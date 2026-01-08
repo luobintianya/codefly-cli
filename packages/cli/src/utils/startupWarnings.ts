@@ -9,7 +9,7 @@ import os from 'node:os';
 import { join as pathJoin } from 'node:path';
 import { getErrorMessage } from '@codefly/codefly-core';
 
-const warningsFilePath = pathJoin(os.tmpdir(), 'gemini-cli-warnings.txt');
+const warningsFilePath = pathJoin(os.tmpdir(), 'codefly-warnings.txt');
 
 export async function getStartupWarnings(): Promise<string[]> {
   try {

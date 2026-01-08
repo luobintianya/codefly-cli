@@ -705,6 +705,7 @@ export async function loadCliConfig(
     hooks: settings.hooks || {},
     projectHooks: projectHooks || {},
     onModelChange: (model: string) => saveModelChange(loadedSettings, model),
+    openaiConfig: settings.security?.auth?.openai,
   });
 }
 

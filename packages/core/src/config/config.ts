@@ -344,6 +344,11 @@ export interface ConfigParameters {
   disabledSkills?: string[];
   experimentalJitContext?: boolean;
   onModelChange?: (model: string) => void;
+  openaiConfig?: {
+    baseUrl?: string;
+    model?: string;
+    apiKey?: string;
+  };
 }
 
 export class Config {
@@ -464,6 +469,12 @@ export class Config {
   private readonly disabledHooks: string[];
   private hookSystem?: HookSystem;
   private readonly onModelChange: ((model: string) => void) | undefined;
+
+  openaiConfig?: {
+    baseUrl?: string;
+    model?: string;
+    apiKey?: string;
+  };
 
   private readonly enableAgents: boolean;
   private readonly skillsSupport: boolean;
@@ -625,7 +636,9 @@ export class Config {
     this.disableYoloMode = params.disableYoloMode ?? false;
     this.hooks = params.hooks;
     this.projectHooks = params.projectHooks;
+    this.projectHooks = params.projectHooks;
     this.onModelChange = params.onModelChange;
+    this.openaiConfig = params.openaiConfig;
 
     if (params.contextFileName) {
       setGeminiMdFilename(params.contextFileName);

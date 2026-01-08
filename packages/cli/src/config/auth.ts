@@ -36,5 +36,19 @@ export function validateAuthMethod(authMethod: string): string | null {
     return null;
   }
 
+  if (authMethod === AuthType.OPENAI) {
+    // Check ENV first
+    if (process.env['OPENAI_API_KEY']) return null;
+
+    // Check Settings
+    const settings = loadSettings().merged;
+    if (settings.security?.auth?.openai?.apiKey) return null;
+
+    return (
+      'When using OpenAI Compatible provider, you must specify the API Key.\n' +
+      'You can set it via the UI or using OPENAI_API_KEY environment variable.'
+    );
+  }
+
   return 'Invalid auth method selected.';
 }

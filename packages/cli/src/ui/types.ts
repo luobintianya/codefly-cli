@@ -26,6 +26,8 @@ export enum AuthState {
   Updating = 'updating',
   // Waiting for user to input API key
   AwaitingApiKeyInput = 'awaiting_api_key_input',
+  // Waiting for user to input OpenAI compatible config
+  AwaitingOpenAIConfig = 'awaiting_openai_config',
   // Successfully authenticated
   Authenticated = 'authenticated',
 }

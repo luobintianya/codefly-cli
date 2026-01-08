@@ -119,6 +119,19 @@ export const useAuthCommand = (settings: LoadedSettings, config: Config) => {
       }
 
       try {
+        if (
+          authType === AuthType.OPENAI &&
+          settings.merged.security?.auth?.openai
+        ) {
+          // Sync settings to config because config.refreshAuth uses config properties
+          // which might be stale if they were just set in the wizard.
+          config.openaiConfig = {
+            baseUrl: settings.merged.security.auth.openai.baseUrl,
+            model: settings.merged.security.auth.openai.model,
+            apiKey: settings.merged.security.auth.openai.apiKey,
+          };
+        }
+
         await config.refreshAuth(authType);
 
         debugLogger.log(`Authenticated via "${authType}".`);

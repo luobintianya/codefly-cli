@@ -41,6 +41,7 @@ describe('useAuth', () => {
     vi.resetAllMocks();
     delete process.env['GEMINI_API_KEY'];
     delete process.env['GEMINI_DEFAULT_AUTH_TYPE'];
+    mockValidateAuthMethod.mockReturnValue(null);
   });
 
   afterEach(() => {
@@ -279,6 +280,28 @@ describe('useAuth', () => {
       await waitFor(() => {
         expect(result.current.authError).toContain('Failed to login');
         expect(result.current.authState).toBe(AuthState.Updating);
+      });
+    });
+
+    it('should sync OpenAI config checks for OpenAI auth type', async () => {
+      const settings = createSettings(AuthType.OPENAI);
+      settings.merged.security.auth.openai = {
+        baseUrl: 'https://test.url',
+        model: 'test-model',
+        apiKey: 'test-key',
+      };
+
+      const { result } = renderHook(() => useAuthCommand(settings, mockConfig));
+
+      await waitFor(() => {
+        expect(mockConfig.refreshAuth).toHaveBeenCalledWith(AuthType.OPENAI);
+        expect(result.current.authState).toBe(AuthState.Authenticated);
+        // Verify config was updated
+        expect(mockConfig.openaiConfig).toEqual({
+          baseUrl: 'https://test.url',
+          model: 'test-model',
+          apiKey: 'test-key',
+        });
       });
     });
   });

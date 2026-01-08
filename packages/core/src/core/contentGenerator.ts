@@ -71,10 +71,14 @@ export async function createContentGeneratorConfig(
     undefined;
   const googleCloudLocation = process.env['GOOGLE_CLOUD_LOCATION'] || undefined;
 
-  const openaiApiKey = process.env['OPENAI_API_KEY'] || undefined;
+  const openaiApiKey =
+    process.env['OPENAI_API_KEY'] || config.openaiConfig?.apiKey || undefined;
   const openaiBaseUrl =
-    process.env['OPENAI_BASE_URL'] || 'https://api.openai.com/v1';
-  const openaiModel = process.env['OPENAI_MODEL'] || 'gpt-4o';
+    process.env['OPENAI_BASE_URL'] ||
+    config.openaiConfig?.baseUrl ||
+    'https://api.openai.com/v1';
+  const openaiModel =
+    process.env['OPENAI_MODEL'] || config.openaiConfig?.model || 'gpt-4o';
 
   const zhipuApiKey = process.env['ZHIPU_API_KEY'] || undefined;
   const zhipuBaseUrl =
