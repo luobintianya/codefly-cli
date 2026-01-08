@@ -22,9 +22,9 @@ import {
   type EditorType,
   isEditorAvailable,
   EDITOR_DISPLAY_NAMES,
-} from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
 import { useKeypress } from '../hooks/useKeypress.js';
-import { coreEvents } from '@google/gemini-cli-core';
+import { coreEvents } from '@codefly/codefly-core';
 
 interface EditorDialogProps {
   onSelect: (

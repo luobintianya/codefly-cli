@@ -10,12 +10,12 @@ import type {
   LoadedSettings,
 } from '../../config/settings.js';
 import { MessageType } from '../types.js';
-import type { EditorType } from '@google/gemini-cli-core';
+import type { EditorType } from '@codefly/codefly-core';
 import {
   allowEditorTypeInSandbox,
   checkHasEditorType,
   getEditorDisplayName,
-} from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
 import type { UseHistoryManagerReturn } from './useHistoryManager.js';
 
 import { SettingPaths } from '../../config/settingPaths.js';

@@ -1,24 +1,24 @@
-# Gemini CLI
+# Codefly
 
-[![Gemini CLI CI](https://github.com/google-gemini/gemini-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/google-gemini/gemini-cli/actions/workflows/ci.yml)
-[![Gemini CLI E2E (Chained)](https://github.com/google-gemini/gemini-cli/actions/workflows/chained_e2e.yml/badge.svg)](https://github.com/google-gemini/gemini-cli/actions/workflows/chained_e2e.yml)
-[![Version](https://img.shields.io/npm/v/@google/gemini-cli)](https://www.npmjs.com/package/@google/gemini-cli)
-[![License](https://img.shields.io/github/license/google-gemini/gemini-cli)](https://github.com/google-gemini/gemini-cli/blob/main/LICENSE)
-[![View Code Wiki](https://www.gstatic.com/_/boq-sdlc-agents-ui/_/r/YUi5dj2UWvE.svg)](https://codewiki.google/github.com/google-gemini/gemini-cli)
+[![Codefly CI](https://github.com/codefly/codefly/actions/workflows/ci.yml/badge.svg)](https://github.com/codefly/codefly/actions/workflows/ci.yml)
+[![Codefly E2E (Chained)](https://github.com/codefly/codefly/actions/workflows/chained_e2e.yml/badge.svg)](https://github.com/codefly/codefly/actions/workflows/chained_e2e.yml)
+[![Version](https://img.shields.io/npm/v/@codefly/codefly)](https://www.npmjs.com/package/@codefly/codefly)
+[![License](https://img.shields.io/github/license/codefly/codefly)](https://github.com/codefly/codefly/blob/main/LICENSE)
 
-![Gemini CLI Screenshot](./docs/assets/gemini-screenshot.png)
+![Codefly Screenshot](./docs/assets/codefly-screenshot.png)
 
-Gemini CLI is an open-source AI agent that brings the power of Gemini directly
-into your terminal. It provides lightweight access to Gemini, giving you the
-most direct path from your prompt to our model.
+Codefly is an open-source AI agent that brings the power of AI directly into
+your terminal. It provides lightweight access to AI models, giving you the most
+direct path from your prompt to powerful language models.
 
-Learn all about Gemini CLI in our [documentation](https://geminicli.com/docs/).
+Learn all about Codefly in our [documentation](https://codefly.dev/docs/).
 
-## 🚀 Why Gemini CLI?
+## 🚀 Why Codefly?
 
 - **🎯 Free tier**: 60 requests/min and 1,000 requests/day with personal Google
   account.
-- **🧠 Powerful Gemini 2.5 Pro**: Access to 1M token context window.
+- **🧠 Powerful AI Models**: Access to 1M token context window with Gemini 2.5
+  Pro.
 - **🔧 Built-in tools**: Google Search grounding, file operations, shell
   commands, web fetching.
 - **🔌 Extensible**: MCP (Model Context Protocol) support for custom
@@ -39,19 +39,19 @@ Learn all about Gemini CLI in our [documentation](https://geminicli.com/docs/).
 
 ```bash
 # Using npx (no installation required)
-npx https://github.com/google-gemini/gemini-cli
+npx @codefly/codefly
 ```
 
 #### Install globally with npm
 
 ```bash
-npm install -g @google/gemini-cli
+npm install -g @codefly/codefly
 ```
 
 #### Install globally with Homebrew (macOS/Linux)
 
 ```bash
-brew install gemini-cli
+brew install codefly
 ```
 
 ## Release Cadence and Tags
@@ -65,7 +65,7 @@ releases will not have been fully vetted and may contain regressions or other
 outstanding issues. Please help us test and install with `preview` tag.
 
 ```bash
-npm install -g @google/gemini-cli@preview
+npm install -g @codefly/codefly@preview
 ```
 
 ### Stable
@@ -75,7 +75,7 @@ npm install -g @google/gemini-cli@preview
   and validations. Use `latest` tag.
 
 ```bash
-npm install -g @google/gemini-cli@latest
+npm install -g @codefly/codefly@latest
 ```
 
 ### Nightly
@@ -85,7 +85,7 @@ npm install -g @google/gemini-cli@latest
   there are pending validations and issues. Use `nightly` tag.
 
 ```bash
-npm install -g @google/gemini-cli@nightly
+npm install -g @codefly/codefly@nightly
 ```
 
 ## 📋 Key Features
@@ -114,15 +114,15 @@ npm install -g @google/gemini-cli@nightly
 
 ### GitHub Integration
 
-Integrate Gemini CLI directly into your GitHub workflows with
-[**Gemini CLI GitHub Action**](https://github.com/google-github-actions/run-gemini-cli):
+Integrate Codefly directly into your GitHub workflows with
+[**Codefly GitHub Action**](https://github.com/codefly/codefly-github-action):
 
 - **Pull Request Reviews**: Automated code review with contextual feedback and
   suggestions
 - **Issue Triage**: Automated labeling and prioritization of GitHub issues based
   on content analysis
-- **On-demand Assistance**: Mention `@gemini-cli` in issues and pull requests
-  for help with debugging, explanations, or task delegation
+- **On-demand Assistance**: Mention `@codefly` in issues and pull requests for
+  help with debugging, explanations, or task delegation
 - **Custom Workflows**: Build automated, scheduled and on-demand workflows
   tailored to your team's needs
 
@@ -144,10 +144,10 @@ for details)
 - **No API key management** - just sign in with your Google account
 - **Automatic updates** to latest models
 
-#### Start Gemini CLI, then choose _Login with Google_ and follow the browser authentication flow when prompted
+#### Start Codefly, then choose _Login with Google_ and follow the browser authentication flow when prompted
 
 ```bash
-gemini
+codefly
 ```
 
 #### If you are using a paid Code Assist License from your organization, remember to set the Google Cloud Project
@@ -155,7 +155,7 @@ gemini
 ```bash
 # Set your Google Cloud Project
 export GOOGLE_CLOUD_PROJECT="YOUR_PROJECT_ID"
-gemini
+codefly
 ```
 
 ### Option 2: Gemini API Key
@@ -171,7 +171,7 @@ gemini
 ```bash
 # Get your key from https://aistudio.google.com/apikey
 export GEMINI_API_KEY="YOUR_API_KEY"
-gemini
+codefly
 ```
 
 ### Option 3: Vertex AI
@@ -188,7 +188,7 @@ gemini
 # Get your key from Google Cloud Console
 export GOOGLE_API_KEY="YOUR_API_KEY"
 export GOOGLE_GENAI_USE_VERTEXAI=true
-gemini
+codefly
 ```
 
 For Google Workspace accounts and other authentication methods, see the
@@ -201,19 +201,19 @@ For Google Workspace accounts and other authentication methods, see the
 #### Start in current directory
 
 ```bash
-gemini
+codefly
 ```
 
 #### Include multiple directories
 
 ```bash
-gemini --include-directories ../lib,../docs
+codefly --include-directories ../lib,../docs
 ```
 
 #### Use specific model
 
 ```bash
-gemini -m gemini-2.5-flash
+codefly -m gemini-2.5-flash
 ```
 
 #### Non-interactive mode for scripts
@@ -221,21 +221,21 @@ gemini -m gemini-2.5-flash
 Get a simple text response:
 
 ```bash
-gemini -p "Explain the architecture of this codebase"
+codefly -p "Explain the architecture of this codebase"
 ```
 
 For more advanced scripting, including how to parse JSON and handle errors, use
 the `--output-format json` flag to get structured output:
 
 ```bash
-gemini -p "Explain the architecture of this codebase" --output-format json
+codefly -p "Explain the architecture of this codebase" --output-format json
 ```
 
 For real-time event streaming (useful for monitoring long-running operations),
 use `--output-format stream-json` to get newline-delimited JSON events:
 
 ```bash
-gemini -p "Run tests and deploy" --output-format stream-json
+codefly -p "Run tests and deploy" --output-format stream-json
 ```
 
 ### Quick Examples
@@ -244,16 +244,16 @@ gemini -p "Run tests and deploy" --output-format stream-json
 
 ```bash
 cd new-project/
-gemini
+codefly
 > Write me a Discord bot that answers questions using a FAQ.md file I will provide
 ```
 
 #### Analyze existing code
 
 ```bash
-git clone https://github.com/google-gemini/gemini-cli
-cd gemini-cli
-gemini
+git clone https://github.com/codefly/codefly
+cd codefly
+codefly
 > Give me a summary of all of the changes that went in yesterday
 ```
 
@@ -276,8 +276,8 @@ gemini
   (`/help`, `/chat`, etc).
 - [**Custom Commands**](./docs/cli/custom-commands.md) - Create your own
   reusable commands.
-- [**Context Files (GEMINI.md)**](./docs/cli/gemini-md.md) - Provide persistent
-  context to Gemini CLI.
+- [**Context Files (CODEFLY.md)**](./docs/cli/codefly-md.md) - Provide
+  persistent context to Codefly.
 - [**Checkpointing**](./docs/cli/checkpointing.md) - Save and resume
   conversations.
 - [**Token Caching**](./docs/cli/token-caching.md) - Optimize token usage.
@@ -319,7 +319,7 @@ gemini
 
 ### Using MCP Servers
 
-Configure MCP servers in `~/.gemini/settings.json` to extend Gemini CLI with
+Configure MCP servers in `~/.codefly/settings.json` to extend Codefly with
 custom tools:
 
 ```text
@@ -333,7 +333,7 @@ instructions.
 
 ## 🤝 Contributing
 
-We welcome contributions! Gemini CLI is fully open source (Apache 2.0), and we
+We welcome contributions! Codefly is fully open source (Apache 2.0), and we
 encourage the community to:
 
 - Report bugs and suggest features.
@@ -344,18 +344,18 @@ encourage the community to:
 See our [Contributing Guide](./CONTRIBUTING.md) for development setup, coding
 standards, and how to submit pull requests.
 
-Check our [Official Roadmap](https://github.com/orgs/google-gemini/projects/11)
-for planned features and priorities.
+Check our [Official Roadmap](https://github.com/orgs/codefly/projects/1) for
+planned features and priorities.
 
 ## 📖 Resources
 
 - **[Official Roadmap](./ROADMAP.md)** - See what's coming next.
 - **[Changelog](./docs/changelogs/index.md)** - See recent notable updates.
-- **[NPM Package](https://www.npmjs.com/package/@google/gemini-cli)** - Package
+- **[NPM Package](https://www.npmjs.com/package/@codefly/codefly)** - Package
   registry.
-- **[GitHub Issues](https://github.com/google-gemini/gemini-cli/issues)** -
-  Report bugs or request features.
-- **[Security Advisories](https://github.com/google-gemini/gemini-cli/security/advisories)** -
+- **[GitHub Issues](https://github.com/codefly/codefly/issues)** - Report bugs
+  or request features.
+- **[Security Advisories](https://github.com/codefly/codefly/security/advisories)** -
   Security updates.
 
 ### Uninstall

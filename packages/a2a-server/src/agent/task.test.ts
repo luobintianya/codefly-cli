@@ -22,17 +22,17 @@ import {
   type CompletedToolCall,
   ApprovalMode,
   ToolConfirmationOutcome,
-} from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
 import { createMockConfig } from '../utils/testing_utils.js';
 import type { ExecutionEventBus, RequestContext } from '@a2a-js/sdk/server';
 import { CoderAgentEvent } from '../types.js';
-import type { ToolCall } from '@google/gemini-cli-core';
+import type { ToolCall } from '@codefly/codefly-core';
 
 const mockProcessRestorableToolCalls = vi.hoisted(() => vi.fn());
 
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
+vi.mock('@codefly/codefly-core', async (importOriginal) => {
   const original =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+    await importOriginal<typeof import('@codefly/codefly-core')>();
   return {
     ...original,
     processRestorableToolCalls: mockProcessRestorableToolCalls,

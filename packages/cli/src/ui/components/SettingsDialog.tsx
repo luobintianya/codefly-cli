@@ -42,9 +42,9 @@ import {
   type SettingsValue,
   TOGGLE_TYPES,
 } from '../../config/settingsSchema.js';
-import { coreEvents, debugLogger } from '@google/gemini-cli-core';
+import { coreEvents, debugLogger } from '@codefly/codefly-core';
 import { keyMatchers, Command } from '../keyMatchers.js';
-import type { Config } from '@google/gemini-cli-core';
+import type { Config } from '@codefly/codefly-core';
 import { useUIState } from '../contexts/UIStateContext.js';
 import { useTextBuffer } from './shared/text-buffer.js';
 import { TextInput } from './shared/TextInput.js';

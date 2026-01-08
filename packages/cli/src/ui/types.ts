@@ -14,7 +14,7 @@ import type {
   ToolResultDisplay,
   RetrieveUserQuotaResponse,
   SkillDefinition,
-} from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
 import type { PartListUnion } from '@google/genai';
 import { type ReactNode } from 'react';
 

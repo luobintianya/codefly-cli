@@ -5,8 +5,8 @@
  */
 
 import { useState, useEffect } from 'react';
-import type { Storage } from '@google/gemini-cli-core';
-import { sessionId, Logger } from '@google/gemini-cli-core';
+import type { Storage } from '@codefly/codefly-core';
+import { sessionId, Logger } from '@codefly/codefly-core';
 
 /**
  * Hook to manage the logger instance.

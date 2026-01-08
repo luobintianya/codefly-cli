@@ -16,7 +16,7 @@ import {
   getErrorMessage,
   Storage,
   coreEvents,
-} from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
 import stripJsonComments from 'strip-json-comments';
 import { DefaultLight } from '../ui/themes/default-light.js';
 import { DefaultDark } from '../ui/themes/default.js';

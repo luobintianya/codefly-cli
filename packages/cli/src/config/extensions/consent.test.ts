@@ -13,7 +13,7 @@ import {
 } from './consent.js';
 import type { ConfirmationRequest } from '../../ui/types.js';
 import type { ExtensionConfig } from '../extension.js';
-import { debugLogger } from '@google/gemini-cli-core';
+import { debugLogger } from '@codefly/codefly-core';
 
 const mockReadline = vi.hoisted(() => ({
   createInterface: vi.fn().mockReturnValue({
@@ -28,9 +28,8 @@ vi.mock('node:readline', () => ({
   createInterface: mockReadline.createInterface,
 }));
 
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+vi.mock('@codefly/codefly-core', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@codefly/codefly-core')>();
   return {
     ...actual,
     debugLogger: {

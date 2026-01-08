@@ -12,16 +12,16 @@ import {
   IDEConnectionStatus,
   ideContextStore,
   type IDEConnectionState,
-} from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
 import { useIdeTrustListener } from './useIdeTrustListener.js';
 import * as trustedFolders from '../../config/trustedFolders.js';
 import { useSettings } from '../contexts/SettingsContext.js';
 import type { LoadedSettings } from '../../config/settings.js';
 
 // Mock dependencies
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
+vi.mock('@codefly/codefly-core', async (importOriginal) => {
   const original =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+    await importOriginal<typeof import('@codefly/codefly-core')>();
   const ideClientInstance = {
     addTrustChangeListener: vi.fn(),
     removeTrustChangeListener: vi.fn(),

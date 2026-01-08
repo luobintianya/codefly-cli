@@ -19,8 +19,8 @@ import type {
   ToolCall,
   Status as CoreStatus,
   EditorType,
-} from '@google/gemini-cli-core';
-import { CoreToolScheduler, debugLogger } from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
+import { CoreToolScheduler, debugLogger } from '@codefly/codefly-core';
 import { useCallback, useState, useMemo, useEffect, useRef } from 'react';
 import type {
   HistoryItemToolGroup,

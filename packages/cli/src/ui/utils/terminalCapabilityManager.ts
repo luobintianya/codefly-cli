@@ -11,7 +11,7 @@ import {
   disableKittyKeyboardProtocol,
   enableModifyOtherKeys,
   disableModifyOtherKeys,
-} from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
 
 export type TerminalBackgroundColor = string | undefined;
 

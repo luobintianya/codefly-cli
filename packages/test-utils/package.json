@@ -1,8 +1,8 @@
 {
-  "name": "@google/gemini-cli-test-utils",
+  "name": "@codefly/codefly-test-utils",
   "version": "0.24.0-nightly.20251227.37be16243",
   "private": true,
-  "main": "src/index.ts",
+  "main": "dist/index.js",
   "license": "Apache-2.0",
   "type": "module",
   "scripts": {

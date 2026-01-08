@@ -67,7 +67,7 @@ import {
   fireSessionStartHook,
   fireSessionEndHook,
   getVersion,
-} from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
 import {
   initializeApp,
   type InitializationResult,

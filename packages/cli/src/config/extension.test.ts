@@ -23,7 +23,7 @@ import {
   ExtensionDisableEvent,
   ExtensionEnableEvent,
   KeychainTokenStorage,
-} from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
 import { loadSettings, SettingScope } from './settings.js';
 import {
   isWorkspaceTrusted,
@@ -95,9 +95,8 @@ const mockLogExtensionInstallEvent = vi.hoisted(() => vi.fn());
 const mockLogExtensionUninstall = vi.hoisted(() => vi.fn());
 const mockLogExtensionUpdateEvent = vi.hoisted(() => vi.fn());
 const mockLogExtensionDisable = vi.hoisted(() => vi.fn());
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+vi.mock('@codefly/codefly-core', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@codefly/codefly-core')>();
   return {
     ...actual,
     logExtensionEnable: mockLogExtensionEnable,

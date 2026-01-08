@@ -16,9 +16,9 @@ import {
   DEFAULT_TRUNCATE_TOOL_OUTPUT_THRESHOLD,
   GeminiClient,
   HookSystem,
-} from '@google/gemini-cli-core';
-import { createMockMessageBus } from '@google/gemini-cli-core/src/test-utils/mock-message-bus.js';
-import type { Config, Storage } from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
+import { createMockMessageBus } from '@codefly/codefly-core/src/test-utils/mock-message-bus.js';
+import type { Config, Storage } from '@codefly/codefly-core';
 import { expect, vi } from 'vitest';
 
 export function createMockConfig(

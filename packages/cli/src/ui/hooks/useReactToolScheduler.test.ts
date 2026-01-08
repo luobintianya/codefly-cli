@@ -4,15 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CoreToolScheduler } from '@google/gemini-cli-core';
-import type { Config } from '@google/gemini-cli-core';
+import { CoreToolScheduler } from '@codefly/codefly-core';
+import type { Config } from '@codefly/codefly-core';
 import { renderHook } from '../../test-utils/render.js';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { useReactToolScheduler } from './useReactToolScheduler.js';
 
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+vi.mock('@codefly/codefly-core', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@codefly/codefly-core')>();
   return {
     ...actual,
     CoreToolScheduler: vi.fn(),

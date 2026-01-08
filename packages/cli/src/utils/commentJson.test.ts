@@ -9,9 +9,9 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as os from 'node:os';
 import { updateSettingsFilePreservingFormat } from './commentJson.js';
-import { coreEvents } from '@google/gemini-cli-core';
+import { coreEvents } from '@codefly/codefly-core';
 
-vi.mock('@google/gemini-cli-core', () => ({
+vi.mock('@codefly/codefly-core', () => ({
   coreEvents: {
     emitFeedback: vi.fn(),
   },

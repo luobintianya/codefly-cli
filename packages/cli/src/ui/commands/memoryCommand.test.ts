@@ -16,12 +16,12 @@ import {
   refreshServerHierarchicalMemory,
   SimpleExtensionLoader,
   type FileDiscoveryService,
-} from '@google/gemini-cli-core';
-import type { LoadServerHierarchicalMemoryResponse } from '@google/gemini-cli-core/index.js';
+} from '@codefly/codefly-core';
+import type { LoadServerHierarchicalMemoryResponse } from '@codefly/codefly-core/index.js';
 
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
+vi.mock('@codefly/codefly-core', async (importOriginal) => {
   const original =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+    await importOriginal<typeof import('@codefly/codefly-core')>();
   return {
     ...original,
     getErrorMessage: vi.fn((error: unknown) => {

@@ -5,13 +5,13 @@
  */
 
 import { useEffect } from 'react';
-import type { Config } from '@google/gemini-cli-core';
+import type { Config } from '@codefly/codefly-core';
 import { loadTrustedFolders } from '../../config/trustedFolders.js';
 import { expandHomeDir } from '../utils/directoryUtils.js';
 import {
   debugLogger,
   refreshServerHierarchicalMemory,
-} from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
 import { MultiFolderTrustDialog } from '../components/MultiFolderTrustDialog.js';
 import type { UseHistoryManagerReturn } from './useHistoryManager.js';
 import { MessageType, type HistoryItem } from '../types.js';

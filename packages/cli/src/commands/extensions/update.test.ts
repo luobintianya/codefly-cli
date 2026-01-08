@@ -33,9 +33,8 @@ const debugLogger = vi.hoisted(() => ({
   }),
 }));
 
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+vi.mock('@codefly/codefly-core', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@codefly/codefly-core')>();
   return {
     ...actual,
     coreEvents: {

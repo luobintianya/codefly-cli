@@ -18,7 +18,7 @@ import {
   decodeTagName,
   type MessageActionReturn,
   INITIAL_HISTORY_LENGTH,
-} from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
 import path from 'node:path';
 import type {
   HistoryItemWithoutId,

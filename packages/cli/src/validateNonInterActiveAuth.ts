@@ -4,13 +4,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type { Config } from '@google/gemini-cli-core';
+import type { Config } from '@codefly/codefly-core';
 import {
   AuthType,
   debugLogger,
   OutputFormat,
   ExitCodes,
-} from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
 import { USER_SETTINGS_PATH } from './config/settings.js';
 import { validateAuthMethod } from './config/auth.js';
 import { type LoadedSettings } from './config/settings.js';

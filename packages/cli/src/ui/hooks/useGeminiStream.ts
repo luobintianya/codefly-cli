@@ -16,7 +16,7 @@ import type {
   ThoughtSummary,
   ToolCallRequestInfo,
   GeminiErrorEventValue,
-} from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
 import {
   GeminiEventType as ServerGeminiEventType,
   getErrorMessage,
@@ -40,7 +40,7 @@ import {
   processRestorableToolCalls,
   recordToolCallInteractions,
   ToolErrorType,
-} from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
 import { type Part, type PartListUnion, FinishReason } from '@google/genai';
 import type {
   HistoryItem,

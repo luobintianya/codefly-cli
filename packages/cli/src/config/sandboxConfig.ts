@@ -8,7 +8,7 @@ import {
   getPackageJson,
   type SandboxConfig,
   FatalSandboxError,
-} from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
 import commandExists from 'command-exists';
 import * as os from 'node:os';
 import type { Settings } from './settings.js';

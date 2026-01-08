@@ -6,8 +6,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { main } from './src/gemini.js';
-import { FatalError, writeToStderr } from '@google/gemini-cli-core';
+import { main } from './src/codefly.js';
+import { FatalError, writeToStderr } from '@codefly/codefly-core';
 import { runExitCleanup } from './src/utils/cleanup.js';
 
 // --- Global Entry Point ---

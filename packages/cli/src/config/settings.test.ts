@@ -66,7 +66,7 @@ import {
   saveSettings,
   type SettingsFile,
 } from './settings.js';
-import { FatalConfigError, GEMINI_DIR } from '@google/gemini-cli-core';
+import { FatalConfigError, GEMINI_DIR } from '@codefly/codefly-core';
 import { ExtensionManager } from './extension-manager.js';
 import { updateSettingsFilePreservingFormat } from '../utils/commentJson.js';
 
@@ -102,9 +102,8 @@ const mockCoreEvents = vi.hoisted(() => ({
   emitFeedback: vi.fn(),
 }));
 
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+vi.mock('@codefly/codefly-core', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@codefly/codefly-core')>();
   return {
     ...actual,
     coreEvents: mockCoreEvents,

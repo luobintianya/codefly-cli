@@ -6,7 +6,7 @@
 
 import { spawn } from 'node:child_process';
 import { RELAUNCH_EXIT_CODE } from './processUtils.js';
-import { writeToStderr } from '@google/gemini-cli-core';
+import { writeToStderr } from '@codefly/codefly-core';
 
 export async function relaunchOnExitCode(runner: () => Promise<number>) {
   while (true) {

@@ -17,10 +17,10 @@ import {
   type ExtensionLoader,
   debugLogger,
   ApprovalMode,
-} from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
 import { loadCliConfig, parseArguments, type CliArgs } from './config.js';
 import type { Settings } from './settings.js';
-import * as ServerConfig from '@google/gemini-cli-core';
+import * as ServerConfig from '@codefly/codefly-core';
 import { isWorkspaceTrusted } from './trustedFolders.js';
 import { ExtensionManager } from './extension-manager.js';
 import { RESUME_LATEST } from '../utils/sessionUtils.js';
@@ -83,9 +83,9 @@ vi.mock('read-package-up', () => ({
   ),
 }));
 
-vi.mock('@google/gemini-cli-core', async () => {
+vi.mock('@codefly/codefly-core', async () => {
   const actualServer = await vi.importActual<typeof ServerConfig>(
-    '@google/gemini-cli-core',
+    '@codefly/codefly-core',
   );
   return {
     ...actualServer,

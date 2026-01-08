@@ -11,7 +11,7 @@ import {
   EXTENSION_SETTINGS_FILENAME,
   EXTENSIONS_CONFIG_FILENAME,
 } from './variables.js';
-import { Storage } from '@google/gemini-cli-core';
+import { Storage } from '@codefly/codefly-core';
 
 export class ExtensionStorage {
   private readonly extensionName: string;

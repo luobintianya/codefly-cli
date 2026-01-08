@@ -9,9 +9,9 @@ import { ExtensionsCommand, ListExtensionsCommand } from './extensions.js';
 import type { CommandContext } from './types.js';
 
 const mockListExtensions = vi.hoisted(() => vi.fn());
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
+vi.mock('@codefly/codefly-core', async (importOriginal) => {
   const original =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+    await importOriginal<typeof import('@codefly/codefly-core')>();
 
   return {
     ...original,

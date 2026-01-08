@@ -11,7 +11,7 @@ import {
   spawnAsync,
   unescapePath,
   escapePath,
-} from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
 
 /**
  * Supported image file extensions based on Gemini API.

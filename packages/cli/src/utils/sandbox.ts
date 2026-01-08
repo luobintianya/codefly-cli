@@ -12,13 +12,13 @@ import { fileURLToPath } from 'node:url';
 import { quote, parse } from 'shell-quote';
 import { USER_SETTINGS_DIR } from '../config/settings.js';
 import { promisify } from 'node:util';
-import type { Config, SandboxConfig } from '@google/gemini-cli-core';
+import type { Config, SandboxConfig } from '@codefly/codefly-core';
 import {
   coreEvents,
   debugLogger,
   FatalSandboxError,
   GEMINI_DIR,
-} from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
 import { ConsolePatcher } from '../ui/utils/ConsolePatcher.js';
 import { randomBytes } from 'node:crypto';
 import {

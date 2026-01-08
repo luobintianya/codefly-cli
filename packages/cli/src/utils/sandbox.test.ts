@@ -9,7 +9,7 @@ import { spawn, exec, execSync } from 'node:child_process';
 import os from 'node:os';
 import fs from 'node:fs';
 import { start_sandbox } from './sandbox.js';
-import { FatalSandboxError, type SandboxConfig } from '@google/gemini-cli-core';
+import { FatalSandboxError, type SandboxConfig } from '@codefly/codefly-core';
 import { EventEmitter } from 'node:events';
 
 vi.mock('../config/settings.js', () => ({
@@ -44,9 +44,8 @@ vi.mock('node:util', async (importOriginal) => {
     },
   };
 });
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+vi.mock('@codefly/codefly-core', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@codefly/codefly-core')>();
   return {
     ...actual,
     debugLogger: {

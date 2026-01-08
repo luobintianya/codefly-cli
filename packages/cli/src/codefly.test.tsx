@@ -19,7 +19,7 @@ import {
   validateDnsResolutionOrder,
   startInteractiveUI,
   getNodeMemoryArgs,
-} from './gemini.js';
+} from './codefly.js';
 import os from 'node:os';
 import v8 from 'node:v8';
 import { type CliArgs } from './config/config.js';
@@ -30,7 +30,7 @@ import {
   type ResumedSessionData,
   debugLogger,
   coreEvents,
-} from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
 import { act } from 'react';
 import { type InitializationResult } from './core/initializer.js';
 
@@ -39,9 +39,8 @@ const performance = vi.hoisted(() => ({
 }));
 vi.stubGlobal('performance', performance);
 
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+vi.mock('@codefly/codefly-core', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@codefly/codefly-core')>();
   return {
     ...actual,
     recordSlowRender: vi.fn(),
@@ -191,7 +190,7 @@ vi.mock('./ui/utils/mouse.js', () => ({
   isIncompleteMouseSequence: vi.fn(),
 }));
 
-describe('gemini.tsx main function', () => {
+describe('codefly.tsx main function', () => {
   let originalEnvGeminiSandbox: string | undefined;
   let originalEnvSandbox: string | undefined;
   let initialUnhandledRejectionListeners: NodeJS.UnhandledRejectionListener[] =
@@ -371,8 +370,8 @@ describe('initializeOutputListenersAndFlush', () => {
   });
 
   it('should flush backlogs and setup listeners if no listeners exist', async () => {
-    const { coreEvents } = await import('@google/gemini-cli-core');
-    const { initializeOutputListenersAndFlush } = await import('./gemini.js');
+    const { coreEvents } = await import('@codefly/codefly-core');
+    const { initializeOutputListenersAndFlush } = await import('./codefly.js');
 
     // Mock listenerCount to return 0
     vi.spyOn(coreEvents, 'listenerCount').mockReturnValue(0);
@@ -439,7 +438,7 @@ describe('getNodeMemoryArgs', () => {
   });
 });
 
-describe('gemini.tsx main function kitty protocol', () => {
+describe('codefly.tsx main function kitty protocol', () => {
   let originalEnvNoRelaunch: string | undefined;
   let setRawModeSpy: MockInstance<
     (mode: boolean) => NodeJS.ReadStream & { fd: 0 }
@@ -1064,7 +1063,7 @@ describe('gemini.tsx main function kitty protocol', () => {
   });
 });
 
-describe('gemini.tsx main function exit codes', () => {
+describe('codefly.tsx main function exit codes', () => {
   let originalEnvNoRelaunch: string | undefined;
 
   beforeEach(() => {
@@ -1398,7 +1397,7 @@ describe('startInteractiveUI', () => {
   });
 
   it('should enable mouse events when alternate buffer is enabled', async () => {
-    const { enableMouseEvents } = await import('@google/gemini-cli-core');
+    const { enableMouseEvents } = await import('@codefly/codefly-core');
     await startTestInteractiveUI(
       mockConfig,
       mockSettings,
@@ -1425,7 +1424,7 @@ describe('startInteractiveUI', () => {
   });
 
   it('should perform all startup tasks in correct order', async () => {
-    const { getVersion } = await import('@google/gemini-cli-core');
+    const { getVersion } = await import('@codefly/codefly-core');
     const { checkForUpdates } = await import('./ui/utils/updateCheck.js');
     const { registerCleanup } = await import('./utils/cleanup.js');
 
@@ -1453,7 +1452,7 @@ describe('startInteractiveUI', () => {
   });
 
   it('should not recordSlowRender when less than threshold', async () => {
-    const { recordSlowRender } = await import('@google/gemini-cli-core');
+    const { recordSlowRender } = await import('@codefly/codefly-core');
     performance.now.mockReturnValueOnce(0);
     await startTestInteractiveUI(
       mockConfig,
@@ -1468,7 +1467,7 @@ describe('startInteractiveUI', () => {
   });
 
   it('should call recordSlowRender when more than threshold', async () => {
-    const { recordSlowRender } = await import('@google/gemini-cli-core');
+    const { recordSlowRender } = await import('@codefly/codefly-core');
     performance.now.mockReturnValueOnce(0);
     performance.now.mockReturnValueOnce(300);
 

@@ -24,7 +24,7 @@ import {
   ReadManyFilesTool,
   type GeminiChat,
   type Config,
-} from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
 import { SettingScope, type LoadedSettings } from '../config/settings.js';
 import { loadCliConfig, type CliArgs } from '../config/config.js';
 import * as fs from 'node:fs/promises';
@@ -49,9 +49,9 @@ vi.mock('node:path', async (importOriginal) => {
 
 // Mock ReadManyFilesTool
 vi.mock(
-  '@google/gemini-cli-core',
+  '@codefly/codefly-core',
   async (
-    importOriginal: () => Promise<typeof import('@google/gemini-cli-core')>,
+    importOriginal: () => Promise<typeof import('@codefly/codefly-core')>,
   ) => {
     const actual = await importOriginal();
     return {

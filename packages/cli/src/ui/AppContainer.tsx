@@ -62,7 +62,7 @@ import {
   fireSessionStartHook,
   fireSessionEndHook,
   generateSummary,
-} from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
 import { validateAuthMethod } from '../config/auth.js';
 import process from 'node:process';
 import { useHistory } from './hooks/useHistoryManager.js';

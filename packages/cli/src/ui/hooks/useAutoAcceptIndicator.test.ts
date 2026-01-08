@@ -17,16 +17,16 @@ import { act } from 'react';
 import { renderHook } from '../../test-utils/render.js';
 import { useAutoAcceptIndicator } from './useAutoAcceptIndicator.js';
 
-import { Config, ApprovalMode } from '@google/gemini-cli-core';
-import type { Config as ActualConfigType } from '@google/gemini-cli-core';
+import { Config, ApprovalMode } from '@codefly/codefly-core';
+import type { Config as ActualConfigType } from '@codefly/codefly-core';
 import type { Key } from './useKeypress.js';
 import { useKeypress } from './useKeypress.js';
 import { MessageType } from '../types.js';
 
 vi.mock('./useKeypress.js');
 
-vi.mock('@google/gemini-cli-core', async () => {
-  const actualServerModule = await vi.importActual('@google/gemini-cli-core');
+vi.mock('@codefly/codefly-core', async () => {
+  const actualServerModule = await vi.importActual('@codefly/codefly-core');
   return {
     ...actualServerModule,
     Config: vi.fn(),

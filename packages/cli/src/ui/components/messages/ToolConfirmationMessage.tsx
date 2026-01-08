@@ -12,8 +12,8 @@ import { RenderInline } from '../../utils/InlineMarkdownRenderer.js';
 import type {
   ToolCallConfirmationDetails,
   Config,
-} from '@google/gemini-cli-core';
-import { IdeClient, ToolConfirmationOutcome } from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
+import { IdeClient, ToolConfirmationOutcome } from '@codefly/codefly-core';
 import type { RadioSelectItem } from '../shared/RadioButtonSelect.js';
 import { RadioButtonSelect } from '../shared/RadioButtonSelect.js';
 import { MaxSizedBox } from '../shared/MaxSizedBox.js';

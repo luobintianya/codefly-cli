@@ -10,7 +10,7 @@ import type {
   CommandContext,
 } from './types.js';
 import { CommandKind } from './types.js';
-import type { MessageActionReturn } from '@google/gemini-cli-core';
+import type { MessageActionReturn } from '@codefly/codefly-core';
 import {
   DiscoveredMCPTool,
   getMCPDiscoveryState,
@@ -20,7 +20,7 @@ import {
   getErrorMessage,
   MCPOAuthTokenStorage,
   mcpServerRequiresOAuth,
-} from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
 import { appEvents, AppEvent } from '../../utils/events.js';
 import { MessageType, type HistoryItemMcpStatus } from '../types.js';
 
@@ -106,7 +106,7 @@ const authCommand: SlashCommand = {
       );
 
       // Import dynamically to avoid circular dependencies
-      const { MCPOAuthProvider } = await import('@google/gemini-cli-core');
+      const { MCPOAuthProvider } = await import('@codefly/codefly-core');
 
       let oauthConfig = server.oauth;
       if (!oauthConfig) {

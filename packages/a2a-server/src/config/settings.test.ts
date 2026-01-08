@@ -9,7 +9,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as os from 'node:os';
 import { loadSettings, USER_SETTINGS_PATH } from './settings.js';
-import { debugLogger } from '@google/gemini-cli-core';
+import { debugLogger } from '@codefly/codefly-core';
 
 const mocks = vi.hoisted(() => {
   const suffix = Math.random().toString(36).slice(2);
@@ -27,7 +27,7 @@ vi.mock('node:os', async (importOriginal) => {
   };
 });
 
-vi.mock('@google/gemini-cli-core', () => ({
+vi.mock('@codefly/codefly-core', () => ({
   GEMINI_DIR: '.gemini',
   debugLogger: {
     error: vi.fn(),

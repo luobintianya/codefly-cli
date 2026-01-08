@@ -25,7 +25,7 @@ import type {
   Status as ToolCallStatusType,
   AnyDeclarativeTool,
   AnyToolInvocation,
-} from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
 import {
   DEFAULT_TRUNCATE_TOOL_OUTPUT_LINES,
   DEFAULT_TRUNCATE_TOOL_OUTPUT_THRESHOLD,
@@ -34,13 +34,13 @@ import {
   MockTool,
   HookSystem,
   PREVIEW_GEMINI_MODEL,
-} from '@google/gemini-cli-core';
-import { createMockMessageBus } from '@google/gemini-cli-core/src/test-utils/mock-message-bus.js';
+} from '@codefly/codefly-core';
+import { createMockMessageBus } from '@codefly/codefly-core/src/test-utils/mock-message-bus.js';
 import { ToolCallStatus } from '../types.js';
 
 // Mocks
-vi.mock('@google/gemini-cli-core', async () => {
-  const actual = await vi.importActual<any>('@google/gemini-cli-core');
+vi.mock('@codefly/codefly-core', async () => {
+  const actual = await vi.importActual<any>('@codefly/codefly-core');
   // Patch CoreToolScheduler to have cancelAll if it's missing in the test environment
   if (
     actual.CoreToolScheduler &&

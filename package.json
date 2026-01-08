@@ -1,5 +1,5 @@
 {
-  "name": "@google/gemini-cli",
+  "name": "@codefly/codefly",
   "version": "0.24.0-nightly.20251227.37be16243",
   "engines": {
     "node": ">=20.0.0"
@@ -11,14 +11,14 @@
   "private": "true",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/google-gemini/gemini-cli.git"
+    "url": "git+https://github.com/codefly/codefly.git"
   },
   "config": {
-    "sandboxImageUri": "us-docker.pkg.dev/gemini-code-dev/gemini-cli/sandbox:0.24.0-nightly.20251227.37be16243"
+    "sandboxImageUri": "us-docker.pkg.dev/codefly-dev/codefly/sandbox:0.24.0-nightly.20251227.37be16243"
   },
   "scripts": {
     "start": "cross-env NODE_ENV=development node scripts/start.js",
-    "start:a2a-server": "CODER_AGENT_PORT=41242 npm run start --workspace @google/gemini-cli-a2a-server",
+    "start:a2a-server": "CODER_AGENT_PORT=41242 npm run start --workspace @codefly/codefly-a2a-server",
     "debug": "cross-env DEBUG=1 node --inspect-brk scripts/start.js",
     "deflake": "node scripts/deflake.js",
     "deflake:test:integration:sandbox:none": "npm run deflake -- --command=\"npm run test:integration:sandbox:none -- --retry=0\"",
@@ -27,7 +27,7 @@
     "auth:docker": "gcloud auth configure-docker us-west1-docker.pkg.dev",
     "auth": "npm run auth:npm && npm run auth:docker",
     "generate": "node scripts/generate-git-commit-info.js",
-    "predocs:settings": "npm run build --workspace @google/gemini-cli-core",
+    "predocs:settings": "npm run build --workspace @codefly/codefly-core",
     "schema:settings": "tsx ./scripts/generate-settings-schema.ts",
     "docs:settings": "tsx ./scripts/generate-settings-doc.ts",
     "docs:keybindings": "tsx ./scripts/generate-keybindings-doc.ts",
@@ -43,9 +43,9 @@
     "test:scripts": "vitest run --config ./scripts/tests/vitest.config.ts",
     "test:e2e": "cross-env VERBOSE=true KEEP_OUTPUT=true npm run test:integration:sandbox:none",
     "test:integration:all": "npm run test:integration:sandbox:none && npm run test:integration:sandbox:docker && npm run test:integration:sandbox:podman",
-    "test:integration:sandbox:none": "cross-env GEMINI_SANDBOX=false vitest run --root ./integration-tests",
-    "test:integration:sandbox:docker": "cross-env GEMINI_SANDBOX=docker npm run build:sandbox && cross-env GEMINI_SANDBOX=docker vitest run --root ./integration-tests",
-    "test:integration:sandbox:podman": "cross-env GEMINI_SANDBOX=podman vitest run --root ./integration-tests",
+    "test:integration:sandbox:none": "cross-env CODEFLY_SANDBOX=false vitest run --root ./integration-tests",
+    "test:integration:sandbox:docker": "cross-env CODEFLY_SANDBOX=docker npm run build:sandbox && cross-env CODEFLY_SANDBOX=docker vitest run --root ./integration-tests",
+    "test:integration:sandbox:podman": "cross-env CODEFLY_SANDBOX=podman vitest run --root ./integration-tests",
     "lint": "eslint . --ext .ts,.tsx && eslint integration-tests && eslint scripts",
     "lint:fix": "eslint . --fix --ext .ts,.tsx && eslint integration-tests --fix && eslint scripts --fix && npm run format",
     "lint:ci": "npm run lint:all",
@@ -69,7 +69,7 @@
     }
   },
   "bin": {
-    "gemini": "bundle/gemini.js"
+    "codefly": "bundle/codefly.js"
   },
   "files": [
     "bundle/",

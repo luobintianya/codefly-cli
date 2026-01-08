@@ -84,7 +84,7 @@ describe('OpenAICompatibleContentGenerator', () => {
     const body = JSON.parse(fetchMock.mock.calls[0][1].body);
     expect(body.messages).toEqual([{ role: 'user', content: 'Hello' }]);
 
-    expect(response.candidates?.[0]?.content.parts[0].text).toBe(
+    expect(response.candidates?.[0]?.content?.parts?.[0]?.text).toBe(
       'Hello there!',
     );
     expect(response.usageMetadata?.totalTokenCount).toBe(15);
@@ -142,13 +142,18 @@ describe('OpenAICompatibleContentGenerator', () => {
     // Chunk 2: " World"
     // Chunk 3: No content
 
-    expect(responses[0].candidates?.[0]?.content.parts[0].text).toBe('Hello');
-    expect(responses[1].candidates?.[0]?.content.parts[0].text).toBe(' World');
+    expect(responses[0]?.candidates?.[0]?.content?.parts?.[0]?.text).toBe(
+      'Hello',
+    );
+    expect(responses[1]?.candidates?.[0]?.content?.parts?.[0]?.text).toBe(
+      ' World',
+    );
   });
 
   it('should return 0 tokens for countTokens', async () => {
     const response = await generator.countTokens({
       contents: [],
+      model: 'gpt-4o',
     });
     expect(response.totalTokens).toBe(0);
   });

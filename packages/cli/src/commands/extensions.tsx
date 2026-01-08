@@ -15,7 +15,7 @@ import { linkCommand } from './extensions/link.js';
 import { newCommand } from './extensions/new.js';
 import { validateCommand } from './extensions/validate.js';
 import { settingsCommand } from './extensions/settings.js';
-import { initializeOutputListenersAndFlush } from '../gemini.js';
+import { initializeOutputListenersAndFlush } from '../codefly.js';
 
 export const extensionsCommand: CommandModule = {
   command: 'extensions <command>',

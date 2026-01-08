@@ -9,7 +9,7 @@ import { Box, Text } from 'ink';
 import { RadioButtonSelect } from './shared/RadioButtonSelect.js';
 import { theme } from '../semantic-colors.js';
 
-import { UserTierId } from '@google/gemini-cli-core';
+import { UserTierId } from '@codefly/codefly-core';
 
 interface ProQuotaDialogProps {
   failedModel: string;

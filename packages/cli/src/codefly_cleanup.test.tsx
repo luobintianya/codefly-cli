@@ -5,9 +5,9 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { main } from './gemini.js';
-import { debugLogger } from '@google/gemini-cli-core';
-import { type Config } from '@google/gemini-cli-core';
+import { main } from './codefly.js';
+import { debugLogger } from '@codefly/codefly-core';
+import { type Config } from '@codefly/codefly-core';
 
 // Custom error to identify mock process.exit calls
 class MockProcessExitError extends Error {
@@ -17,9 +17,8 @@ class MockProcessExitError extends Error {
   }
 }
 
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+vi.mock('@codefly/codefly-core', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@codefly/codefly-core')>();
   return {
     ...actual,
     writeToStdout: vi.fn(),
@@ -142,7 +141,7 @@ vi.mock('./utils/sessionCleanup.js', async (importOriginal) => {
   };
 });
 
-describe('gemini.tsx main function cleanup', () => {
+describe('codefly.tsx main function cleanup', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     process.env['GEMINI_CLI_NO_RELAUNCH'] = 'true';

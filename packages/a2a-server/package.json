@@ -1,16 +1,16 @@
 {
-  "name": "@google/gemini-cli-a2a-server",
+  "name": "@codefly/codefly-a2a-server",
   "version": "0.24.0-nightly.20251227.37be16243",
-  "description": "Gemini CLI A2A Server",
+  "description": "Codefly A2A Server",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/google-gemini/gemini-cli.git",
+    "url": "git+https://github.com/codefly/codefly.git",
     "directory": "packages/a2a-server"
   },
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "gemini-cli-a2a-server": "dist/a2a-server.mjs"
+    "codefly-a2a-server": "dist/a2a-server.mjs"
   },
   "scripts": {
     "build": "node ../../scripts/build_package.js",
@@ -27,7 +27,7 @@
   "dependencies": {
     "@a2a-js/sdk": "^0.3.7",
     "@google-cloud/storage": "^7.16.0",
-    "@google/gemini-cli-core": "file:../core",
+    "@codefly/codefly-core": "file:../core",
     "express": "^5.1.0",
     "fs-extra": "^11.3.0",
     "tar": "^7.5.2",

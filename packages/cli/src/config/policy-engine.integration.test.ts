@@ -9,14 +9,13 @@ import {
   ApprovalMode,
   PolicyDecision,
   PolicyEngine,
-} from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
 import { createPolicyEngineConfig } from './policy.js';
 import type { Settings } from './settings.js';
 
 // Mock Storage to ensure tests are hermetic and don't read from user's home directory
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+vi.mock('@codefly/codefly-core', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@codefly/codefly-core')>();
   const Storage = actual.Storage;
   // Monkey-patch static methods
   Storage.getUserPoliciesDir = () => '/non-existent/user/policies';

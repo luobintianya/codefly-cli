@@ -25,7 +25,7 @@ import type {
   Config,
   EditorType,
   AnyToolInvocation,
-} from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
 import {
   ApprovalMode,
   AuthType,
@@ -34,7 +34,7 @@ import {
   ToolConfirmationOutcome,
   tokenLimit,
   debugLogger,
-} from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
 import type { Part, PartListUnion } from '@google/genai';
 import type { UseHistoryManagerReturn } from './useHistoryManager.js';
 import type { SlashCommandProcessorResult } from '../types.js';
@@ -72,7 +72,7 @@ const MockedUserPromptEvent = vi.hoisted(() =>
 );
 const mockParseAndFormatApiError = vi.hoisted(() => vi.fn());
 
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
+vi.mock('@codefly/codefly-core', async (importOriginal) => {
   const actualCoreModule = (await importOriginal()) as any;
   return {
     ...actualCoreModule,

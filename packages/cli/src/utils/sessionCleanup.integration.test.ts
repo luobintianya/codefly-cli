@@ -11,7 +11,7 @@ import {
   SESSION_FILE_PREFIX,
   type Config,
   debugLogger,
-} from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
 
 // Create a mock config for integration testing
 function createTestConfig(): Config {

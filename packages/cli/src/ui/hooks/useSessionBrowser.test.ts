@@ -18,8 +18,8 @@ import type {
   Config,
   ConversationRecord,
   MessageRecord,
-} from '@google/gemini-cli-core';
-import { coreEvents } from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
+import { coreEvents } from '@codefly/codefly-core';
 
 // Mock modules
 vi.mock('fs/promises');

@@ -8,7 +8,8 @@ import path from 'node:path';
 import os from 'node:os';
 import * as crypto from 'node:crypto';
 
-export const GEMINI_DIR = '.gemini';
+export const CODEFLY_DIR = '.codefly';
+export const GEMINI_DIR = CODEFLY_DIR; // Backward compatibility alias
 export const GOOGLE_ACCOUNTS_FILENAME = 'google_accounts.json';
 
 /**

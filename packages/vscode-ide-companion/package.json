@@ -1,13 +1,13 @@
 {
-  "name": "gemini-cli-vscode-ide-companion",
-  "displayName": "Gemini CLI Companion",
-  "description": "Enable Gemini CLI with direct access to your IDE workspace.",
+  "name": "codefly-vscode-ide-companion",
+  "displayName": "Codefly Companion",
+  "description": "Enable Codefly with direct access to your IDE workspace.",
   "version": "0.24.0-nightly.20251227.37be16243",
   "publisher": "google",
   "icon": "assets/icon.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/google-gemini/gemini-cli.git",
+    "url": "https://github.com/codefly/codefly.git",
     "directory": "packages/vscode-ide-companion"
   },
   "engines": {
@@ -19,10 +19,7 @@
     "AI"
   ],
   "keywords": [
-    "gemini-cli",
-    "gemini cli",
-    "gemini",
-    "gemini code",
+    "codefly",
     "cli",
     "ide integration",
     "ide companion"
@@ -32,74 +29,74 @@
   ],
   "contributes": {
     "configuration": {
-      "title": "Gemini CLI",
+      "title": "Codefly",
       "properties": {
-        "gemini-cli.debug.logging.enabled": {
+        "codefly.debug.logging.enabled": {
           "type": "boolean",
           "default": false,
-          "description": "Enable detailed logging for debugging the Gemini CLI Companion."
+          "description": "Enable detailed logging for debugging the Codefly Companion."
         }
       }
     },
     "languages": [
       {
-        "id": "gemini-diff-editable"
+        "id": "codefly-diff-editable"
       }
     ],
     "commands": [
       {
-        "command": "gemini.diff.accept",
-        "title": "Gemini CLI: Accept Diff",
+        "command": "codefly.diff.accept",
+        "title": "Codefly: Accept Diff",
         "icon": "$(check)"
       },
       {
-        "command": "gemini.diff.cancel",
-        "title": "Gemini CLI: Close Diff Editor",
+        "command": "codefly.diff.cancel",
+        "title": "Codefly: Close Diff Editor",
         "icon": "$(close)"
       },
       {
-        "command": "gemini-cli.runGeminiCLI",
-        "title": "Gemini CLI: Run"
+        "command": "codefly.runCodefly",
+        "title": "Codefly: Run"
       },
       {
-        "command": "gemini-cli.showNotices",
-        "title": "Gemini CLI: View Third-Party Notices"
+        "command": "codefly.showNotices",
+        "title": "Codefly: View Third-Party Notices"
       }
     ],
     "menus": {
       "commandPalette": [
         {
-          "command": "gemini.diff.accept",
-          "when": "gemini.diff.isVisible"
+          "command": "codefly.diff.accept",
+          "when": "codefly.diff.isVisible"
         },
         {
-          "command": "gemini.diff.cancel",
-          "when": "gemini.diff.isVisible"
+          "command": "codefly.diff.cancel",
+          "when": "codefly.diff.isVisible"
         }
       ],
       "editor/title": [
         {
-          "command": "gemini.diff.accept",
-          "when": "gemini.diff.isVisible",
+          "command": "codefly.diff.accept",
+          "when": "codefly.diff.isVisible",
           "group": "navigation"
         },
         {
-          "command": "gemini.diff.cancel",
-          "when": "gemini.diff.isVisible",
+          "command": "codefly.diff.cancel",
+          "when": "codefly.diff.isVisible",
           "group": "navigation"
         }
       ]
     },
     "keybindings": [
       {
-        "command": "gemini.diff.accept",
+        "command": "codefly.diff.accept",
         "key": "ctrl+s",
-        "when": "gemini.diff.isVisible"
+        "when": "codefly.diff.isVisible"
       },
       {
-        "command": "gemini.diff.accept",
+        "command": "codefly.diff.accept",
         "key": "cmd+s",
-        "when": "gemini.diff.isVisible"
+        "when": "codefly.diff.isVisible"
       }
     ]
   },

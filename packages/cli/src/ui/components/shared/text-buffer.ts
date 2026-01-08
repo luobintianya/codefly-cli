@@ -15,7 +15,7 @@ import {
   CoreEvent,
   debugLogger,
   unescapePath,
-} from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
 import {
   toCodePoints,
   cpLen,

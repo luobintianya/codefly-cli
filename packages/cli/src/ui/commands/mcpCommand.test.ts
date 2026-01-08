@@ -13,15 +13,14 @@ import {
   getMCPServerStatus,
   getMCPDiscoveryState,
   DiscoveredMCPTool,
-} from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
 
 import type { CallableTool } from '@google/genai';
 import { Type } from '@google/genai';
 import { MessageType } from '../types.js';
 
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+vi.mock('@codefly/codefly-core', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@codefly/codefly-core')>();
   const mockAuthenticate = vi.fn();
   return {
     ...actual,

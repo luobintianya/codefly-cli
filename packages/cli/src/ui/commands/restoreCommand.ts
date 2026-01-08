@@ -14,7 +14,7 @@ import {
   getTruncatedCheckpointNames,
   performRestore,
   type ToolCallData,
-} from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
 import {
   type CommandContext,
   type SlashCommand,

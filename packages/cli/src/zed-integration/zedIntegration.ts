@@ -10,7 +10,7 @@ import type {
   ToolResult,
   ToolCallConfirmationDetails,
   FilterFilesOptions,
-} from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
 import {
   AuthType,
   logToolCall,
@@ -30,7 +30,7 @@ import {
   resolveModel,
   createWorkingStdio,
   startupProfiler,
-} from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
 import * as acp from '@agentclientprotocol/sdk';
 import { AcpFileSystemService } from './fileSystemService.js';
 import { Readable, Writable } from 'node:stream';

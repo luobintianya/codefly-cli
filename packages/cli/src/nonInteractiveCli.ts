@@ -10,7 +10,7 @@ import type {
   ResumedSessionData,
   CompletedToolCall,
   UserFeedbackPayload,
-} from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
 import { isSlashCommand } from './ui/utils/commandUtils.js';
 import type { LoadedSettings } from './config/settings.js';
 import {
@@ -29,7 +29,7 @@ import {
   createWorkingStdio,
   recordToolCallInteractions,
   ToolErrorType,
-} from '@google/gemini-cli-core';
+} from '@codefly/codefly-core';
 
 import type { Content, Part } from '@google/genai';
 import readline from 'node:readline';
