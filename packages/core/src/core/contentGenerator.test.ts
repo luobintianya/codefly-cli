@@ -18,6 +18,7 @@ import { LoggingContentGenerator } from './loggingContentGenerator.js';
 import { loadApiKey } from './apiKeyCredentialStorage.js';
 import { FakeContentGenerator } from './fakeContentGenerator.js';
 import { RecordingContentGenerator } from './recordingContentGenerator.js';
+import { OpenAICompatibleContentGenerator } from './openaiCompatibleContentGenerator.js';
 
 vi.mock('../code_assist/codeAssist.js');
 vi.mock('@google/genai');
@@ -336,6 +337,31 @@ describe('createContentGenerator', () => {
       new LoggingContentGenerator(mockGenerator.models, mockConfig),
     );
   });
+
+  it('should create an OpenAICompatibleContentGenerator for AuthType.OPENAI', async () => {
+    const mockConfigWithRecordParams = {
+      ...mockConfig, // Use the shared mock config which has getModel etc.
+      recordResponses: undefined,
+    } as unknown as Config;
+
+    const generator = await createContentGenerator(
+      {
+        authType: AuthType.OPENAI,
+        apiKey: 'test-openai-key',
+        baseUrl: 'https://api.openai.com/v1',
+        model: 'gpt-4o',
+      },
+      mockConfigWithRecordParams,
+    );
+
+    expect(generator).toBeInstanceOf(LoggingContentGenerator);
+    const loggingGenerator = generator as LoggingContentGenerator;
+    // We can't easily check the private wrapped instance type without casting to any or using a getter if available.
+    // LoggingContentGenerator has getWrapped() method.
+    expect(loggingGenerator.getWrapped()).toBeInstanceOf(
+      OpenAICompatibleContentGenerator,
+    );
+  });
 });
 
 describe('createContentGeneratorConfig', () => {
@@ -419,5 +445,40 @@ describe('createContentGeneratorConfig', () => {
     );
     expect(config.apiKey).toBeUndefined();
     expect(config.vertexai).toBeUndefined();
+  });
+
+  it('should configure for OpenAI using OPENAI_API_KEY when set', async () => {
+    vi.stubEnv('OPENAI_API_KEY', 'env-openai-key');
+    const config = await createContentGeneratorConfig(
+      mockConfig,
+      AuthType.OPENAI,
+    );
+    expect(config.apiKey).toBe('env-openai-key');
+    expect(config.baseUrl).toBe('https://api.openai.com/v1');
+    expect(config.model).toBe('gpt-4o');
+  });
+
+  it('should configure for OpenAI with custom base URL and model', async () => {
+    vi.stubEnv('OPENAI_API_KEY', 'env-openai-key');
+    vi.stubEnv('OPENAI_BASE_URL', 'https://custom.openai.com');
+    vi.stubEnv('OPENAI_MODEL', 'custom-model');
+    const config = await createContentGeneratorConfig(
+      mockConfig,
+      AuthType.OPENAI,
+    );
+    expect(config.apiKey).toBe('env-openai-key');
+    expect(config.baseUrl).toBe('https://custom.openai.com');
+    expect(config.model).toBe('custom-model');
+  });
+
+  it('should configure for Zhipu AI using ZHIPU_API_KEY when set', async () => {
+    vi.stubEnv('ZHIPU_API_KEY', 'env-zhipu-key');
+    const config = await createContentGeneratorConfig(
+      mockConfig,
+      AuthType.ZHIPU,
+    );
+    expect(config.apiKey).toBe('env-zhipu-key');
+    expect(config.baseUrl).toBe('https://open.bigmodel.cn/api/paas/v4');
+    expect(config.model).toBe('glm-4');
   });
 });
