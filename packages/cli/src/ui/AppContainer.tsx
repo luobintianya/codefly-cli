@@ -443,7 +443,9 @@ export const AppContainer = (props: AppContainerProps) => {
   });
 
   // Derive auth state variables for backward compatibility with UIStateContext
-  const isAuthDialogOpen = authState === AuthState.Updating;
+  const isAuthDialogOpen =
+    authState === AuthState.Updating ||
+    authState === AuthState.AwaitingOpenAIConfig;
   const isAuthenticating = authState === AuthState.Unauthenticated;
 
   // Session browser and resume functionality

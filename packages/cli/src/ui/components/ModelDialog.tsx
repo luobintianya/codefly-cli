@@ -10,20 +10,14 @@ import { Box, Text } from 'ink';
 import {
   PREVIEW_GEMINI_MODEL,
   PREVIEW_GEMINI_FLASH_MODEL,
-  PREVIEW_GEMINI_MODEL_AUTO,
-  DEFAULT_GEMINI_MODEL,
-  DEFAULT_GEMINI_FLASH_MODEL,
-  DEFAULT_GEMINI_FLASH_LITE_MODEL,
-  DEFAULT_GEMINI_MODEL_AUTO,
   ModelSlashCommandEvent,
   logModelSlashCommand,
-  getDisplayString,
+  AuthType,
 } from '@codefly/codefly-core';
 import { useKeypress } from '../hooks/useKeypress.js';
 import { theme } from '../semantic-colors.js';
 import { DescriptiveRadioButtonSelect } from './shared/DescriptiveRadioButtonSelect.js';
 import { ConfigContext } from '../contexts/ConfigContext.js';
-import { ThemedGradient } from './ThemedGradient.js';
 
 interface ModelDialogProps {
   onClose: () => void;
@@ -31,35 +25,39 @@ interface ModelDialogProps {
 
 export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
   const config = useContext(ConfigContext);
-  const [view, setView] = useState<'main' | 'manual'>('main');
 
   // Determine the Preferred Model (read once when the dialog opens).
-  const preferredModel = config?.getModel() || DEFAULT_GEMINI_MODEL_AUTO;
-
-  const shouldShowPreviewModels =
-    config?.getPreviewFeatures() && config.getHasAccessToPreviewModel();
-
-  const manualModelSelected = useMemo(() => {
-    const manualModels = [
-      DEFAULT_GEMINI_MODEL,
-      DEFAULT_GEMINI_FLASH_MODEL,
-      DEFAULT_GEMINI_FLASH_LITE_MODEL,
-      PREVIEW_GEMINI_MODEL,
-      PREVIEW_GEMINI_FLASH_MODEL,
-    ];
-    if (manualModels.includes(preferredModel)) {
-      return preferredModel;
-    }
-    return '';
-  }, [preferredModel]);
+  const preferredModel = config?.getModel() || PREVIEW_GEMINI_FLASH_MODEL;
+  const [showCustomInput, setShowCustomInput] = useState(false);
+  const [customModel, setCustomModel] = useState('');
 
   useKeypress(
     (key) => {
       if (key.name === 'escape') {
-        if (view === 'manual') {
-          setView('main');
+        if (showCustomInput) {
+          setShowCustomInput(false);
+          setCustomModel('');
         } else {
           onClose();
+        }
+        return;
+      }
+      if (showCustomInput) {
+        if (key.name === 'return') {
+          handleCustomModelSubmit();
+          return;
+        }
+        if (key.name === 'backspace') {
+          setCustomModel(customModel.slice(0, -1));
+          return;
+        }
+        if (key.name === 'space') {
+          setCustomModel(customModel + ' ');
+          return;
+        }
+        if (key.ctrl || key.meta) return;
+        if (key.sequence && key.sequence.length === 1) {
+          setCustomModel(customModel + key.sequence);
         }
       }
     },
@@ -67,95 +65,63 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
   );
 
   const mainOptions = useMemo(() => {
+    const authType = config?.getContentGeneratorConfig()?.authType;
+
+    // If using OpenAI or Zhipu, show provider-specific options
+    if (authType === AuthType.OPENAI || authType === AuthType.ZHIPU) {
+      const providerName = authType === AuthType.ZHIPU ? 'Zhipu AI' : 'OpenAI';
+      const currentModel = config?.getModel() || 'Not set';
+
+      return [
+        {
+          value: currentModel,
+          title: `${providerName}: ${currentModel}`,
+          description: `Currently using ${currentModel}. To change models, update your authentication settings.`,
+          key: currentModel,
+        },
+      ];
+    }
+
+    // For Gemini: Show only Gemini 3 models
     const list = [
       {
-        value: DEFAULT_GEMINI_MODEL_AUTO,
-        title: getDisplayString(DEFAULT_GEMINI_MODEL_AUTO),
-        description:
-          'Let Gemini CLI decide the best model for the task: gemini-2.5-pro, gemini-2.5-flash',
-        key: DEFAULT_GEMINI_MODEL_AUTO,
+        value: PREVIEW_GEMINI_MODEL,
+        title: 'Gemini 3 Pro',
+        description: 'High capability model for complex tasks',
+        key: PREVIEW_GEMINI_MODEL,
       },
       {
-        value: 'Manual',
-        title: manualModelSelected
-          ? `Manual (${manualModelSelected})`
-          : 'Manual',
-        description: 'Manually select a model',
-        key: 'Manual',
+        value: PREVIEW_GEMINI_FLASH_MODEL,
+        title: 'Gemini 3 Flash',
+        description: 'Fast and efficient model',
+        key: PREVIEW_GEMINI_FLASH_MODEL,
+      },
+      {
+        value: 'custom',
+        title: 'Custom Model',
+        description: 'Enter a custom model name',
+        key: 'custom',
       },
     ];
 
-    if (shouldShowPreviewModels) {
-      list.unshift({
-        value: PREVIEW_GEMINI_MODEL_AUTO,
-        title: getDisplayString(PREVIEW_GEMINI_MODEL_AUTO),
-        description:
-          'Let Gemini CLI decide the best model for the task: gemini-3-pro, gemini-3-flash',
-        key: PREVIEW_GEMINI_MODEL_AUTO,
-      });
-    }
     return list;
-  }, [shouldShowPreviewModels, manualModelSelected]);
+  }, [config]);
 
-  const manualOptions = useMemo(() => {
-    const list = [
-      {
-        value: DEFAULT_GEMINI_MODEL,
-        title: DEFAULT_GEMINI_MODEL,
-        key: DEFAULT_GEMINI_MODEL,
-      },
-      {
-        value: DEFAULT_GEMINI_FLASH_MODEL,
-        title: DEFAULT_GEMINI_FLASH_MODEL,
-        key: DEFAULT_GEMINI_FLASH_MODEL,
-      },
-      {
-        value: DEFAULT_GEMINI_FLASH_LITE_MODEL,
-        title: DEFAULT_GEMINI_FLASH_LITE_MODEL,
-        key: DEFAULT_GEMINI_FLASH_LITE_MODEL,
-      },
-    ];
-
-    if (shouldShowPreviewModels) {
-      list.unshift(
-        {
-          value: PREVIEW_GEMINI_MODEL,
-          title: PREVIEW_GEMINI_MODEL,
-          key: PREVIEW_GEMINI_MODEL,
-        },
-        {
-          value: PREVIEW_GEMINI_FLASH_MODEL,
-          title: PREVIEW_GEMINI_FLASH_MODEL,
-          key: PREVIEW_GEMINI_FLASH_MODEL,
-        },
-      );
-    }
-    return list;
-  }, [shouldShowPreviewModels]);
-
-  const options = view === 'main' ? mainOptions : manualOptions;
+  const options = mainOptions;
 
   // Calculate the initial index based on the preferred model.
   const initialIndex = useMemo(() => {
     const idx = options.findIndex((option) => option.value === preferredModel);
-    if (idx !== -1) {
-      return idx;
-    }
-    if (view === 'main') {
-      const manualIdx = options.findIndex((o) => o.value === 'Manual');
-      return manualIdx !== -1 ? manualIdx : 0;
-    }
-    return 0;
-  }, [preferredModel, options, view]);
+    return idx !== -1 ? idx : 0;
+  }, [preferredModel, options]);
 
   // Handle selection internally (Autonomous Dialog).
   const handleSelect = useCallback(
     (model: string) => {
-      if (model === 'Manual') {
-        setView('manual');
+      if (model === 'custom') {
+        setShowCustomInput(true);
         return;
       }
-
       if (config) {
         config.setModel(model);
         const event = new ModelSlashCommandEvent(model);
@@ -166,23 +132,14 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
     [config, onClose],
   );
 
-  let header;
-  let subheader;
-
-  // Do not show any header or subheader since it's already showing preview model
-  // options
-  if (shouldShowPreviewModels) {
-    header = undefined;
-    subheader = undefined;
-    // When a user has the access but has not enabled the preview features.
-  } else if (config?.getHasAccessToPreviewModel()) {
-    header = 'Gemini 3 is now available.';
-    subheader =
-      'Enable "Preview features" in /settings.\nLearn more at https://goo.gle/enable-preview-features';
-  } else {
-    header = 'Gemini 3 is coming soon.';
-    subheader = undefined;
-  }
+  const handleCustomModelSubmit = useCallback(() => {
+    if (customModel.trim() && config) {
+      config.setModel(customModel.trim());
+      const event = new ModelSlashCommandEvent(customModel.trim());
+      logModelSlashCommand(config, event);
+    }
+    onClose();
+  }, [config, onClose, customModel]);
 
   return (
     <Box
@@ -194,23 +151,25 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
     >
       <Text bold>Select Model</Text>
 
-      <Box flexDirection="column">
-        {header && (
-          <Box marginTop={1}>
-            <ThemedGradient>
-              <Text>{header}</Text>
-            </ThemedGradient>
-          </Box>
-        )}
-        {subheader && <Text>{subheader}</Text>}
-      </Box>
       <Box marginTop={1}>
-        <DescriptiveRadioButtonSelect
-          items={options}
-          onSelect={handleSelect}
-          initialIndex={initialIndex}
-          showNumbers={true}
-        />
+        {showCustomInput ? (
+          <Box flexDirection="column">
+            <Text color={theme.text.secondary}>
+              Enter custom model name (press Enter to submit, Esc to cancel):
+            </Text>
+            <Box>
+              <Text color={theme.text.primary}>{customModel}</Text>
+              <Text color={theme.text.secondary}>_</Text>
+            </Box>
+          </Box>
+        ) : (
+          <DescriptiveRadioButtonSelect
+            items={options}
+            onSelect={handleSelect}
+            initialIndex={initialIndex}
+            showNumbers={true}
+          />
+        )}
       </Box>
       <Box marginTop={1} flexDirection="column">
         <Text color={theme.text.secondary}>

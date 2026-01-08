@@ -112,17 +112,20 @@ describe('useAuth', () => {
 
       mockValidateAuthMethod.mockReturnValue('Validation Error');
       const error = validateAuthMethodWithSettings(
-        AuthType.USE_GEMINI,
+        AuthType.USE_VERTEX_AI,
         settings,
       );
       expect(error).toBe('Validation Error');
-      expect(mockValidateAuthMethod).toHaveBeenCalledWith(AuthType.USE_GEMINI);
+      expect(mockValidateAuthMethod).toHaveBeenCalledWith(
+        AuthType.USE_VERTEX_AI,
+      );
     });
   });
 
   describe('useAuthCommand', () => {
     const mockConfig = {
       refreshAuth: vi.fn(),
+      openaiConfig: {}, // Initialize to avoid undefined issues
     } as unknown as Config;
 
     const createSettings = (selectedType?: AuthType) =>
@@ -232,7 +235,7 @@ describe('useAuth', () => {
     it('should set error if validation fails', async () => {
       mockValidateAuthMethod.mockReturnValue('Validation Failed');
       const { result } = renderHook(() =>
-        useAuthCommand(createSettings(AuthType.USE_GEMINI), mockConfig),
+        useAuthCommand(createSettings(AuthType.USE_VERTEX_AI), mockConfig),
       );
 
       await waitFor(() => {
@@ -242,6 +245,7 @@ describe('useAuth', () => {
     });
 
     it('should set error if GEMINI_DEFAULT_AUTH_TYPE is invalid', async () => {
+      mockLoadApiKey.mockResolvedValue('key');
       process.env['GEMINI_DEFAULT_AUTH_TYPE'] = 'INVALID_TYPE';
       const { result } = renderHook(() =>
         useAuthCommand(createSettings(AuthType.USE_GEMINI), mockConfig),
@@ -256,6 +260,7 @@ describe('useAuth', () => {
     });
 
     it('should authenticate successfully for valid auth type', async () => {
+      mockLoadApiKey.mockResolvedValue('key');
       const { result } = renderHook(() =>
         useAuthCommand(createSettings(AuthType.USE_GEMINI), mockConfig),
       );
@@ -270,6 +275,7 @@ describe('useAuth', () => {
     });
 
     it('should handle refreshAuth failure', async () => {
+      mockLoadApiKey.mockResolvedValue('key');
       (mockConfig.refreshAuth as Mock).mockRejectedValue(
         new Error('Auth Failed'),
       );
@@ -285,7 +291,15 @@ describe('useAuth', () => {
 
     it('should sync OpenAI config checks for OpenAI auth type', async () => {
       const settings = createSettings(AuthType.OPENAI);
-      settings.merged.security.auth.openai = {
+      if (!settings.merged.security?.auth) {
+        throw new Error('Security auth settings not initialized');
+      }
+      // Type assertion needed because settings schema uses literal types as defaults
+      (settings.merged.security.auth.openai as {
+        baseUrl?: string;
+        model?: string;
+        apiKey?: string;
+      }) = {
         baseUrl: 'https://test.url',
         model: 'test-model',
         apiKey: 'test-key',
