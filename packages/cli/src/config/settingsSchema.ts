@@ -610,6 +610,27 @@ const SETTINGS_SCHEMA = {
     },
   },
 
+  privacy: {
+    type: 'object',
+    label: 'Privacy',
+    category: 'Advanced',
+    requiresRestart: true,
+    default: {},
+    description: 'Privacy settings.',
+    showInDialog: false,
+    properties: {
+      usageStatisticsEnabled: {
+        type: 'boolean',
+        label: 'Usage Statistics Enabled',
+        category: 'Advanced',
+        requiresRestart: true,
+        default: true,
+        description: 'Enable usage statistics.',
+        showInDialog: false,
+      },
+    },
+  },
+
   telemetry: {
     type: 'object',
     label: 'Telemetry',

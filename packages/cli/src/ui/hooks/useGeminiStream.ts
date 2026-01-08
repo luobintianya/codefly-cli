@@ -38,7 +38,7 @@ import {
   runInDevTraceSpan,
   EDIT_TOOL_NAMES,
   processRestorableToolCalls,
-  recordToolCallInteractions,
+  // recordToolCallInteractions,
   ToolErrorType,
 } from '@codefly/codefly-core';
 import { type Part, type PartListUnion, FinishReason } from '@google/genai';
@@ -166,10 +166,10 @@ export const useGeminiStream = (
               completedToolCallsFromScheduler,
             );
 
-          await recordToolCallInteractions(
-            config,
-            completedToolCallsFromScheduler,
-          );
+          // await recordToolCallInteractions(
+          //   config,
+          //   completedToolCallsFromScheduler,
+          // );
         } catch (error) {
           debugLogger.warn(
             `Error recording completed tool call information: ${error}`,
@@ -634,7 +634,6 @@ export const useGeminiStream = (
           text: parseAndFormatApiError(
             eventValue.error,
             config.getContentGeneratorConfig()?.authType,
-            undefined,
             config.getModel(),
             DEFAULT_GEMINI_FLASH_MODEL,
           ),
@@ -1025,7 +1024,6 @@ export const useGeminiStream = (
                     text: parseAndFormatApiError(
                       getErrorMessage(error) || 'Unknown error',
                       config.getContentGeneratorConfig()?.authType,
-                      undefined,
                       config.getModel(),
                       DEFAULT_GEMINI_FLASH_MODEL,
                     ),

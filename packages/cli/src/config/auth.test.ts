@@ -29,18 +29,6 @@ describe('validateAuthMethod', () => {
 
   it.each([
     {
-      description: 'should return null for LOGIN_WITH_GOOGLE',
-      authType: AuthType.LOGIN_WITH_GOOGLE,
-      envs: {},
-      expected: null,
-    },
-    {
-      description: 'should return null for COMPUTE_ADC',
-      authType: AuthType.COMPUTE_ADC,
-      envs: {},
-      expected: null,
-    },
-    {
       description: 'should return null for USE_GEMINI if GEMINI_API_KEY is set',
       authType: AuthType.USE_GEMINI,
       envs: { GEMINI_API_KEY: 'test-key' },

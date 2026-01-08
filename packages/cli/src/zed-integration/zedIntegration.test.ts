@@ -100,7 +100,7 @@ describe('GeminiAgent', () => {
     } as unknown as Mocked<Awaited<ReturnType<typeof loadCliConfig>>>;
     mockSettings = {
       merged: {
-        security: { auth: { selectedType: 'login_with_google' } },
+        security: { auth: { selectedType: 'use_gemini' } },
         mcpServers: {},
       },
       setValue: vi.fn(),
@@ -122,22 +122,20 @@ describe('GeminiAgent', () => {
     });
 
     expect(response.protocolVersion).toBe(acp.PROTOCOL_VERSION);
-    expect(response.authMethods).toHaveLength(3);
+    expect(response.authMethods).toHaveLength(2);
     expect(response.agentCapabilities?.loadSession).toBe(false);
   });
 
   it('should authenticate correctly', async () => {
     await agent.authenticate({
-      methodId: AuthType.LOGIN_WITH_GOOGLE,
+      methodId: AuthType.USE_GEMINI,
     });
 
-    expect(mockConfig.refreshAuth).toHaveBeenCalledWith(
-      AuthType.LOGIN_WITH_GOOGLE,
-    );
+    expect(mockConfig.refreshAuth).toHaveBeenCalledWith(AuthType.USE_GEMINI);
     expect(mockSettings.setValue).toHaveBeenCalledWith(
       SettingScope.User,
       'security.auth.selectedType',
-      AuthType.LOGIN_WITH_GOOGLE,
+      AuthType.USE_GEMINI,
     );
   });
 

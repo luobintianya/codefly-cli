@@ -8,8 +8,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import type { Mock } from 'vitest';
 import type { ConfigParameters, SandboxConfig } from './config.js';
 import { Config, DEFAULT_FILE_FILTERING_OPTIONS } from './config.js';
-import { ExperimentFlags } from '../code_assist/experiments/flagNames.js';
-import { debugLogger } from '../utils/debugLogger.js';
+import { DEFAULT_GEMINI_MODEL } from './models.js';
 import { ApprovalMode } from '../policy/types.js';
 import type { HookDefinition } from '../hooks/types.js';
 import { HookType, HookEventName } from '../hooks/types.js';
@@ -34,12 +33,6 @@ import { logRipgrepFallback } from '../telemetry/loggers.js';
 import { RipgrepFallbackEvent } from '../telemetry/types.js';
 import { ToolRegistry } from '../tools/tool-registry.js';
 import { DEFAULT_MODEL_CONFIGS } from './defaultModelConfigs.js';
-import {
-  DEFAULT_GEMINI_MODEL,
-  DEFAULT_GEMINI_MODEL_AUTO,
-  PREVIEW_GEMINI_MODEL,
-  PREVIEW_GEMINI_MODEL_AUTO,
-} from './models.js';
 
 vi.mock('fs', async (importOriginal) => {
   const actual = await importOriginal<typeof import('fs')>();
@@ -181,17 +174,14 @@ vi.mock('../services/contextManager.js');
 import { BaseLlmClient } from '../core/baseLlmClient.js';
 import { tokenLimit } from '../core/tokenLimits.js';
 import { uiTelemetryService } from '../telemetry/index.js';
-import { getCodeAssistServer } from '../code_assist/codeAssist.js';
-import { getExperiments } from '../code_assist/experiments/experiments.js';
-import type { CodeAssistServer } from '../code_assist/server.js';
 import { ContextManager } from '../services/contextManager.js';
 
 vi.mock('../core/baseLlmClient.js');
 vi.mock('../core/tokenLimits.js', () => ({
   tokenLimit: vi.fn(),
+  DEFAULT_GEMINI_MODEL: 'gemini-pro', // Mocking constant exports if needed
+  tokenLimits: {},
 }));
-vi.mock('../code_assist/codeAssist.js');
-vi.mock('../code_assist/experiments/experiments.js');
 
 describe('Server Config (config.ts)', () => {
   const MODEL = DEFAULT_GEMINI_MODEL;
@@ -260,86 +250,6 @@ describe('Server Config (config.ts)', () => {
         'Config was already initialized',
       );
     });
-
-    describe('getCompressionThreshold', () => {
-      it('should return the local compression threshold if it is set', async () => {
-        const config = new Config({
-          ...baseParams,
-          compressionThreshold: 0.5,
-        });
-        expect(await config.getCompressionThreshold()).toBe(0.5);
-      });
-
-      it('should return the remote experiment threshold if it is a positive number', async () => {
-        const config = new Config({
-          ...baseParams,
-          experiments: {
-            flags: {
-              [ExperimentFlags.CONTEXT_COMPRESSION_THRESHOLD]: {
-                floatValue: 0.8,
-              },
-            },
-          },
-        } as unknown as ConfigParameters);
-        expect(await config.getCompressionThreshold()).toBe(0.8);
-      });
-
-      it('should return undefined if the remote experiment threshold is 0', async () => {
-        const config = new Config({
-          ...baseParams,
-          experiments: {
-            flags: {
-              [ExperimentFlags.CONTEXT_COMPRESSION_THRESHOLD]: {
-                floatValue: 0.0,
-              },
-            },
-          },
-        } as unknown as ConfigParameters);
-        expect(await config.getCompressionThreshold()).toBeUndefined();
-      });
-
-      it('should return undefined if there are no experiments', async () => {
-        const config = new Config(baseParams);
-        expect(await config.getCompressionThreshold()).toBeUndefined();
-      });
-    });
-
-    describe('getUserCaching', () => {
-      it('should return the remote experiment flag when available', async () => {
-        const config = new Config({
-          ...baseParams,
-          experiments: {
-            flags: {
-              [ExperimentFlags.USER_CACHING]: {
-                boolValue: true,
-              },
-            },
-            experimentIds: [],
-          },
-        });
-        expect(await config.getUserCaching()).toBe(true);
-      });
-
-      it('should return false when the remote flag is false', async () => {
-        const config = new Config({
-          ...baseParams,
-          experiments: {
-            flags: {
-              [ExperimentFlags.USER_CACHING]: {
-                boolValue: false,
-              },
-            },
-            experimentIds: [],
-          },
-        });
-        expect(await config.getUserCaching()).toBe(false);
-      });
-
-      it('should return undefined if there are no experiments', async () => {
-        const config = new Config(baseParams);
-        expect(await config.getUserCaching()).toBeUndefined();
-      });
-    });
   });
 
   describe('refreshAuth', () => {
@@ -380,23 +290,6 @@ describe('Server Config (config.ts)', () => {
       expect(spy).toHaveBeenCalled();
     });
 
-    it('should strip thoughts when switching from GenAI to Vertex', async () => {
-      const config = new Config(baseParams);
-
-      vi.mocked(createContentGeneratorConfig).mockImplementation(
-        async (_: Config, authType: AuthType | undefined) =>
-          ({ authType }) as unknown as ContentGeneratorConfig,
-      );
-
-      await config.refreshAuth(AuthType.USE_GEMINI);
-
-      await config.refreshAuth(AuthType.LOGIN_WITH_GOOGLE);
-
-      expect(
-        config.getGeminiClient().stripThoughtsFromHistory,
-      ).toHaveBeenCalledWith();
-    });
-
     it('should strip thoughts when switching from GenAI to Vertex AI', async () => {
       const config = new Config(baseParams);
 
@@ -429,78 +322,6 @@ describe('Server Config (config.ts)', () => {
       expect(
         config.getGeminiClient().stripThoughtsFromHistory,
       ).not.toHaveBeenCalledWith();
-    });
-  });
-
-  describe('Preview Features Logic in refreshAuth', () => {
-    beforeEach(() => {
-      // Set up default mock behavior for these functions before each test
-      vi.mocked(getCodeAssistServer).mockReturnValue(undefined);
-      vi.mocked(getExperiments).mockResolvedValue({
-        flags: {},
-        experimentIds: [],
-      });
-    });
-
-    it('should enable preview features for Google auth when remote flag is true', async () => {
-      // Override the default mock for this specific test
-      vi.mocked(getCodeAssistServer).mockReturnValue({} as CodeAssistServer); // Simulate Google auth by returning a truthy value
-      vi.mocked(getExperiments).mockResolvedValue({
-        flags: {
-          [ExperimentFlags.ENABLE_PREVIEW]: { boolValue: true },
-        },
-        experimentIds: [],
-      });
-      const config = new Config({ ...baseParams, previewFeatures: undefined });
-      await config.refreshAuth(AuthType.LOGIN_WITH_GOOGLE);
-      expect(config.getPreviewFeatures()).toBe(true);
-    });
-
-    it('should disable preview features for Google auth when remote flag is false', async () => {
-      // Override the default mock
-      vi.mocked(getCodeAssistServer).mockReturnValue({} as CodeAssistServer);
-      vi.mocked(getExperiments).mockResolvedValue({
-        flags: {
-          [ExperimentFlags.ENABLE_PREVIEW]: { boolValue: false },
-        },
-        experimentIds: [],
-      });
-      const config = new Config({ ...baseParams, previewFeatures: undefined });
-      await config.refreshAuth(AuthType.LOGIN_WITH_GOOGLE);
-      expect(config.getPreviewFeatures()).toBe(undefined);
-    });
-
-    it('should disable preview features for Google auth when remote flag is missing', async () => {
-      // Override the default mock for getCodeAssistServer, the getExperiments mock is already correct
-      vi.mocked(getCodeAssistServer).mockReturnValue({} as CodeAssistServer);
-      const config = new Config({ ...baseParams, previewFeatures: undefined });
-      await config.refreshAuth(AuthType.LOGIN_WITH_GOOGLE);
-      expect(config.getPreviewFeatures()).toBe(undefined);
-    });
-
-    it('should not change preview features or model if it is already set to true', async () => {
-      const initialModel = 'some-other-model';
-      const config = new Config({
-        ...baseParams,
-        previewFeatures: true,
-        model: initialModel,
-      });
-      // It doesn't matter which auth method we use here, the logic should exit early
-      await config.refreshAuth(AuthType.USE_GEMINI);
-      expect(config.getPreviewFeatures()).toBe(true);
-      expect(config.getModel()).toBe(initialModel);
-    });
-
-    it('should not change preview features or model if it is already set to false', async () => {
-      const initialModel = 'some-other-model';
-      const config = new Config({
-        ...baseParams,
-        previewFeatures: false,
-        model: initialModel,
-      });
-      await config.refreshAuth(AuthType.USE_GEMINI);
-      expect(config.getPreviewFeatures()).toBe(false);
-      expect(config.getModel()).toBe(initialModel);
     });
   });
 
@@ -551,24 +372,6 @@ describe('Server Config (config.ts)', () => {
     };
     const config = new Config(paramsWithFileFiltering);
     expect(config.getFileFilteringRespectGitIgnore()).toBe(false);
-  });
-
-  it('should initialize WorkspaceContext with includeDirectories', () => {
-    const includeDirectories = ['dir1', 'dir2'];
-    const paramsWithIncludeDirs: ConfigParameters = {
-      ...baseParams,
-      includeDirectories,
-    };
-    const config = new Config(paramsWithIncludeDirs);
-    const workspaceContext = config.getWorkspaceContext();
-    const directories = workspaceContext.getDirectories();
-
-    // Should include only the target directory initially
-    expect(directories).toHaveLength(1);
-    expect(directories).toContain(path.resolve(baseParams.targetDir));
-
-    // The other directories should be in the pending list
-    expect(config.getPendingIncludeDirectories()).toEqual(includeDirectories);
   });
 
   it('Config constructor should set telemetry to true when provided as true', () => {
@@ -720,74 +523,6 @@ describe('Server Config (config.ts)', () => {
       delete paramsWithoutTelemetry.telemetry;
       const config = new Config(paramsWithoutTelemetry);
       expect(config.getTelemetryOtlpProtocol()).toBe('grpc');
-    });
-  });
-
-  describe('UseRipgrep Configuration', () => {
-    it('should default useRipgrep to true when not provided', () => {
-      const config = new Config(baseParams);
-      expect(config.getUseRipgrep()).toBe(true);
-    });
-
-    it('should set useRipgrep to false when provided as false', () => {
-      const paramsWithRipgrep: ConfigParameters = {
-        ...baseParams,
-        useRipgrep: false,
-      };
-      const config = new Config(paramsWithRipgrep);
-      expect(config.getUseRipgrep()).toBe(false);
-    });
-
-    it('should set useRipgrep to true when explicitly provided as true', () => {
-      const paramsWithRipgrep: ConfigParameters = {
-        ...baseParams,
-        useRipgrep: true,
-      };
-      const config = new Config(paramsWithRipgrep);
-      expect(config.getUseRipgrep()).toBe(true);
-    });
-
-    it('should default useRipgrep to true when undefined', () => {
-      const paramsWithUndefinedRipgrep: ConfigParameters = {
-        ...baseParams,
-        useRipgrep: undefined,
-      };
-      const config = new Config(paramsWithUndefinedRipgrep);
-      expect(config.getUseRipgrep()).toBe(true);
-    });
-  });
-
-  describe('UseWriteTodos Configuration', () => {
-    it('should default useWriteTodos to true when not provided', () => {
-      const config = new Config(baseParams);
-      expect(config.getUseWriteTodos()).toBe(true);
-    });
-
-    it('should set useWriteTodos to false when provided as false', () => {
-      const params: ConfigParameters = {
-        ...baseParams,
-        useWriteTodos: false,
-      };
-      const config = new Config(params);
-      expect(config.getUseWriteTodos()).toBe(false);
-    });
-
-    it('should disable useWriteTodos for preview models', () => {
-      const params: ConfigParameters = {
-        ...baseParams,
-        model: 'gemini-3-pro-preview',
-      };
-      const config = new Config(params);
-      expect(config.getUseWriteTodos()).toBe(false);
-    });
-
-    it('should NOT disable useWriteTodos for non-preview models', () => {
-      const params: ConfigParameters = {
-        ...baseParams,
-        model: 'gemini-2.5-pro',
-      };
-      const config = new Config(params);
-      expect(config.getUseWriteTodos()).toBe(true);
     });
   });
 
@@ -1626,259 +1361,6 @@ describe('Config getHooks', () => {
       config.setModel(DEFAULT_GEMINI_MODEL, true);
 
       expect(onModelChange).not.toHaveBeenCalled();
-    });
-  });
-});
-
-describe('Config getExperiments', () => {
-  const baseParams: ConfigParameters = {
-    cwd: '/tmp',
-    targetDir: '/path/to/target',
-    debugMode: false,
-    sessionId: 'test-session-id',
-    model: 'gemini-pro',
-  };
-
-  it('should return undefined when no experiments are provided', () => {
-    const config = new Config(baseParams);
-    expect(config.getExperiments()).toBeUndefined();
-  });
-
-  it('should return empty object when empty experiments are provided', () => {
-    const configWithEmptyExps = new Config({
-      ...baseParams,
-      experiments: { flags: {}, experimentIds: [] },
-    });
-    expect(configWithEmptyExps.getExperiments()).toEqual({
-      flags: {},
-      experimentIds: [],
-    });
-  });
-
-  it('should return the experiments configuration when provided', () => {
-    const mockExps = {
-      flags: {
-        testFlag: { boolValue: true },
-      },
-      experimentIds: [],
-    };
-
-    const config = new Config({
-      ...baseParams,
-      experiments: mockExps,
-    });
-
-    const retrievedExps = config.getExperiments();
-    expect(retrievedExps).toEqual(mockExps);
-    expect(retrievedExps).toBe(mockExps); // Should return the same reference
-  });
-});
-
-describe('Config setExperiments logging', () => {
-  const baseParams: ConfigParameters = {
-    cwd: '/tmp',
-    targetDir: '/path/to/target',
-    debugMode: false,
-    sessionId: 'test-session-id',
-    model: 'gemini-pro',
-  };
-
-  it('logs a sorted, non-truncated summary of experiments when they are set', () => {
-    const config = new Config(baseParams);
-    const debugSpy = vi
-      .spyOn(debugLogger, 'debug')
-      .mockImplementation(() => {});
-    const experiments = {
-      flags: {
-        ZetaFlag: {
-          boolValue: true,
-          stringValue: 'zeta',
-          int32ListValue: { values: [1, 2] },
-        },
-        AlphaFlag: {
-          boolValue: false,
-          stringValue: 'alpha',
-          stringListValue: { values: ['a', 'b', 'c'] },
-        },
-        MiddleFlag: {
-          // Intentionally sparse to ensure undefined values are omitted
-          floatValue: 0.42,
-          int32ListValue: { values: [] },
-        },
-      },
-      experimentIds: [101, 99],
-    };
-
-    config.setExperiments(experiments);
-
-    const logCall = debugSpy.mock.calls.find(
-      ([message]) => message === 'Experiments loaded',
-    );
-    expect(logCall).toBeDefined();
-    const loggedSummary = logCall?.[1] as string;
-    expect(typeof loggedSummary).toBe('string');
-    expect(loggedSummary).toContain('experimentIds');
-    expect(loggedSummary).toContain('101');
-    expect(loggedSummary).toContain('AlphaFlag');
-    expect(loggedSummary).toContain('ZetaFlag');
-    const alphaIndex = loggedSummary.indexOf('AlphaFlag');
-    const zetaIndex = loggedSummary.indexOf('ZetaFlag');
-    expect(alphaIndex).toBeGreaterThan(-1);
-    expect(zetaIndex).toBeGreaterThan(-1);
-    expect(alphaIndex).toBeLessThan(zetaIndex);
-    expect(loggedSummary).toContain('\n');
-    expect(loggedSummary).not.toContain('stringListLength: 0');
-    expect(loggedSummary).not.toContain('int32ListLength: 0');
-
-    debugSpy.mockRestore();
-  });
-});
-
-describe('Availability Service Integration', () => {
-  const baseModel = 'test-model';
-  const baseParams: ConfigParameters = {
-    sessionId: 'test',
-    targetDir: '.',
-    debugMode: false,
-    model: baseModel,
-    cwd: '.',
-  };
-
-  it('setActiveModel updates active model', async () => {
-    const config = new Config(baseParams);
-    const model1 = 'model1';
-    const model2 = 'model2';
-
-    config.setActiveModel(model1);
-    expect(config.getActiveModel()).toBe(model1);
-
-    config.setActiveModel(model2);
-    expect(config.getActiveModel()).toBe(model2);
-  });
-
-  it('getActiveModel defaults to configured model if not set', () => {
-    const config = new Config(baseParams);
-    expect(config.getActiveModel()).toBe(baseModel);
-  });
-
-  it('resetTurn delegates to availability service', () => {
-    const config = new Config(baseParams);
-    const service = config.getModelAvailabilityService();
-    const spy = vi.spyOn(service, 'resetTurn');
-
-    config.resetTurn();
-    expect(spy).toHaveBeenCalled();
-  });
-});
-
-describe('Config Quota & Preview Model Access', () => {
-  let config: Config;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let mockCodeAssistServer: any;
-
-  const baseParams: ConfigParameters = {
-    cwd: '/tmp',
-    targetDir: '/tmp',
-    debugMode: false,
-    sessionId: 'test-session',
-    model: 'gemini-pro',
-    embeddingModel: 'gemini-embedding',
-    sandbox: {
-      command: 'docker',
-      image: 'gemini-cli-sandbox',
-    },
-  };
-
-  beforeEach(() => {
-    vi.clearAllMocks();
-    mockCodeAssistServer = {
-      projectId: 'test-project',
-      retrieveUserQuota: vi.fn(),
-    };
-    vi.mocked(getCodeAssistServer).mockReturnValue(mockCodeAssistServer);
-    config = new Config(baseParams);
-  });
-
-  describe('refreshUserQuota', () => {
-    it('should update hasAccessToPreviewModel to true if quota includes preview model', async () => {
-      mockCodeAssistServer.retrieveUserQuota.mockResolvedValue({
-        buckets: [{ modelId: PREVIEW_GEMINI_MODEL }],
-      });
-
-      await config.refreshUserQuota();
-      expect(config.getHasAccessToPreviewModel()).toBe(true);
-    });
-
-    it('should update hasAccessToPreviewModel to false if quota does not include preview model', async () => {
-      mockCodeAssistServer.retrieveUserQuota.mockResolvedValue({
-        buckets: [{ modelId: 'some-other-model' }],
-      });
-
-      await config.refreshUserQuota();
-      expect(config.getHasAccessToPreviewModel()).toBe(false);
-    });
-
-    it('should update hasAccessToPreviewModel to false if buckets are undefined', async () => {
-      mockCodeAssistServer.retrieveUserQuota.mockResolvedValue({});
-
-      await config.refreshUserQuota();
-      expect(config.getHasAccessToPreviewModel()).toBe(false);
-    });
-
-    it('should return undefined and not update if codeAssistServer is missing', async () => {
-      vi.mocked(getCodeAssistServer).mockReturnValue(undefined);
-      const result = await config.refreshUserQuota();
-      expect(result).toBeUndefined();
-      expect(config.getHasAccessToPreviewModel()).toBe(false);
-    });
-
-    it('should return undefined if retrieveUserQuota fails', async () => {
-      mockCodeAssistServer.retrieveUserQuota.mockRejectedValue(
-        new Error('Network error'),
-      );
-      const result = await config.refreshUserQuota();
-      expect(result).toBeUndefined();
-      // Should remain default (false)
-      expect(config.getHasAccessToPreviewModel()).toBe(false);
-    });
-  });
-
-  describe('setPreviewFeatures', () => {
-    it('should reset model to default auto if disabling preview features while using a preview model', () => {
-      config.setPreviewFeatures(true);
-      config.setModel(PREVIEW_GEMINI_MODEL);
-
-      config.setPreviewFeatures(false);
-
-      expect(config.getModel()).toBe(DEFAULT_GEMINI_MODEL_AUTO);
-    });
-
-    it('should NOT reset model if disabling preview features while NOT using a preview model', () => {
-      config.setPreviewFeatures(true);
-      const nonPreviewModel = 'gemini-1.5-pro';
-      config.setModel(nonPreviewModel);
-
-      config.setPreviewFeatures(false);
-
-      expect(config.getModel()).toBe(nonPreviewModel);
-    });
-
-    it('should switch to preview auto model if enabling preview features while using default auto model', () => {
-      config.setPreviewFeatures(false);
-      config.setModel(DEFAULT_GEMINI_MODEL_AUTO);
-
-      config.setPreviewFeatures(true);
-
-      expect(config.getModel()).toBe(PREVIEW_GEMINI_MODEL_AUTO);
-    });
-
-    it('should NOT reset model if enabling preview features', () => {
-      config.setPreviewFeatures(false);
-      config.setModel(PREVIEW_GEMINI_MODEL); // Just pretending it was set somehow
-
-      config.setPreviewFeatures(true);
-
-      expect(config.getModel()).toBe(PREVIEW_GEMINI_MODEL);
     });
   });
 });

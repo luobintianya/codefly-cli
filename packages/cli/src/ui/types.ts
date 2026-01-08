@@ -12,7 +12,6 @@ import type {
   ToolCallConfirmationDetails,
   ToolConfirmationOutcome,
   ToolResultDisplay,
-  RetrieveUserQuotaResponse,
   SkillDefinition,
 } from '@codefly/codefly-core';
 import type { PartListUnion } from '@google/genai';
@@ -144,7 +143,6 @@ export type HistoryItemHelp = HistoryItemBase & {
 export type HistoryItemStats = HistoryItemBase & {
   type: 'stats';
   duration: string;
-  quotas?: RetrieveUserQuotaResponse;
 };
 
 export type HistoryItemModelStats = HistoryItemBase & {

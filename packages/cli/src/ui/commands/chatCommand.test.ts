@@ -67,7 +67,7 @@ describe('chatCommand', () => {
             getProjectTempDir: () => '/project/root/.gemini/tmp/mockhash',
           },
           getContentGeneratorConfig: () => ({
-            authType: AuthType.LOGIN_WITH_GOOGLE,
+            authType: AuthType.USE_VERTEX_AI,
           }),
         },
         logger: {
@@ -216,7 +216,7 @@ describe('chatCommand', () => {
 
       expect(mockCheckpointExists).not.toHaveBeenCalled(); // Should skip existence check
       expect(mockSaveCheckpoint).toHaveBeenCalledWith(
-        { history, authType: AuthType.LOGIN_WITH_GOOGLE },
+        { history, authType: AuthType.USE_VERTEX_AI },
         tag,
       );
       expect(result).toEqual({
@@ -266,7 +266,7 @@ describe('chatCommand', () => {
       ];
       mockLoadCheckpoint.mockResolvedValue({
         history: conversation,
-        authType: AuthType.LOGIN_WITH_GOOGLE,
+        authType: AuthType.USE_VERTEX_AI,
       });
 
       const result = await resumeCommand?.action?.(mockContext, goodTag);
@@ -297,7 +297,7 @@ describe('chatCommand', () => {
       expect(result).toEqual({
         type: 'message',
         messageType: 'error',
-        content: `Cannot resume chat. It was saved with a different authentication method (${AuthType.USE_GEMINI}) than the current one (${AuthType.LOGIN_WITH_GOOGLE}).`,
+        content: `Cannot resume chat. It was saved with a different authentication method (${AuthType.USE_GEMINI}) than the current one (${AuthType.USE_VERTEX_AI}).`,
       });
     });
 

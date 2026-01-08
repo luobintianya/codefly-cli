@@ -35,7 +35,7 @@ export async function loadConfig(
   taskId: string,
 ): Promise<Config> {
   const workspaceDir = process.cwd();
-  const adcFilePath = process.env['GOOGLE_APPLICATION_CREDENTIALS'];
+  // const adcFilePath = process.env['GOOGLE_APPLICATION_CREDENTIALS'];
 
   const configParams: ConfigParameters = {
     sessionId: taskId,
@@ -100,21 +100,10 @@ export async function loadConfig(
   startupProfiler.flush(config);
 
   if (process.env['USE_CCPA']) {
-    logger.info('[Config] Using CCPA Auth:');
-    try {
-      if (adcFilePath) {
-        path.resolve(adcFilePath);
-      }
-    } catch (e) {
-      logger.error(
-        `[Config] USE_CCPA env var is true but unable to resolve GOOGLE_APPLICATION_CREDENTIALS file path ${adcFilePath}. Error ${e}`,
-      );
-    }
-    await config.refreshAuth(AuthType.LOGIN_WITH_GOOGLE);
-    logger.info(
-      `[Config] GOOGLE_CLOUD_PROJECT: ${process.env['GOOGLE_CLOUD_PROJECT']}`,
-    );
-  } else if (process.env['GEMINI_API_KEY']) {
+    logger.warn('[Config] USE_CCPA is not supported anymore.');
+  }
+
+  if (process.env['GEMINI_API_KEY']) {
     logger.info('[Config] Using Gemini API Key');
     await config.refreshAuth(AuthType.USE_GEMINI);
   } else {

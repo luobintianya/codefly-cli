@@ -34,8 +34,6 @@ import {
 import { parse } from 'shell-quote';
 import type { Config, MCPServerConfig } from '../config/config.js';
 import { AuthProviderType } from '../config/config.js';
-import { GoogleCredentialProvider } from '../mcp/google-auth-provider.js';
-import { ServiceAccountImpersonationProvider } from '../mcp/sa-impersonation-provider.js';
 import { DiscoveredMCPTool } from './mcp-tool.js';
 
 import type { CallableTool, FunctionCall, Part, Tool } from '@google/genai';
@@ -653,19 +651,9 @@ function createTransportRequestInit(
  * @param mcpServerConfig The MCP server configuration
  */
 function createAuthProvider(
-  mcpServerConfig: MCPServerConfig,
+  _mcpServerConfig: MCPServerConfig,
 ): McpAuthProvider | undefined {
-  if (
-    mcpServerConfig.authProviderType ===
-    AuthProviderType.SERVICE_ACCOUNT_IMPERSONATION
-  ) {
-    return new ServiceAccountImpersonationProvider(mcpServerConfig);
-  }
-  if (
-    mcpServerConfig.authProviderType === AuthProviderType.GOOGLE_CREDENTIALS
-  ) {
-    return new GoogleCredentialProvider(mcpServerConfig);
-  }
+  // Google auth providers removed with Google login functionality
   return undefined;
 }
 

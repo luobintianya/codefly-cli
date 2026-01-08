@@ -29,9 +29,11 @@ import { TelemetryTarget } from './index.js';
 
 import * as os from 'node:os';
 import * as path from 'node:path';
-
-import { authEvents } from '../code_assist/oauth2.js';
+import { EventEmitter } from 'node:events';
 import { debugLogger } from '../utils/debugLogger.js';
+
+// Mock authEvents since code_assist/oauth2.js no longer exists
+const authEvents = new EventEmitter();
 
 vi.mock('@opentelemetry/exporter-trace-otlp-grpc');
 vi.mock('@opentelemetry/exporter-logs-otlp-grpc');

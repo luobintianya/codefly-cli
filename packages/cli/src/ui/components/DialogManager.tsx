@@ -62,7 +62,6 @@ export const DialogManager = ({
         isTerminalQuotaError={uiState.proQuotaRequest.isTerminalQuotaError}
         isModelNotFoundError={!!uiState.proQuotaRequest.isModelNotFoundError}
         onChoice={uiActions.handleProQuotaChoice}
-        userTier={uiState.userTier}
       />
     );
   }
@@ -179,7 +178,6 @@ export const DialogManager = ({
     return (
       <Box flexDirection="column">
         <AuthDialog
-          config={config}
           settings={settings}
           setAuthState={uiActions.setAuthState}
           authError={uiState.authError}

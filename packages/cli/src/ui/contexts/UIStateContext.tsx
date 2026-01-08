@@ -20,7 +20,6 @@ import type { TextBuffer } from '../components/shared/text-buffer.js';
 import type {
   IdeContext,
   ApprovalMode,
-  UserTierId,
   IdeInfo,
   FallbackIntent,
 } from '@codefly/codefly-core';
@@ -100,7 +99,6 @@ export interface UIState {
   queueErrorMessage: string | null;
   showAutoAcceptIndicator: ApprovalMode;
   // Quota-related state
-  userTier: UserTierId | undefined;
   proQuotaRequest: ProQuotaDialogRequest | null;
   currentModel: string;
   contextFileNames: string[];

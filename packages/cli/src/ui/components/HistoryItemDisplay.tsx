@@ -117,10 +117,7 @@ export const HistoryItemDisplay: React.FC<HistoryItemDisplayProps> = ({
         <Help commands={commands} />
       )}
       {itemForDisplay.type === 'stats' && (
-        <StatsDisplay
-          duration={itemForDisplay.duration}
-          quotas={itemForDisplay.quotas}
-        />
+        <StatsDisplay duration={itemForDisplay.duration} />
       )}
       {itemForDisplay.type === 'model_stats' && <ModelStatsDisplay />}
       {itemForDisplay.type === 'tool_stats' && <ToolStatsDisplay />}

@@ -5,6 +5,7 @@
  */
 
 export * from './src/index.js';
+export * from './src/core/apiKeyCredentialStorage.js';
 export { Storage } from './src/config/storage.js';
 export {
   DEFAULT_GEMINI_MODEL,
@@ -46,6 +47,4 @@ export { logModelSlashCommand } from './src/telemetry/loggers.js';
 export { KeychainTokenStorage } from './src/mcp/token-storage/keychain-token-storage.js';
 export * from './src/utils/googleQuotaErrors.js';
 export type { GoogleApiError } from './src/utils/googleErrors.js';
-export { getCodeAssistServer } from './src/code_assist/codeAssist.js';
-export { getExperiments } from './src/code_assist/experiments/experiments.js';
 export { getErrorStatus, ModelNotFoundError } from './src/utils/httpErrors.js';

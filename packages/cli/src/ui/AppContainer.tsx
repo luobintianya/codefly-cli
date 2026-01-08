@@ -33,14 +33,12 @@ import {
   type Config,
   type IdeInfo,
   type IdeContext,
-  type UserTierId,
   type UserFeedbackPayload,
   IdeClient,
   ideContextStore,
   getErrorMessage,
   getAllGeminiMdFilenames,
   AuthType,
-  clearCachedCredentialFile,
   type ResumedSessionData,
   recordExitFail,
   ShellExecutionService,
@@ -50,7 +48,6 @@ import {
   CoreEvent,
   refreshServerHierarchicalMemory,
   type MemoryChangedPayload,
-  writeToStdout,
   disableMouseEvents,
   enterAlternateScreen,
   enableMouseEvents,
@@ -102,7 +99,6 @@ import { appEvents, AppEvent } from '../utils/events.js';
 import { type UpdateObject } from './utils/updateCheck.js';
 import { setUpdateHandler } from '../utils/handleAutoUpdate.js';
 import { registerCleanup, runExitCleanup } from '../utils/cleanup.js';
-import { RELAUNCH_EXIT_CODE } from '../utils/processUtils.js';
 import type { SessionInfo } from '../utils/sessionUtils.js';
 import { useMessageQueue } from './hooks/useMessageQueue.js';
 import { useAutoAcceptIndicator } from './hooks/useAutoAcceptIndicator.js';
@@ -255,7 +251,7 @@ export const AppContainer = (props: AppContainerProps) => {
 
   const [currentModel, setCurrentModel] = useState(config.getModel());
 
-  const [userTier, setUserTier] = useState<UserTierId | undefined>(undefined);
+  // const [userTier, setUserTier] = useState<UserTierId | undefined>(undefined);
 
   const [isConfigInitialized, setConfigInitialized] = useState(false);
 
@@ -443,7 +439,6 @@ export const AppContainer = (props: AppContainerProps) => {
   const { proQuotaRequest, handleProQuotaChoice } = useQuotaAndFallback({
     config,
     historyManager,
-    userTier,
     setModelSwitchedFromQuotaError,
   });
 
@@ -482,7 +477,7 @@ export const AppContainer = (props: AppContainerProps) => {
   const handleAuthSelect = useCallback(
     async (authType: AuthType | undefined, scope: LoadableSettingScope) => {
       if (authType) {
-        await clearCachedCredentialFile();
+        // await clearCachedCredentialFile();
         settings.setValue(scope, 'security.auth.selectedType', authType);
 
         try {
@@ -494,21 +489,7 @@ export const AppContainer = (props: AppContainerProps) => {
           );
           return;
         }
-
-        if (
-          authType === AuthType.LOGIN_WITH_GOOGLE &&
-          config.isBrowserLaunchSuppressed()
-        ) {
-          await runExitCleanup();
-          writeToStdout(`
-----------------------------------------------------------------
-Logging in with Google... Restarting Gemini CLI to continue.
-----------------------------------------------------------------
-          `);
-          process.exit(RELAUNCH_EXIT_CODE);
-        }
       }
-      setAuthState(AuthState.Authenticated);
     },
     [settings, config, setAuthState, onAuthError],
   );
@@ -545,9 +526,9 @@ Logging in with Google... Restarting Gemini CLI to continue.
   // Sync user tier from config when authentication changes
   useEffect(() => {
     // Only sync when not currently authenticating
-    if (authState === AuthState.Authenticated) {
-      setUserTier(config.getUserTier());
-    }
+    // if (authState === AuthState.Authenticated) {
+    //   setUserTier(config.getUserTier());
+    // }
   }, [config, authState]);
 
   // Check for enforced auth type mismatch
@@ -1488,7 +1469,7 @@ Logging in with Google... Restarting Gemini CLI to continue.
       queueErrorMessage,
       showAutoAcceptIndicator,
       currentModel,
-      userTier,
+
       proQuotaRequest,
       contextFileNames,
       errorCount,
@@ -1576,7 +1557,7 @@ Logging in with Google... Restarting Gemini CLI to continue.
       messageQueue,
       queueErrorMessage,
       showAutoAcceptIndicator,
-      userTier,
+
       proQuotaRequest,
       contextFileNames,
       errorCount,

@@ -10,7 +10,7 @@ import type {
   LogoutActionReturn,
 } from './types.js';
 import { CommandKind } from './types.js';
-import { clearCachedCredentialFile } from '@codefly/codefly-core';
+// import { clearCachedCredentialFile } from '@codefly/codefly-core';
 import { SettingScope } from '../../config/settings.js';
 
 const authLoginCommand: SlashCommand = {
@@ -29,7 +29,7 @@ const authLogoutCommand: SlashCommand = {
   description: 'Log out and clear all cached credentials',
   kind: CommandKind.BUILT_IN,
   action: async (context, _args): Promise<LogoutActionReturn> => {
-    await clearCachedCredentialFile();
+    // await clearCachedCredentialFile();
     // Clear the selected auth type so user sees the auth selection menu
     context.services.settings.setValue(
       SettingScope.User,

@@ -9,10 +9,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { StatsDisplay } from './StatsDisplay.js';
 import * as SessionContext from '../contexts/SessionContext.js';
 import type { SessionMetrics } from '../contexts/SessionContext.js';
-import {
-  ToolCallDecision,
-  type RetrieveUserQuotaResponse,
-} from '@codefly/codefly-core';
+import { ToolCallDecision } from '@codefly/codefly-core';
 
 // Mock the context to provide controlled data for testing
 vi.mock('../contexts/SessionContext.js', async (importOriginal) => {
@@ -388,114 +385,6 @@ describe('<StatsDisplay />', () => {
       expect(output).toContain('Agent powering down. Goodbye!');
       expect(output).not.toContain('Session Stats');
       expect(output).toMatchSnapshot();
-    });
-  });
-
-  describe('Quota Display', () => {
-    it('renders quota information when quotas are provided', () => {
-      const now = new Date('2025-01-01T12:00:00Z');
-      vi.useFakeTimers();
-      vi.setSystemTime(now);
-
-      const metrics = createTestMetrics({
-        models: {
-          'gemini-2.5-pro': {
-            api: { totalRequests: 1, totalErrors: 0, totalLatencyMs: 100 },
-            tokens: {
-              input: 50,
-              prompt: 100,
-              candidates: 100,
-              total: 250,
-              cached: 50,
-              thoughts: 0,
-              tool: 0,
-            },
-          },
-        },
-      });
-
-      const resetTime = new Date(now.getTime() + 1000 * 60 * 90).toISOString(); // 1 hour 30 minutes from now
-
-      const quotas: RetrieveUserQuotaResponse = {
-        buckets: [
-          {
-            modelId: 'gemini-2.5-pro',
-            remainingFraction: 0.75,
-            resetTime,
-          },
-        ],
-      };
-
-      useSessionStatsMock.mockReturnValue({
-        stats: {
-          sessionId: 'test-session-id',
-          sessionStartTime: new Date(),
-          metrics,
-          lastPromptTokenCount: 0,
-          promptCount: 5,
-        },
-
-        getPromptCount: () => 5,
-        startNewPrompt: vi.fn(),
-      });
-
-      const { lastFrame } = render(
-        <StatsDisplay duration="1s" quotas={quotas} />,
-      );
-      const output = lastFrame();
-
-      expect(output).toContain('Usage left');
-      expect(output).toContain('75.0%');
-      expect(output).toContain('(Resets in 1h 30m)');
-      expect(output).toMatchSnapshot();
-
-      vi.useRealTimers();
-    });
-
-    it('renders quota information for unused models', () => {
-      const now = new Date('2025-01-01T12:00:00Z');
-      vi.useFakeTimers();
-      vi.setSystemTime(now);
-
-      // No models in metrics, but a quota for gemini-2.5-flash
-      const metrics = createTestMetrics();
-
-      const resetTime = new Date(now.getTime() + 1000 * 60 * 120).toISOString(); // 2 hours from now
-
-      const quotas: RetrieveUserQuotaResponse = {
-        buckets: [
-          {
-            modelId: 'gemini-2.5-flash',
-            remainingFraction: 0.5,
-            resetTime,
-          },
-        ],
-      };
-
-      useSessionStatsMock.mockReturnValue({
-        stats: {
-          sessionId: 'test-session-id',
-          sessionStartTime: new Date(),
-          metrics,
-          lastPromptTokenCount: 0,
-          promptCount: 5,
-        },
-        getPromptCount: () => 5,
-        startNewPrompt: vi.fn(),
-      });
-
-      const { lastFrame } = render(
-        <StatsDisplay duration="1s" quotas={quotas} />,
-      );
-      const output = lastFrame();
-
-      expect(output).toContain('gemini-2.5-flash');
-      expect(output).toContain('-'); // for requests
-      expect(output).toContain('50.0%');
-      expect(output).toContain('(Resets in 2h)');
-      expect(output).toMatchSnapshot();
-
-      vi.useRealTimers();
     });
   });
 });

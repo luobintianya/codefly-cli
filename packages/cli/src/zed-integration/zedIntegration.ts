@@ -16,7 +16,7 @@ import {
   logToolCall,
   convertToFunctionResponse,
   ToolConfirmationOutcome,
-  clearCachedCredentialFile,
+  // clearCachedCredentialFile,
   isNodeError,
   getErrorMessage,
   isWithinRoot,
@@ -77,11 +77,11 @@ export class GeminiAgent {
   ): Promise<acp.InitializeResponse> {
     this.clientCapabilities = args.clientCapabilities;
     const authMethods = [
-      {
-        id: AuthType.LOGIN_WITH_GOOGLE,
-        name: 'Log in with Google',
-        description: null,
-      },
+      // {
+      //   id: AuthType.LOGIN_WITH_GOOGLE,
+      //   name: 'Log in with Google',
+      //   description: null,
+      // },
       {
         id: AuthType.USE_GEMINI,
         name: 'Use Gemini API key',
@@ -115,12 +115,11 @@ export class GeminiAgent {
 
   async authenticate({ methodId }: acp.AuthenticateRequest): Promise<void> {
     const method = z.nativeEnum(AuthType).parse(methodId);
-    const selectedAuthType = this.settings.merged.security?.auth?.selectedType;
 
     // Only clear credentials when switching to a different auth method
-    if (selectedAuthType && selectedAuthType !== method) {
-      await clearCachedCredentialFile();
-    }
+    // if (selectedAuthType && selectedAuthType !== method) {
+    //   await clearCachedCredentialFile();
+    // }
 
     // Refresh auth with the requested method
     // This will reuse existing credentials if they're valid,

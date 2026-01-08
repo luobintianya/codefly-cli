@@ -5,7 +5,6 @@
  */
 
 import * as path from 'node:path';
-import { inspect } from 'node:util';
 import process from 'node:process';
 import type {
   ContentGenerator,
@@ -51,7 +50,6 @@ import {
   DEFAULT_GEMINI_MODEL_AUTO,
   DEFAULT_THINKING_MODE,
   isPreviewModel,
-  PREVIEW_GEMINI_MODEL,
   PREVIEW_GEMINI_MODEL_AUTO,
 } from './models.js';
 import { shouldAttemptBrowserLaunch } from '../utils/browser.js';
@@ -86,20 +84,13 @@ import { MessageBus } from '../confirmation-bus/message-bus.js';
 import { PolicyEngine } from '../policy/policy-engine.js';
 import type { PolicyEngineConfig } from '../policy/types.js';
 import { HookSystem } from '../hooks/index.js';
-import type { UserTierId } from '../code_assist/types.js';
-import type { RetrieveUserQuotaResponse } from '../code_assist/types.js';
-import { getCodeAssistServer } from '../code_assist/codeAssist.js';
-import type { Experiments } from '../code_assist/experiments/experiments.js';
 import { AgentRegistry } from '../agents/registry.js';
 import { setGlobalProxy } from '../utils/fetch.js';
 import { DelegateToAgentTool } from '../agents/delegate-to-agent-tool.js';
 import { DELEGATE_TO_AGENT_TOOL_NAME } from '../tools/tool-names.js';
-import { getExperiments } from '../code_assist/experiments/experiments.js';
-import { ExperimentFlags } from '../code_assist/experiments/flagNames.js';
-import { debugLogger } from '../utils/debugLogger.js';
+
 import { SkillManager } from '../skills/skillManager.js';
 import { startupProfiler } from '../telemetry/startupProfiler.js';
-
 import { ApprovalMode } from '../policy/types.js';
 
 export interface AccessibilitySettings {
@@ -343,7 +334,6 @@ export interface ConfigParameters {
   disableYoloMode?: boolean;
   modelConfigServiceConfig?: ModelConfigServiceConfig;
   enableHooks?: boolean;
-  experiments?: Experiments;
   hooks?: { [K in HookEventName]?: HookDefinition[] } & { disabled?: string[] };
   projectHooks?: { [K in HookEventName]?: HookDefinition[] } & {
     disabled?: string[];
@@ -472,8 +462,6 @@ export class Config {
     | ({ [K in HookEventName]?: HookDefinition[] } & { disabled?: string[] })
     | undefined;
   private readonly disabledHooks: string[];
-  private experiments: Experiments | undefined;
-  private experimentsPromise: Promise<void> | undefined;
   private hookSystem?: HookSystem;
   private readonly onModelChange: ((model: string) => void) | undefined;
 
@@ -637,7 +625,6 @@ export class Config {
     this.disableYoloMode = params.disableYoloMode ?? false;
     this.hooks = params.hooks;
     this.projectHooks = params.projectHooks;
-    this.experiments = params.experiments;
     this.onModelChange = params.onModelChange;
 
     if (params.contextFileName) {
@@ -645,8 +632,7 @@ export class Config {
     }
 
     if (this.telemetrySettings.enabled) {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      initializeTelemetry(this);
+      void initializeTelemetry(this);
     }
 
     const proxy = this.getProxy();
@@ -790,33 +776,6 @@ export class Config {
     // Initialize BaseLlmClient now that the ContentGenerator is available
     this.baseLlmClient = new BaseLlmClient(this.contentGenerator, this);
 
-    const codeAssistServer = getCodeAssistServer(this);
-    if (codeAssistServer) {
-      if (codeAssistServer.projectId) {
-        await this.refreshUserQuota();
-      }
-
-      this.experimentsPromise = getExperiments(codeAssistServer)
-        .then((experiments) => {
-          this.setExperiments(experiments);
-
-          // If preview features have not been set and the user authenticated through Google, we enable preview based on remote config only if it's true
-          if (this.getPreviewFeatures() === undefined) {
-            const remotePreviewFeatures =
-              experiments.flags[ExperimentFlags.ENABLE_PREVIEW]?.boolValue;
-            if (remotePreviewFeatures === true) {
-              this.setPreviewFeatures(remotePreviewFeatures);
-            }
-          }
-        })
-        .catch((e) => {
-          debugLogger.error('Failed to fetch experiments', e);
-        });
-    } else {
-      this.experiments = undefined;
-      this.experimentsPromise = undefined;
-    }
-
     const authType = this.contentGeneratorConfig.authType;
     if (
       authType === AuthType.USE_GEMINI ||
@@ -829,21 +788,6 @@ export class Config {
     if (!this.hasAccessToPreviewModel && isPreviewModel(this.model)) {
       this.setModel(DEFAULT_GEMINI_MODEL_AUTO);
     }
-  }
-
-  async getExperimentsAsync(): Promise<Experiments | undefined> {
-    if (this.experiments) {
-      return this.experiments;
-    }
-    const codeAssistServer = getCodeAssistServer(this);
-    if (codeAssistServer) {
-      return getExperiments(codeAssistServer);
-    }
-    return undefined;
-  }
-
-  getUserTier(): UserTierId | undefined {
-    return this.contentGenerator?.userTier;
   }
 
   /**
@@ -1046,23 +990,8 @@ export class Config {
     this.hasAccessToPreviewModel = hasAccess;
   }
 
-  async refreshUserQuota(): Promise<RetrieveUserQuotaResponse | undefined> {
-    const codeAssistServer = getCodeAssistServer(this);
-    if (!codeAssistServer || !codeAssistServer.projectId) {
-      return undefined;
-    }
-    try {
-      const quota = await codeAssistServer.retrieveUserQuota({
-        project: codeAssistServer.projectId,
-      });
-      const hasAccess =
-        quota.buckets?.some((b) => b.modelId === PREVIEW_GEMINI_MODEL) ?? false;
-      this.setHasAccessToPreviewModel(hasAccess);
-      return quota;
-    } catch (e) {
-      debugLogger.debug('Failed to retrieve user quota', e);
-      return undefined;
-    }
+  async refreshUserQuota(): Promise<undefined> {
+    return undefined;
   }
 
   getCoreTools(): string[] | undefined {
@@ -1449,52 +1378,19 @@ export class Config {
   }
 
   async getCompressionThreshold(): Promise<number | undefined> {
-    if (this.compressionThreshold) {
-      return this.compressionThreshold;
-    }
-
-    await this.ensureExperimentsLoaded();
-
-    const remoteThreshold =
-      this.experiments?.flags[ExperimentFlags.CONTEXT_COMPRESSION_THRESHOLD]
-        ?.floatValue;
-    if (remoteThreshold === 0) {
-      return undefined;
-    }
-    return remoteThreshold;
+    return this.compressionThreshold;
   }
 
   async getUserCaching(): Promise<boolean | undefined> {
-    await this.ensureExperimentsLoaded();
-
-    return this.experiments?.flags[ExperimentFlags.USER_CACHING]?.boolValue;
+    return undefined;
   }
 
   async getBannerTextNoCapacityIssues(): Promise<string> {
-    await this.ensureExperimentsLoaded();
-    return (
-      this.experiments?.flags[ExperimentFlags.BANNER_TEXT_NO_CAPACITY_ISSUES]
-        ?.stringValue ?? ''
-    );
+    return '';
   }
 
   async getBannerTextCapacityIssues(): Promise<string> {
-    await this.ensureExperimentsLoaded();
-    return (
-      this.experiments?.flags[ExperimentFlags.BANNER_TEXT_CAPACITY_ISSUES]
-        ?.stringValue ?? ''
-    );
-  }
-
-  private async ensureExperimentsLoaded(): Promise<void> {
-    if (!this.experimentsPromise) {
-      return;
-    }
-    try {
-      await this.experimentsPromise;
-    } catch (e) {
-      debugLogger.debug('Failed to fetch experiments', e);
-    }
+    return '';
   }
 
   isInteractiveShellEnabled(): boolean {
@@ -1748,58 +1644,6 @@ export class Config {
    */
   getDisabledHooks(): string[] {
     return this.disabledHooks;
-  }
-
-  /**
-   * Get experiments configuration
-   */
-  getExperiments(): Experiments | undefined {
-    return this.experiments;
-  }
-
-  /**
-   * Set experiments configuration
-   */
-  setExperiments(experiments: Experiments): void {
-    this.experiments = experiments;
-    const flagSummaries = Object.entries(experiments.flags ?? {})
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([flagId, flag]) => {
-        const summary: Record<string, unknown> = { flagId };
-        if (flag.boolValue !== undefined) {
-          summary['boolValue'] = flag.boolValue;
-        }
-        if (flag.floatValue !== undefined) {
-          summary['floatValue'] = flag.floatValue;
-        }
-        if (flag.intValue !== undefined) {
-          summary['intValue'] = flag.intValue;
-        }
-        if (flag.stringValue !== undefined) {
-          summary['stringValue'] = flag.stringValue;
-        }
-        const int32Length = flag.int32ListValue?.values?.length ?? 0;
-        if (int32Length > 0) {
-          summary['int32ListLength'] = int32Length;
-        }
-        const stringListLength = flag.stringListValue?.values?.length ?? 0;
-        if (stringListLength > 0) {
-          summary['stringListLength'] = stringListLength;
-        }
-        return summary;
-      });
-    const summary = {
-      experimentIds: experiments.experimentIds ?? [],
-      flags: flagSummaries,
-    };
-    const summaryString = inspect(summary, {
-      depth: null,
-      maxArrayLength: null,
-      maxStringLength: null,
-      breakLength: 80,
-      compact: false,
-    });
-    debugLogger.debug('Experiments loaded', summaryString);
   }
 }
 // Export model constants for use in CLI

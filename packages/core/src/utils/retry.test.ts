@@ -524,14 +524,14 @@ describe('retryWithBackoff', () => {
         fallbackOccurred = true;
         return await fallbackCallback(authType, error);
       },
-      authType: AuthType.LOGIN_WITH_GOOGLE,
+      authType: AuthType.USE_GEMINI,
     });
 
     await vi.runAllTimersAsync();
 
     await expect(promise).resolves.toBe('success');
     expect(fallbackCallback).toHaveBeenCalledWith(
-      AuthType.LOGIN_WITH_GOOGLE,
+      AuthType.USE_GEMINI,
       expect.objectContaining({ status: 500 }),
     );
     // 3 attempts (initial + 2 retries) fail with 500, then fallback triggers, then 1 success
@@ -556,14 +556,14 @@ describe('retryWithBackoff', () => {
         fallbackOccurred = true;
         return await fallbackCallback(authType, error);
       },
-      authType: AuthType.LOGIN_WITH_GOOGLE,
+      authType: AuthType.USE_GEMINI,
     });
 
     await vi.runAllTimersAsync();
 
     await expect(promise).resolves.toBe('success');
     expect(fallbackCallback).toHaveBeenCalledWith(
-      AuthType.LOGIN_WITH_GOOGLE,
+      AuthType.USE_GEMINI,
       expect.any(ModelNotFoundError),
     );
     expect(mockFn).toHaveBeenCalledTimes(2);
@@ -624,7 +624,7 @@ describe('retryWithBackoff', () => {
           initialDelayMs: 1,
           getAvailabilityContext: getContext,
           onPersistent429,
-          authType: AuthType.LOGIN_WITH_GOOGLE,
+          authType: AuthType.USE_GEMINI,
         }),
       ).rejects.toThrow(TerminalQuotaError);
 

@@ -47,7 +47,6 @@ export function resolvePolicyChain(
   ) {
     chain = getModelPolicyChain({
       previewEnabled: config.getModel() === PREVIEW_GEMINI_MODEL_AUTO,
-      userTier: config.getUserTier(),
     });
   } else {
     chain = createSingleModelChain(modelFromConfig);

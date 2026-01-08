@@ -20,11 +20,7 @@ import {
   loadTrustedFolders,
   type TrustedFoldersError,
 } from './config/trustedFolders.js';
-import {
-  loadSettings,
-  migrateDeprecatedSettings,
-  SettingScope,
-} from './config/settings.js';
+import { loadSettings, migrateDeprecatedSettings } from './config/settings.js';
 import { getStartupWarnings } from './utils/startupWarnings.js';
 import { getUserStartupWarnings } from './utils/userStartupWarnings.js';
 import { ConsolePatcher } from './ui/utils/ConsolePatcher.js';
@@ -45,7 +41,7 @@ import {
   sessionId,
   logUserPrompt,
   AuthType,
-  getOauthClient,
+  // getOauthClient,
   UserPromptEvent,
   debugLogger,
   recordSlowRender,
@@ -365,15 +361,8 @@ export async function main() {
     !settings.merged.security?.auth?.selectedType ||
     settings.merged.security?.auth?.selectedType === AuthType.LEGACY_CLOUD_SHELL
   ) {
-    if (
-      process.env['CLOUD_SHELL'] === 'true' ||
-      process.env['GEMINI_CLI_USE_COMPUTE_ADC'] === 'true'
-    ) {
-      settings.setValue(
-        SettingScope.User,
-        'selectedAuthType',
-        AuthType.COMPUTE_ADC,
-      );
+    if (process.env['CLOUD_SHELL'] === 'true') {
+      // Logic for Cloud Shell if any
     }
   }
 
@@ -576,14 +565,14 @@ export async function main() {
     const initializationResult = await initializeApp(config, settings);
     initAppHandle?.end();
 
-    if (
-      settings.merged.security?.auth?.selectedType ===
-        AuthType.LOGIN_WITH_GOOGLE &&
-      config.isBrowserLaunchSuppressed()
-    ) {
-      // Do oauth before app renders to make copying the link possible.
-      await getOauthClient(settings.merged.security.auth.selectedType, config);
-    }
+    // if (
+    //   settings.merged.security?.auth?.selectedType ===
+    //     AuthType.LOGIN_WITH_GOOGLE &&
+    //   config.isBrowserLaunchSuppressed()
+    // ) {
+    //   // Do oauth before app renders to make copying the link possible.
+    //   await getOauthClient(settings.merged.security.auth.selectedType, config);
+    // }
 
     if (config.getExperimentalZedIntegration()) {
       return runZedIntegration(config, settings, argv);
@@ -660,7 +649,7 @@ export async function main() {
     }
     if (!input) {
       debugLogger.error(
-        `No input provided via stdin. Input can be provided by piping data into gemini or using the --prompt option.`,
+        `No input provided via stdin. Input can be provided by piping data into codefly or using the --prompt option.`,
       );
       await runExitCleanup();
       process.exit(ExitCodes.FATAL_INPUT_ERROR);

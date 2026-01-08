@@ -51,7 +51,6 @@ import {
 } from './gcp-exporters.js';
 import { TelemetryTarget } from './index.js';
 import { debugLogger } from '../utils/debugLogger.js';
-import { authEvents } from '../code_assist/oauth2.js';
 
 // For troubleshooting, set the log level to DiagLogLevel.DEBUG
 class DiagLoggerAdapter {
@@ -175,13 +174,16 @@ export async function initializeTelemetry(
     // This is done only once.
     if (!callbackRegistered) {
       callbackRegistered = true;
+      /*
+      // Telemetry re-init logic removed as it depended on OAuth events
       authListener = async (newCredentials: JWTInput) => {
         if (config.getTelemetryEnabled() && config.getTelemetryUseCliAuth()) {
           debugLogger.log('Telemetry reinit with credentials.');
           await initializeTelemetry(config, newCredentials);
         }
       };
-      authEvents.on('post_auth', authListener);
+      // authEvents.on('post_auth', authListener);
+      */
     }
     debugLogger.log(
       'CLI auth is requested but no credentials, deferring telemetry initialization.',
@@ -371,7 +373,7 @@ export async function shutdownTelemetry(
     propagation.disable();
     diag.disable();
     if (authListener) {
-      authEvents.off('post_auth', authListener);
+      // authEvents.off('post_auth', authListener);
       authListener = undefined;
     }
     callbackRegistered = false;

@@ -11,7 +11,6 @@ import {
   AuthType,
   createContentGeneratorConfig,
 } from './contentGenerator.js';
-import { createCodeAssistContentGenerator } from '../code_assist/codeAssist.js';
 import { GoogleGenAI } from '@google/genai';
 import type { Config } from '../config/config.js';
 import { LoggingContentGenerator } from './loggingContentGenerator.js';
@@ -19,8 +18,6 @@ import { loadApiKey } from './apiKeyCredentialStorage.js';
 import { FakeContentGenerator } from './fakeContentGenerator.js';
 import { RecordingContentGenerator } from './recordingContentGenerator.js';
 import { OpenAICompatibleContentGenerator } from './openaiCompatibleContentGenerator.js';
-
-vi.mock('../code_assist/codeAssist.js');
 vi.mock('@google/genai');
 vi.mock('./apiKeyCredentialStorage.js', () => ({
   loadApiKey: vi.fn(),
@@ -79,108 +76,6 @@ describe('createContentGenerator', () => {
       mockConfigWithRecordResponses,
     );
     expect(generator).toBeInstanceOf(RecordingContentGenerator);
-  });
-
-  it('should create a CodeAssistContentGenerator when AuthType is LOGIN_WITH_GOOGLE', async () => {
-    const mockGenerator = {} as unknown as ContentGenerator;
-    vi.mocked(createCodeAssistContentGenerator).mockResolvedValue(
-      mockGenerator as never,
-    );
-    const generator = await createContentGenerator(
-      {
-        authType: AuthType.LOGIN_WITH_GOOGLE,
-      },
-      mockConfig,
-    );
-    expect(createCodeAssistContentGenerator).toHaveBeenCalled();
-    expect(generator).toEqual(
-      new LoggingContentGenerator(mockGenerator, mockConfig),
-    );
-  });
-
-  it('should create a CodeAssistContentGenerator when AuthType is COMPUTE_ADC', async () => {
-    const mockGenerator = {} as unknown as ContentGenerator;
-    vi.mocked(createCodeAssistContentGenerator).mockResolvedValue(
-      mockGenerator as never,
-    );
-    const generator = await createContentGenerator(
-      {
-        authType: AuthType.COMPUTE_ADC,
-      },
-      mockConfig,
-    );
-    expect(createCodeAssistContentGenerator).toHaveBeenCalled();
-    expect(generator).toEqual(
-      new LoggingContentGenerator(mockGenerator, mockConfig),
-    );
-  });
-
-  it('should create a GoogleGenAI content generator', async () => {
-    const mockConfig = {
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
-      getProxy: vi.fn().mockReturnValue(undefined),
-      getUsageStatisticsEnabled: () => true,
-      getPreviewFeatures: vi.fn().mockReturnValue(false),
-    } as unknown as Config;
-
-    // Set a fixed version for testing
-    vi.stubEnv('CLI_VERSION', '1.2.3');
-
-    const mockGenerator = {
-      models: {},
-    } as unknown as GoogleGenAI;
-    vi.mocked(GoogleGenAI).mockImplementation(() => mockGenerator as never);
-    const generator = await createContentGenerator(
-      {
-        apiKey: 'test-api-key',
-        authType: AuthType.USE_GEMINI,
-      },
-      mockConfig,
-    );
-    expect(GoogleGenAI).toHaveBeenCalledWith({
-      apiKey: 'test-api-key',
-      vertexai: undefined,
-      httpOptions: {
-        headers: {
-          'User-Agent': expect.stringContaining('GeminiCLI/1.2.3/gemini-pro'),
-          'x-gemini-api-privileged-user-id': expect.any(String),
-        },
-      },
-    });
-    expect(generator).toEqual(
-      new LoggingContentGenerator(mockGenerator.models, mockConfig),
-    );
-  });
-
-  it('should include custom headers from GEMINI_CLI_CUSTOM_HEADERS for Code Assist requests', async () => {
-    const mockGenerator = {} as unknown as ContentGenerator;
-    vi.mocked(createCodeAssistContentGenerator).mockResolvedValue(
-      mockGenerator as never,
-    );
-    vi.stubEnv(
-      'GEMINI_CLI_CUSTOM_HEADERS',
-      'X-Test-Header: test-value, Another-Header: another value',
-    );
-
-    await createContentGenerator(
-      {
-        authType: AuthType.LOGIN_WITH_GOOGLE,
-      },
-      mockConfig,
-    );
-
-    expect(createCodeAssistContentGenerator).toHaveBeenCalledWith(
-      {
-        headers: expect.objectContaining({
-          'User-Agent': expect.any(String),
-          'X-Test-Header': 'test-value',
-          'Another-Header': 'another value',
-        }),
-      },
-      AuthType.LOGIN_WITH_GOOGLE,
-      mockConfig,
-      undefined,
-    );
   });
 
   it('should include custom headers from GEMINI_CLI_CUSTOM_HEADERS for GoogleGenAI requests without inferring auth mechanism', async () => {

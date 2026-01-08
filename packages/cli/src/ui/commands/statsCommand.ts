@@ -33,13 +33,6 @@ async function defaultSessionView(context: CommandContext) {
     duration: formatDuration(wallDuration),
   };
 
-  if (context.services.config) {
-    const quota = await context.services.config.refreshUserQuota();
-    if (quota) {
-      statsItem.quotas = quota;
-    }
-  }
-
   context.ui.addItem(statsItem, Date.now());
 }
 

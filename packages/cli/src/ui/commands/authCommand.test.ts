@@ -69,19 +69,6 @@ describe('authCommand', () => {
   });
 
   describe('auth logout subcommand', () => {
-    it('should clear cached credentials', async () => {
-      const logoutCommand = authCommand.subCommands?.[1];
-      expect(logoutCommand?.name).toBe('logout');
-
-      const { clearCachedCredentialFile } = await import(
-        '@codefly/codefly-core'
-      );
-
-      await logoutCommand!.action!(mockContext, '');
-
-      expect(clearCachedCredentialFile).toHaveBeenCalledOnce();
-    });
-
     it('should clear selectedAuthType setting', async () => {
       const logoutCommand = authCommand.subCommands?.[1];
 

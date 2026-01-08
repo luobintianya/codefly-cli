@@ -15,15 +15,13 @@ import {
   type Mock,
 } from 'vitest';
 import { AuthDialog } from './AuthDialog.js';
-import { AuthType, type Config, debugLogger } from '@codefly/codefly-core';
+import { AuthType, type Config } from '@codefly/codefly-core';
 import type { LoadedSettings } from '../../config/settings.js';
 import { AuthState } from '../types.js';
 import { RadioButtonSelect } from '../components/shared/RadioButtonSelect.js';
 import { useKeypress } from '../hooks/useKeypress.js';
 import { validateAuthMethodWithSettings } from './useAuth.js';
-import { runExitCleanup } from '../../utils/cleanup.js';
 import { Text } from 'ink';
-import { RELAUNCH_EXIT_CODE } from '../../utils/processUtils.js';
 
 // Mocks
 vi.mock('@codefly/codefly-core', async (importOriginal) => {
@@ -62,7 +60,6 @@ vi.mock('../components/shared/RadioButtonSelect.js', () => ({
 const mockedUseKeypress = useKeypress as Mock;
 const mockedRadioButtonSelect = RadioButtonSelect as Mock;
 const mockedValidateAuthMethod = validateAuthMethodWithSettings as Mock;
-const mockedRunExitCleanup = runExitCleanup as Mock;
 
 describe('AuthDialog', () => {
   let props: {
@@ -98,54 +95,6 @@ describe('AuthDialog', () => {
 
   afterEach(() => {
     process.env = originalEnv;
-  });
-
-  describe('Environment Variable Effects on Auth Options', () => {
-    const cloudShellLabel = 'Use Cloud Shell user credentials';
-    const metadataServerLabel =
-      'Use metadata server application default credentials';
-    const computeAdcItem = (label: string) => ({
-      label,
-      value: AuthType.COMPUTE_ADC,
-      key: AuthType.COMPUTE_ADC,
-    });
-
-    it.each([
-      {
-        env: { CLOUD_SHELL: 'true' },
-        shouldContain: [computeAdcItem(cloudShellLabel)],
-        shouldNotContain: [computeAdcItem(metadataServerLabel)],
-        desc: 'in Cloud Shell',
-      },
-      {
-        env: { GEMINI_CLI_USE_COMPUTE_ADC: 'true' },
-        shouldContain: [computeAdcItem(metadataServerLabel)],
-        shouldNotContain: [computeAdcItem(cloudShellLabel)],
-        desc: 'with GEMINI_CLI_USE_COMPUTE_ADC',
-      },
-      {
-        env: {},
-        shouldContain: [],
-        shouldNotContain: [
-          computeAdcItem(cloudShellLabel),
-          computeAdcItem(metadataServerLabel),
-        ],
-        desc: 'by default',
-      },
-    ])(
-      'correctly shows/hides COMPUTE_ADC options $desc',
-      ({ env, shouldContain, shouldNotContain }) => {
-        process.env = { ...env };
-        renderWithProviders(<AuthDialog {...props} />);
-        const items = mockedRadioButtonSelect.mock.calls[0][0].items;
-        for (const item of shouldContain) {
-          expect(items).toContainEqual(item);
-        }
-        for (const item of shouldNotContain) {
-          expect(items).not.toContainEqual(item);
-        }
-      },
-    );
   });
 
   it('filters auth types when enforcedType is set', () => {
@@ -189,8 +138,8 @@ describe('AuthDialog', () => {
       },
       {
         setup: () => {},
-        expected: AuthType.LOGIN_WITH_GOOGLE,
-        desc: 'defaults to Login with Google',
+        expected: AuthType.USE_GEMINI,
+        desc: 'defaults to Use Gemini',
       },
     ])('selects initial auth type $desc', ({ setup, expected }) => {
       setup();
@@ -219,7 +168,6 @@ describe('AuthDialog', () => {
     it('skips API key dialog on initial setup if env var is present', async () => {
       mockedValidateAuthMethod.mockReturnValue(null);
       process.env['GEMINI_API_KEY'] = 'test-key-from-env';
-      // props.settings.merged.security.auth.selectedType is undefined here, simulating initial setup
 
       renderWithProviders(<AuthDialog {...props} />);
       const { onSelect: handleAuthSelect } =
@@ -234,7 +182,6 @@ describe('AuthDialog', () => {
     it('skips API key dialog if env var is present but empty', async () => {
       mockedValidateAuthMethod.mockReturnValue(null);
       process.env['GEMINI_API_KEY'] = ''; // Empty string
-      // props.settings.merged.security.auth.selectedType is undefined here
 
       renderWithProviders(<AuthDialog {...props} />);
       const { onSelect: handleAuthSelect } =
@@ -248,8 +195,6 @@ describe('AuthDialog', () => {
 
     it('shows API key dialog on initial setup if no env var is present', async () => {
       mockedValidateAuthMethod.mockReturnValue(null);
-      // process.env['GEMINI_API_KEY'] is not set
-      // props.settings.merged.security.auth.selectedType is undefined here, simulating initial setup
 
       renderWithProviders(<AuthDialog {...props} />);
       const { onSelect: handleAuthSelect } =
@@ -265,8 +210,7 @@ describe('AuthDialog', () => {
       mockedValidateAuthMethod.mockReturnValue(null);
       process.env['GEMINI_API_KEY'] = 'test-key-from-env';
       // Simulate that the user has already authenticated once
-      props.settings.merged.security!.auth!.selectedType =
-        AuthType.LOGIN_WITH_GOOGLE;
+      props.settings.merged.security!.auth!.selectedType = AuthType.USE_GEMINI;
 
       renderWithProviders(<AuthDialog {...props} />);
       const { onSelect: handleAuthSelect } =
@@ -276,30 +220,6 @@ describe('AuthDialog', () => {
       expect(props.setAuthState).toHaveBeenCalledWith(
         AuthState.Unauthenticated,
       );
-    });
-
-    it('exits process for Login with Google when browser is suppressed', async () => {
-      vi.useFakeTimers();
-      const exitSpy = vi
-        .spyOn(process, 'exit')
-        .mockImplementation(() => undefined as never);
-      const logSpy = vi.spyOn(debugLogger, 'log').mockImplementation(() => {});
-      vi.mocked(props.config.isBrowserLaunchSuppressed).mockReturnValue(true);
-      mockedValidateAuthMethod.mockReturnValue(null);
-
-      renderWithProviders(<AuthDialog {...props} />);
-      const { onSelect: handleAuthSelect } =
-        mockedRadioButtonSelect.mock.calls[0][0];
-      await handleAuthSelect(AuthType.LOGIN_WITH_GOOGLE);
-
-      await vi.runAllTimersAsync();
-
-      expect(mockedRunExitCleanup).toHaveBeenCalled();
-      expect(exitSpy).toHaveBeenCalledWith(RELAUNCH_EXIT_CODE);
-
-      exitSpy.mockRestore();
-      logSpy.mockRestore();
-      vi.useRealTimers();
     });
   });
 

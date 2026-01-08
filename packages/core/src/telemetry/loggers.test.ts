@@ -293,7 +293,7 @@ describe('loggers', () => {
       const event = new UserPromptEvent(
         11,
         'prompt-id-9',
-        AuthType.COMPUTE_ADC,
+        AuthType.USE_GEMINI,
         'test-prompt',
       );
 
@@ -391,7 +391,7 @@ describe('loggers', () => {
             },
           ],
         },
-        AuthType.LOGIN_WITH_GOOGLE,
+        AuthType.USE_GEMINI,
         usageData,
         'test-response',
       );
@@ -549,7 +549,7 @@ describe('loggers', () => {
             port: 8080,
           },
         },
-        AuthType.LOGIN_WITH_GOOGLE,
+        AuthType.USE_GEMINI,
         'ApiError',
         503,
       );
@@ -630,7 +630,7 @@ describe('loggers', () => {
       getTelemetryLogPromptsEnabled: () => true,
       isInteractive: () => false,
       getContentGeneratorConfig: () => ({
-        authType: AuthType.LOGIN_WITH_GOOGLE,
+        authType: AuthType.USE_GEMINI,
       }),
     } as Config;
 

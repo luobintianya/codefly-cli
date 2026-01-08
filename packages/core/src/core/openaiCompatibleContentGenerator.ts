@@ -14,9 +14,8 @@ import type {
   FinishReason,
 } from '@google/genai';
 import { GenerateContentResponse } from '@google/genai';
-import { toContents } from '../code_assist/converter.js';
+import { toContents } from './converter.js';
 import type { ContentGenerator } from './contentGenerator.js';
-import type { UserTierId } from '../code_assist/types.js';
 
 interface OpenAIConfig {
   baseUrl: string;
@@ -55,8 +54,6 @@ interface OpenAIStreamResponse {
 }
 
 export class OpenAICompatibleContentGenerator implements ContentGenerator {
-  userTier?: UserTierId;
-
   constructor(private readonly config: OpenAIConfig) {}
 
   private mapContentToOpenAIMessages(contents: Content[]): OpenAIMessage[] {

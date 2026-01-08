@@ -25,7 +25,6 @@ import {
   type ServerGeminiStreamEvent,
   type ToolCallConfirmationDetails,
   type Config,
-  type UserTierId,
   type AnsiOutput,
   EDIT_TOOL_NAMES,
   processRestorableToolCalls,
@@ -236,13 +235,11 @@ export class Task {
     const metadata: {
       coderAgent: CoderAgentMessage;
       model: string;
-      userTier?: UserTierId;
       error?: string;
       traceId?: string;
     } = {
       coderAgent: coderAgentMessage,
       model: this.modelInfo || this.config.getModel(),
-      userTier: this.config.getUserTier(),
     };
 
     if (metadataError) {

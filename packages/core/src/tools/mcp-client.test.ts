@@ -12,8 +12,8 @@ import {
   StreamableHTTPError,
 } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AuthProviderType, type Config } from '../config/config.js';
-import { GoogleCredentialProvider } from '../mcp/google-auth-provider.js';
+import { type Config } from '../config/config.js';
+// import { GoogleCredentialProvider } from '../mcp/google-auth-provider.js'; // Removed with Google login
 import { MCPOAuthProvider } from '../mcp/oauth-provider.js';
 import { MCPOAuthTokenStorage } from '../mcp/oauth-token-storage.js';
 import { OAuthUtils } from '../mcp/oauth-utils.js';
@@ -50,7 +50,6 @@ vi.mock('../mcp/oauth-provider.js');
 vi.mock('../mcp/oauth-token-storage.js');
 vi.mock('../mcp/oauth-utils.js');
 vi.mock('google-auth-library');
-import { GoogleAuth } from 'google-auth-library';
 
 vi.mock('../utils/events.js', () => ({
   coreEvents: {
@@ -1386,144 +1385,9 @@ describe('mcp-client', () => {
       });
     });
 
-    describe('useGoogleCredentialProvider', () => {
-      beforeEach(() => {
-        // Mock GoogleAuth client
-        const mockClient = {
-          getAccessToken: vi.fn().mockResolvedValue({ token: 'test-token' }),
-          quotaProjectId: 'myproject',
-        };
-
-        GoogleAuth.prototype.getClient = vi.fn().mockResolvedValue(mockClient);
-      });
-
-      it('should use GoogleCredentialProvider when specified', async () => {
-        const transport = await createTransport(
-          'test-server',
-          {
-            httpUrl: 'http://test.googleapis.com',
-            authProviderType: AuthProviderType.GOOGLE_CREDENTIALS,
-            oauth: {
-              scopes: ['scope1'],
-            },
-            headers: {
-              'X-Goog-User-Project': 'myproject',
-            },
-          },
-          false,
-          EMPTY_CONFIG,
-        );
-
-        expect(transport).toBeInstanceOf(StreamableHTTPClientTransport);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const authProvider = (transport as any)._authProvider;
-        expect(authProvider).toBeInstanceOf(GoogleCredentialProvider);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const googUserProject = (transport as any)._requestInit?.headers?.[
-          'X-Goog-User-Project'
-        ];
-        expect(googUserProject).toBe('myproject');
-      });
-
-      it('should use headers from GoogleCredentialProvider', async () => {
-        const mockGetRequestHeaders = vi.fn().mockResolvedValue({
-          'X-Goog-User-Project': 'provider-project',
-        });
-        vi.spyOn(
-          GoogleCredentialProvider.prototype,
-          'getRequestHeaders',
-        ).mockImplementation(mockGetRequestHeaders);
-
-        const transport = await createTransport(
-          'test-server',
-          {
-            httpUrl: 'http://test.googleapis.com',
-            authProviderType: AuthProviderType.GOOGLE_CREDENTIALS,
-            oauth: {
-              scopes: ['scope1'],
-            },
-          },
-          false,
-          EMPTY_CONFIG,
-        );
-
-        expect(transport).toBeInstanceOf(StreamableHTTPClientTransport);
-        expect(mockGetRequestHeaders).toHaveBeenCalled();
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const headers = (transport as any)._requestInit?.headers;
-        expect(headers['X-Goog-User-Project']).toBe('provider-project');
-      });
-
-      it('should prioritize provider headers over config headers', async () => {
-        const mockGetRequestHeaders = vi.fn().mockResolvedValue({
-          'X-Goog-User-Project': 'provider-project',
-        });
-        vi.spyOn(
-          GoogleCredentialProvider.prototype,
-          'getRequestHeaders',
-        ).mockImplementation(mockGetRequestHeaders);
-
-        const transport = await createTransport(
-          'test-server',
-          {
-            httpUrl: 'http://test.googleapis.com',
-            authProviderType: AuthProviderType.GOOGLE_CREDENTIALS,
-            oauth: {
-              scopes: ['scope1'],
-            },
-            headers: {
-              'X-Goog-User-Project': 'config-project',
-            },
-          },
-          false,
-          EMPTY_CONFIG,
-        );
-
-        expect(transport).toBeInstanceOf(StreamableHTTPClientTransport);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const headers = (transport as any)._requestInit?.headers;
-        expect(headers['X-Goog-User-Project']).toBe('provider-project');
-      });
-
-      it('should use GoogleCredentialProvider with SSE transport', async () => {
-        const transport = await createTransport(
-          'test-server',
-          {
-            url: 'http://test.googleapis.com',
-            type: 'sse',
-            authProviderType: AuthProviderType.GOOGLE_CREDENTIALS,
-            oauth: {
-              scopes: ['scope1'],
-            },
-          },
-          false,
-          EMPTY_CONFIG,
-        );
-
-        expect(transport).toBeInstanceOf(SSEClientTransport);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const authProvider = (transport as any)._authProvider;
-        expect(authProvider).toBeInstanceOf(GoogleCredentialProvider);
-      });
-
-      it('should throw an error if no URL is provided with GoogleCredentialProvider', async () => {
-        await expect(
-          createTransport(
-            'test-server',
-            {
-              authProviderType: AuthProviderType.GOOGLE_CREDENTIALS,
-              oauth: {
-                scopes: ['scope1'],
-              },
-            },
-            false,
-            EMPTY_CONFIG,
-          ),
-        ).rejects.toThrow(
-          'URL must be provided in the config for Google Credentials provider',
-        );
-      });
-    });
+    // describe('useGoogleCredentialProvider', () => {
+    //   GoogleCredentialProvider tests removed with Google login functionality
+    // });
   });
   describe('isEnabled', () => {
     const funcDecl = { name: 'myTool' };

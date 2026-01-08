@@ -27,7 +27,7 @@ import {
   coreEvents,
   CoreEvent,
   createWorkingStdio,
-  recordToolCallInteractions,
+  // recordToolCallInteractions,
   ToolErrorType,
 } from '@codefly/codefly-core';
 
@@ -410,7 +410,7 @@ export async function runNonInteractive({
               .getChat()
               .recordCompletedToolCalls(currentModel, completedToolCalls);
 
-            await recordToolCallInteractions(config, completedToolCalls);
+            // await recordToolCallInteractions(config, completedToolCalls);
           } catch (error) {
             debugLogger.error(
               `Error recording completed tool call information: ${error}`,

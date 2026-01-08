@@ -5,7 +5,7 @@
  */
 
 import type React from 'react';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { Box, Text } from 'ink';
 import { theme } from '../semantic-colors.js';
 import { RadioButtonSelect } from '../components/shared/RadioButtonSelect.js';
@@ -16,17 +16,13 @@ import type {
 import { SettingScope } from '../../config/settings.js';
 import {
   AuthType,
-  clearCachedCredentialFile,
-  type Config,
+  // clearCachedCredentialFile,
 } from '@codefly/codefly-core';
 import { useKeypress } from '../hooks/useKeypress.js';
 import { AuthState } from '../types.js';
-import { runExitCleanup } from '../../utils/cleanup.js';
-import { validateAuthMethodWithSettings } from './useAuth.js';
-import { RELAUNCH_EXIT_CODE } from '../../utils/processUtils.js';
+// import { runExitCleanup } from '../../utils/cleanup.js';
 
 interface AuthDialogProps {
-  config: Config;
   settings: LoadedSettings;
   setAuthState: (state: AuthState) => void;
   authError: string | null;
@@ -34,36 +30,13 @@ interface AuthDialogProps {
 }
 
 export function AuthDialog({
-  config,
   settings,
   setAuthState,
   authError,
   onAuthError,
 }: AuthDialogProps): React.JSX.Element {
-  const [exiting, setExiting] = useState(false);
+  // const [exiting, setExiting] = useState(false);
   let items = [
-    {
-      label: 'Login with Google',
-      value: AuthType.LOGIN_WITH_GOOGLE,
-      key: AuthType.LOGIN_WITH_GOOGLE,
-    },
-    ...(process.env['CLOUD_SHELL'] === 'true'
-      ? [
-          {
-            label: 'Use Cloud Shell user credentials',
-            value: AuthType.COMPUTE_ADC,
-            key: AuthType.COMPUTE_ADC,
-          },
-        ]
-      : process.env['GEMINI_CLI_USE_COMPUTE_ADC'] === 'true'
-        ? [
-            {
-              label: 'Use metadata server application default credentials',
-              value: AuthType.COMPUTE_ADC,
-              key: AuthType.COMPUTE_ADC,
-            },
-          ]
-        : []),
     {
       label: 'Use Gemini API Key',
       value: AuthType.USE_GEMINI,
@@ -104,7 +77,7 @@ export function AuthDialog({
       return item.value === AuthType.USE_GEMINI;
     }
 
-    return item.value === AuthType.LOGIN_WITH_GOOGLE;
+    return false;
   });
   if (settings.merged.security?.auth?.enforcedType) {
     initialAuthIndex = 0;
@@ -112,24 +85,10 @@ export function AuthDialog({
 
   const onSelect = useCallback(
     async (authType: AuthType | undefined, scope: LoadableSettingScope) => {
-      if (exiting) {
-        return;
-      }
       if (authType) {
-        await clearCachedCredentialFile();
-
+        // await clearCachedCredentialFile();
         settings.setValue(scope, 'security.auth.selectedType', authType);
-        if (
-          authType === AuthType.LOGIN_WITH_GOOGLE &&
-          config.isBrowserLaunchSuppressed()
-        ) {
-          setExiting(true);
-          setTimeout(async () => {
-            await runExitCleanup();
-            process.exit(RELAUNCH_EXIT_CODE);
-          }, 100);
-          return;
-        }
+        // Google login check removed
 
         if (authType === AuthType.USE_GEMINI) {
           if (process.env['GEMINI_API_KEY'] !== undefined) {
@@ -143,17 +102,12 @@ export function AuthDialog({
       }
       setAuthState(AuthState.Unauthenticated);
     },
-    [settings, config, setAuthState, exiting],
+    [settings, setAuthState /* existing */],
   );
 
   const handleAuthSelect = (authMethod: AuthType) => {
-    const error = validateAuthMethodWithSettings(authMethod, settings);
-    if (error) {
-      onAuthError(error);
-    } else {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      onSelect(authMethod, SettingScope.User);
-    }
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    onSelect(authMethod, SettingScope.User);
   };
 
   useKeypress(
@@ -177,23 +131,6 @@ export function AuthDialog({
     },
     { isActive: true },
   );
-
-  if (exiting) {
-    return (
-      <Box
-        borderStyle="round"
-        borderColor={theme.border.focused}
-        flexDirection="row"
-        padding={1}
-        width="100%"
-        alignItems="flex-start"
-      >
-        <Text color={theme.text.primary}>
-          Logging in with Google... Restarting Gemini CLI to continue.
-        </Text>
-      </Box>
-    );
-  }
 
   return (
     <Box
@@ -234,14 +171,12 @@ export function AuthDialog({
         </Box>
         <Box marginTop={1}>
           <Text color={theme.text.primary}>
-            Terms of Services and Privacy Notice for Gemini CLI
+            Terms of Services and Privacy Notice for Codefly
           </Text>
         </Box>
         <Box marginTop={1}>
           <Text color={theme.text.link}>
-            {
-              'https://github.com/google-gemini/gemini-cli/blob/main/docs/tos-privacy.md'
-            }
+            {'https://github.com/codefly/codefly/blob/main/docs/tos-privacy.md'}
           </Text>
         </Box>
       </Box>

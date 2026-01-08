@@ -12,7 +12,6 @@ import { RadioButtonSelect } from './shared/RadioButtonSelect.js';
 
 import {
   PREVIEW_GEMINI_MODEL,
-  UserTierId,
   DEFAULT_GEMINI_FLASH_MODEL,
 } from '@codefly/codefly-core';
 
@@ -37,7 +36,6 @@ describe('ProQuotaDialog', () => {
           message="flash error"
           isTerminalQuotaError={true} // should not matter
           onChoice={mockOnChoice}
-          userTier={UserTierId.FREE}
         />,
       );
 
@@ -73,7 +71,6 @@ describe('ProQuotaDialog', () => {
             isTerminalQuotaError={true}
             isModelNotFoundError={false}
             onChoice={mockOnChoice}
-            userTier={UserTierId.LEGACY}
           />,
         );
 
@@ -105,7 +102,6 @@ describe('ProQuotaDialog', () => {
             message="flash error"
             isTerminalQuotaError={true}
             onChoice={mockOnChoice}
-            userTier={UserTierId.FREE}
           />,
         );
 
@@ -138,7 +134,6 @@ describe('ProQuotaDialog', () => {
             isTerminalQuotaError={true}
             isModelNotFoundError={false}
             onChoice={mockOnChoice}
-            userTier={UserTierId.FREE}
           />,
         );
 
@@ -178,7 +173,6 @@ describe('ProQuotaDialog', () => {
             isTerminalQuotaError={false}
             isModelNotFoundError={false}
             onChoice={mockOnChoice}
-            userTier={UserTierId.FREE}
           />,
         );
 
@@ -209,7 +203,6 @@ describe('ProQuotaDialog', () => {
             isTerminalQuotaError={false}
             isModelNotFoundError={true}
             onChoice={mockOnChoice}
-            userTier={UserTierId.FREE}
           />,
         );
 
@@ -242,7 +235,6 @@ describe('ProQuotaDialog', () => {
             isTerminalQuotaError={false}
             isModelNotFoundError={true}
             onChoice={mockOnChoice}
-            userTier={UserTierId.LEGACY}
           />,
         );
 
@@ -277,7 +269,6 @@ describe('ProQuotaDialog', () => {
           message=""
           isTerminalQuotaError={false}
           onChoice={mockOnChoice}
-          userTier={UserTierId.FREE}
         />,
       );
 

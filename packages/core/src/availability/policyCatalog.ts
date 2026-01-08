@@ -16,7 +16,6 @@ import {
   PREVIEW_GEMINI_FLASH_MODEL,
   PREVIEW_GEMINI_MODEL,
 } from '../config/models.js';
-import type { UserTierId } from '../code_assist/types.js';
 
 // actions and stateTransitions are optional when defining ModelPolicy
 type PolicyConfig = Omit<ModelPolicy, 'actions' | 'stateTransitions'> & {
@@ -26,7 +25,6 @@ type PolicyConfig = Omit<ModelPolicy, 'actions' | 'stateTransitions'> & {
 
 export interface ModelPolicyOptions {
   previewEnabled: boolean;
-  userTier?: UserTierId;
 }
 
 const DEFAULT_ACTIONS: ModelPolicyActionMap = {
