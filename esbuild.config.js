@@ -7,7 +7,7 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
-import { writeFileSync } from 'node:fs';
+import { writeFileSync, readFileSync } from 'node:fs';
 import { wasmLoader } from 'esbuild-plugin-wasm';
 
 let esbuild;
@@ -76,7 +76,8 @@ const baseConfig = {
 const cliConfig = {
   ...baseConfig,
   banner: {
-    js: `import { createRequire } from 'module'; const require = createRequire(import.meta.url); globalThis.__filename = require('url').fileURLToPath(import.meta.url); globalThis.__dirname = require('path').dirname(globalThis.__filename);`,
+    js: `#!/usr/bin/env node
+import { createRequire } from 'module'; const require = createRequire(import.meta.url); globalThis.__filename = require('url').fileURLToPath(import.meta.url); globalThis.__dirname = require('path').dirname(globalThis.__filename);`,
   },
   entryPoints: ['packages/cli/index.ts'],
   outfile: 'bundle/codefly.js',
@@ -107,6 +108,17 @@ Promise.allSettled([
   esbuild.build(cliConfig).then(({ metafile }) => {
     if (process.env.DEV === 'true') {
       writeFileSync('./bundle/esbuild.json', JSON.stringify(metafile, null, 2));
+    }
+    // Remove duplicate shebang if present (caused by banner + source file shebang)
+    try {
+      const bundlePath = './bundle/codefly.js';
+      let content = readFileSync(bundlePath, 'utf8');
+      if (content.startsWith('#!/usr/bin/env node\n#!/usr/bin/env node')) {
+        content = content.replace('#!/usr/bin/env node\n', '');
+        writeFileSync(bundlePath, content);
+      }
+    } catch (e) {
+      console.warn('Failed to sanitize bundle shebang:', e);
     }
   }),
   esbuild.build(a2aServerConfig),
