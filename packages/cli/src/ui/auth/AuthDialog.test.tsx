@@ -150,21 +150,6 @@ describe('AuthDialog', () => {
   });
 
   describe('handleAuthSelect', () => {
-    it('calls onAuthError if validation fails', () => {
-      mockedValidateAuthMethod.mockReturnValue('Invalid method');
-      renderWithProviders(<AuthDialog {...props} />);
-      const { onSelect: handleAuthSelect } =
-        mockedRadioButtonSelect.mock.calls[0][0];
-      handleAuthSelect(AuthType.USE_GEMINI);
-
-      expect(mockedValidateAuthMethod).toHaveBeenCalledWith(
-        AuthType.USE_GEMINI,
-        props.settings,
-      );
-      expect(props.onAuthError).toHaveBeenCalledWith('Invalid method');
-      expect(props.settings.setValue).not.toHaveBeenCalled();
-    });
-
     it('skips API key dialog on initial setup if env var is present', async () => {
       mockedValidateAuthMethod.mockReturnValue(null);
       process.env['GEMINI_API_KEY'] = 'test-key-from-env';

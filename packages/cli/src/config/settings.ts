@@ -12,7 +12,7 @@ import process from 'node:process';
 import {
   debugLogger,
   FatalConfigError,
-  GEMINI_DIR,
+  CODEFLY_DIR,
   getErrorMessage,
   Storage,
   coreEvents,
@@ -518,8 +518,8 @@ export class LoadedSettings {
 function findEnvFile(startDir: string): string | null {
   let currentDir = path.resolve(startDir);
   while (true) {
-    // prefer gemini-specific .env under GEMINI_DIR
-    const geminiEnvPath = path.join(currentDir, GEMINI_DIR, '.env');
+    // prefer codefly-specific .env under CODEFLY_DIR
+    const geminiEnvPath = path.join(currentDir, CODEFLY_DIR, '.env');
     if (fs.existsSync(geminiEnvPath)) {
       return geminiEnvPath;
     }
@@ -529,8 +529,8 @@ function findEnvFile(startDir: string): string | null {
     }
     const parentDir = path.dirname(currentDir);
     if (parentDir === currentDir || !parentDir) {
-      // check .env under home as fallback, again preferring gemini-specific .env
-      const homeGeminiEnvPath = path.join(homedir(), GEMINI_DIR, '.env');
+      // check .env under home as fallback, again preferring codefly-specific .env
+      const homeGeminiEnvPath = path.join(homedir(), CODEFLY_DIR, '.env');
       if (fs.existsSync(homeGeminiEnvPath)) {
         return homeGeminiEnvPath;
       }
@@ -587,7 +587,7 @@ export function loadEnvironment(settings: Settings): void {
 
       const excludedVars =
         settings?.advanced?.excludedEnvVars || DEFAULT_EXCLUDED_ENV_VARS;
-      const isProjectEnvFile = !envFilePath.includes(GEMINI_DIR);
+      const isProjectEnvFile = !envFilePath.includes(CODEFLY_DIR);
 
       for (const key in parsedEnv) {
         if (Object.hasOwn(parsedEnv, key)) {

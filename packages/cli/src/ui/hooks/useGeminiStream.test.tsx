@@ -1642,9 +1642,8 @@ describe('useGeminiStream', () => {
         expect(mockParseAndFormatApiError).toHaveBeenCalledWith(
           'Rate limit exceeded',
           mockAuthType,
-          undefined,
           'gemini-2.5-pro',
-          'gemini-2.5-flash',
+          'gemini-3-flash-preview',
         );
       });
     });
@@ -2480,9 +2479,8 @@ describe('useGeminiStream', () => {
       expect(mockParseAndFormatApiError).toHaveBeenCalledWith(
         { message: 'Test error' },
         expect.any(String),
-        undefined,
         'gemini-2.5-pro',
-        'gemini-2.5-flash',
+        'gemini-3-flash-preview',
       );
     });
   });

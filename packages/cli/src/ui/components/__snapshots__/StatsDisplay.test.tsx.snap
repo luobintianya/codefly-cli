@@ -18,6 +18,9 @@ exports[`<StatsDisplay /> > Code Changes Display > displays Code Changes when li
 │    » Tool Time:              100ms (100.0%)                                                      │
 │                                                                                                  │
 │                                                                                                  │
+│  Model Usage                 Reqs   Input Tokens   Cache Reads  Output Tokens                    │
+│  ────────────────────────────────────────────────────────────────────────────                    │
+│                                                                                                  │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────╯"
 `;
 
@@ -37,6 +40,9 @@ exports[`<StatsDisplay /> > Code Changes Display > hides Code Changes when no li
 │    » API Time:               0s (0.0%)                                                           │
 │    » Tool Time:              100ms (100.0%)                                                      │
 │                                                                                                  │
+│                                                                                                  │
+│  Model Usage                 Reqs   Input Tokens   Cache Reads  Output Tokens                    │
+│  ────────────────────────────────────────────────────────────────────────────                    │
 │                                                                                                  │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────╯"
 `;
@@ -58,6 +64,9 @@ exports[`<StatsDisplay /> > Conditional Color Tests > renders success rate in gr
 │    » Tool Time:              0s (0.0%)                                                           │
 │                                                                                                  │
 │                                                                                                  │
+│  Model Usage                 Reqs   Input Tokens   Cache Reads  Output Tokens                    │
+│  ────────────────────────────────────────────────────────────────────────────                    │
+│                                                                                                  │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────╯"
 `;
 
@@ -78,6 +87,9 @@ exports[`<StatsDisplay /> > Conditional Color Tests > renders success rate in re
 │    » Tool Time:              0s (0.0%)                                                           │
 │                                                                                                  │
 │                                                                                                  │
+│  Model Usage                 Reqs   Input Tokens   Cache Reads  Output Tokens                    │
+│  ────────────────────────────────────────────────────────────────────────────                    │
+│                                                                                                  │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────╯"
 `;
 
@@ -97,6 +109,9 @@ exports[`<StatsDisplay /> > Conditional Color Tests > renders success rate in ye
 │    » API Time:               0s (0.0%)                                                           │
 │    » Tool Time:              0s (0.0%)                                                           │
 │                                                                                                  │
+│                                                                                                  │
+│  Model Usage                 Reqs   Input Tokens   Cache Reads  Output Tokens                    │
+│  ────────────────────────────────────────────────────────────────────────────                    │
 │                                                                                                  │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────╯"
 `;
@@ -142,65 +157,8 @@ exports[`<StatsDisplay /> > Conditional Rendering Tests > hides User Agreement w
 │    » Tool Time:              123ms (100.0%)                                                      │
 │                                                                                                  │
 │                                                                                                  │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────╯"
-`;
-
-exports[`<StatsDisplay /> > Quota Display > renders quota information for unused models 1`] = `
-"╭──────────────────────────────────────────────────────────────────────────────────────────────────╮
-│                                                                                                  │
-│  Session Stats                                                                                   │
-│                                                                                                  │
-│  Interaction Summary                                                                             │
-│  Session ID:                 test-session-id                                                     │
-│  Tool Calls:                 0 ( ✓ 0 x 0 )                                                       │
-│  Success Rate:               0.0%                                                                │
-│                                                                                                  │
-│  Performance                                                                                     │
-│  Wall Time:                  1s                                                                  │
-│  Agent Active:               0s                                                                  │
-│    » API Time:               0s (0.0%)                                                           │
-│    » Tool Time:              0s (0.0%)                                                           │
-│                                                                                                  │
-│                                                                                                  │
-│  Model Usage                 Reqs                  Usage left                                    │
-│  ────────────────────────────────────────────────────────────                                    │
-│  gemini-2.5-flash               -        50.0% (Resets in 2h)                                    │
-│                                                                                                  │
-│  Usage limits span all sessions and reset daily.                                                 │
-│  /auth to upgrade or switch to API key.                                                          │
-│                                                                                                  │
-│                                                                                                  │
-│  » Tip: For a full token breakdown, run \`/stats model\`.                                          │
-│                                                                                                  │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────╯"
-`;
-
-exports[`<StatsDisplay /> > Quota Display > renders quota information when quotas are provided 1`] = `
-"╭──────────────────────────────────────────────────────────────────────────────────────────────────╮
-│                                                                                                  │
-│  Session Stats                                                                                   │
-│                                                                                                  │
-│  Interaction Summary                                                                             │
-│  Session ID:                 test-session-id                                                     │
-│  Tool Calls:                 0 ( ✓ 0 x 0 )                                                       │
-│  Success Rate:               0.0%                                                                │
-│                                                                                                  │
-│  Performance                                                                                     │
-│  Wall Time:                  1s                                                                  │
-│  Agent Active:               100ms                                                               │
-│    » API Time:               100ms (100.0%)                                                      │
-│    » Tool Time:              0s (0.0%)                                                           │
-│                                                                                                  │
-│                                                                                                  │
-│  Model Usage                 Reqs                  Usage left                                    │
-│  ────────────────────────────────────────────────────────────                                    │
-│  gemini-2.5-pro                 1    75.0% (Resets in 1h 30m)                                    │
-│                                                                                                  │
-│  Usage limits span all sessions and reset daily.                                                 │
-│  /auth to upgrade or switch to API key.                                                          │
-│                                                                                                  │
-│                                                                                                  │
-│  » Tip: For a full token breakdown, run \`/stats model\`.                                          │
+│  Model Usage                 Reqs   Input Tokens   Cache Reads  Output Tokens                    │
+│  ────────────────────────────────────────────────────────────────────────────                    │
 │                                                                                                  │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────╯"
 `;
@@ -222,6 +180,9 @@ exports[`<StatsDisplay /> > Title Rendering > renders the custom title when a ti
 │    » Tool Time:              0s (0.0%)                                                           │
 │                                                                                                  │
 │                                                                                                  │
+│  Model Usage                 Reqs   Input Tokens   Cache Reads  Output Tokens                    │
+│  ────────────────────────────────────────────────────────────────────────────                    │
+│                                                                                                  │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────╯"
 `;
 
@@ -241,6 +202,9 @@ exports[`<StatsDisplay /> > Title Rendering > renders the default title when no 
 │    » API Time:               0s (0.0%)                                                           │
 │    » Tool Time:              0s (0.0%)                                                           │
 │                                                                                                  │
+│                                                                                                  │
+│  Model Usage                 Reqs   Input Tokens   Cache Reads  Output Tokens                    │
+│  ────────────────────────────────────────────────────────────────────────────                    │
 │                                                                                                  │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────╯"
 `;
@@ -315,6 +279,9 @@ exports[`<StatsDisplay /> > renders only the Performance section in its zero sta
 │    » API Time:               0s (0.0%)                                                           │
 │    » Tool Time:              0s (0.0%)                                                           │
 │                                                                                                  │
+│                                                                                                  │
+│  Model Usage                 Reqs   Input Tokens   Cache Reads  Output Tokens                    │
+│  ────────────────────────────────────────────────────────────────────────────                    │
 │                                                                                                  │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────╯"
 `;

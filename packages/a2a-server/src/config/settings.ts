@@ -11,13 +11,13 @@ import { homedir } from 'node:os';
 import type { MCPServerConfig } from '@codefly/codefly-core';
 import {
   debugLogger,
-  GEMINI_DIR,
+  CODEFLY_DIR,
   getErrorMessage,
   type TelemetrySettings,
 } from '@codefly/codefly-core';
 import stripJsonComments from 'strip-json-comments';
 
-export const USER_SETTINGS_DIR = path.join(homedir(), GEMINI_DIR);
+export const USER_SETTINGS_DIR = path.join(homedir(), CODEFLY_DIR);
 export const USER_SETTINGS_PATH = path.join(USER_SETTINGS_DIR, 'settings.json');
 
 // TODO: Ensure full compatibility with V2 nested settings structure (settings.schema.json).
@@ -82,7 +82,7 @@ export function loadSettings(workspaceDir: string): Settings {
 
   const workspaceSettingsPath = path.join(
     workspaceDir,
-    GEMINI_DIR,
+    CODEFLY_DIR,
     'settings.json',
   );
 

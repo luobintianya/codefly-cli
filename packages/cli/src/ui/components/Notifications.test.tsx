@@ -47,7 +47,7 @@ vi.mock('node:path', async () => {
 });
 
 vi.mock('@codefly/codefly-core', () => ({
-  GEMINI_DIR: '.gemini',
+  CODEFLY_DIR: '.codefly',
   Storage: {
     getGlobalTempDir: () => '/mock/temp',
   },

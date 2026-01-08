@@ -33,11 +33,11 @@ vi.mock('@codefly/codefly-core', async (importOriginal) => {
       DISCONNECTED: 'DISCONNECTED',
     },
     Storage: vi.fn().mockImplementation((_cwd: string) => ({
-      getGlobalSettingsPath: () => '/tmp/gemini/settings.json',
-      getWorkspaceSettingsPath: () => '/tmp/gemini/workspace-settings.json',
-      getProjectTempDir: () => '/test/home/.gemini/tmp/mocked_hash',
+      getGlobalSettingsPath: () => '/tmp/codefly/settings.json',
+      getWorkspaceSettingsPath: () => '/tmp/codefly/workspace-settings.json',
+      getProjectTempDir: () => '/test/home/.codefly/tmp/mocked_hash',
     })),
-    GEMINI_DIR: '.gemini',
+    CODEFLY_DIR: '.codefly',
     getErrorMessage: (e: unknown) =>
       e instanceof Error ? e.message : String(e),
   };

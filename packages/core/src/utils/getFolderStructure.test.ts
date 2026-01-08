@@ -11,7 +11,7 @@ import * as os from 'node:os';
 import { getFolderStructure } from './getFolderStructure.js';
 import { FileDiscoveryService } from '../services/fileDiscoveryService.js';
 import * as path from 'node:path';
-import { GEMINI_DIR } from './paths.js';
+import { CODEFLY_DIR } from './paths.js';
 
 describe('getFolderStructure', () => {
   let testRootDir: string;
@@ -256,8 +256,8 @@ ${testRootDir}${path.sep}
       await createTestFile('file1.txt');
       await createTestFile('node_modules', 'some-package', 'index.js');
       await createTestFile('ignored.txt');
-      await createTestFile(GEMINI_DIR, 'config.yaml');
-      await createTestFile(GEMINI_DIR, 'logs.json');
+      await createTestFile(CODEFLY_DIR, 'config.yaml');
+      await createTestFile(CODEFLY_DIR, 'logs.json');
 
       const fileService = new FileDiscoveryService(testRootDir);
       const structure = await getFolderStructure(testRootDir, {
@@ -302,8 +302,8 @@ ${testRootDir}${path.sep}
       await createTestFile('file1.txt');
       await createTestFile('node_modules', 'some-package', 'index.js');
       await createTestFile('ignored.txt');
-      await createTestFile(GEMINI_DIR, 'config.yaml');
-      await createTestFile(GEMINI_DIR, 'logs.json');
+      await createTestFile(CODEFLY_DIR, 'config.yaml');
+      await createTestFile(CODEFLY_DIR, 'logs.json');
 
       const fileService = new FileDiscoveryService(testRootDir);
       const structure = await getFolderStructure(testRootDir, {
@@ -322,8 +322,8 @@ ${testRootDir}${path.sep}
       await createTestFile('file1.txt');
       await createTestFile('node_modules', 'some-package', 'index.js');
       await createTestFile('ignored.txt');
-      await createTestFile(GEMINI_DIR, 'config.yaml');
-      await createTestFile(GEMINI_DIR, 'logs.json');
+      await createTestFile(CODEFLY_DIR, 'config.yaml');
+      await createTestFile(CODEFLY_DIR, 'logs.json');
 
       const fileService = new FileDiscoveryService(testRootDir);
       const structure = await getFolderStructure(testRootDir, {

@@ -13,7 +13,7 @@ import { FatalSandboxError, type SandboxConfig } from '@codefly/codefly-core';
 import { EventEmitter } from 'node:events';
 
 vi.mock('../config/settings.js', () => ({
-  USER_SETTINGS_DIR: '/home/user/.gemini',
+  USER_SETTINGS_DIR: '/home/user/.codefly',
 }));
 vi.mock('node:child_process');
 vi.mock('node:os');
@@ -62,8 +62,8 @@ vi.mock('@codefly/codefly-core', async (importOriginal) => {
         this.name = 'FatalSandboxError';
       }
     },
-    GEMINI_DIR: '.gemini',
-    USER_SETTINGS_DIR: '/home/user/.gemini',
+    CODEFLY_DIR: '.codefly',
+    USER_SETTINGS_DIR: '/home/user/.codefly',
   };
 });
 
@@ -346,7 +346,7 @@ describe('sandbox', () => {
           '--volume',
           '/host/path:/container/path:ro',
           '--volume',
-          expect.stringContaining('/home/user/.gemini'),
+          expect.stringContaining('/home/user/.codefly'),
         ]),
         expect.any(Object),
       );

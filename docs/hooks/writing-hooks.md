@@ -447,7 +447,7 @@ const fs = require('fs');
 
 async function main() {
   const projectDir = process.env.GEMINI_PROJECT_DIR;
-  const chromaPath = path.join(projectDir, '.gemini', 'chroma');
+  const chromaPath = path.join(projectDir, '.codefly', 'chroma');
 
   // Ensure chroma directory exists
   fs.mkdirSync(chromaPath, { recursive: true });
@@ -513,7 +513,7 @@ async function main() {
   // Search memories
   const projectDir = process.env.GEMINI_PROJECT_DIR;
   const client = new ChromaClient({
-    path: path.join(projectDir, '.gemini', 'chroma'),
+    path: path.join(projectDir, '.codefly', 'chroma'),
   });
 
   try {
@@ -770,7 +770,7 @@ async function main() {
 
   const tempFile = path.join(
     projectDir,
-    '.gemini',
+    '.codefly',
     'memory',
     `session-${sessionId}.jsonl`,
   );
@@ -830,7 +830,7 @@ async function main() {
 
   const tempFile = path.join(
     projectDir,
-    '.gemini',
+    '.codefly',
     'memory',
     `session-${sessionId}.jsonl`,
   );
@@ -874,7 +874,7 @@ JSON:`;
 
     // Store in ChromaDB
     const client = new ChromaClient({
-      path: path.join(projectDir, '.gemini', 'chroma'),
+      path: path.join(projectDir, '.codefly', 'chroma'),
     });
     const collection = await client.getCollection({ name: 'project_memories' });
     const embedModel = genai.getGenerativeModel({

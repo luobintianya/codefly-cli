@@ -12,7 +12,7 @@ import { useShellHistory } from './useShellHistory.js';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import * as crypto from 'node:crypto';
-import { GEMINI_DIR } from '@codefly/codefly-core';
+import { CODEFLY_DIR } from '@codefly/codefly-core';
 
 vi.mock('node:fs/promises', () => ({
   readFile: vi.fn(),
@@ -40,15 +40,15 @@ vi.mock('@codefly/codefly-core', async (importOriginal) => {
   const path = await import('node:path');
   class Storage {
     static getGlobalSettingsPath(): string {
-      return '/test/home/.gemini/settings.json';
+      return '/test/home/.codefly/settings.json';
     }
     getProjectTempDir(): string {
-      return path.join('/test/home/', actual.GEMINI_DIR, 'tmp', 'mocked_hash');
+      return path.join('/test/home/', actual.CODEFLY_DIR, 'tmp', 'mocked_hash');
     }
     getHistoryFilePath(): string {
       return path.join(
         '/test/home/',
-        actual.GEMINI_DIR,
+        actual.CODEFLY_DIR,
         'tmp',
         'mocked_hash',
         'shell_history',
@@ -69,7 +69,7 @@ const MOCKED_PROJECT_HASH = 'mocked_hash';
 
 const MOCKED_HISTORY_DIR = path.join(
   MOCKED_HOME_DIR,
-  GEMINI_DIR,
+  CODEFLY_DIR,
   'tmp',
   MOCKED_PROJECT_HASH,
 );

@@ -22,7 +22,7 @@ vi.mock('@codefly/codefly-core', async (importOriginal) => {
   return {
     ...actual,
     recordFlickerFrame: vi.fn(),
-    GEMINI_DIR: '.gemini',
+    CODEFLY_DIR: '.codefly',
   };
 });
 vi.mock('ink', async (importOriginal) => {

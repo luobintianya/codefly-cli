@@ -14,6 +14,7 @@ import {
   afterEach,
   afterAll,
 } from 'vitest';
+import { CODEFLY_DIR } from '@codefly/codefly-core';
 import * as fs from 'node:fs';
 import * as os from 'node:os';
 import * as path from 'node:path';
@@ -1089,7 +1090,7 @@ describe('extension tests', () => {
     it('should add the workspace to trusted folders if user consents', async () => {
       const trustedFoldersPath = path.join(
         tempHomeDir,
-        '.gemini',
+        CODEFLY_DIR,
         'trustedFolders.json',
       );
       vi.mocked(isWorkspaceTrusted).mockReturnValue({

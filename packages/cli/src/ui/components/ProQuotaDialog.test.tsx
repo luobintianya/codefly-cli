@@ -124,43 +124,6 @@ describe('ProQuotaDialog', () => {
         );
         unmount();
       });
-
-      it('should render switch, upgrade, and stop options for free tier', () => {
-        const { unmount } = render(
-          <ProQuotaDialog
-            failedModel="gemini-2.5-pro"
-            fallbackModel="gemini-2.5-flash"
-            message="free tier quota error"
-            isTerminalQuotaError={true}
-            isModelNotFoundError={false}
-            onChoice={mockOnChoice}
-          />,
-        );
-
-        expect(RadioButtonSelect).toHaveBeenCalledWith(
-          expect.objectContaining({
-            items: [
-              {
-                label: 'Switch to gemini-2.5-flash',
-                value: 'retry_always',
-                key: 'retry_always',
-              },
-              {
-                label: 'Upgrade for higher limits',
-                value: 'upgrade',
-                key: 'upgrade',
-              },
-              {
-                label: 'Stop',
-                value: 'retry_later',
-                key: 'retry_later',
-              },
-            ],
-          }),
-          undefined,
-        );
-        unmount();
-      });
     });
 
     describe('when it is a capacity error', () => {

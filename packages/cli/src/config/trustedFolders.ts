@@ -12,7 +12,7 @@ import {
   getErrorMessage,
   isWithinRoot,
   ideContextStore,
-  GEMINI_DIR,
+  CODEFLY_DIR,
 } from '@codefly/codefly-core';
 import type { Settings } from './settings.js';
 import stripJsonComments from 'strip-json-comments';
@@ -20,7 +20,7 @@ import stripJsonComments from 'strip-json-comments';
 export const TRUSTED_FOLDERS_FILENAME = 'trustedFolders.json';
 
 export function getUserSettingsDir(): string {
-  return path.join(homedir(), GEMINI_DIR);
+  return path.join(homedir(), CODEFLY_DIR);
 }
 
 export function getTrustedFoldersPath(): string {

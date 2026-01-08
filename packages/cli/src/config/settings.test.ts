@@ -66,15 +66,15 @@ import {
   saveSettings,
   type SettingsFile,
 } from './settings.js';
-import { FatalConfigError, GEMINI_DIR } from '@codefly/codefly-core';
+import { FatalConfigError, CODEFLY_DIR } from '@codefly/codefly-core';
 import { ExtensionManager } from './extension-manager.js';
 import { updateSettingsFilePreservingFormat } from '../utils/commentJson.js';
 
 const MOCK_WORKSPACE_DIR = '/mock/workspace';
-// Use the (mocked) GEMINI_DIR for consistency
+// Use the (mocked) CODEFLY_DIR for consistency
 const MOCK_WORKSPACE_SETTINGS_PATH = pathActual.join(
   MOCK_WORKSPACE_DIR,
-  GEMINI_DIR,
+  CODEFLY_DIR,
   'settings.json',
 );
 
@@ -1997,7 +1997,9 @@ describe('Settings Loading and Merging', () => {
         preferredEditor: 'code',
         vimMode: true,
         theme: 'dark',
-        usageStatisticsEnabled: false,
+        privacy: {
+          usageStatisticsEnabled: false,
+        },
         model: 'gemini-2.5-pro',
         contextFileName: 'CONTEXT.md',
         includeDirectories: ['/src'],
@@ -2140,7 +2142,7 @@ describe('Settings Loading and Merging', () => {
       isWorkspaceTrustedValue = true,
     }) {
       delete process.env['TESTTEST']; // reset
-      const geminiEnvPath = path.resolve(path.join(GEMINI_DIR, '.env'));
+      const geminiEnvPath = path.resolve(path.join(CODEFLY_DIR, '.env'));
 
       vi.mocked(isWorkspaceTrusted).mockReturnValue({
         isTrusted: isWorkspaceTrustedValue,

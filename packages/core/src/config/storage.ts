@@ -8,7 +8,7 @@ import * as path from 'node:path';
 import * as os from 'node:os';
 import * as crypto from 'node:crypto';
 import * as fs from 'node:fs';
-import { GEMINI_DIR } from '../utils/paths.js';
+import { CODEFLY_DIR } from '../utils/paths.js';
 
 export const GOOGLE_ACCOUNTS_FILENAME = 'google_accounts.json';
 export const OAUTH_FILE = 'oauth_creds.json';
@@ -25,9 +25,9 @@ export class Storage {
   static getGlobalGeminiDir(): string {
     const homeDir = os.homedir();
     if (!homeDir) {
-      return path.join(os.tmpdir(), GEMINI_DIR);
+      return path.join(os.tmpdir(), CODEFLY_DIR);
     }
-    return path.join(homeDir, GEMINI_DIR);
+    return path.join(homeDir, CODEFLY_DIR);
   }
 
   static getMcpOAuthTokensPath(): string {
@@ -92,7 +92,7 @@ export class Storage {
   }
 
   getGeminiDir(): string {
-    return path.join(this.targetDir, GEMINI_DIR);
+    return path.join(this.targetDir, CODEFLY_DIR);
   }
 
   getProjectTempDir(): string {
