@@ -217,7 +217,6 @@ describe('Server Config (config.ts)', () => {
     telemetry: TELEMETRY_SETTINGS,
     sessionId: SESSION_ID,
     model: MODEL,
-    usageStatisticsEnabled: false,
   };
 
   beforeEach(() => {
@@ -628,28 +627,6 @@ describe('Server Config (config.ts)', () => {
     const config = new Config(baseParams);
     const fileService = config.getFileService();
     expect(fileService).toBeDefined();
-  });
-
-  describe('Usage Statistics', () => {
-    it('defaults usage statistics to enabled if not specified', () => {
-      const config = new Config({
-        ...baseParams,
-        usageStatisticsEnabled: undefined,
-      });
-
-      expect(config.getUsageStatisticsEnabled()).toBe(true);
-    });
-
-    it.each([{ enabled: true }, { enabled: false }])(
-      'sets usage statistics based on the provided value (enabled: $enabled)',
-      ({ enabled }) => {
-        const config = new Config({
-          ...baseParams,
-          usageStatisticsEnabled: enabled,
-        });
-        expect(config.getUsageStatisticsEnabled()).toBe(enabled);
-      },
-    );
   });
 
   describe('Telemetry Settings', () => {
@@ -1325,7 +1302,6 @@ describe('BaseLlmClient Lifecycle', () => {
     telemetry: TELEMETRY_SETTINGS,
     sessionId: SESSION_ID,
     model: MODEL,
-    usageStatisticsEnabled: false,
   };
 
   it('should throw an error if getBaseLlmClient is called before refreshAuth', () => {
@@ -1380,7 +1356,6 @@ describe('Generation Config Merging (HACK)', () => {
     telemetry: TELEMETRY_SETTINGS,
     sessionId: SESSION_ID,
     model: MODEL,
-    usageStatisticsEnabled: false,
   };
 
   it('should merge default aliases when user provides only overrides', () => {
@@ -1473,7 +1448,6 @@ describe('Config getHooks', () => {
     debugMode: false,
     sessionId: 'test-session-id',
     model: 'gemini-pro',
-    usageStatisticsEnabled: false,
   };
 
   it('should return undefined when no hooks are provided', () => {
@@ -1606,7 +1580,6 @@ describe('Config getHooks', () => {
         debugMode: false,
         sessionId: 'test-session-id',
         model: 'auto',
-        usageStatisticsEnabled: false,
       });
       const service = config.getModelAvailabilityService();
       const spy = vi.spyOn(service, 'reset');
@@ -1664,7 +1637,6 @@ describe('Config getExperiments', () => {
     debugMode: false,
     sessionId: 'test-session-id',
     model: 'gemini-pro',
-    usageStatisticsEnabled: false,
   };
 
   it('should return undefined when no experiments are provided', () => {
@@ -1709,7 +1681,6 @@ describe('Config setExperiments logging', () => {
     debugMode: false,
     sessionId: 'test-session-id',
     model: 'gemini-pro',
-    usageStatisticsEnabled: false,
   };
 
   it('logs a sorted, non-truncated summary of experiments when they are set', () => {
@@ -1811,7 +1782,6 @@ describe('Config Quota & Preview Model Access', () => {
     debugMode: false,
     sessionId: 'test-session',
     model: 'gemini-pro',
-    usageStatisticsEnabled: false,
     embeddingModel: 'gemini-embedding',
     sandbox: {
       command: 'docker',

@@ -645,7 +645,6 @@ export async function loadCliConfig(
       screenReader,
     },
     telemetry: telemetrySettings,
-    usageStatisticsEnabled: settings.privacy?.usageStatisticsEnabled ?? true,
     fileFiltering,
     checkpointing: settings.general?.checkpointing?.enabled,
     proxy:

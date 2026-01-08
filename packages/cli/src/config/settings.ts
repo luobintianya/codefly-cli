@@ -132,7 +132,6 @@ const MIGRATION_MAP: Record<string, string> = {
   theme: 'ui.theme',
   toolDiscoveryCommand: 'tools.discoveryCommand',
   toolCallCommand: 'tools.callCommand',
-  usageStatisticsEnabled: 'privacy.usageStatisticsEnabled',
   useExternalAuth: 'security.auth.useExternal',
   useRipgrep: 'tools.useRipgrep',
   vimMode: 'general.vimMode',

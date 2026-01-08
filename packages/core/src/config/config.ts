@@ -281,7 +281,6 @@ export interface ConfigParameters {
   contextFileName?: string | string[];
   accessibility?: AccessibilitySettings;
   telemetry?: TelemetrySettings;
-  usageStatisticsEnabled?: boolean;
   fileFiltering?: {
     respectGitIgnore?: boolean;
     respectGeminiIgnore?: boolean;
@@ -394,7 +393,6 @@ export class Config {
   private readonly showMemoryUsage: boolean;
   private readonly accessibility: AccessibilitySettings;
   private readonly telemetrySettings: TelemetrySettings;
-  private readonly usageStatisticsEnabled: boolean;
   private geminiClient!: GeminiClient;
   private baseLlmClient!: BaseLlmClient;
   private modelRouterService: ModelRouterService;
@@ -528,7 +526,6 @@ export class Config {
       useCollector: params.telemetry?.useCollector,
       useCliAuth: params.telemetry?.useCliAuth,
     };
-    this.usageStatisticsEnabled = params.usageStatisticsEnabled ?? true;
 
     this.fileFiltering = {
       respectGitIgnore:
@@ -1341,10 +1338,6 @@ export class Config {
       this.fileDiscoveryService = new FileDiscoveryService(this.targetDir);
     }
     return this.fileDiscoveryService;
-  }
-
-  getUsageStatisticsEnabled(): boolean {
-    return this.usageStatisticsEnabled;
   }
 
   getExperimentalZedIntegration(): boolean {

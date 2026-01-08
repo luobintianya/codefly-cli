@@ -44,7 +44,6 @@ import type {
   ModelConfigKey,
   ResolvedModelConfig,
 } from '../services/modelConfigService.js';
-import { ClearcutLogger } from '../telemetry/clearcut-logger/clearcut-logger.js';
 import { HookSystem } from '../hooks/hookSystem.js';
 import * as policyCatalog from '../availability/policyCatalog.js';
 
@@ -166,7 +165,6 @@ describe('Gemini Client (client.ts)', () => {
   let mockRouterService: { route: Mock };
   beforeEach(async () => {
     vi.resetAllMocks();
-    ClearcutLogger.clearInstance();
     vi.mocked(uiTelemetryService.setLastPromptTokenCount).mockClear();
 
     vi.mocked(ChatCompressionService.prototype.compress).mockResolvedValue({

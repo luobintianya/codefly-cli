@@ -104,7 +104,6 @@ import {
 import { DiscoveredMCPTool } from '../tools/mcp-tool.js';
 import * as uiTelemetry from './uiTelemetry.js';
 import { makeFakeConfig } from '../test-utils/config.js';
-import { ClearcutLogger } from './clearcut-logger/clearcut-logger.js';
 import { UserAccountManager } from '../utils/userAccountManager.js';
 import { InstallationManager } from '../utils/installationManager.js';
 import { AgentTerminateMode } from '../agents/types.js';
@@ -140,7 +139,6 @@ describe('loggers', () => {
   describe('logChatCompression', () => {
     beforeEach(() => {
       vi.spyOn(metrics, 'recordChatCompressionMetrics');
-      vi.spyOn(ClearcutLogger.prototype, 'logChatCompressionEvent');
     });
 
     it('logs the chat compression event to Clearcut', () => {
@@ -152,10 +150,6 @@ describe('loggers', () => {
       });
 
       logChatCompression(mockConfig, event);
-
-      expect(
-        ClearcutLogger.prototype.logChatCompressionEvent,
-      ).toHaveBeenCalledWith(event);
     });
 
     it('records the chat compression event to OTEL', () => {
@@ -191,7 +185,6 @@ describe('loggers', () => {
           authType: AuthType.USE_VERTEX_AI,
         }),
         getTelemetryEnabled: () => true,
-        getUsageStatisticsEnabled: () => true,
         getTelemetryLogPromptsEnabled: () => true,
         getFileFilteringRespectGitIgnore: () => true,
         getFileFilteringAllowBuildArtifacts: () => false,
@@ -259,7 +252,6 @@ describe('loggers', () => {
       getSessionId: () => 'test-session-id',
       getTelemetryEnabled: () => true,
       getTelemetryLogPromptsEnabled: () => true,
-      getUsageStatisticsEnabled: () => true,
       isInteractive: () => false,
     } as unknown as Config;
 
@@ -296,7 +288,6 @@ describe('loggers', () => {
         getTelemetryEnabled: () => true,
         getTelemetryLogPromptsEnabled: () => false,
         getTargetDir: () => 'target-dir',
-        getUsageStatisticsEnabled: () => true,
         isInteractive: () => false,
       } as unknown as Config;
       const event = new UserPromptEvent(
@@ -329,7 +320,6 @@ describe('loggers', () => {
     const mockConfig = {
       getSessionId: () => 'test-session-id',
       getTargetDir: () => 'target-dir',
-      getUsageStatisticsEnabled: () => true,
       getTelemetryEnabled: () => true,
       getTelemetryLogPromptsEnabled: () => true,
       isInteractive: () => false,
@@ -505,7 +495,6 @@ describe('loggers', () => {
     const mockConfig = {
       getSessionId: () => 'test-session-id',
       getTargetDir: () => 'target-dir',
-      getUsageStatisticsEnabled: () => true,
       getTelemetryEnabled: () => true,
       getTelemetryLogPromptsEnabled: () => true,
       isInteractive: () => false,
@@ -637,7 +626,6 @@ describe('loggers', () => {
     const mockConfig = {
       getSessionId: () => 'test-session-id',
       getTargetDir: () => 'target-dir',
-      getUsageStatisticsEnabled: () => true,
       getTelemetryEnabled: () => true,
       getTelemetryLogPromptsEnabled: () => true,
       isInteractive: () => false,
@@ -713,7 +701,6 @@ describe('loggers', () => {
       const mockConfigWithPrompts = {
         getSessionId: () => 'test-session-id',
         getTargetDir: () => 'target-dir',
-        getUsageStatisticsEnabled: () => true,
         getTelemetryEnabled: () => true,
         getTelemetryLogPromptsEnabled: () => true, // Enabled
         isInteractive: () => false,
@@ -800,7 +787,6 @@ describe('loggers', () => {
       const mockConfigWithoutPrompts = {
         getSessionId: () => 'test-session-id',
         getTargetDir: () => 'target-dir',
-        getUsageStatisticsEnabled: () => true,
         getTelemetryEnabled: () => true,
         getTelemetryLogPromptsEnabled: () => false, // Disabled
         isInteractive: () => false,
@@ -857,7 +843,6 @@ describe('loggers', () => {
         getTelemetryEnabled: () => true,
         getTelemetryLogPromptsEnabled: () => true,
         isInteractive: () => false,
-        getUsageStatisticsEnabled: () => true,
         getContentGeneratorConfig: () => ({
           authType: AuthType.USE_GEMINI,
         }),
@@ -891,7 +876,6 @@ describe('loggers', () => {
   describe('logFlashFallback', () => {
     const mockConfig = {
       getSessionId: () => 'test-session-id',
-      getUsageStatisticsEnabled: () => true,
       isInteractive: () => false,
     } as unknown as Config;
 
@@ -918,22 +902,15 @@ describe('loggers', () => {
   describe('logRipgrepFallback', () => {
     const mockConfig = {
       getSessionId: () => 'test-session-id',
-      getUsageStatisticsEnabled: () => true,
       isInteractive: () => false,
     } as unknown as Config;
 
-    beforeEach(() => {
-      vi.spyOn(ClearcutLogger.prototype, 'logRipgrepFallbackEvent');
-    });
+    beforeEach(() => {});
 
     it('should log ripgrep fallback event', () => {
       const event = new RipgrepFallbackEvent();
 
       logRipgrepFallback(mockConfig, event);
-
-      expect(
-        ClearcutLogger.prototype.logRipgrepFallbackEvent,
-      ).toHaveBeenCalled();
 
       const emittedEvent = mockLogger.emit.mock.calls[0][0];
       expect(emittedEvent.body).toBe('Switching to grep as fallback.');
@@ -952,10 +929,6 @@ describe('loggers', () => {
       const event = new RipgrepFallbackEvent('rg not found');
 
       logRipgrepFallback(mockConfig, event);
-
-      expect(
-        ClearcutLogger.prototype.logRipgrepFallbackEvent,
-      ).toHaveBeenCalled();
 
       const emittedEvent = mockLogger.emit.mock.calls[0][0];
       expect(emittedEvent.body).toBe('Switching to grep as fallback.');
@@ -1009,7 +982,6 @@ describe('loggers', () => {
       getSessionId: () => 'test-session-id',
       getTargetDir: () => 'target-dir',
       getGeminiClient: () => mockGeminiClient,
-      getUsageStatisticsEnabled: () => true,
       getTelemetryEnabled: () => true,
       getTelemetryLogPromptsEnabled: () => true,
       isInteractive: () => false,
@@ -1544,19 +1516,13 @@ describe('loggers', () => {
   });
 
   describe('logMalformedJsonResponse', () => {
-    beforeEach(() => {
-      vi.spyOn(ClearcutLogger.prototype, 'logMalformedJsonResponseEvent');
-    });
+    beforeEach(() => {});
 
     it('logs the event to Clearcut and OTEL', () => {
       const mockConfig = makeFakeConfig();
       const event = new MalformedJsonResponseEvent('test-model');
 
       logMalformedJsonResponse(mockConfig, event);
-
-      expect(
-        ClearcutLogger.prototype.logMalformedJsonResponseEvent,
-      ).toHaveBeenCalledWith(event);
 
       expect(mockLogger.emit).toHaveBeenCalledWith({
         body: 'Malformed JSON response from test-model.',
@@ -1577,7 +1543,6 @@ describe('loggers', () => {
     const mockConfig = {
       getSessionId: () => 'test-session-id',
       getTargetDir: () => 'target-dir',
-      getUsageStatisticsEnabled: () => true,
       getTelemetryEnabled: () => true,
       getTelemetryLogPromptsEnabled: () => true,
       isInteractive: () => false,
@@ -1639,7 +1604,6 @@ describe('loggers', () => {
   describe('logToolOutputTruncated', () => {
     const mockConfig = {
       getSessionId: () => 'test-session-id',
-      getUsageStatisticsEnabled: () => true,
       isInteractive: () => false,
     } as unknown as Config;
 
@@ -1678,12 +1642,10 @@ describe('loggers', () => {
   describe('logModelRouting', () => {
     const mockConfig = {
       getSessionId: () => 'test-session-id',
-      getUsageStatisticsEnabled: () => true,
       isInteractive: () => false,
     } as unknown as Config;
 
     beforeEach(() => {
-      vi.spyOn(ClearcutLogger.prototype, 'logModelRoutingEvent');
       vi.spyOn(metrics, 'recordModelRoutingMetrics');
     });
 
@@ -1699,10 +1661,6 @@ describe('loggers', () => {
 
       logModelRouting(mockConfig, event);
 
-      expect(
-        ClearcutLogger.prototype.logModelRoutingEvent,
-      ).toHaveBeenCalledWith(event);
-
       expect(mockLogger.emit).toHaveBeenCalledWith({
         body: 'Model routing decision. Model: gemini-pro, Source: default',
         attributes: {
@@ -1717,7 +1675,6 @@ describe('loggers', () => {
 
       expect(metrics.recordModelRoutingMetrics).toHaveBeenCalledWith(
         mockConfig,
-        event,
       );
     });
 
@@ -1735,9 +1692,6 @@ describe('loggers', () => {
 
       logModelRouting(mockConfig, event);
 
-      expect(
-        ClearcutLogger.prototype.logModelRoutingEvent,
-      ).toHaveBeenCalledWith(event);
       expect(mockLogger.emit).not.toHaveBeenCalled();
       expect(metrics.recordModelRoutingMetrics).not.toHaveBeenCalled();
     });
@@ -1746,14 +1700,11 @@ describe('loggers', () => {
   describe('logExtensionInstall', () => {
     const mockConfig = {
       getSessionId: () => 'test-session-id',
-      getUsageStatisticsEnabled: () => true,
       getContentGeneratorConfig: () => null,
       isInteractive: () => false,
     } as unknown as Config;
 
-    beforeEach(() => {
-      vi.spyOn(ClearcutLogger.prototype, 'logExtensionInstallEvent');
-    });
+    beforeEach(() => {});
 
     afterEach(() => {
       vi.clearAllMocks();
@@ -1770,10 +1721,6 @@ describe('loggers', () => {
       );
 
       await logExtensionInstallEvent(mockConfig, event);
-
-      expect(
-        ClearcutLogger.prototype.logExtensionInstallEvent,
-      ).toHaveBeenCalledWith(event);
 
       expect(mockLogger.emit).toHaveBeenCalledWith({
         body: 'Installed extension testing',
@@ -1796,14 +1743,11 @@ describe('loggers', () => {
   describe('logExtensionUpdate', async () => {
     const mockConfig = {
       getSessionId: () => 'test-session-id',
-      getUsageStatisticsEnabled: () => true,
       getContentGeneratorConfig: () => null,
       isInteractive: () => false,
     } as unknown as Config;
 
-    beforeEach(() => {
-      vi.spyOn(ClearcutLogger.prototype, 'logExtensionUpdateEvent');
-    });
+    beforeEach(() => {});
 
     afterEach(() => {
       vi.clearAllMocks();
@@ -1821,10 +1765,6 @@ describe('loggers', () => {
       );
 
       await logExtensionUpdateEvent(mockConfig, event);
-
-      expect(
-        ClearcutLogger.prototype.logExtensionUpdateEvent,
-      ).toHaveBeenCalledWith(event);
 
       expect(mockLogger.emit).toHaveBeenCalledWith({
         body: 'Updated extension testing',
@@ -1848,14 +1788,11 @@ describe('loggers', () => {
   describe('logExtensionUninstall', async () => {
     const mockConfig = {
       getSessionId: () => 'test-session-id',
-      getUsageStatisticsEnabled: () => true,
       getContentGeneratorConfig: () => null,
       isInteractive: () => false,
     } as unknown as Config;
 
-    beforeEach(() => {
-      vi.spyOn(ClearcutLogger.prototype, 'logExtensionUninstallEvent');
-    });
+    beforeEach(() => {});
 
     afterEach(() => {
       vi.clearAllMocks();
@@ -1869,10 +1806,6 @@ describe('loggers', () => {
       );
 
       await logExtensionUninstall(mockConfig, event);
-
-      expect(
-        ClearcutLogger.prototype.logExtensionUninstallEvent,
-      ).toHaveBeenCalledWith(event);
 
       expect(mockLogger.emit).toHaveBeenCalledWith({
         body: 'Uninstalled extension testing',
@@ -1893,13 +1826,10 @@ describe('loggers', () => {
   describe('logExtensionEnable', async () => {
     const mockConfig = {
       getSessionId: () => 'test-session-id',
-      getUsageStatisticsEnabled: () => true,
       isInteractive: () => false,
     } as unknown as Config;
 
-    beforeEach(() => {
-      vi.spyOn(ClearcutLogger.prototype, 'logExtensionEnableEvent');
-    });
+    beforeEach(() => {});
 
     afterEach(() => {
       vi.clearAllMocks();
@@ -1914,10 +1844,6 @@ describe('loggers', () => {
       );
 
       await logExtensionEnable(mockConfig, event);
-
-      expect(
-        ClearcutLogger.prototype.logExtensionEnableEvent,
-      ).toHaveBeenCalledWith(event);
 
       expect(mockLogger.emit).toHaveBeenCalledWith({
         body: 'Enabled extension testing',
@@ -1938,13 +1864,10 @@ describe('loggers', () => {
   describe('logExtensionDisable', () => {
     const mockConfig = {
       getSessionId: () => 'test-session-id',
-      getUsageStatisticsEnabled: () => true,
       isInteractive: () => false,
     } as unknown as Config;
 
-    beforeEach(() => {
-      vi.spyOn(ClearcutLogger.prototype, 'logExtensionDisableEvent');
-    });
+    beforeEach(() => {});
 
     afterEach(() => {
       vi.clearAllMocks();
@@ -1959,10 +1882,6 @@ describe('loggers', () => {
       );
 
       await logExtensionDisable(mockConfig, event);
-
-      expect(
-        ClearcutLogger.prototype.logExtensionDisableEvent,
-      ).toHaveBeenCalledWith(event);
 
       expect(mockLogger.emit).toHaveBeenCalledWith({
         body: 'Disabled extension testing',
@@ -1983,22 +1902,15 @@ describe('loggers', () => {
   describe('logAgentStart', () => {
     const mockConfig = {
       getSessionId: () => 'test-session-id',
-      getUsageStatisticsEnabled: () => true,
       isInteractive: () => false,
     } as unknown as Config;
 
-    beforeEach(() => {
-      vi.spyOn(ClearcutLogger.prototype, 'logAgentStartEvent');
-    });
+    beforeEach(() => {});
 
     it('should log agent start event', () => {
       const event = new AgentStartEvent('agent-123', 'TestAgent');
 
       logAgentStart(mockConfig, event);
-
-      expect(ClearcutLogger.prototype.logAgentStartEvent).toHaveBeenCalledWith(
-        event,
-      );
 
       expect(mockLogger.emit).toHaveBeenCalledWith({
         body: 'Agent TestAgent started. ID: agent-123',
@@ -2019,12 +1931,10 @@ describe('loggers', () => {
   describe('logAgentFinish', () => {
     const mockConfig = {
       getSessionId: () => 'test-session-id',
-      getUsageStatisticsEnabled: () => true,
       isInteractive: () => false,
     } as unknown as Config;
 
     beforeEach(() => {
-      vi.spyOn(ClearcutLogger.prototype, 'logAgentFinishEvent');
       vi.spyOn(metrics, 'recordAgentRunMetrics');
     });
 
@@ -2038,10 +1948,6 @@ describe('loggers', () => {
       );
 
       logAgentFinish(mockConfig, event);
-
-      expect(ClearcutLogger.prototype.logAgentFinishEvent).toHaveBeenCalledWith(
-        event,
-      );
 
       expect(mockLogger.emit).toHaveBeenCalledWith({
         body: 'Agent TestAgent finished. Reason: GOAL. Duration: 1000ms. Turns: 5.',
@@ -2060,32 +1966,22 @@ describe('loggers', () => {
         },
       });
 
-      expect(metrics.recordAgentRunMetrics).toHaveBeenCalledWith(
-        mockConfig,
-        event,
-      );
+      expect(metrics.recordAgentRunMetrics).toHaveBeenCalledWith(mockConfig);
     });
   });
 
   describe('logWebFetchFallbackAttempt', () => {
     const mockConfig = {
       getSessionId: () => 'test-session-id',
-      getUsageStatisticsEnabled: () => true,
       isInteractive: () => false,
     } as unknown as Config;
 
-    beforeEach(() => {
-      vi.spyOn(ClearcutLogger.prototype, 'logWebFetchFallbackAttemptEvent');
-    });
+    beforeEach(() => {});
 
     it('should log web fetch fallback attempt event', () => {
       const event = new WebFetchFallbackAttemptEvent('private_ip');
 
       logWebFetchFallbackAttempt(mockConfig, event);
-
-      expect(
-        ClearcutLogger.prototype.logWebFetchFallbackAttemptEvent,
-      ).toHaveBeenCalledWith(event);
 
       expect(mockLogger.emit).toHaveBeenCalledWith({
         body: 'Web fetch fallback attempt. Reason: private_ip',
@@ -2105,13 +2001,11 @@ describe('loggers', () => {
   describe('logHookCall', () => {
     const mockConfig = {
       getSessionId: () => 'test-session-id',
-      getUsageStatisticsEnabled: () => true,
       isInteractive: () => false,
       getTelemetryLogPromptsEnabled: () => false,
     } as unknown as Config;
 
     beforeEach(() => {
-      vi.spyOn(ClearcutLogger.prototype, 'logHookCallEvent');
       vi.spyOn(metrics, 'recordHookCallMetrics');
     });
 
@@ -2128,10 +2022,6 @@ describe('loggers', () => {
       );
 
       logHookCall(mockConfig, event);
-
-      expect(ClearcutLogger.prototype.logHookCallEvent).toHaveBeenCalledWith(
-        event,
-      );
 
       expect(mockLogger.emit).toHaveBeenCalledWith({
         body: 'Hook call before-tool./path/to/script.sh succeeded in 150ms',

@@ -11,7 +11,6 @@ import { Config } from '../config/config.js';
  * Default parameters used for {@link FAKE_CONFIG}
  */
 export const DEFAULT_CONFIG_PARAMETERS: ConfigParameters = {
-  usageStatisticsEnabled: true,
   debugMode: false,
   sessionId: 'test-session-id',
   proxy: undefined,
