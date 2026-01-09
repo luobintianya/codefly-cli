@@ -79,6 +79,23 @@ export class LoggingContentGenerator implements ContentGenerator {
   ): ServerDetails {
     const genConfig = this.config.getContentGeneratorConfig();
 
+    // Case 1: Custom model with baseUrl (e.g., OpenAI, Zhipu AI)
+    if (genConfig?.baseUrl) {
+      try {
+        const url = new URL(genConfig.baseUrl);
+        return {
+          address: url.hostname,
+          port: url.port
+            ? parseInt(url.port, 10)
+            : url.protocol === 'https:'
+              ? 443
+              : 80,
+        };
+      } catch {
+        // If baseUrl is invalid, fall through to defaults
+      }
+    }
+
     // Case 2: Using an API key for Vertex AI.
     if (genConfig?.vertexai) {
       const location = process.env['GOOGLE_CLOUD_LOCATION'];
