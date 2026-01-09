@@ -21,6 +21,8 @@ import {
   DEFAULT_GEMINI_MODEL,
   PREVIEW_GEMINI_MODEL,
   PREVIEW_GEMINI_FLASH_MODEL,
+  LEGACY_GEMINI_2_5_PRO,
+  LEGACY_GEMINI_2_5_FLASH,
 } from '../config/models.js';
 import { firePreCompressHook } from '../core/sessionHookTriggers.js';
 import { PreCompressTrigger } from '../hooks/types.js';
@@ -91,6 +93,10 @@ export function modelStringToModelConfigAlias(model: string): string {
       return 'chat-compression-3-pro';
     case PREVIEW_GEMINI_FLASH_MODEL:
       return 'chat-compression-3-flash';
+    case LEGACY_GEMINI_2_5_PRO:
+      return 'chat-compression-2.5-pro';
+    case LEGACY_GEMINI_2_5_FLASH:
+      return 'chat-compression-2.5-flash';
     case DEFAULT_GEMINI_MODEL:
       return 'chat-compression-2.5-pro';
     case DEFAULT_GEMINI_FLASH_MODEL:

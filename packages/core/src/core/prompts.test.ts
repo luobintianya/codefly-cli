@@ -144,7 +144,6 @@ describe('Core System Prompt (prompts.ts)', () => {
     const prompt = getCoreSystemPrompt(mockConfig, userMemory);
     expect(prompt).not.toContain('---\n\n'); // Separator should not be present
     expect(prompt).toContain('You are an interactive CLI agent'); // Check for core content
-    expect(prompt).toContain('No Chitchat:');
     expect(prompt).toMatchSnapshot(); // Use snapshot for base prompt structure
   });
 

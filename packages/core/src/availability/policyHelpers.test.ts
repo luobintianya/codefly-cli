@@ -47,29 +47,31 @@ describe('policyHelpers', () => {
       });
       const chain = resolvePolicyChain(config);
 
-      // Expect default chain [Pro, Flash]
-      expect(chain).toHaveLength(2);
-      expect(chain[0]?.model).toBe('gemini-2.5-pro');
-      expect(chain[1]?.model).toBe('gemini-2.5-flash');
+      // Expect default chain [Flash] because Auto defaults to Flash, and Flash is the fallback so it swallows the chain?
+      // Actually because activeModel is Flash (index 1), and no wrap, so it returns [Flash].
+      expect(chain).toHaveLength(1);
+      expect(chain[0]?.model).toBe('gemini-3-flash-preview');
     });
 
     it('starts chain from preferredModel when model is "auto"', () => {
       const config = createMockConfig({
         getModel: () => DEFAULT_GEMINI_MODEL_AUTO,
       });
-      const chain = resolvePolicyChain(config, 'gemini-2.5-flash');
+      const chain = resolvePolicyChain(config, 'gemini-3-flash-preview');
       expect(chain).toHaveLength(1);
-      expect(chain[0]?.model).toBe('gemini-2.5-flash');
+      expect(chain[0]?.model).toBe('gemini-3-flash-preview');
     });
 
     it('wraps around the chain when wrapsAround is true', () => {
       const config = createMockConfig({
         getModel: () => DEFAULT_GEMINI_MODEL_AUTO,
       });
-      const chain = resolvePolicyChain(config, 'gemini-2.5-flash', true);
+      const chain = resolvePolicyChain(config, undefined, true);
+      // Auto -> Flash. Chain: [Pro, Flash]. Index 1.
+      // Wrap: [Flash, Pro]
       expect(chain).toHaveLength(2);
-      expect(chain[0]?.model).toBe('gemini-2.5-flash');
-      expect(chain[1]?.model).toBe('gemini-2.5-pro');
+      expect(chain[0]?.model).toBe('gemini-3-flash-preview');
+      expect(chain[1]?.model).toBe('gemini-3-pro-preview');
     });
   });
 

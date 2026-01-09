@@ -567,7 +567,7 @@ describe('createPolicyEngineConfig', () => {
           typeof path === 'string' &&
           nodePath
             .normalize(path)
-            .includes(nodePath.normalize('.gemini/policies'))
+            .includes(nodePath.normalize('/tmp/mock/default/policies'))
         ) {
           return [
             {
@@ -593,7 +593,9 @@ describe('createPolicyEngineConfig', () => {
           typeof path === 'string' &&
           nodePath
             .normalize(path)
-            .includes(nodePath.normalize('.gemini/policies/write.toml'))
+            .includes(
+              nodePath.normalize('/tmp/mock/default/policies/write.toml'),
+            )
         ) {
           return `
 [[rule]]
@@ -630,8 +632,8 @@ priority = 150
         r.decision === PolicyDecision.ALLOW,
     );
     expect(rule).toBeDefined();
-    // Priority 150 in user tier → 2.150
-    expect(rule?.priority).toBeCloseTo(2.15, 5);
+    // Priority 150 in default tier → 1.150
+    expect(rule?.priority).toBeCloseTo(1.15, 5);
     expect(rule?.argsPattern).toBeInstanceOf(RegExp);
     expect(rule?.argsPattern?.test('{"command":"git status"}')).toBe(true);
     expect(rule?.argsPattern?.test('{"command":"git diff"}')).toBe(true);
@@ -657,7 +659,7 @@ priority = 150
           typeof path === 'string' &&
           nodePath
             .normalize(path)
-            .includes(nodePath.normalize('.gemini/policies'))
+            .includes(nodePath.normalize('/tmp/mock/default/policies'))
         ) {
           return [
             {
@@ -683,7 +685,9 @@ priority = 150
           typeof path === 'string' &&
           nodePath
             .normalize(path)
-            .includes(nodePath.normalize('.gemini/policies/safety.toml'))
+            .includes(
+              nodePath.normalize('/tmp/mock/default/policies/safety.toml'),
+            )
         ) {
           return `
 [[rule]]

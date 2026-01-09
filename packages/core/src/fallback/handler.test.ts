@@ -21,7 +21,6 @@ import { createAvailabilityServiceMock } from '../availability/testUtils.js';
 import { AuthType } from '../core/contentGenerator.js';
 import {
   DEFAULT_GEMINI_FLASH_MODEL,
-  DEFAULT_GEMINI_MODEL,
   DEFAULT_GEMINI_MODEL_AUTO,
   PREVIEW_GEMINI_FLASH_MODEL,
   PREVIEW_GEMINI_MODEL,
@@ -55,7 +54,7 @@ vi.mock('../utils/debugLogger.js', () => ({
   },
 }));
 
-const MOCK_PRO_MODEL = DEFAULT_GEMINI_MODEL;
+const MOCK_PRO_MODEL = PREVIEW_GEMINI_MODEL;
 const FALLBACK_MODEL = DEFAULT_GEMINI_FLASH_MODEL;
 const AUTH_OAUTH = AuthType.USE_GEMINI;
 
@@ -133,7 +132,7 @@ describe('handleFallback', () => {
         DEFAULT_GEMINI_MODEL_AUTO,
       );
 
-      await handleFallback(policyConfig, DEFAULT_GEMINI_MODEL, AUTH_OAUTH);
+      await handleFallback(policyConfig, MOCK_PRO_MODEL, AUTH_OAUTH);
 
       expect(availability.selectFirstAvailable).toHaveBeenCalledWith([
         DEFAULT_GEMINI_FLASH_MODEL,

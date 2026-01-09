@@ -29,9 +29,10 @@ describe('getFolderStructure', () => {
   }
 
   beforeEach(async () => {
-    testRootDir = await fsPromises.mkdtemp(
+    const tempDir = await fsPromises.mkdtemp(
       path.join(os.tmpdir(), 'folder-structure-test-'),
     );
+    testRootDir = await fsPromises.realpath(tempDir);
   });
 
   afterEach(async () => {
@@ -251,7 +252,7 @@ ${testRootDir}${path.sep}
     it('should ignore files and folders specified in .gitignore', async () => {
       await fsPromises.writeFile(
         nodePath.join(testRootDir, '.gitignore'),
-        'ignored.txt\nnode_modules/\n.gemini/*\n!/.gemini/config.yaml',
+        `ignored.txt\nnode_modules/\n${CODEFLY_DIR}/*\n!/${CODEFLY_DIR}/config.yaml`,
       );
       await createTestFile('file1.txt');
       await createTestFile('node_modules', 'some-package', 'index.js');
@@ -297,7 +298,7 @@ ${testRootDir}${path.sep}
     it('should ignore geminiignore files by default', async () => {
       await fsPromises.writeFile(
         nodePath.join(testRootDir, '.geminiignore'),
-        'ignored.txt\nnode_modules/\n.gemini/\n!/.gemini/config.yaml',
+        `ignored.txt\nnode_modules/\n${CODEFLY_DIR}/\n!/${CODEFLY_DIR}/config.yaml`,
       );
       await createTestFile('file1.txt');
       await createTestFile('node_modules', 'some-package', 'index.js');
@@ -317,7 +318,7 @@ ${testRootDir}${path.sep}
     it('should not ignore files if respectGeminiIgnore is false', async () => {
       await fsPromises.writeFile(
         nodePath.join(testRootDir, '.geminiignore'),
-        'ignored.txt\nnode_modules/\n.gemini/\n!/.gemini/config.yaml',
+        `ignored.txt\nnode_modules/\n${CODEFLY_DIR}/\n!/${CODEFLY_DIR}/config.yaml`,
       );
       await createTestFile('file1.txt');
       await createTestFile('node_modules', 'some-package', 'index.js');

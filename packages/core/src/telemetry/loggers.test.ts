@@ -310,7 +310,7 @@ describe('loggers', () => {
           interactive: false,
           prompt_length: 11,
           prompt_id: 'prompt-id-9',
-          auth_type: 'compute-default-credentials',
+          auth_type: 'gemini-api-key',
         },
       });
     });
@@ -445,7 +445,7 @@ describe('loggers', () => {
           status_code: 200,
           genAiAttributes: {
             'gen_ai.operation.name': 'generate_content',
-            'gen_ai.provider.name': 'gcp.vertex_ai',
+            'gen_ai.provider.name': 'gcp.gen_ai',
             'gen_ai.request.model': 'test-model',
             'gen_ai.response.model': 'test-model',
           },
@@ -461,7 +461,7 @@ describe('loggers', () => {
           type: 'input',
           genAiAttributes: {
             'gen_ai.operation.name': 'generate_content',
-            'gen_ai.provider.name': 'gcp.vertex_ai',
+            'gen_ai.provider.name': 'gcp.gen_ai',
             'gen_ai.request.model': 'test-model',
             'gen_ai.response.model': 'test-model',
           },
@@ -476,7 +476,7 @@ describe('loggers', () => {
           type: 'output',
           genAiAttributes: {
             'gen_ai.operation.name': 'generate_content',
-            'gen_ai.provider.name': 'gcp.vertex_ai',
+            'gen_ai.provider.name': 'gcp.gen_ai',
             'gen_ai.request.model': 'test-model',
             'gen_ai.response.model': 'test-model',
           },
@@ -606,7 +606,7 @@ describe('loggers', () => {
           status_code: 503,
           genAiAttributes: {
             'gen_ai.operation.name': 'generate_content',
-            'gen_ai.provider.name': 'gcp.vertex_ai',
+            'gen_ai.provider.name': 'gcp.gen_ai',
             'gen_ai.request.model': 'test-model',
             'gen_ai.response.model': 'test-model',
             'error.type': 'ApiError',
@@ -663,7 +663,7 @@ describe('loggers', () => {
         attributes: expect.objectContaining({
           'event.name': 'gen_ai.client.inference.operation.details',
           'gen_ai.request.model': 'test-model',
-          'gen_ai.provider.name': 'gcp.vertex_ai',
+          'gen_ai.provider.name': 'gcp.gen_ai',
         }),
       });
     });
@@ -692,7 +692,7 @@ describe('loggers', () => {
         attributes: expect.objectContaining({
           'event.name': 'gen_ai.client.inference.operation.details',
           'gen_ai.request.model': 'test-model',
-          'gen_ai.provider.name': 'gcp.vertex_ai',
+          'gen_ai.provider.name': 'gcp.gen_ai',
         }),
       });
     });
@@ -1675,6 +1675,7 @@ describe('loggers', () => {
 
       expect(metrics.recordModelRoutingMetrics).toHaveBeenCalledWith(
         mockConfig,
+        expect.any(ModelRoutingEvent),
       );
     });
 
@@ -1966,7 +1967,10 @@ describe('loggers', () => {
         },
       });
 
-      expect(metrics.recordAgentRunMetrics).toHaveBeenCalledWith(mockConfig);
+      expect(metrics.recordAgentRunMetrics).toHaveBeenCalledWith(
+        mockConfig,
+        event,
+      );
     });
   });
 

@@ -84,8 +84,11 @@ describe('FallbackStrategy', () => {
     // Mock selectModelForAvailability to find a fallback (Flash)
     vi.mocked(selectModelForAvailability).mockReturnValue({
       selectedModel: DEFAULT_GEMINI_FLASH_MODEL,
-      skipped: [{ model: DEFAULT_GEMINI_MODEL, reason: 'quota' }],
+      skipped: [{ model: 'gemini-2.5-pro', reason: 'quota' }],
     });
+
+    // Mock getModel to return a distinct model (so fallback is different)
+    vi.mocked(mockConfig.getModel).mockReturnValue('gemini-2.5-pro');
 
     const decision = await strategy.route(mockContext, mockConfig, mockClient);
 
@@ -93,7 +96,7 @@ describe('FallbackStrategy', () => {
     expect(decision?.model).toBe(DEFAULT_GEMINI_FLASH_MODEL);
     expect(decision?.metadata.source).toBe('fallback');
     expect(decision?.metadata.reasoning).toContain(
-      `Model ${DEFAULT_GEMINI_MODEL} is unavailable`,
+      `Model gemini-2.5-pro is unavailable`,
     );
   });
 

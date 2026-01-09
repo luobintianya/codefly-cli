@@ -1,9 +1,9 @@
 # Codefly
 
-[![Codefly CI](https://github.com/codefly/codefly/actions/workflows/ci.yml/badge.svg)](https://github.com/codefly/codefly/actions/workflows/ci.yml)
-[![Codefly E2E (Chained)](https://github.com/codefly/codefly/actions/workflows/chained_e2e.yml/badge.svg)](https://github.com/codefly/codefly/actions/workflows/chained_e2e.yml)
+[![Codefly CI](https://github.com/luobintianya/codefly-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/luobintianya/codefly-cli/actions/workflows/ci.yml)
+[![Codefly E2E (Chained)](https://github.com/luobintianya/codefly-cli/actions/workflows/chained_e2e.yml/badge.svg)](https://github.com/luobintianya/codefly-cli/actions/workflows/chained_e2e.yml)
 [![Version](https://img.shields.io/npm/v/@codefly/codefly)](https://www.npmjs.com/package/@codefly/codefly)
-[![License](https://img.shields.io/github/license/codefly/codefly)](https://github.com/codefly/codefly/blob/main/LICENSE)
+[![License](https://img.shields.io/github/license/codefly/codefly)](https://github.com/luobintianya/codefly-cli/blob/main/LICENSE)
 
 ![Codefly Screenshot](./docs/assets/codefly-screenshot.png)
 
@@ -115,7 +115,7 @@ npm install -g @codefly/codefly@nightly
 ### GitHub Integration
 
 Integrate Codefly directly into your GitHub workflows with
-[**Codefly GitHub Action**](https://github.com/codefly/codefly-github-action):
+[**Codefly GitHub Action**](https://github.com/luobintianya/codefly-cli-github-action):
 
 - **Pull Request Reviews**: Automated code review with contextual feedback and
   suggestions
@@ -251,7 +251,7 @@ codefly
 #### Analyze existing code
 
 ```bash
-git clone https://github.com/codefly/codefly
+git clone https://github.com/luobintianya/codefly-cli
 cd codefly
 codefly
 > Give me a summary of all of the changes that went in yesterday
@@ -353,9 +353,9 @@ planned features and priorities.
 - **[Changelog](./docs/changelogs/index.md)** - See recent notable updates.
 - **[NPM Package](https://www.npmjs.com/package/@codefly/codefly)** - Package
   registry.
-- **[GitHub Issues](https://github.com/codefly/codefly/issues)** - Report bugs
-  or request features.
-- **[Security Advisories](https://github.com/codefly/codefly/security/advisories)** -
+- **[GitHub Issues](https://github.com/luobintianya/codefly-cli/issues)** -
+  Report bugs or request features.
+- **[Security Advisories](https://github.com/luobintianya/codefly-cli/security/advisories)** -
   Security updates.
 
 ### Uninstall

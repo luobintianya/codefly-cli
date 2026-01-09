@@ -20,6 +20,7 @@ export interface TextInputProps {
   onSubmit?: (value: string) => void;
   onCancel?: () => void;
   focus?: boolean;
+  mask?: boolean;
 }
 
 export function TextInput({
@@ -28,6 +29,7 @@ export function TextInput({
   onSubmit,
   onCancel,
   focus = true,
+  mask = false,
 }: TextInputProps): React.JSX.Element {
   const {
     text,
@@ -81,17 +83,19 @@ export function TextInput({
         const isCursorLine =
           focus && currentVisualRow === cursorVisualRowAbsolute;
 
+        const displayText = mask ? '*'.repeat(lineText.length) : lineText;
+
         const lineDisplay = isCursorLine
-          ? cpSlice(lineText, 0, cursorVisualColAbsolute) +
+          ? cpSlice(displayText, 0, cursorVisualColAbsolute) +
             chalk.inverse(
               cpSlice(
-                lineText,
+                displayText,
                 cursorVisualColAbsolute,
                 cursorVisualColAbsolute + 1,
               ) || ' ',
             ) +
-            cpSlice(lineText, cursorVisualColAbsolute + 1)
-          : lineText;
+            cpSlice(displayText, cursorVisualColAbsolute + 1)
+          : displayText;
 
         return (
           <Box key={idx} height={1}>

@@ -5,10 +5,12 @@
  */
 
 import type React from 'react';
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { Box, Text } from 'ink';
 import { theme } from '../semantic-colors.js';
 import { RadioButtonSelect } from '../components/shared/RadioButtonSelect.js';
+import { TextInput } from '../components/shared/TextInput.js';
+import { useTextBuffer } from '../components/shared/text-buffer.js';
 import type {
   LoadableSettingScope,
   LoadedSettings,
@@ -32,7 +34,8 @@ interface AuthDialogProps {
 // ... imports ...
 
 // Simple text input component for config collection
-function SimpleTextInput({
+// Wrapper for TextInput to handle buffer state
+function WrappedTextInput({
   label,
   value,
   onChange,
@@ -49,45 +52,32 @@ function SimpleTextInput({
   placeholder?: string;
   mask?: boolean;
 }) {
-  useKeypress(
-    (key) => {
-      if (key.name === 'return') {
-        onSubmit();
-        return;
-      }
-      if (key.name === 'escape') {
-        onCancel();
-        return;
-      }
-      if (key.name === 'backspace') {
-        onChange(value.slice(0, -1));
-        return;
-      }
-      if (key.name === 'space') {
-        onChange(value + ' ');
-        return;
-      }
-      if (key.ctrl || key.meta) return;
-      if (key.sequence && key.sequence.length === 1) {
-        onChange(value + key.sequence);
-      }
-    },
-    { isActive: true },
-  );
+  const buffer = useTextBuffer({
+    initialText: value,
+    onChange,
+    viewport: { height: 1, width: 110 },
+    isValidPath: () => false,
+    singleLine: true,
+  });
 
-  const displayValue = mask ? '*'.repeat(value.length) : value;
+  // Sync buffer with external value if it changes externally
+  useEffect(() => {
+    if (buffer.text !== value) {
+      buffer.setText(value);
+    }
+  }, [value, buffer]);
 
   return (
     <Box flexDirection="column" marginTop={1}>
       <Text bold>{label}</Text>
       <Box borderStyle="round" borderColor={theme.border.focused} paddingX={1}>
-        <Text>
-          {displayValue}
-          {displayValue.length === 0 && placeholder ? (
-            <Text color={theme.text.secondary}>{placeholder}</Text>
-          ) : null}
-          <Text color={theme.text.accent}>█</Text>
-        </Text>
+        <TextInput
+          buffer={buffer}
+          placeholder={placeholder}
+          onSubmit={() => onSubmit()}
+          onCancel={onCancel}
+          mask={mask}
+        />
       </Box>
       <Text color={theme.text.secondary}>
         (Enter to confirm, Esc to cancel)
@@ -237,7 +227,7 @@ export function AuthDialog({
 
   useKeypress(
     (key) => {
-      if (configStep !== 'none') return; // Handled by SimpleTextInput
+      if (configStep !== 'none') return; // Handled by WrappedTextInput
 
       if (key.name === 'escape') {
         // Prevent exit if there is an error message.
@@ -272,7 +262,7 @@ export function AuthDialog({
           OpenAI Compatible Configuration
         </Text>
         {configStep === 'baseUrl' && (
-          <SimpleTextInput
+          <WrappedTextInput
             label="Base URL"
             value={openaiConfig.baseUrl}
             onChange={(val) =>
@@ -287,7 +277,7 @@ export function AuthDialog({
           />
         )}
         {configStep === 'model' && (
-          <SimpleTextInput
+          <WrappedTextInput
             label="Model Name"
             value={openaiConfig.model}
             onChange={(val) =>
@@ -302,7 +292,7 @@ export function AuthDialog({
           />
         )}
         {configStep === 'apiKey' && (
-          <SimpleTextInput
+          <WrappedTextInput
             label="API Key"
             value={openaiConfig.apiKey}
             onChange={(val) =>
@@ -364,7 +354,9 @@ export function AuthDialog({
         </Box>
         <Box marginTop={1}>
           <Text color={theme.text.link}>
-            {'https://github.com/codefly/codefly/blob/main/docs/tos-privacy.md'}
+            {
+              'https://github.com/luobintianya/codefly-cli/blob/main/docs/tos-privacy.md'
+            }
           </Text>
         </Box>
       </Box>

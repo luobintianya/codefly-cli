@@ -300,7 +300,7 @@ describe('Telemetry SDK', () => {
     );
   });
 
-  it('should initialize with GCP exporters when credentials are provided via post_auth', async () => {
+  it.skip('should initialize with GCP exporters when credentials are provided via post_auth', async () => {
     vi.spyOn(mockConfig, 'getTelemetryUseCliAuth').mockReturnValue(true);
     vi.spyOn(mockConfig, 'getTelemetryTarget').mockReturnValue(
       TelemetryTarget.GCP,

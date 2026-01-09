@@ -11,7 +11,7 @@
   "private": "true",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/codefly/codefly.git"
+    "url": "git+https://github.com/luobintianya/codefly-cli.git"
   },
   "config": {
     "sandboxImageUri": "us-docker.pkg.dev/codefly-dev/codefly/sandbox:0.24.0-nightly.20251227.37be16243"
