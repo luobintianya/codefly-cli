@@ -180,7 +180,7 @@ their corresponding top-level category object in your `settings.json` file.
   - **Requires restart:** Yes
 
 - **`ui.showStatusInTitle`** (boolean):
-  - **Description:** Show Gemini CLI status and thoughts in the terminal window
+  - **Description:** Show Codefly status and thoughts in the terminal window
     title
   - **Default:** `false`
 
@@ -280,7 +280,7 @@ their corresponding top-level category object in your `settings.json` file.
 #### `privacy`
 
 - **`privacy.usageStatisticsEnabled`** (boolean):
-  - **Description:** Enable collection of usage statistics
+  - **Description:** Enable usage statistics.
   - **Default:** `true`
   - **Requires restart:** Yes
 
@@ -766,6 +766,21 @@ their corresponding top-level category object in your `settings.json` file.
 
 - **`security.auth.useExternal`** (boolean):
   - **Description:** Whether to use an external authentication flow.
+  - **Default:** `undefined`
+  - **Requires restart:** Yes
+
+- **`security.auth.openai.baseUrl`** (string):
+  - **Description:** Base URL for the OpenAI compatible provider.
+  - **Default:** `"https://api.openai.com/v1"`
+  - **Requires restart:** Yes
+
+- **`security.auth.openai.model`** (string):
+  - **Description:** Model name to use.
+  - **Default:** `"gpt-4o"`
+  - **Requires restart:** Yes
+
+- **`security.auth.openai.apiKey`** (string):
+  - **Description:** API Key for the provider.
   - **Default:** `undefined`
   - **Requires restart:** Yes
 

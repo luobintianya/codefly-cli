@@ -67,7 +67,7 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
   const mainOptions = useMemo(() => {
     const authType = config?.getContentGeneratorConfig()?.authType;
 
-    // If using OpenAI or Zhipu, show provider-specific options
+    // If using OpenAI or Zhipu, allow editing the model
     if (authType === AuthType.OPENAI || authType === AuthType.ZHIPU) {
       const providerName = authType === AuthType.ZHIPU ? 'Zhipu AI' : 'OpenAI';
       const currentModel = config?.getModel() || 'Not set';
@@ -76,8 +76,14 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
         {
           value: currentModel,
           title: `${providerName}: ${currentModel}`,
-          description: `Currently using ${currentModel}. To change models, update your authentication settings.`,
+          description: `Current model. Select to keep using ${currentModel}.`,
           key: currentModel,
+        },
+        {
+          value: 'custom',
+          title: 'Change Model',
+          description: `Enter a different ${providerName} model name`,
+          key: 'custom',
         },
       ];
     }
@@ -134,8 +140,19 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
 
   const handleCustomModelSubmit = useCallback(() => {
     if (customModel.trim() && config) {
-      config.setModel(customModel.trim());
-      const event = new ModelSlashCommandEvent(customModel.trim());
+      const trimmedModel = customModel.trim();
+      config.setModel(trimmedModel);
+
+      // If using OpenAI/Zhipu, also update the openaiConfig
+      const authType = config.getContentGeneratorConfig()?.authType;
+      if (
+        (authType === AuthType.OPENAI || authType === AuthType.ZHIPU) &&
+        config.openaiConfig
+      ) {
+        config.openaiConfig.model = trimmedModel;
+      }
+
+      const event = new ModelSlashCommandEvent(trimmedModel);
       logModelSlashCommand(config, event);
     }
     onClose();

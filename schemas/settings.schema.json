@@ -189,8 +189,8 @@
         },
         "showStatusInTitle": {
           "title": "Show Status in Title",
-          "description": "Show Gemini CLI status and thoughts in the terminal window title",
-          "markdownDescription": "Show Gemini CLI status and thoughts in the terminal window title\n\n- Category: `UI`\n- Requires restart: `no`\n- Default: `false`",
+          "description": "Show Codefly status and thoughts in the terminal window title",
+          "markdownDescription": "Show Codefly status and thoughts in the terminal window title\n\n- Category: `UI`\n- Requires restart: `no`\n- Default: `false`",
           "default": false,
           "type": "boolean"
         },
@@ -372,15 +372,15 @@
     },
     "privacy": {
       "title": "Privacy",
-      "description": "Privacy-related settings.",
-      "markdownDescription": "Privacy-related settings.\n\n- Category: `Privacy`\n- Requires restart: `yes`\n- Default: `{}`",
+      "description": "Privacy settings.",
+      "markdownDescription": "Privacy settings.\n\n- Category: `Advanced`\n- Requires restart: `yes`\n- Default: `{}`",
       "default": {},
       "type": "object",
       "properties": {
         "usageStatisticsEnabled": {
-          "title": "Enable Usage Statistics",
-          "description": "Enable collection of usage statistics",
-          "markdownDescription": "Enable collection of usage statistics\n\n- Category: `Privacy`\n- Requires restart: `yes`\n- Default: `true`",
+          "title": "Usage Statistics Enabled",
+          "description": "Enable usage statistics.",
+          "markdownDescription": "Enable usage statistics.\n\n- Category: `Advanced`\n- Requires restart: `yes`\n- Default: `true`",
           "default": true,
           "type": "boolean"
         }
@@ -1285,6 +1285,36 @@
               "description": "Whether to use an external authentication flow.",
               "markdownDescription": "Whether to use an external authentication flow.\n\n- Category: `Security`\n- Requires restart: `yes`",
               "type": "boolean"
+            },
+            "openai": {
+              "title": "OpenAI Compatible Settings",
+              "description": "Settings for OpenAI compatible providers.",
+              "markdownDescription": "Settings for OpenAI compatible providers.\n\n- Category: `Security`\n- Requires restart: `yes`\n- Default: `{}`",
+              "default": {},
+              "type": "object",
+              "properties": {
+                "baseUrl": {
+                  "title": "Base URL",
+                  "description": "Base URL for the OpenAI compatible provider.",
+                  "markdownDescription": "Base URL for the OpenAI compatible provider.\n\n- Category: `Security`\n- Requires restart: `yes`\n- Default: `https://api.openai.com/v1`",
+                  "default": "https://api.openai.com/v1",
+                  "type": "string"
+                },
+                "model": {
+                  "title": "Model Name",
+                  "description": "Model name to use.",
+                  "markdownDescription": "Model name to use.\n\n- Category: `Security`\n- Requires restart: `yes`\n- Default: `gpt-4o`",
+                  "default": "gpt-4o",
+                  "type": "string"
+                },
+                "apiKey": {
+                  "title": "API Key",
+                  "description": "API Key for the provider.",
+                  "markdownDescription": "API Key for the provider.\n\n- Category: `Security`\n- Requires restart: `yes`",
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
             }
           },
           "additionalProperties": false

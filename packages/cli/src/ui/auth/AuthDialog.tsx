@@ -65,7 +65,8 @@ function WrappedTextInput({
     if (buffer.text !== value) {
       buffer.setText(value);
     }
-  }, [value, buffer]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
 
   return (
     <Box flexDirection="column" marginTop={1}>
