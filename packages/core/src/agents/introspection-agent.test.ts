@@ -17,7 +17,7 @@ describe('IntrospectionAgent', () => {
     expect(localAgent.name).toBe('introspection_agent');
     expect(localAgent.kind).toBe('local');
     expect(localAgent.displayName).toBe('Introspection Agent');
-    expect(localAgent.description).toContain('Gemini CLI');
+    expect(localAgent.description).toContain('Codefly CLI');
   });
 
   it('should have correctly configured inputs and outputs', () => {

@@ -11,7 +11,7 @@ import { initializeOutputListenersAndFlush } from '../codefly.js';
 export const hooksCommand: CommandModule = {
   command: 'hooks <command>',
   aliases: ['hook'],
-  describe: 'Manage Gemini CLI hooks.',
+  describe: 'Manage Codefly CLI hooks.',
   builder: (yargs) =>
     yargs
       .middleware(() => initializeOutputListenersAndFlush())

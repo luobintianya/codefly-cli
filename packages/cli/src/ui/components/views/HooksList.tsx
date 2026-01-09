@@ -28,7 +28,7 @@ interface HooksListProps {
 export const HooksList: React.FC<HooksListProps> = ({ hooks }) => (
   <Box flexDirection="column" marginTop={1} marginBottom={1}>
     <Text>
-      Hooks are scripts or programs that Gemini CLI executes at specific points
+      Hooks are scripts or programs that Codefly CLI executes at specific points
       in the agentic loop, allowing you to intercept and customize behavior.
     </Text>
 

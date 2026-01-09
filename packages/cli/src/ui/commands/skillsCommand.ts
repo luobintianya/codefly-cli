@@ -185,7 +185,7 @@ function enableCompletion(
 export const skillsCommand: SlashCommand = {
   name: 'skills',
   description:
-    'List, enable, or disable Gemini CLI agent skills. Usage: /skills [list | disable <name> | enable <name>]',
+    'List, enable, or disable Codefly CLI agent skills. Usage: /skills [list | disable <name> | enable <name>]',
   kind: CommandKind.BUILT_IN,
   autoExecute: false,
   subCommands: [

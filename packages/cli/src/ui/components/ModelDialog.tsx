@@ -190,7 +190,7 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
       </Box>
       <Box marginTop={1} flexDirection="column">
         <Text color={theme.text.secondary}>
-          Applies to this session and future Gemini CLI sessions.
+          Applies to this session and future Codefly CLI sessions.
         </Text>
       </Box>
       <Box marginTop={1} flexDirection="column">

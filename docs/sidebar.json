@@ -20,11 +20,11 @@
     "label": "Get started",
     "items": [
       {
-        "label": "Gemini CLI quickstart",
+        "label": "Codefly CLI quickstart",
         "slug": "docs/get-started"
       },
       {
-        "label": "Gemini 3 on Gemini CLI",
+        "label": "Gemini 3 on Codefly CLI",
         "slug": "docs/get-started/gemini-3"
       },
       {

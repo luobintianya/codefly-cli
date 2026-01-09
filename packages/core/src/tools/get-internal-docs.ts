@@ -73,7 +73,7 @@ async function getDocsRoot(): Promise<string> {
     return bundleDocsPath;
   }
 
-  throw new Error('Could not find Gemini CLI documentation directory.');
+  throw new Error('Could not find Codefly CLI documentation directory.');
 }
 
 class GetInternalDocsInvocation extends BaseToolInvocation<
@@ -107,7 +107,7 @@ class GetInternalDocsInvocation extends BaseToolInvocation<
         files.sort();
 
         const fileList = files.map((f) => `- ${f}`).join('\n');
-        const resultContent = `Available Gemini CLI documentation files:\n\n${fileList}`;
+        const resultContent = `Available Codefly CLI documentation files:\n\n${fileList}`;
 
         return {
           llmContent: resultContent,
@@ -146,7 +146,7 @@ class GetInternalDocsInvocation extends BaseToolInvocation<
 }
 
 /**
- * A tool that provides access to Gemini CLI's internal documentation.
+ * A tool that provides access to Codefly CLI's internal documentation.
  * If no path is provided, it returns a list of all available documentation files.
  * If a path is provided, it returns the content of that specific file.
  */
@@ -160,7 +160,7 @@ export class GetInternalDocsTool extends BaseDeclarativeTool<
     super(
       GetInternalDocsTool.Name,
       'GetInternalDocs',
-      'Returns the content of Gemini CLI internal documentation files. If no path is provided, returns a list of all available documentation paths.',
+      'Returns the content of Codefly CLI internal documentation files. If no path is provided, returns a list of all available documentation paths.',
       Kind.Think,
       {
         type: 'object',

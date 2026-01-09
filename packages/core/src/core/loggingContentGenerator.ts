@@ -84,7 +84,7 @@ export class LoggingContentGenerator implements ContentGenerator {
       try {
         const url = new URL(genConfig.baseUrl);
         return {
-          address: url.hostname,
+          address: genConfig?.baseUrl,
           port: url.port
             ? parseInt(url.port, 10)
             : url.protocol === 'https:'

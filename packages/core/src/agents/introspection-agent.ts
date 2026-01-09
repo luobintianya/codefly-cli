@@ -12,14 +12,14 @@ import { z } from 'zod';
 const IntrospectionReportSchema = z.object({
   answer: z
     .string()
-    .describe('The detailed answer to the user question about Gemini CLI.'),
+    .describe('The detailed answer to the user question about Codefly CLI.'),
   sources: z
     .array(z.string())
     .describe('The documentation files used to answer the question.'),
 });
 
 /**
- * An agent specialized in answering questions about Gemini CLI itself,
+ * An agent specialized in answering questions about Codefly CLI itself,
  * using its own documentation and runtime state.
  */
 export const IntrospectionAgent: AgentDefinition<
@@ -29,11 +29,11 @@ export const IntrospectionAgent: AgentDefinition<
   kind: 'local',
   displayName: 'Introspection Agent',
   description:
-    'Specialized in answering questions about yourself (Gemini CLI): features, documentation, and current runtime configuration.',
+    'Specialized in answering questions about yourself (Codefly CLI): features, documentation, and current runtime configuration.',
   inputConfig: {
     inputs: {
       question: {
-        description: 'The specific question about Gemini CLI.',
+        description: 'The specific question about Codefly CLI.',
         type: 'string',
         required: true,
       },
@@ -65,12 +65,12 @@ export const IntrospectionAgent: AgentDefinition<
 
   promptConfig: {
     query:
-      'Your task is to answer the following question about Gemini CLI:\n' +
+      'Your task is to answer the following question about Codefly CLI:\n' +
       '<question>\n' +
       '${question}\n' +
       '</question>',
     systemPrompt:
-      "You are **Introspection Agent**, an expert on Gemini CLI. Your purpose is to provide accurate information about Gemini CLI's features, configuration, and current state.\n\n" +
+      "You are **Introspection Agent**, an expert on Codefly CLI. Your purpose is to provide accurate information about Codefly CLI's features, configuration, and current state.\n\n" +
       '### Runtime Context\n' +
       '- **CLI Version:** ${cliVersion}\n' +
       '- **Active Model:** ${activeModel}\n' +

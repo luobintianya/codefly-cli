@@ -97,7 +97,7 @@ describe('<ModelDialog />', () => {
     const { lastFrame } = renderComponent();
     expect(lastFrame()).toContain('Select Model');
     expect(lastFrame()).toContain(
-      'Applies to this session and future Gemini CLI sessions.',
+      'Applies to this session and future Codefly CLI sessions.',
     );
     expect(lastFrame()).toContain('Gemini 3 Pro');
     expect(lastFrame()).toContain('Gemini 3 Flash');

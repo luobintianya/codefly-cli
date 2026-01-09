@@ -257,7 +257,7 @@ export class ShellExecutionService {
         detached: !isWindows,
         env: {
           ...sanitizeEnvironment(process.env, sanitizationConfig),
-          GEMINI_CLI: '1',
+          CODEFLY_CLI: '1',
           TERM: 'xterm-256color',
           PAGER: 'cat',
           GIT_PAGER: 'cat',
@@ -474,7 +474,7 @@ export class ShellExecutionService {
             process.env,
             shellExecutionConfig.sanitizationConfig,
           ),
-          GEMINI_CLI: '1',
+          CODEFLY_CLI: '1',
           TERM: 'xterm-256color',
           PAGER: shellExecutionConfig.pager ?? 'cat',
           GIT_PAGER: shellExecutionConfig.pager ?? 'cat',

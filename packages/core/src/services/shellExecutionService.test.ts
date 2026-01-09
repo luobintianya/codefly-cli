@@ -1457,7 +1457,7 @@ describe('ShellExecutionService environment variables', () => {
     expect(mockPtySpawn).toHaveBeenCalled();
     const ptyEnv = mockPtySpawn.mock.calls[0][2].env;
     expect(ptyEnv).toHaveProperty('MY_TEST_VAR', 'test-value');
-    expect(ptyEnv).toHaveProperty('GEMINI_CLI', '1');
+    expect(ptyEnv).toHaveProperty('CODEFLY_CLI', '1');
 
     // Ensure pty process exits
     mockPtyProcess.onExit.mock.calls[0][0]({ exitCode: 0, signal: null });
@@ -1476,7 +1476,7 @@ describe('ShellExecutionService environment variables', () => {
     expect(mockCpSpawn).toHaveBeenCalled();
     const cpEnv = mockCpSpawn.mock.calls[0][2].env;
     expect(cpEnv).toHaveProperty('MY_TEST_VAR', 'test-value');
-    expect(cpEnv).toHaveProperty('GEMINI_CLI', '1');
+    expect(cpEnv).toHaveProperty('CODEFLY_CLI', '1');
 
     // Ensure child_process exits
     mockChildProcess.emit('exit', 0, null);
