@@ -15,7 +15,7 @@ exports[`AuthDialog > Snapshots > renders correctly with auth error 1`] = `
 │                                                                                                                      │
 │   Terms of Services and Privacy Notice for Codefly                                                                   │
 │                                                                                                                      │
-│   https://github.com/codefly/codefly/blob/main/docs/tos-privacy.md                                                   │
+│   https://github.com/luobintianya/codefly-cli/blob/main/docs/tos-privacy.md                                          │
 │                                                                                                                      │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯"
 `;
@@ -33,7 +33,7 @@ exports[`AuthDialog > Snapshots > renders correctly with default props 1`] = `
 │                                                                                                                      │
 │   Terms of Services and Privacy Notice for Codefly                                                                   │
 │                                                                                                                      │
-│   https://github.com/codefly/codefly/blob/main/docs/tos-privacy.md                                                   │
+│   https://github.com/luobintianya/codefly-cli/blob/main/docs/tos-privacy.md                                          │
 │                                                                                                                      │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯"
 `;
@@ -51,7 +51,7 @@ exports[`AuthDialog > Snapshots > renders correctly with enforced auth type 1`] 
 │                                                                                                                      │
 │   Terms of Services and Privacy Notice for Codefly                                                                   │
 │                                                                                                                      │
-│   https://github.com/codefly/codefly/blob/main/docs/tos-privacy.md                                                   │
+│   https://github.com/luobintianya/codefly-cli/blob/main/docs/tos-privacy.md                                          │
 │                                                                                                                      │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯"
 `;
