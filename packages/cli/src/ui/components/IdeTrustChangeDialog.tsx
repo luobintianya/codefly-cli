@@ -40,9 +40,15 @@ export const IdeTrustChangeDialog = ({ reason }: IdeTrustChangeDialogProps) => {
   }
 
   return (
-    <Box borderStyle="round" borderColor={theme.status.warning} paddingX={1}>
+    <Box
+      borderStyle="round"
+      borderColor={theme.status.warning}
+      paddingX={1}
+      flexDirection="column"
+    >
+      <Text color={theme.status.warning}>{message}</Text>
       <Text color={theme.status.warning}>
-        {message} Press &apos;r&apos; to restart Codefly to apply the changes.
+        Press &apos;r&apos; to restart Codefly to apply the changes.
       </Text>
     </Box>
   );
