@@ -27,7 +27,7 @@ const renderWithWidth = (
 describe('<ContextSummaryDisplay />', () => {
   const baseProps = {
     geminiMdFileCount: 1,
-    contextFileNames: ['GEMINI.md'],
+    contextFileNames: ['CODEFLY.md'],
     mcpServers: { 'test-server': { command: 'test' } },
     ideContext: {
       workspaceState: {
@@ -41,7 +41,7 @@ describe('<ContextSummaryDisplay />', () => {
     const { lastFrame, unmount } = renderWithWidth(120, baseProps);
     const output = lastFrame()!;
     expect(output).toContain(
-      '1 open file (ctrl+g to view) | 1 GEMINI.md file | 1 MCP server | 1 skill',
+      '1 open file (ctrl+g to view) | 1 CODEFLY.md file | 1 MCP server | 1 skill',
     );
     expect(output).not.toContain('Using:');
     // Check for absence of newlines
@@ -54,7 +54,7 @@ describe('<ContextSummaryDisplay />', () => {
     const output = lastFrame()!;
     const expectedLines = [
       ' - 1 open file (ctrl+g to view)',
-      ' - 1 GEMINI.md file',
+      ' - 1 CODEFLY.md file',
       ' - 1 MCP server',
       ' - 1 skill',
     ];

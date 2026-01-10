@@ -193,8 +193,8 @@ their corresponding top-level category object in your `settings.json` file.
   - **Default:** `false`
 
 - **`ui.hideContextSummary`** (boolean):
-  - **Description:** Hide the context summary (GEMINI.md, MCP servers) above the
-    input.
+  - **Description:** Hide the context summary (CODEFLY.md, MCP servers) above
+    the input.
   - **Default:** `false`
 
 - **`ui.footer.hideCWD`** (boolean):
@@ -567,7 +567,7 @@ their corresponding top-level category object in your `settings.json` file.
   - **Default:** `[]`
 
 - **`context.loadMemoryFromIncludeDirectories`** (boolean):
-  - **Description:** Controls how /memory refresh loads GEMINI.md files. When
+  - **Description:** Controls how /memory refresh loads CODEFLY.md files. When
     true, include directories are scanned; when false, only the current
     directory is used.
   - **Default:** `false`

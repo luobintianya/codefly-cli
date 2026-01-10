@@ -813,7 +813,7 @@ export async function copyExtension(
 
 function getContextFileNames(config: ExtensionConfig): string[] {
   if (!config.contextFileName) {
-    return ['GEMINI.md'];
+    return ['CODEFLY.md'];
   } else if (!Array.isArray(config.contextFileName)) {
     return [config.contextFileName];
   }
