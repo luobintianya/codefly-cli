@@ -110,7 +110,7 @@ npm install -g @codeflyai/codefly@nightly
   [Google Search](https://ai.google.dev/gemini-api/docs/grounding) for real-time
   information
 - Conversation checkpointing to save and resume complex sessions
-- Custom context files (GEMINI.md) to tailor behavior for your projects
+- Custom context files (CODEFLY.md) to tailor behavior for your projects
 
 ### GitHub Integration
 

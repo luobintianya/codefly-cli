@@ -34,9 +34,9 @@ overview of Gemini CLI, see the [main documentation page](../index.md).
 - **[Token caching](./token-caching.md):** Optimize API costs by caching tokens.
 - **[Trusted folders](./trusted-folders.md):** A security feature to control
   which projects can use the full capabilities of the CLI.
-- **[Ignoring files (.geminiignore)](./gemini-ignore.md):** Exclude specific
+- **[Ignoring files (.codeflyignore)](./codefly-ignore.md):** Exclude specific
   files and directories from being accessed by tools.
-- **[Context files (GEMINI.md)](./gemini-md.md):** Provide persistent,
+- **[Context files (CODEFLY.md)](./codefly-md.md):** Provide persistent,
   hierarchical context to the model.
 - **[System prompt override](./system-prompt.md):** Replace the built‑in system
   instructions using `GEMINI_SYSTEM_MD`.

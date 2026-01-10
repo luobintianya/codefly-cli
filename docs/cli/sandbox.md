@@ -144,7 +144,7 @@ DEBUG=1 gemini -s -p "debug command"
 ```
 
 **Note:** If you have `DEBUG=true` in a project's `.env` file, it won't affect
-gemini-cli due to automatic exclusion. Use `.gemini/.env` files for gemini-cli
+gemini-cli due to automatic exclusion. Use `.codefly/.env` files for gemini-cli
 specific debug settings.
 
 ### Inspect sandbox

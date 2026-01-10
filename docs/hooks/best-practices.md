@@ -35,7 +35,7 @@ Store results between invocations to avoid repeated computation:
 const fs = require('fs');
 const path = require('path');
 
-const CACHE_FILE = '.gemini/hook-cache.json';
+const CACHE_FILE = '.codefly/hook-cache.json';
 
 function readCache() {
   try {
@@ -138,7 +138,7 @@ Write debug information to dedicated log files:
 
 ```bash
 #!/usr/bin/env bash
-LOG_FILE=".gemini/hooks/debug.log"
+LOG_FILE=".codefly/hooks/debug.log"
 
 # Log with timestamp
 log() {
@@ -187,7 +187,7 @@ cat > test-input.json << 'EOF'
 EOF
 
 # Test the hook
-cat test-input.json | .gemini/hooks/my-hook.sh
+cat test-input.json | .codefly/hooks/my-hook.sh
 
 # Check exit code
 echo "Exit code: $?"
@@ -254,7 +254,7 @@ Begin with basic logging hooks before implementing complex logic:
 #!/usr/bin/env bash
 # Simple logging hook to understand input structure
 input=$(cat)
-echo "$input" >> .gemini/hook-inputs.log
+echo "$input" >> .codefly/hook-inputs.log
 echo "Logged input"
 ```
 
@@ -281,8 +281,8 @@ tool_name=$(echo "$input" | jq -r '.tool_name')
 Always make hook scripts executable:
 
 ```bash
-chmod +x .gemini/hooks/*.sh
-chmod +x .gemini/hooks/*.js
+chmod +x .codefly/hooks/*.sh
+chmod +x .codefly/hooks/*.js
 ```
 
 ### Version control
@@ -290,8 +290,8 @@ chmod +x .gemini/hooks/*.js
 Commit hooks to share with your team:
 
 ```bash
-git add .gemini/hooks/
-git add .gemini/settings.json
+git add .codefly/hooks/
+git add .codefly/settings.json
 git commit -m "Add project hooks for security and testing"
 ```
 
@@ -299,13 +299,13 @@ git commit -m "Add project hooks for security and testing"
 
 ```gitignore
 # Ignore hook cache and logs
-.gemini/hook-cache.json
-.gemini/hook-debug.log
-.gemini/memory/session-*.jsonl
+.codefly/hook-cache.json
+.codefly/hook-debug.log
+.codefly/memory/session-*.jsonl
 
 # Keep hook scripts
-!.gemini/hooks/*.sh
-!.gemini/hooks/*.js
+!.codefly/hooks/*.sh
+!.codefly/hooks/*.js
 ```
 
 ### Document behavior
@@ -322,7 +322,7 @@ Add descriptions to help others understand your hooks:
           {
             "name": "secret-scanner",
             "type": "command",
-            "command": "$GEMINI_PROJECT_DIR/.gemini/hooks/block-secrets.sh",
+            "command": "$GEMINI_PROJECT_DIR/.codefly/hooks/block-secrets.sh",
             "description": "Scans code changes for API keys, passwords, and other secrets before writing"
           }
         ]
@@ -380,18 +380,18 @@ echo "write_file|replace" | grep -E "write_.*|replace"
 **Ensure script is executable:**
 
 ```bash
-ls -la .gemini/hooks/my-hook.sh
-chmod +x .gemini/hooks/my-hook.sh
+ls -la .codefly/hooks/my-hook.sh
+chmod +x .codefly/hooks/my-hook.sh
 ```
 
 **Verify script path:**
 
 ```bash
 # Check path expansion
-echo "$GEMINI_PROJECT_DIR/.gemini/hooks/my-hook.sh"
+echo "$GEMINI_PROJECT_DIR/.codefly/hooks/my-hook.sh"
 
 # Verify file exists
-test -f "$GEMINI_PROJECT_DIR/.gemini/hooks/my-hook.sh" && echo "File exists"
+test -f "$GEMINI_PROJECT_DIR/.codefly/hooks/my-hook.sh" && echo "File exists"
 ```
 
 ### Hook timing out
@@ -575,12 +575,12 @@ fi
 #!/usr/bin/env bash
 
 # List all environment variables
-env > .gemini/hook-env.log
+env > .codefly/hook-env.log
 
 # Check specific variables
-echo "GEMINI_PROJECT_DIR: $GEMINI_PROJECT_DIR" >> .gemini/hook-env.log
-echo "GEMINI_SESSION_ID: $GEMINI_SESSION_ID" >> .gemini/hook-env.log
-echo "GEMINI_API_KEY: ${GEMINI_API_KEY:+<set>}" >> .gemini/hook-env.log
+echo "GEMINI_PROJECT_DIR: $GEMINI_PROJECT_DIR" >> .codefly/hook-env.log
+echo "GEMINI_SESSION_ID: $GEMINI_SESSION_ID" >> .codefly/hook-env.log
+echo "GEMINI_API_KEY: ${GEMINI_API_KEY:+<set>}" >> .codefly/hook-env.log
 ```
 
 **Use .env files:**
@@ -601,16 +601,16 @@ fi
 Understanding where hooks come from and what they can do is critical for secure
 usage.
 
-| Hook Source                   | Description                                                                                                                |
-| :---------------------------- | :------------------------------------------------------------------------------------------------------------------------- |
-| **System**                    | Configured by system administrators (e.g., `/etc/gemini-cli/settings.json`, `/Library/...`). Assumed to be the **safest**. |
-| **User** (`~/.gemini/...`)    | Configured by you. You are responsible for ensuring they are safe.                                                         |
-| **Extensions**                | You explicitly approve and install these. Security depends on the extension source (integrity).                            |
-| **Project** (`./.gemini/...`) | **Untrusted by default.** Safest in trusted internal repos; higher risk in third-party/public repos.                       |
+| Hook Source                    | Description                                                                                                                |
+| :----------------------------- | :------------------------------------------------------------------------------------------------------------------------- |
+| **System**                     | Configured by system administrators (e.g., `/etc/gemini-cli/settings.json`, `/Library/...`). Assumed to be the **safest**. |
+| **User** (`~/.codefly/...`)    | Configured by you. You are responsible for ensuring they are safe.                                                         |
+| **Extensions**                 | You explicitly approve and install these. Security depends on the extension source (integrity).                            |
+| **Project** (`./.codefly/...`) | **Untrusted by default.** Safest in trusted internal repos; higher risk in third-party/public repos.                       |
 
 #### Project Hook Security
 
-When you open a project with hooks defined in `.gemini/settings.json`:
+When you open a project with hooks defined in `.codefly/settings.json`:
 
 1. **Detection**: Gemini CLI detects the hooks.
 2. **Identification**: A unique identity is generated for each hook based on its

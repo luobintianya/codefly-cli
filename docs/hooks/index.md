@@ -39,8 +39,8 @@ commands on your machine. Malicious or poorly configured hooks can:
 - **Modify system**: Delete files, install malware, or change system settings.
 - **Consume resources**: Run infinite loops or crash your system.
 
-**Project-level hooks** (in `.gemini/settings.json`) and **Extension hooks** are
-particularly risky when opening third-party projects or extensions from
+**Project-level hooks** (in `.codefly/settings.json`) and **Extension hooks**
+are particularly risky when opening third-party projects or extensions from
 untrusted authors. Gemini CLI will **warn you** the first time it detects a new
 project hook (identified by its name and command), but it is **your
 responsibility** to review these hooks (and any installed extensions) before
@@ -78,7 +78,7 @@ scripts:
 ```json
 {
   "type": "command",
-  "command": "$GEMINI_PROJECT_DIR/.gemini/hooks/my-hook.sh",
+  "command": "$GEMINI_PROJECT_DIR/.codefly/hooks/my-hook.sh",
   "timeout": 30000
 }
 ```
@@ -439,9 +439,9 @@ precedence rules.
 Hook configurations are applied in the following order of execution (lower
 numbers run first):
 
-1.  **Project settings:** `.gemini/settings.json` in your project directory
+1.  **Project settings:** `.codefly/settings.json` in your project directory
     (highest priority)
-2.  **User settings:** `~/.gemini/settings.json`
+2.  **User settings:** `~/.codefly/settings.json`
 3.  **System settings:** `/etc/gemini-cli/settings.json`
 4.  **Extensions:** Internal hooks defined by installed extensions (lowest
     priority)
@@ -531,7 +531,7 @@ You can temporarily enable or disable individual hooks using commands:
 These commands allow you to control hook execution without editing configuration
 files. The hook name should match the `name` field in your hook configuration.
 Changes made via these commands are persisted to your global User settings
-(`~/.gemini/settings.json`).
+(`~/.codefly/settings.json`).
 
 ### Disabled hooks configuration
 
@@ -564,7 +564,7 @@ This command:
 - Converts event names (`PreToolUse` → `BeforeTool`, etc.)
 - Translates tool names (`Bash` → `run_shell_command`, `replace` → `replace`)
 - Updates matcher patterns
-- Writes to `.gemini/settings.json`
+- Writes to `.codefly/settings.json`
 
 ### Event name mapping
 

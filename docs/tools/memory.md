@@ -18,8 +18,8 @@ across sessions, providing personalized and directed assistance.
 
 ## How to use `save_memory` with the Gemini CLI
 
-The tool appends the provided `fact` to a special `GEMINI.md` file located in
-the user's home directory (`~/.gemini/GEMINI.md`). This file can be configured
+The tool appends the provided `fact` to a special `CODEFLY.md` file located in
+the user's home directory (`~/.codefly/CODEFLY.md`). This file can be configured
 to have a different name.
 
 Once added, the facts are stored under a `## Gemini Added Memories` section.

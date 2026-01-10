@@ -130,12 +130,12 @@ gemini extensions link <path>
 
 ## How it works
 
-On startup, Gemini CLI looks for extensions in `<home>/.gemini/extensions`
+On startup, Gemini CLI looks for extensions in `<home>/.codefly/extensions`
 
 Extensions exist as a directory that contains a `gemini-extension.json` file.
 For example:
 
-`<home>/.gemini/extensions/my-extension/gemini-extension.json`
+`<home>/.codefly/extensions/my-extension/gemini-extension.json`
 
 ### `gemini-extension.json`
 
@@ -151,7 +151,7 @@ The file has the following structure:
       "command": "node my-server.js"
     }
   },
-  "contextFileName": "GEMINI.md",
+  "contextFileName": "CODEFLY.md",
   "excludeTools": ["run_shell_command"]
 }
 ```
@@ -173,7 +173,7 @@ The file has the following structure:
     `trust`.
 - `contextFileName`: The name of the file that contains the context for the
   extension. This will be used to load the context from the extension directory.
-  If this property is not used but a `GEMINI.md` file is present in your
+  If this property is not used but a `CODEFLY.md` file is present in your
   extension directory, then that file will be loaded.
 - `excludeTools`: An array of tool names to exclude from the model. You can also
   specify command-specific restrictions for tools that support it, like the
@@ -221,7 +221,7 @@ Each object in the array should have the following properties:
 
 When a user installs this extension, they will be prompted to enter their API
 key. The value will be saved to a `.env` file in the extension's directory
-(e.g., `<home>/.gemini/extensions/my-api-extension/.env`).
+(e.g., `<home>/.codefly/extensions/my-api-extension/.env`).
 
 You can view a list of an extension's settings by running:
 
@@ -250,7 +250,7 @@ standard naming conventions.
 An extension named `gcp` with the following structure:
 
 ```
-.gemini/extensions/gcp/
+.codefly/extensions/gcp/
 ├── gemini-extension.json
 └── commands/
     ├── deploy.toml
@@ -286,8 +286,8 @@ using `"cwd": "${extensionPath}${/}run.ts"`.
 
 **Supported variables:**
 
-| variable                   | description                                                                                                                                                     |
-| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `${extensionPath}`         | The fully-qualified path of the extension in the user's filesystem e.g., '/Users/username/.gemini/extensions/example-extension'. This will not unwrap symlinks. |
-| `${workspacePath}`         | The fully-qualified path of the current workspace.                                                                                                              |
-| `${/} or ${pathSeparator}` | The path separator (differs per OS).                                                                                                                            |
+| variable                   | description                                                                                                                                                      |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `${extensionPath}`         | The fully-qualified path of the extension in the user's filesystem e.g., '/Users/username/.codefly/extensions/example-extension'. This will not unwrap symlinks. |
+| `${workspacePath}`         | The fully-qualified path of the current workspace.                                                                                                               |
+| `${/} or ${pathSeparator}` | The path separator (differs per OS).                                                                                                                             |

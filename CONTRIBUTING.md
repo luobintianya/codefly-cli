@@ -310,7 +310,7 @@ npm run lint
 - Please adhere to the coding style, patterns, and conventions used throughout
   the existing codebase.
 - Consult
-  [GEMINI.md](https://github.com/google-gemini/gemini-cli/blob/main/GEMINI.md)
+  [CODEFLY.md](https://github.com/google-gemini/gemini-cli/blob/main/CODEFLY.md)
   (typically found in the project root) for specific instructions related to
   AI-assisted development, including conventions for React, comments, and Git
   usage.
@@ -359,7 +359,7 @@ DEBUG=1 gemini
 ```
 
 **Note:** If you have `DEBUG=true` in a project's `.env` file, it won't affect
-gemini-cli due to automatic exclusion. Use `.gemini/.env` files for gemini-cli
+gemini-cli due to automatic exclusion. Use `.codefly/.env` files for gemini-cli
 specific debug settings.
 
 ### React DevTools
@@ -407,8 +407,8 @@ operations and outbound network traffic ("closed") by default by setting
 Available built-in profiles are `{permissive,restrictive}-{open,closed,proxied}`
 (see below for proxied networking). You can also switch to a custom profile
 `SEATBELT_PROFILE=<profile>` if you also create a file
-`.gemini/sandbox-macos-<profile>.sb` under your project settings directory
-`.gemini`.
+`.codefly/sandbox-macos-<profile>.sb` under your project settings directory
+`.codefly`.
 
 #### Container-based sandboxing (all platforms)
 
@@ -428,8 +428,8 @@ as you start/stop Gemini CLI. Files created within the sandbox should be
 automatically mapped to your user/group on host machine. You can easily specify
 additional mounts, ports, or environment variables by setting
 `SANDBOX_{MOUNTS,PORTS,ENV}` as needed. You can also fully customize the sandbox
-for your projects by creating the files `.gemini/sandbox.Dockerfile` and/or
-`.gemini/sandbox.bashrc` under your project settings directory (`.gemini`) and
+for your projects by creating the files `.codefly/sandbox.Dockerfile` and/or
+`.codefly/sandbox.bashrc` under your project settings directory (`.codefly`) and
 running `gemini` with `BUILD_SANDBOX=1` to trigger building of your custom
 sandbox.
 
