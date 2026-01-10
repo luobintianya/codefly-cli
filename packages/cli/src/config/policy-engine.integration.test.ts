@@ -9,13 +9,14 @@ import {
   ApprovalMode,
   PolicyDecision,
   PolicyEngine,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import { createPolicyEngineConfig } from './policy.js';
 import type { Settings } from './settings.js';
 
 // Mock Storage to ensure tests are hermetic and don't read from user's home directory
-vi.mock('@codefly/codefly-core', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@codefly/codefly-core')>();
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import('@codeflyai/codefly-core')>();
   const Storage = actual.Storage;
   // Monkey-patch static methods
   Storage.getUserPoliciesDir = () => '/non-existent/user/policies';

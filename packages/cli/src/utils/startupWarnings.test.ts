@@ -7,11 +7,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { getStartupWarnings } from './startupWarnings.js';
 import * as fs from 'node:fs/promises';
-import { getErrorMessage } from '@codefly/codefly-core';
+import { getErrorMessage } from '@codeflyai/codefly-core';
 
 vi.mock('node:fs/promises', { spy: true });
-vi.mock('@codefly/codefly-core', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@codefly/codefly-core')>();
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import('@codeflyai/codefly-core')>();
   return {
     ...actual,
     getErrorMessage: vi.fn(),

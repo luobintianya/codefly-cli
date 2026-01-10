@@ -15,8 +15,8 @@ import type {
   Config,
   GeminiClient,
   ShellExecutionResult,
-} from '@codefly/codefly-core';
-import { isBinary, ShellExecutionService } from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
+import { isBinary, ShellExecutionService } from '@codeflyai/codefly-core';
 import { type PartListUnion } from '@google/genai';
 import type { UseHistoryManagerReturn } from './useHistoryManager.js';
 import { SHELL_COMMAND_NAME } from '../constants.js';

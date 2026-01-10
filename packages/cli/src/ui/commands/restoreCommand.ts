@@ -14,7 +14,7 @@ import {
   getTruncatedCheckpointNames,
   performRestore,
   type ToolCallData,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import {
   type CommandContext,
   type SlashCommand,

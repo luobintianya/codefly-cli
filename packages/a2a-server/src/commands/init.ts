@@ -7,7 +7,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { CoderAgentEvent, type AgentSettings } from '../types.js';
-import { performInit } from '@codefly/codefly-core';
+import { performInit } from '@codeflyai/codefly-core';
 import type {
   Command,
   CommandContext,

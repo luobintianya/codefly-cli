@@ -9,7 +9,7 @@ import * as path from 'node:path';
 import {
   type MCPServerConfig,
   type ExtensionInstallMetadata,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import {
   EXTENSIONS_CONFIG_FILENAME,
   INSTALL_METADATA_FILENAME,

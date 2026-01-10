@@ -19,7 +19,7 @@ import { removeCommand } from './remove.js';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as os from 'node:os';
-import { CODEFLY_DIR, debugLogger } from '@codefly/codefly-core';
+import { CODEFLY_DIR, debugLogger } from '@codeflyai/codefly-core';
 
 vi.mock('fs/promises', () => ({
   readFile: vi.fn(),

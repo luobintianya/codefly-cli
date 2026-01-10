@@ -45,7 +45,7 @@ import {
   type HookDefinition,
   type HookEventName,
   type ResolvedExtensionSetting,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import { maybeRequestConsentOrFail } from './extensions/consent.js';
 import { resolveEnvVarsInObject } from '../utils/envVarResolver.js';
 import { ExtensionStorage } from './extensions/storage.js';

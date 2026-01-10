@@ -9,13 +9,14 @@ import { render } from '../test-utils/render.js';
 import { act } from 'react';
 import { IdeIntegrationNudge } from './IdeIntegrationNudge.js';
 import { KeypressProvider } from './contexts/KeypressContext.js';
-import { debugLogger } from '@codefly/codefly-core';
+import { debugLogger } from '@codeflyai/codefly-core';
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // Mock debugLogger
-vi.mock('@codefly/codefly-core', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@codefly/codefly-core')>();
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import('@codeflyai/codefly-core')>();
   return {
     ...actual,
     debugLogger: {

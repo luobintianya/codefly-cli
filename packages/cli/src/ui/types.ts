@@ -13,7 +13,7 @@ import type {
   ToolConfirmationOutcome,
   ToolResultDisplay,
   SkillDefinition,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import type { PartListUnion } from '@google/genai';
 import { type ReactNode } from 'react';
 

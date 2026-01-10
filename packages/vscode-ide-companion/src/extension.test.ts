@@ -10,11 +10,11 @@ import { activate } from './extension.js';
 import {
   IDE_DEFINITIONS,
   detectIdeFromEnv,
-} from '@codefly/codefly-core/src/ide/detect-ide.js';
+} from '@codeflyai/codefly-core/src/ide/detect-ide.js';
 
-vi.mock('@codefly/codefly-core/src/ide/detect-ide.js', async () => {
+vi.mock('@codeflyai/codefly-core/src/ide/detect-ide.js', async () => {
   const actual = await vi.importActual(
-    '@codefly/codefly-core/src/ide/detect-ide.js',
+    '@codeflyai/codefly-core/src/ide/detect-ide.js',
   );
   return {
     ...actual,

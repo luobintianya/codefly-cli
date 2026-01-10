@@ -25,7 +25,7 @@ import os from 'node:os';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import dotenv from 'dotenv';
-import { CODEFLY_DIR } from '@codefly/codefly-core';
+import { CODEFLY_DIR } from '@codeflyai/codefly-core';
 
 const argv = yargs(hideBin(process.argv)).option('q', {
   alias: 'quiet',

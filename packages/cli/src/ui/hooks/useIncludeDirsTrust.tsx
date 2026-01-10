@@ -5,13 +5,13 @@
  */
 
 import { useEffect } from 'react';
-import type { Config } from '@codefly/codefly-core';
+import type { Config } from '@codeflyai/codefly-core';
 import { loadTrustedFolders } from '../../config/trustedFolders.js';
 import { expandHomeDir } from '../utils/directoryUtils.js';
 import {
   debugLogger,
   refreshServerHierarchicalMemory,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import { MultiFolderTrustDialog } from '../components/MultiFolderTrustDialog.js';
 import type { UseHistoryManagerReturn } from './useHistoryManager.js';
 import { MessageType, type HistoryItem } from '../types.js';

@@ -10,8 +10,8 @@ import { MessageType, type HistoryItemHooksList } from '../types.js';
 import type {
   HookRegistryEntry,
   MessageActionReturn,
-} from '@codefly/codefly-core';
-import { getErrorMessage } from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
+import { getErrorMessage } from '@codeflyai/codefly-core';
 import { SettingScope } from '../../config/settings.js';
 
 /**

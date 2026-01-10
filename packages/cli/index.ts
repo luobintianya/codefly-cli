@@ -7,7 +7,7 @@
  */
 
 import { main } from './src/codefly.js';
-import { FatalError, writeToStderr } from '@codefly/codefly-core';
+import { FatalError, writeToStderr } from '@codeflyai/codefly-core';
 import { runExitCleanup } from './src/utils/cleanup.js';
 
 // --- Global Entry Point ---

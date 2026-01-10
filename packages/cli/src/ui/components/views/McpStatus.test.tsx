@@ -7,7 +7,7 @@
 import { render } from '../../../test-utils/render.js';
 import { describe, it, expect, vi } from 'vitest';
 import { McpStatus } from './McpStatus.js';
-import { MCPServerStatus } from '@codefly/codefly-core';
+import { MCPServerStatus } from '@codeflyai/codefly-core';
 import { MessageType } from '../../types.js';
 
 describe('McpStatus', () => {
@@ -81,7 +81,7 @@ describe('McpStatus', () => {
 
   it('renders correctly with a disconnected server', async () => {
     vi.spyOn(
-      await import('@codefly/codefly-core'),
+      await import('@codeflyai/codefly-core'),
       'getMCPServerStatus',
     ).mockReturnValue(MCPServerStatus.DISCONNECTED);
     const { lastFrame, unmount } = render(<McpStatus {...baseProps} />);

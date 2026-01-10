@@ -18,7 +18,7 @@ import {
   coreEvents,
   CODEFLY_DIR,
   type GeminiCLIExtension,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 
 vi.mock('node:os', () => ({
   homedir: vi.fn().mockReturnValue('/virtual-home'),

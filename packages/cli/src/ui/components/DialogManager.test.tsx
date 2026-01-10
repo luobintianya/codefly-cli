@@ -10,7 +10,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { Text } from 'ink';
 import { type UIState } from '../contexts/UIStateContext.js';
 import { type RestartReason } from '../hooks/useIdeTrustListener.js';
-import { type IdeInfo } from '@codefly/codefly-core';
+import { type IdeInfo } from '@codeflyai/codefly-core';
 import { type ShellConfirmationRequest } from '../types.js';
 
 // Mock child components

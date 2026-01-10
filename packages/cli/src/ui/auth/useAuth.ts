@@ -11,8 +11,8 @@ import {
   type Config,
   loadApiKey,
   debugLogger,
-} from '@codefly/codefly-core';
-import { getErrorMessage } from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
+import { getErrorMessage } from '@codeflyai/codefly-core';
 import { AuthState } from '../types.js';
 import { validateAuthMethod } from '../../config/auth.js';
 

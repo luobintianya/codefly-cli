@@ -16,7 +16,7 @@ import {
 } from 'vitest';
 import * as fs from 'node:fs';
 import { loadSettings, SettingScope } from '../../config/settings.js';
-import { debugLogger } from '@codefly/codefly-core';
+import { debugLogger } from '@codeflyai/codefly-core';
 import { handleMigrateFromClaude } from './migrate.js';
 
 vi.mock('node:fs');

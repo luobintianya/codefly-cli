@@ -15,7 +15,7 @@ import {
   SHELL_FOCUS_HINT_DELAY_MS,
 } from '../../constants.js';
 import { theme } from '../../semantic-colors.js';
-import { SHELL_TOOL_NAME } from '@codefly/codefly-core';
+import { SHELL_TOOL_NAME } from '@codeflyai/codefly-core';
 import { useUIActions } from '../../contexts/UIActionsContext.js';
 import { useMouseClick } from '../../hooks/useMouseClick.js';
 import { ToolResultDisplay } from './ToolResultDisplay.js';
@@ -26,7 +26,7 @@ import {
   STATUS_INDICATOR_WIDTH,
 } from './ToolShared.js';
 import type { ToolMessageProps } from './ToolMessage.js';
-import type { Config } from '@codefly/codefly-core';
+import type { Config } from '@codeflyai/codefly-core';
 
 export interface ShellToolMessageProps extends ToolMessageProps {
   activeShellPtyId?: number | null;

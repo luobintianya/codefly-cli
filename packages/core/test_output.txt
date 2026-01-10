@@ -1,5 +1,5 @@
 
-> @codefly/codefly-core@0.24.0-nightly.20251227.37be16243 test
+> @codeflyai/codefly-core@0.24.0-nightly.20251227.37be16243 test
 > vitest run --reporter=verbose
 
 
@@ -3760,12 +3760,12 @@ working stdoutworking stderr ✓ src/utils/stdio.test.ts > stdio utils > patchSt
 ⎯⎯⎯⎯⎯⎯ Failed Suites 3 ⎯⎯⎯⎯⎯⎯⎯
 
  FAIL  src/utils/filesearch/crawler.test.ts [ src/utils/filesearch/crawler.test.ts ]
-Error: Failed to resolve entry for package "@codefly/codefly-test-utils". The package may have incorrect main/module/exports specified in its package.json.
+Error: Failed to resolve entry for package "@codeflyai/codefly-test-utils". The package may have incorrect main/module/exports specified in its package.json.
   Plugin: vite:import-analysis
   File: /Users/robinx/code/codefly-cli/packages/core/src/utils/filesearch/crawler.test.ts:12:44
   9  |  import * as cache from "./crawlCache.js";
   10 |  import { crawl } from "./crawler.js";
-  11 |  import { createTmpDir, cleanupTmpDir } from "@codefly/codefly-test-utils";
+  11 |  import { createTmpDir, cleanupTmpDir } from "@codeflyai/codefly-test-utils";
      |                                               ^
   12 |  import { loadIgnoreRules } from "./ignore.js";
   13 |  describe("crawler", () => {
@@ -3782,12 +3782,12 @@ Error: Failed to resolve entry for package "@codefly/codefly-test-utils". The pa
 
  FAIL  src/utils/filesearch/fileSearch.test.ts [ src/utils/filesearch/fileSearch.test.ts ]
  FAIL  src/utils/filesearch/ignore.test.ts [ src/utils/filesearch/ignore.test.ts ]
-Error: Failed to resolve entry for package "@codefly/codefly-test-utils". The package may have incorrect main/module/exports specified in its package.json.
+Error: Failed to resolve entry for package "@codeflyai/codefly-test-utils". The package may have incorrect main/module/exports specified in its package.json.
   Plugin: vite:import-analysis
   File: /Users/robinx/code/codefly-cli/packages/core/src/utils/filesearch/fileSearch.test.ts:9:44
   6  |  import { describe, it, expect, afterEach, vi } from "vitest";
   7  |  import { FileSearchFactory, AbortError, filter } from "./fileSearch.js";
-  8  |  import { createTmpDir, cleanupTmpDir } from "@codefly/codefly-test-utils";
+  8  |  import { createTmpDir, cleanupTmpDir } from "@codeflyai/codefly-test-utils";
      |                                               ^
   9  |  describe("FileSearch", () => {
   10 |    let tmpDir;
@@ -4806,7 +4806,7 @@ AssertionError: expected null not to be null
 npm error Lifecycle script `test` failed with error:
 npm error code 1
 npm error path /Users/robinx/code/codefly-cli/packages/core
-npm error workspace @codefly/codefly-core@0.24.0-nightly.20251227.37be16243
+npm error workspace @codeflyai/codefly-core@0.24.0-nightly.20251227.37be16243
 npm error location /Users/robinx/code/codefly-cli/packages/core
 npm error command failed
 npm error command sh -c vitest run --reporter=verbose

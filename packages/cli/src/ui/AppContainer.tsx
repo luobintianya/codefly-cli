@@ -60,7 +60,7 @@ import {
   fireSessionEndHook,
   generateSummary,
   type UserTierId,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import { validateAuthMethod } from '../config/auth.js';
 import process from 'node:process';
 import { useHistory } from './hooks/useHistoryManager.js';

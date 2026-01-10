@@ -21,8 +21,8 @@ import {
   debugLogger,
   ExitCodes,
   coreEvents,
-} from '@codefly/codefly-core';
-import type { Config } from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
+import type { Config } from '@codeflyai/codefly-core';
 import * as auth from './config/auth.js';
 import { type LoadedSettings } from './config/settings.js';
 

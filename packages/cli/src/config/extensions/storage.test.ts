@@ -13,7 +13,7 @@ import {
   EXTENSION_SETTINGS_FILENAME,
   EXTENSIONS_CONFIG_FILENAME,
 } from './variables.js';
-import { Storage } from '@codefly/codefly-core';
+import { Storage } from '@codeflyai/codefly-core';
 
 vi.mock('node:os');
 vi.mock('node:fs', async (importOriginal) => {
@@ -26,7 +26,7 @@ vi.mock('node:fs', async (importOriginal) => {
     },
   };
 });
-vi.mock('@codefly/codefly-core');
+vi.mock('@codeflyai/codefly-core');
 
 describe('ExtensionStorage', () => {
   const mockHomeDir = '/mock/home';

@@ -8,7 +8,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { modelCommand } from './modelCommand.js';
 import { type CommandContext } from './types.js';
 import { createMockCommandContext } from '../../test-utils/mockCommandContext.js';
-import type { Config } from '@codefly/codefly-core';
+import type { Config } from '@codeflyai/codefly-core';
 
 describe('modelCommand', () => {
   let mockContext: CommandContext;

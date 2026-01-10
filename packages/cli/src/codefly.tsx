@@ -63,7 +63,7 @@ import {
   fireSessionStartHook,
   fireSessionEndHook,
   getVersion,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import {
   initializeApp,
   type InitializationResult,

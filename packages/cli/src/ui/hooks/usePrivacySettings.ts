@@ -5,7 +5,7 @@
  */
 
 import { useCallback } from 'react';
-import { type Config } from '@codefly/codefly-core';
+import { type Config } from '@codeflyai/codefly-core';
 
 export interface PrivacyState {
   isLoading: boolean;

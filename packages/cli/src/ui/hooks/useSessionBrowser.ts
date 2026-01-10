@@ -12,9 +12,9 @@ import type {
   Config,
   ConversationRecord,
   ResumedSessionData,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import type { Part } from '@google/genai';
-import { partListUnionToString, coreEvents } from '@codefly/codefly-core';
+import { partListUnionToString, coreEvents } from '@codeflyai/codefly-core';
 import type { SessionInfo } from '../../utils/sessionUtils.js';
 import { MessageType, ToolCallStatus } from '../types.js';
 

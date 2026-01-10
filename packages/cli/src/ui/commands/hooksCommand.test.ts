@@ -8,8 +8,8 @@ import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { hooksCommand } from './hooksCommand.js';
 import { createMockCommandContext } from '../../test-utils/mockCommandContext.js';
 import { MessageType } from '../types.js';
-import type { HookRegistryEntry } from '@codefly/codefly-core';
-import { HookType, HookEventName, ConfigSource } from '@codefly/codefly-core';
+import type { HookRegistryEntry } from '@codeflyai/codefly-core';
+import { HookType, HookEventName, ConfigSource } from '@codeflyai/codefly-core';
 import type { CommandContext } from './types.js';
 
 describe('hooksCommand', () => {

@@ -12,7 +12,7 @@ import { useShellHistory } from './useShellHistory.js';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import * as crypto from 'node:crypto';
-import { CODEFLY_DIR } from '@codefly/codefly-core';
+import { CODEFLY_DIR } from '@codeflyai/codefly-core';
 
 vi.mock('node:fs/promises', () => ({
   readFile: vi.fn(),
@@ -35,8 +35,9 @@ vi.mock('node:fs', async (importOriginal) => {
     mkdirSync: vi.fn(),
   };
 });
-vi.mock('@codefly/codefly-core', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@codefly/codefly-core')>();
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import('@codeflyai/codefly-core')>();
   const path = await import('node:path');
   class Storage {
     static getGlobalSettingsPath(): string {

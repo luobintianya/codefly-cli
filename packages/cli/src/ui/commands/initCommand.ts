@@ -12,7 +12,7 @@ import type {
   SlashCommandActionReturn,
 } from './types.js';
 import { CommandKind } from './types.js';
-import { performInit } from '@codefly/codefly-core';
+import { performInit } from '@codeflyai/codefly-core';
 
 export const initCommand: SlashCommand = {
   name: 'init',

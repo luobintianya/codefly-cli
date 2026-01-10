@@ -9,8 +9,8 @@ import path from 'node:path';
 import toml from '@iarna/toml';
 import { glob } from 'glob';
 import { z } from 'zod';
-import type { Config } from '@codefly/codefly-core';
-import { Storage, coreEvents } from '@codefly/codefly-core';
+import type { Config } from '@codeflyai/codefly-core';
+import { Storage, coreEvents } from '@codeflyai/codefly-core';
 import type { ICommandLoader } from './types.js';
 import type {
   CommandContext,

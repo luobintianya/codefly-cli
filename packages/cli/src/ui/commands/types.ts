@@ -15,7 +15,7 @@ import type {
   GitService,
   Logger,
   CommandActionReturn,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import type { LoadedSettings } from '../../config/settings.js';
 import type { UseHistoryManagerReturn } from '../hooks/useHistoryManager.js';
 import type { SessionStatsState } from '../contexts/SessionContext.js';

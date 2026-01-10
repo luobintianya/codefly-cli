@@ -19,8 +19,8 @@ import type {
   ToolCall,
   Status as CoreStatus,
   EditorType,
-} from '@codefly/codefly-core';
-import { CoreToolScheduler, debugLogger } from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
+import { CoreToolScheduler, debugLogger } from '@codeflyai/codefly-core';
 import { useCallback, useState, useMemo, useEffect, useRef } from 'react';
 import type {
   HistoryItemToolGroup,

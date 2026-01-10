@@ -14,7 +14,7 @@ import {
   PREVIEW_GEMINI_MODEL,
   UserTierId,
   DEFAULT_GEMINI_FLASH_MODEL,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 
 // Mock the child component to make it easier to test the parent
 vi.mock('./shared/RadioButtonSelect.js', () => ({

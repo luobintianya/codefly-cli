@@ -18,7 +18,7 @@ import type {
   Config,
   ExtensionsStartingEvent,
   ExtensionsStoppingEvent,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import {
   GitService,
   Logger,
@@ -28,7 +28,7 @@ import {
   ToolConfirmationOutcome,
   Storage,
   IdeClient,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import { useSessionStats } from '../contexts/SessionContext.js';
 import type {
   Message,

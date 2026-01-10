@@ -23,7 +23,7 @@ import type {
   IdeInfo,
   FallbackIntent,
   UserTierId,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import type { DOMElement } from 'ink';
 import type { SessionStatsState } from '../contexts/SessionContext.js';
 import type { ExtensionUpdateState } from '../state/extensions.js';

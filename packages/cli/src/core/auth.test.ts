@@ -6,9 +6,9 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { performInitialAuth } from './auth.js';
-import { type Config } from '@codefly/codefly-core';
+import { type Config } from '@codeflyai/codefly-core';
 
-vi.mock('@codefly/codefly-core', () => ({
+vi.mock('@codeflyai/codefly-core', () => ({
   AuthType: {
     OAUTH: 'oauth',
   },

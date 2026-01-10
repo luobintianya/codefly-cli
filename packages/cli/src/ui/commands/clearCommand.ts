@@ -11,7 +11,7 @@ import {
   SessionEndReason,
   SessionStartSource,
   flushTelemetry,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import type { SlashCommand } from './types.js';
 import { CommandKind } from './types.js';
 import { randomUUID } from 'node:crypto';

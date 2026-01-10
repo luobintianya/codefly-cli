@@ -9,9 +9,9 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as os from 'node:os';
 import { updateSettingsFilePreservingFormat } from './commentJson.js';
-import { coreEvents } from '@codefly/codefly-core';
+import { coreEvents } from '@codeflyai/codefly-core';
 
-vi.mock('@codefly/codefly-core', () => ({
+vi.mock('@codeflyai/codefly-core', () => ({
   coreEvents: {
     emitFeedback: vi.fn(),
   },

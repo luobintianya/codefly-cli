@@ -8,11 +8,11 @@ import type {
   Config,
   ConversationRecord,
   MessageRecord,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import {
   partListUnionToString,
   SESSION_FILE_PREFIX,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import * as fs from 'node:fs/promises';
 import path from 'node:path';
 import { stripUnsafeCharacters } from '../ui/utils/textUtils.js';

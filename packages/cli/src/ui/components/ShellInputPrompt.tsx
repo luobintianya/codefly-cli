@@ -7,7 +7,7 @@
 import { useCallback } from 'react';
 import type React from 'react';
 import { useKeypress } from '../hooks/useKeypress.js';
-import { ShellExecutionService } from '@codefly/codefly-core';
+import { ShellExecutionService } from '@codeflyai/codefly-core';
 import { keyToAnsi, type Key } from '../hooks/keyToAnsi.js';
 
 export interface ShellInputPromptProps {

@@ -9,10 +9,10 @@ import { act, useState } from 'react';
 import { renderHook } from '../../test-utils/render.js';
 import { waitFor } from '../../test-utils/async.js';
 import { useAtCompletion } from './useAtCompletion.js';
-import type { Config, FileSearch } from '@codefly/codefly-core';
-import { FileSearchFactory } from '@codefly/codefly-core';
-import type { FileSystemStructure } from '@codefly/codefly-test-utils';
-import { createTmpDir, cleanupTmpDir } from '@codefly/codefly-test-utils';
+import type { Config, FileSearch } from '@codeflyai/codefly-core';
+import { FileSearchFactory } from '@codeflyai/codefly-core';
+import type { FileSystemStructure } from '@codeflyai/codefly-test-utils';
+import { createTmpDir, cleanupTmpDir } from '@codeflyai/codefly-test-utils';
 import type { Suggestion } from '../components/SuggestionsDisplay.js';
 
 // Test harness to capture the state from the hook's callbacks.

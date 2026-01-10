@@ -9,7 +9,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as os from 'node:os';
 import { loadSettings, USER_SETTINGS_PATH } from './settings.js';
-import { debugLogger } from '@codefly/codefly-core';
+import { debugLogger } from '@codeflyai/codefly-core';
 
 const mocks = vi.hoisted(() => {
   const suffix = Math.random().toString(36).slice(2);
@@ -27,7 +27,7 @@ vi.mock('node:os', async (importOriginal) => {
   };
 });
 
-vi.mock('@codefly/codefly-core', () => ({
+vi.mock('@codeflyai/codefly-core', () => ({
   CODEFLY_DIR: '.codefly',
   debugLogger: {
     error: vi.fn(),

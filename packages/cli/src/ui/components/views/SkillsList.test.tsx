@@ -7,7 +7,7 @@
 import { render } from '../../../test-utils/render.js';
 import { describe, it, expect } from 'vitest';
 import { SkillsList } from './SkillsList.js';
-import { type SkillDefinition } from '@codefly/codefly-core';
+import { type SkillDefinition } from '@codeflyai/codefly-core';
 
 describe('SkillsList Component', () => {
   const mockSkills: SkillDefinition[] = [

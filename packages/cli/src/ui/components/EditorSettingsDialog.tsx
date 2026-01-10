@@ -22,9 +22,9 @@ import {
   type EditorType,
   isEditorAvailable,
   EDITOR_DISPLAY_NAMES,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import { useKeypress } from '../hooks/useKeypress.js';
-import { coreEvents } from '@codefly/codefly-core';
+import { coreEvents } from '@codeflyai/codefly-core';
 
 interface EditorDialogProps {
   onSelect: (

@@ -18,8 +18,8 @@ import type {
   Config,
   ConversationRecord,
   MessageRecord,
-} from '@codefly/codefly-core';
-import { coreEvents } from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
+import { coreEvents } from '@codeflyai/codefly-core';
 
 // Mock modules
 vi.mock('fs/promises');

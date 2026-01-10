@@ -7,7 +7,7 @@
 import type {
   MCPServerConfig,
   ExtensionInstallMetadata,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { INSTALL_METADATA_FILENAME } from './extensions/variables.js';

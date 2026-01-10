@@ -11,13 +11,13 @@ import {
   logIdeConnection,
   IdeConnectionEvent,
   IdeConnectionType,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import {
   getIdeInstaller,
   IDEConnectionStatus,
   ideContextStore,
   GEMINI_CLI_COMPANION_EXTENSION_NAME,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import path from 'node:path';
 import type {
   CommandContext,

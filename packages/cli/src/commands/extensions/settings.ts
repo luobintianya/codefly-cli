@@ -12,7 +12,7 @@ import {
   getScopedEnvContents,
 } from '../../config/extensions/extensionSettings.js';
 import { getExtensionAndManager } from './utils.js';
-import { debugLogger } from '@codefly/codefly-core';
+import { debugLogger } from '@codeflyai/codefly-core';
 import { exitCli } from '../utils.js';
 
 // --- SET COMMAND ---

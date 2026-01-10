@@ -7,7 +7,7 @@
 import type React from 'react';
 import { Box, Text } from 'ink';
 import { theme } from '../semantic-colors.js';
-import { type Config } from '@codefly/codefly-core';
+import { type Config } from '@codeflyai/codefly-core';
 
 interface TipsProps {
   config: Config;

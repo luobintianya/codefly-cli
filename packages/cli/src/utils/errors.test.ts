@@ -13,13 +13,13 @@ import {
   beforeEach,
   afterEach,
 } from 'vitest';
-import type { Config } from '@codefly/codefly-core';
+import type { Config } from '@codeflyai/codefly-core';
 import {
   OutputFormat,
   FatalInputError,
   debugLogger,
   coreEvents,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import {
   getErrorMessage,
   handleError,
@@ -35,9 +35,9 @@ vi.mock('./cleanup.js', () => ({
 }));
 
 // Mock the core modules
-vi.mock('@codefly/codefly-core', async (importOriginal) => {
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
   const original =
-    await importOriginal<typeof import('@codefly/codefly-core')>();
+    await importOriginal<typeof import('@codeflyai/codefly-core')>();
 
   return {
     ...original,

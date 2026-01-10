@@ -19,7 +19,7 @@ import { SettingScope } from '../../config/settings.js';
 import {
   AuthType,
   // clearCachedCredentialFile,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import { useKeypress } from '../hooks/useKeypress.js';
 import { AuthState } from '../types.js';
 // import { runExitCleanup } from '../../utils/cleanup.js';

@@ -14,7 +14,7 @@ import {
   useRef,
 } from 'react';
 import { ESC } from '../utils/input.js';
-import { debugLogger } from '@codefly/codefly-core';
+import { debugLogger } from '@codeflyai/codefly-core';
 import { appEvents, AppEvent } from '../../utils/events.js';
 import {
   isIncompleteMouseSequence,

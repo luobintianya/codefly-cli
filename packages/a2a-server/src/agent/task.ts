@@ -28,7 +28,7 @@ import {
   type AnsiOutput,
   EDIT_TOOL_NAMES,
   processRestorableToolCalls,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import type { RequestContext } from '@a2a-js/sdk/server';
 import { type ExecutionEventBus } from '@a2a-js/sdk/server';
 import type {

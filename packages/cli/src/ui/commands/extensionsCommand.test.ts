@@ -7,7 +7,7 @@
 import type {
   ExtensionLoader,
   GeminiCLIExtension,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import { createMockCommandContext } from '../../test-utils/mockCommandContext.js';
 import { MessageType } from '../types.js';
 import {

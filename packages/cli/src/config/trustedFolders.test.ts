@@ -5,7 +5,7 @@
  */
 
 import * as osActual from 'node:os';
-import { FatalConfigError, ideContextStore } from '@codefly/codefly-core';
+import { FatalConfigError, ideContextStore } from '@codeflyai/codefly-core';
 import {
   describe,
   it,

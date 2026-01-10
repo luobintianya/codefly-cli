@@ -13,7 +13,7 @@ import {
   isWithinRoot,
   ideContextStore,
   CODEFLY_DIR,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import type { Settings } from './settings.js';
 import stripJsonComments from 'strip-json-comments';
 

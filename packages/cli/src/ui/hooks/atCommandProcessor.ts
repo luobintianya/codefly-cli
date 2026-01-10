@@ -11,14 +11,14 @@ import type {
   AnyToolInvocation,
   Config,
   DiscoveredMCPResource,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import {
   debugLogger,
   getErrorMessage,
   isNodeError,
   unescapePath,
   ReadManyFilesTool,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import { Buffer } from 'node:buffer';
 import type { HistoryItem, IndividualToolCallDisplay } from '../types.js';
 import { ToolCallStatus } from '../types.js';

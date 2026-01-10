@@ -16,7 +16,7 @@ import {
 } from 'vitest';
 import { handleInstall, installCommand } from './install.js';
 import yargs from 'yargs';
-import { debugLogger, type GeminiCLIExtension } from '@codefly/codefly-core';
+import { debugLogger, type GeminiCLIExtension } from '@codeflyai/codefly-core';
 import type {
   ExtensionManager,
   inferInstallMetadata,

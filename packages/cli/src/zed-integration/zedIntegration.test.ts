@@ -24,7 +24,7 @@ import {
   ReadManyFilesTool,
   type GeminiChat,
   type Config,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import { SettingScope, type LoadedSettings } from '../config/settings.js';
 import { loadCliConfig, type CliArgs } from '../config/config.js';
 import * as fs from 'node:fs/promises';
@@ -49,9 +49,9 @@ vi.mock('node:path', async (importOriginal) => {
 
 // Mock ReadManyFilesTool
 vi.mock(
-  '@codefly/codefly-core',
+  '@codeflyai/codefly-core',
   async (
-    importOriginal: () => Promise<typeof import('@codefly/codefly-core')>,
+    importOriginal: () => Promise<typeof import('@codeflyai/codefly-core')>,
   ) => {
     const actual = await importOriginal();
     return {
@@ -122,7 +122,7 @@ describe('GeminiAgent', () => {
     });
 
     expect(response.protocolVersion).toBe(acp.PROTOCOL_VERSION);
-    expect(response.authMethods).toHaveLength(2);
+    expect(response.authMethods).toHaveLength(3);
     expect(response.agentCapabilities?.loadSession).toBe(false);
   });
 

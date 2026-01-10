@@ -39,9 +39,9 @@ function getArgs() {
     })
     .option('cli-package-name', {
       description:
-        'fully qualified package name with scope (e.g @codefly/codefly)',
+        'fully qualified package name with scope (e.g @codeflyai/codefly)',
       string: true,
-      default: '@codefly/codefly',
+      default: '@codeflyai/codefly',
     })
     .option('preview_version_override', {
       description: 'Override the calculated preview version.',

@@ -12,7 +12,7 @@ import {
   type CommandContext,
   type SlashCommand,
 } from '../commands/types.js';
-import { debugLogger } from '@codefly/codefly-core';
+import { debugLogger } from '@codeflyai/codefly-core';
 
 // Type alias for improved type safety based on actual fzf result structure
 type FzfCommandResult = {

@@ -14,8 +14,8 @@ import {
   calculateTransformationsForLine,
   calculateTransformedLine,
 } from './shared/text-buffer.js';
-import type { Config } from '@codefly/codefly-core';
-import { ApprovalMode, debugLogger } from '@codefly/codefly-core';
+import type { Config } from '@codeflyai/codefly-core';
+import { ApprovalMode, debugLogger } from '@codeflyai/codefly-core';
 import * as path from 'node:path';
 import type { CommandContext, SlashCommand } from '../commands/types.js';
 import { CommandKind } from '../commands/types.js';

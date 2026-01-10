@@ -9,7 +9,7 @@ import type { CompressionProps } from '../../types.js';
 import { CliSpinner } from '../CliSpinner.js';
 import { theme } from '../../semantic-colors.js';
 import { SCREEN_READER_MODEL_PREFIX } from '../../textConstants.js';
-import { CompressionStatus } from '@codefly/codefly-core';
+import { CompressionStatus } from '@codeflyai/codefly-core';
 
 export interface CompressionDisplayProps {
   compression: CompressionProps;

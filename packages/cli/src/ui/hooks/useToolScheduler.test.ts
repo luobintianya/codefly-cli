@@ -25,7 +25,7 @@ import type {
   Status as ToolCallStatusType,
   AnyDeclarativeTool,
   AnyToolInvocation,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import {
   DEFAULT_TRUNCATE_TOOL_OUTPUT_LINES,
   DEFAULT_TRUNCATE_TOOL_OUTPUT_THRESHOLD,
@@ -34,13 +34,13 @@ import {
   MockTool,
   HookSystem,
   PREVIEW_GEMINI_MODEL,
-} from '@codefly/codefly-core';
-import { createMockMessageBus } from '@codefly/codefly-core/src/test-utils/mock-message-bus.js';
+} from '@codeflyai/codefly-core';
+import { createMockMessageBus } from '@codeflyai/codefly-core/src/test-utils/mock-message-bus.js';
 import { ToolCallStatus } from '../types.js';
 
 // Mocks
-vi.mock('@codefly/codefly-core', async () => {
-  const actual = await vi.importActual<any>('@codefly/codefly-core');
+vi.mock('@codeflyai/codefly-core', async () => {
+  const actual = await vi.importActual<any>('@codeflyai/codefly-core');
   // Patch CoreToolScheduler to have cancelAll if it's missing in the test environment
   if (
     actual.CoreToolScheduler &&

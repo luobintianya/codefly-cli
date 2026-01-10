@@ -9,9 +9,9 @@ import { ExtensionsCommand, ListExtensionsCommand } from './extensions.js';
 import type { CommandContext } from './types.js';
 
 const mockListExtensions = vi.hoisted(() => vi.fn());
-vi.mock('@codefly/codefly-core', async (importOriginal) => {
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
   const original =
-    await importOriginal<typeof import('@codefly/codefly-core')>();
+    await importOriginal<typeof import('@codeflyai/codefly-core')>();
 
   return {
     ...original,

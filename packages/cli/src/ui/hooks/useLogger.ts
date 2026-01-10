@@ -5,8 +5,8 @@
  */
 
 import { useState, useEffect } from 'react';
-import type { Storage } from '@codefly/codefly-core';
-import { sessionId, Logger } from '@codefly/codefly-core';
+import type { Storage } from '@codeflyai/codefly-core';
+import { sessionId, Logger } from '@codeflyai/codefly-core';
 
 /**
  * Hook to manage the logger instance.

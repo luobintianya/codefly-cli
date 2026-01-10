@@ -7,7 +7,7 @@
 // File for 'gemini mcp add' command
 import type { CommandModule } from 'yargs';
 import { loadSettings, SettingScope } from '../../config/settings.js';
-import { debugLogger, type MCPServerConfig } from '@codefly/codefly-core';
+import { debugLogger, type MCPServerConfig } from '@codeflyai/codefly-core';
 import { exitCli } from '../utils.js';
 
 async function addMcpServer(

@@ -8,7 +8,7 @@ import {
   type AuthType,
   type Config,
   getErrorMessage,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 
 /**
  * Handles the initial authentication flow.

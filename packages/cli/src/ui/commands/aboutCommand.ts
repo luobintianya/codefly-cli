@@ -13,7 +13,7 @@ import {
   UserAccountManager,
   debugLogger,
   getVersion,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 
 export const aboutCommand: SlashCommand = {
   name: 'about',

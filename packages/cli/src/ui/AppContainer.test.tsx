@@ -27,7 +27,7 @@ import {
   type UserFeedbackPayload,
   type ResumedSessionData,
   AuthType,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 
 // Mock coreEvents
 const mockCoreEvents = vi.hoisted(() => ({
@@ -47,8 +47,9 @@ const mocks = vi.hoisted(() => ({
   mockStdout: { write: vi.fn() },
 }));
 
-vi.mock('@codefly/codefly-core', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@codefly/codefly-core')>();
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import('@codeflyai/codefly-core')>();
   return {
     ...actual,
     coreEvents: mockCoreEvents,
@@ -178,7 +179,7 @@ import {
   writeToStdout,
   enableMouseEvents,
   disableMouseEvents,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import { type ExtensionManager } from '../config/extension-manager.js';
 
 describe('AppContainer State Management', () => {

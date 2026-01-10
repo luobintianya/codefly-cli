@@ -7,7 +7,7 @@
 import type React from 'react';
 import { Box, Text } from 'ink';
 import { theme } from '../semantic-colors.js';
-import { ApprovalMode } from '@codefly/codefly-core';
+import { ApprovalMode } from '@codeflyai/codefly-core';
 
 interface AutoAcceptIndicatorProps {
   approvalMode: ApprovalMode;

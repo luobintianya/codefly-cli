@@ -14,13 +14,13 @@ import type {
   BugCommandSettings,
   TelemetrySettings,
   AuthType,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import {
   DEFAULT_TRUNCATE_TOOL_OUTPUT_LINES,
   DEFAULT_TRUNCATE_TOOL_OUTPUT_THRESHOLD,
   DEFAULT_MODEL_CONFIGS,
   GEMINI_MODEL_ALIAS_AUTO,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import type { CustomTheme } from '../ui/themes/theme.js';
 import type { SessionRetentionSettings } from './settings.js';
 import { DEFAULT_MIN_RETENTION } from '../utils/sessionCleanup.js';

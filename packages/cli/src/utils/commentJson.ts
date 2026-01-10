@@ -6,7 +6,7 @@
 
 import * as fs from 'node:fs';
 import { parse, stringify } from 'comment-json';
-import { coreEvents } from '@codefly/codefly-core';
+import { coreEvents } from '@codeflyai/codefly-core';
 
 /**
  * Type representing an object that may contain Symbol keys for comments.

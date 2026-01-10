@@ -10,8 +10,8 @@ import { type CommandContext } from './types.js';
 import { createMockCommandContext } from '../../test-utils/mockCommandContext.js';
 import { SettingScope } from '../../config/settings.js';
 
-vi.mock('@codefly/codefly-core', async () => {
-  const actual = await vi.importActual('@codefly/codefly-core');
+vi.mock('@codeflyai/codefly-core', async () => {
+  const actual = await vi.importActual('@codeflyai/codefly-core');
   return {
     ...actual,
     clearCachedCredentialFile: vi.fn().mockResolvedValue(undefined),

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { listExtensions } from '@codefly/codefly-core';
+import { listExtensions } from '@codeflyai/codefly-core';
 import type {
   Command,
   CommandContext,

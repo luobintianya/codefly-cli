@@ -6,7 +6,7 @@
 
 import * as path from 'node:path';
 import { type VariableSchema, VARIABLE_SCHEMA } from './variableSchema.js';
-import { CODEFLY_DIR } from '@codefly/codefly-core';
+import { CODEFLY_DIR } from '@codeflyai/codefly-core';
 
 export const EXTENSIONS_DIRECTORY_NAME = path.join(CODEFLY_DIR, 'extensions');
 export const EXTENSIONS_CONFIG_FILENAME = 'gemini-extension.json';

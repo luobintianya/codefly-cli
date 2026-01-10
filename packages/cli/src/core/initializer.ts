@@ -13,7 +13,7 @@ import {
   StartSessionEvent,
   logCliConfiguration,
   startupProfiler,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import { type LoadedSettings } from '../config/settings.js';
 import { performInitialAuth } from './auth.js';
 import { validateTheme } from './theme.js';

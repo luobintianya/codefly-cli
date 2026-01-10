@@ -17,8 +17,8 @@ import {
 } from './setupGithubCommand.js';
 import type { CommandContext } from './types.js';
 import * as commandUtils from '../utils/commandUtils.js';
-import type { ToolActionReturn } from '@codefly/codefly-core';
-import { debugLogger } from '@codefly/codefly-core';
+import type { ToolActionReturn } from '@codeflyai/codefly-core';
+import { debugLogger } from '@codeflyai/codefly-core';
 
 vi.mock('child_process');
 

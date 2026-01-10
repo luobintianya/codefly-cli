@@ -2,7 +2,7 @@
 
 [![Codefly CI](https://github.com/luobintianya/codefly-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/luobintianya/codefly-cli/actions/workflows/ci.yml)
 [![Codefly E2E (Chained)](https://github.com/luobintianya/codefly-cli/actions/workflows/chained_e2e.yml/badge.svg)](https://github.com/luobintianya/codefly-cli/actions/workflows/chained_e2e.yml)
-[![Version](https://img.shields.io/npm/v/@codefly/codefly)](https://www.npmjs.com/package/@codefly/codefly)
+[![Version](https://img.shields.io/npm/v/@codeflyai/codefly)](https://www.npmjs.com/package/@codeflyai/codefly)
 [![License](https://img.shields.io/github/license/codefly/codefly)](https://github.com/luobintianya/codefly-cli/blob/main/LICENSE)
 
 ![Codefly Screenshot](./docs/assets/codefly-screenshot.png)
@@ -39,13 +39,13 @@ Learn all about Codefly in our [documentation](https://codefly.dev/docs/).
 
 ```bash
 # Using npx (no installation required)
-npx @codefly/codefly
+npx @codeflyai/codefly
 ```
 
 #### Install globally with npm
 
 ```bash
-npm install -g @codefly/codefly
+npm install -g @codeflyai/codefly
 ```
 
 #### Install globally with Homebrew (macOS/Linux)
@@ -65,7 +65,7 @@ releases will not have been fully vetted and may contain regressions or other
 outstanding issues. Please help us test and install with `preview` tag.
 
 ```bash
-npm install -g @codefly/codefly@preview
+npm install -g @codeflyai/codefly@preview
 ```
 
 ### Stable
@@ -75,7 +75,7 @@ npm install -g @codefly/codefly@preview
   and validations. Use `latest` tag.
 
 ```bash
-npm install -g @codefly/codefly@latest
+npm install -g @codeflyai/codefly@latest
 ```
 
 ### Nightly
@@ -85,7 +85,7 @@ npm install -g @codefly/codefly@latest
   there are pending validations and issues. Use `nightly` tag.
 
 ```bash
-npm install -g @codefly/codefly@nightly
+npm install -g @codeflyai/codefly@nightly
 ```
 
 ## 📋 Key Features
@@ -351,7 +351,7 @@ planned features and priorities.
 
 - **[Official Roadmap](./ROADMAP.md)** - See what's coming next.
 - **[Changelog](./docs/changelogs/index.md)** - See recent notable updates.
-- **[NPM Package](https://www.npmjs.com/package/@codefly/codefly)** - Package
+- **[NPM Package](https://www.npmjs.com/package/@codeflyai/codefly)** - Package
   registry.
 - **[GitHub Issues](https://github.com/luobintianya/codefly-cli/issues)** -
   Report bugs or request features.

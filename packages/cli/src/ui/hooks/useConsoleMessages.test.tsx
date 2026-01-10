@@ -8,12 +8,12 @@ import { act, useCallback } from 'react';
 import { vi } from 'vitest';
 import { render } from '../../test-utils/render.js';
 import { useConsoleMessages } from './useConsoleMessages.js';
-import { CoreEvent, type ConsoleLogPayload } from '@codefly/codefly-core';
+import { CoreEvent, type ConsoleLogPayload } from '@codeflyai/codefly-core';
 
 // Mock coreEvents
 let consoleLogHandler: ((payload: ConsoleLogPayload) => void) | undefined;
 
-vi.mock('@codefly/codefly-core', async (importOriginal) => {
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const actual = (await importOriginal()) as any;
   return {

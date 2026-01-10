@@ -12,7 +12,7 @@ import type {
   AnyDeclarativeTool,
   AnyToolInvocation,
   UserFeedbackPayload,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import {
   executeToolCall,
   ToolErrorType,
@@ -21,7 +21,7 @@ import {
   uiTelemetryService,
   FatalInputError,
   CoreEvent,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import type { Part } from '@google/genai';
 import { runNonInteractive } from './nonInteractiveCli.js';
 import {
@@ -47,9 +47,9 @@ const mockCoreEvents = vi.hoisted(() => ({
   emitFeedback: vi.fn(),
 }));
 
-vi.mock('@codefly/codefly-core', async (importOriginal) => {
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
   const original =
-    await importOriginal<typeof import('@codefly/codefly-core')>();
+    await importOriginal<typeof import('@codeflyai/codefly-core')>();
 
   class MockChatRecordingService {
     initialize = vi.fn();
@@ -1726,7 +1726,7 @@ describe('runNonInteractive', () => {
       .mockReturnValue('model-1');
 
     // Mock debugLogger.error
-    const { debugLogger } = await import('@codefly/codefly-core');
+    const { debugLogger } = await import('@codeflyai/codefly-core');
     const debugLoggerErrorSpy = vi
       .spyOn(debugLogger, 'error')
       .mockImplementation(() => {});

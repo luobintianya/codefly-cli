@@ -22,7 +22,7 @@ vi.mock('../contexts/VimModeContext.js', () => ({
     vimMode: 'NORMAL',
   })),
 }));
-import { ApprovalMode } from '@codefly/codefly-core';
+import { ApprovalMode } from '@codeflyai/codefly-core';
 import { StreamingState } from '../types.js';
 
 // Mock child components

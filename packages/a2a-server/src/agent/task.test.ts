@@ -22,17 +22,17 @@ import {
   type CompletedToolCall,
   ApprovalMode,
   ToolConfirmationOutcome,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import { createMockConfig } from '../utils/testing_utils.js';
 import type { ExecutionEventBus, RequestContext } from '@a2a-js/sdk/server';
 import { CoderAgentEvent } from '../types.js';
-import type { ToolCall } from '@codefly/codefly-core';
+import type { ToolCall } from '@codeflyai/codefly-core';
 
 const mockProcessRestorableToolCalls = vi.hoisted(() => vi.fn());
 
-vi.mock('@codefly/codefly-core', async (importOriginal) => {
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
   const original =
-    await importOriginal<typeof import('@codefly/codefly-core')>();
+    await importOriginal<typeof import('@codeflyai/codefly-core')>();
   return {
     ...original,
     processRestorableToolCalls: mockProcessRestorableToolCalls,

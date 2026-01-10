@@ -12,13 +12,13 @@ import { fileURLToPath } from 'node:url';
 import { quote, parse } from 'shell-quote';
 import { USER_SETTINGS_DIR } from '../config/settings.js';
 import { promisify } from 'node:util';
-import type { Config, SandboxConfig } from '@codefly/codefly-core';
+import type { Config, SandboxConfig } from '@codeflyai/codefly-core';
 import {
   coreEvents,
   debugLogger,
   FatalSandboxError,
   CODEFLY_DIR,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import { ConsolePatcher } from '../ui/utils/ConsolePatcher.js';
 import { randomBytes } from 'node:crypto';
 import {

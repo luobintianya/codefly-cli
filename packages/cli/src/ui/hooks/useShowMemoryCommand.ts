@@ -6,7 +6,7 @@
 
 import type { Message } from '../types.js';
 import { MessageType } from '../types.js';
-import { debugLogger, type Config } from '@codefly/codefly-core';
+import { debugLogger, type Config } from '@codeflyai/codefly-core';
 import type { LoadedSettings } from '../../config/settings.js';
 
 export function createShowMemoryAction(

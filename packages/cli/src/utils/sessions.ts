@@ -10,7 +10,7 @@ import {
   writeToStderr,
   writeToStdout,
   type Config,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import {
   formatRelativeTime,
   SessionSelector,

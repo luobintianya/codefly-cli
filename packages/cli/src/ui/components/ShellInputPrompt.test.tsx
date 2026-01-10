@@ -7,7 +7,7 @@
 import { render } from '../../test-utils/render.js';
 import { ShellInputPrompt } from './ShellInputPrompt.js';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { ShellExecutionService } from '@codefly/codefly-core';
+import { ShellExecutionService } from '@codeflyai/codefly-core';
 
 // Mock useKeypress
 const mockUseKeypress = vi.fn();
@@ -17,8 +17,8 @@ vi.mock('../hooks/useKeypress.js', () => ({
 }));
 
 // Mock ShellExecutionService
-vi.mock('@codefly/codefly-core', async () => {
-  const actual = await vi.importActual('@codefly/codefly-core');
+vi.mock('@codeflyai/codefly-core', async () => {
+  const actual = await vi.importActual('@codeflyai/codefly-core');
   return {
     ...actual,
     ShellExecutionService: {

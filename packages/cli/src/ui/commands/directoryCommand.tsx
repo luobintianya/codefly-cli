@@ -13,12 +13,12 @@ import { MultiFolderTrustDialog } from '../components/MultiFolderTrustDialog.js'
 import type { SlashCommand, CommandContext } from './types.js';
 import { CommandKind } from './types.js';
 import { MessageType, type HistoryItem } from '../types.js';
-import { refreshServerHierarchicalMemory } from '@codefly/codefly-core';
+import { refreshServerHierarchicalMemory } from '@codeflyai/codefly-core';
 import {
   expandHomeDir,
   getDirectorySuggestions,
 } from '../utils/directoryUtils.js';
-import type { Config } from '@codefly/codefly-core';
+import type { Config } from '@codeflyai/codefly-core';
 
 async function finishAddingDirectories(
   config: Config,

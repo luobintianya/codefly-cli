@@ -12,8 +12,11 @@ import type {
   RequestContext,
   ExecutionEventBus,
 } from '@a2a-js/sdk/server';
-import type { ToolCallRequestInfo, Config } from '@codefly/codefly-core';
-import { GeminiEventType, SimpleExtensionLoader } from '@codefly/codefly-core';
+import type { ToolCallRequestInfo, Config } from '@codeflyai/codefly-core';
+import {
+  GeminiEventType,
+  SimpleExtensionLoader,
+} from '@codeflyai/codefly-core';
 import { v4 as uuidv4 } from 'uuid';
 
 import { logger } from '../utils/logger.js';

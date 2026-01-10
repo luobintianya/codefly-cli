@@ -8,7 +8,7 @@ import type { CommandModule } from 'yargs';
 import {
   debugLogger,
   type ExtensionInstallMetadata,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 
 import { getErrorMessage } from '../../utils/errors.js';
 import {

@@ -14,7 +14,7 @@ vi.mock('node:fs', () => ({
 }));
 
 // Mock core
-vi.mock('@codefly/codefly-core', () => ({
+vi.mock('@codeflyai/codefly-core', () => ({
   debugLogger: {
     log: vi.fn(),
     warn: vi.fn(),

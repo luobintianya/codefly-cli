@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { enableMouseEvents, disableMouseEvents } from '@codefly/codefly-core';
+import { enableMouseEvents, disableMouseEvents } from '@codeflyai/codefly-core';
 import {
   SGR_MOUSE_REGEX,
   X11_MOUSE_REGEX,

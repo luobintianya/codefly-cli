@@ -14,7 +14,7 @@ import {
   ModelSlashCommandEvent,
   logModelSlashCommand,
   AuthType,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import { useKeypress } from '../hooks/useKeypress.js';
 import { theme } from '../semantic-colors.js';
 import { DescriptiveRadioButtonSelect } from './shared/DescriptiveRadioButtonSelect.js';

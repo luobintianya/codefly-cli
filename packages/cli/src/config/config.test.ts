@@ -17,10 +17,10 @@ import {
   type ExtensionLoader,
   debugLogger,
   ApprovalMode,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import { loadCliConfig, parseArguments, type CliArgs } from './config.js';
 import type { Settings } from './settings.js';
-import * as ServerConfig from '@codefly/codefly-core';
+import * as ServerConfig from '@codeflyai/codefly-core';
 import { isWorkspaceTrusted } from './trustedFolders.js';
 import { ExtensionManager } from './extension-manager.js';
 import { RESUME_LATEST } from '../utils/sessionUtils.js';
@@ -83,9 +83,9 @@ vi.mock('read-package-up', () => ({
   ),
 }));
 
-vi.mock('@codefly/codefly-core', async () => {
+vi.mock('@codeflyai/codefly-core', async () => {
   const actualServer = await vi.importActual<typeof ServerConfig>(
-    '@codefly/codefly-core',
+    '@codeflyai/codefly-core',
   );
   return {
     ...actualServer,

@@ -21,7 +21,7 @@ import {
   CACHE_EFFICIENCY_MEDIUM,
 } from '../utils/displayUtils.js';
 import { computeSessionStats } from '../utils/computeStats.js';
-import {} from '@codefly/codefly-core';
+import {} from '@codeflyai/codefly-core';
 
 // A more flexible and powerful StatRow component
 interface StatRowProps {

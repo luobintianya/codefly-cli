@@ -6,8 +6,8 @@
 
 import * as glob from 'glob';
 import * as path from 'node:path';
-import type { Config } from '@codefly/codefly-core';
-import { CODEFLY_DIR, Storage } from '@codefly/codefly-core';
+import type { Config } from '@codeflyai/codefly-core';
+import { CODEFLY_DIR, Storage } from '@codeflyai/codefly-core';
 import mock from 'mock-fs';
 import { FileCommandLoader } from './FileCommandLoader.js';
 import { assert, vi } from 'vitest';
@@ -58,9 +58,9 @@ vi.mock('./prompt-processors/argumentProcessor.js', async (importOriginal) => {
       .mockImplementation(() => new original.DefaultArgumentProcessor()),
   };
 });
-vi.mock('@codefly/codefly-core', async (importOriginal) => {
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
   const original =
-    await importOriginal<typeof import('@codefly/codefly-core')>();
+    await importOriginal<typeof import('@codeflyai/codefly-core')>();
   return {
     ...original,
     Storage: original.Storage,

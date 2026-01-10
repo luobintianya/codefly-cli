@@ -7,7 +7,7 @@
 import type { SlashCommand } from './types.js';
 import { CommandKind } from './types.js';
 import { terminalSetup } from '../utils/terminalSetup.js';
-import { type MessageActionReturn } from '@codefly/codefly-core';
+import { type MessageActionReturn } from '@codeflyai/codefly-core';
 
 /**
  * Command to configure terminal keybindings for multiline input support.

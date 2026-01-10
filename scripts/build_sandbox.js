@@ -90,23 +90,23 @@ if (!argv.s) {
   execSync('npm run build --workspaces', { stdio: 'inherit' });
 }
 
-console.log('packing @codefly/codefly ...');
+console.log('packing @codeflyai/codefly ...');
 const cliPackageDir = join('packages', 'cli');
 rmSync(join(cliPackageDir, 'dist', 'google-gemini-cli-*.tgz'), { force: true });
 execSync(
-  `npm pack -w @codefly/codefly --pack-destination ./packages/cli/dist`,
+  `npm pack -w @codeflyai/codefly --pack-destination ./packages/cli/dist`,
   {
     stdio: 'ignore',
   },
 );
 
-console.log('packing @codefly/codefly-core ...');
+console.log('packing @codeflyai/codefly-core ...');
 const corePackageDir = join('packages', 'core');
 rmSync(join(corePackageDir, 'dist', 'google-gemini-cli-core-*.tgz'), {
   force: true,
 });
 execSync(
-  `npm pack -w @codefly/codefly-core --pack-destination ./packages/core/dist`,
+  `npm pack -w @codeflyai/codefly-core --pack-destination ./packages/core/dist`,
   { stdio: 'ignore' },
 );
 

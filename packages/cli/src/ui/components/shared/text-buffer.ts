@@ -15,7 +15,7 @@ import {
   CoreEvent,
   debugLogger,
   unescapePath,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import {
   toCodePoints,
   cpLen,

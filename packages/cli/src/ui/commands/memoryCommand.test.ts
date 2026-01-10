@@ -16,12 +16,12 @@ import {
   refreshServerHierarchicalMemory,
   SimpleExtensionLoader,
   type FileDiscoveryService,
-} from '@codefly/codefly-core';
-import type { LoadServerHierarchicalMemoryResponse } from '@codefly/codefly-core/index.js';
+} from '@codeflyai/codefly-core';
+import type { LoadServerHierarchicalMemoryResponse } from '@codeflyai/codefly-core/index.js';
 
-vi.mock('@codefly/codefly-core', async (importOriginal) => {
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
   const original =
-    await importOriginal<typeof import('@codefly/codefly-core')>();
+    await importOriginal<typeof import('@codeflyai/codefly-core')>();
   return {
     ...original,
     getErrorMessage: vi.fn((error: unknown) => {

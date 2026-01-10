@@ -9,7 +9,7 @@
 import { execSync } from 'node:child_process';
 import { join } from 'node:path';
 import { existsSync, readFileSync } from 'node:fs';
-import { CODEFLY_DIR } from '@codefly/codefly-core';
+import { CODEFLY_DIR } from '@codeflyai/codefly-core';
 
 const projectRoot = join(import.meta.dirname, '..');
 

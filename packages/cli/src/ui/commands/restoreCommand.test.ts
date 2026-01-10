@@ -15,7 +15,7 @@ import {
   CODEFLY_DIR,
   type Config,
   type GitService,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 
 describe('restoreCommand', () => {
   let mockContext: CommandContext;

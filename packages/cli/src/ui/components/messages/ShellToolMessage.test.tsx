@@ -11,11 +11,11 @@ import {
 } from './ShellToolMessage.js';
 import { StreamingState, ToolCallStatus } from '../../types.js';
 import { Text } from 'ink';
-import type { Config } from '@codefly/codefly-core';
+import type { Config } from '@codeflyai/codefly-core';
 import { renderWithProviders } from '../../../test-utils/render.js';
 import { waitFor } from '../../../test-utils/async.js';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { SHELL_TOOL_NAME } from '@codefly/codefly-core';
+import { SHELL_TOOL_NAME } from '@codeflyai/codefly-core';
 import { SHELL_COMMAND_NAME } from '../../constants.js';
 import { StreamingContext } from '../../contexts/StreamingContext.js';
 

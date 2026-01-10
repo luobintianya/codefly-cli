@@ -6,7 +6,7 @@
 
 import { spawn } from 'node:child_process';
 import { RELAUNCH_EXIT_CODE } from './processUtils.js';
-import { writeToStderr } from '@codefly/codefly-core';
+import { writeToStderr } from '@codeflyai/codefly-core';
 
 export async function relaunchOnExitCode(runner: () => Promise<number>) {
   while (true) {

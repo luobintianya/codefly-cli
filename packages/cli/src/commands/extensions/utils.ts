@@ -8,7 +8,7 @@ import { ExtensionManager } from '../../config/extension-manager.js';
 import { promptForSetting } from '../../config/extensions/extensionSettings.js';
 import { loadSettings } from '../../config/settings.js';
 import { requestConsentNonInteractive } from '../../config/extensions/consent.js';
-import { debugLogger } from '@codefly/codefly-core';
+import { debugLogger } from '@codeflyai/codefly-core';
 
 export async function getExtensionAndManager(name: string) {
   const workspaceDir = process.cwd();

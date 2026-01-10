@@ -5,8 +5,8 @@
  */
 
 import { useEffect, useReducer, useRef } from 'react';
-import type { Config, FileSearch } from '@codefly/codefly-core';
-import { FileSearchFactory, escapePath } from '@codefly/codefly-core';
+import type { Config, FileSearch } from '@codeflyai/codefly-core';
+import { FileSearchFactory, escapePath } from '@codeflyai/codefly-core';
 import type { Suggestion } from '../components/SuggestionsDisplay.js';
 import { MAX_SUGGESTIONS_TO_SHOW } from '../components/SuggestionsDisplay.js';
 import { AsyncFzf } from 'fzf';

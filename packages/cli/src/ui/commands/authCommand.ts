@@ -10,7 +10,7 @@ import type {
   LogoutActionReturn,
 } from './types.js';
 import { CommandKind } from './types.js';
-// import { clearCachedCredentialFile } from '@codefly/codefly-core';
+// import { clearCachedCredentialFile } from '@codeflyai/codefly-core';
 import { SettingScope } from '../../config/settings.js';
 
 const authLoginCommand: SlashCommand = {

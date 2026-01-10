@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type { Config } from '@codefly/codefly-core';
+import type { Config } from '@codeflyai/codefly-core';
 import {
   OutputFormat,
   JsonFormatter,
@@ -18,7 +18,7 @@ import {
   isFatalToolError,
   debugLogger,
   coreEvents,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import { runSyncCleanup } from './cleanup.js';
 
 export function getErrorMessage(error: unknown): string {

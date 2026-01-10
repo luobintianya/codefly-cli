@@ -30,7 +30,7 @@ import {
   type ResumedSessionData,
   debugLogger,
   coreEvents,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import { act } from 'react';
 import { type InitializationResult } from './core/initializer.js';
 
@@ -39,8 +39,9 @@ const performance = vi.hoisted(() => ({
 }));
 vi.stubGlobal('performance', performance);
 
-vi.mock('@codefly/codefly-core', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@codefly/codefly-core')>();
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import('@codeflyai/codefly-core')>();
   return {
     ...actual,
     recordSlowRender: vi.fn(),
@@ -370,7 +371,7 @@ describe('initializeOutputListenersAndFlush', () => {
   });
 
   it('should flush backlogs and setup listeners if no listeners exist', async () => {
-    const { coreEvents } = await import('@codefly/codefly-core');
+    const { coreEvents } = await import('@codeflyai/codefly-core');
     const { initializeOutputListenersAndFlush } = await import('./codefly.js');
 
     // Mock listenerCount to return 0
@@ -1397,7 +1398,7 @@ describe('startInteractiveUI', () => {
   });
 
   it('should enable mouse events when alternate buffer is enabled', async () => {
-    const { enableMouseEvents } = await import('@codefly/codefly-core');
+    const { enableMouseEvents } = await import('@codeflyai/codefly-core');
     await startTestInteractiveUI(
       mockConfig,
       mockSettings,
@@ -1424,7 +1425,7 @@ describe('startInteractiveUI', () => {
   });
 
   it('should perform all startup tasks in correct order', async () => {
-    const { getVersion } = await import('@codefly/codefly-core');
+    const { getVersion } = await import('@codeflyai/codefly-core');
     const { checkForUpdates } = await import('./ui/utils/updateCheck.js');
     const { registerCleanup } = await import('./utils/cleanup.js');
 
@@ -1452,7 +1453,7 @@ describe('startInteractiveUI', () => {
   });
 
   it('should not recordSlowRender when less than threshold', async () => {
-    const { recordSlowRender } = await import('@codefly/codefly-core');
+    const { recordSlowRender } = await import('@codeflyai/codefly-core');
     performance.now.mockReturnValueOnce(0);
     await startTestInteractiveUI(
       mockConfig,
@@ -1467,7 +1468,7 @@ describe('startInteractiveUI', () => {
   });
 
   it('should call recordSlowRender when more than threshold', async () => {
-    const { recordSlowRender } = await import('@codefly/codefly-core');
+    const { recordSlowRender } = await import('@codeflyai/codefly-core');
     performance.now.mockReturnValueOnce(0);
     performance.now.mockReturnValueOnce(300);
 

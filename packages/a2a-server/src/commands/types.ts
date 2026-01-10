@@ -5,7 +5,7 @@
  */
 
 import type { ExecutionEventBus, AgentExecutor } from '@a2a-js/sdk/server';
-import type { Config, GitService } from '@codefly/codefly-core';
+import type { Config, GitService } from '@codeflyai/codefly-core';
 
 export interface CommandContext {
   config: Config;

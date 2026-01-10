@@ -1,5 +1,5 @@
 {
-  "name": "@codefly/codefly-core",
+  "name": "@codeflyai/codefly-core",
   "version": "0.24.0-nightly.20251227.37be16243",
   "description": "Codefly Core",
   "license": "Apache-2.0",
@@ -80,7 +80,7 @@
     "node-pty": "^1.0.0"
   },
   "devDependencies": {
-    "@codefly/codefly-test-utils": "file:../test-utils",
+    "@codeflyai/codefly-test-utils": "file:../test-utils",
     "@types/diff": "^7.0.2",
     "@types/fast-levenshtein": "^0.0.4",
     "@types/js-yaml": "^4.0.9",

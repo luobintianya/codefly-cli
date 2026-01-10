@@ -7,7 +7,7 @@
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import { join as pathJoin } from 'node:path';
-import { getErrorMessage } from '@codefly/codefly-core';
+import { getErrorMessage } from '@codeflyai/codefly-core';
 
 const warningsFilePath = pathJoin(os.tmpdir(), 'codefly-warnings.txt');
 

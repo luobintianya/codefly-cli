@@ -25,9 +25,9 @@ import { loadConfig, loadEnvironment, setTargetDir } from '../config/config.js';
 import { loadSettings } from '../config/settings.js';
 import { loadExtensions } from '../config/extension.js';
 import { commandRegistry } from '../commands/command-registry.js';
-import { debugLogger, SimpleExtensionLoader } from '@codefly/codefly-core';
+import { debugLogger, SimpleExtensionLoader } from '@codeflyai/codefly-core';
 import type { Command, CommandArgument } from '../commands/types.js';
-import { GitService } from '@codefly/codefly-core';
+import { GitService } from '@codeflyai/codefly-core';
 
 type CommandResponse = {
   name: string;

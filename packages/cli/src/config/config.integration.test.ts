@@ -17,8 +17,11 @@ import {
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { tmpdir } from 'node:os';
-import type { ConfigParameters } from '@codefly/codefly-core';
-import { Config, DEFAULT_FILE_FILTERING_OPTIONS } from '@codefly/codefly-core';
+import type { ConfigParameters } from '@codeflyai/codefly-core';
+import {
+  Config,
+  DEFAULT_FILE_FILTERING_OPTIONS,
+} from '@codeflyai/codefly-core';
 import type { Settings } from './settingsSchema.js';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
@@ -41,8 +44,8 @@ afterAll(() => {
 const CLEARCUT_URL = 'https://play.googleapis.com/log';
 
 // Mock file discovery service and tool registry
-vi.mock('@codefly/codefly-core', async () => {
-  const actual = await vi.importActual('@codefly/codefly-core');
+vi.mock('@codeflyai/codefly-core', async () => {
+  const actual = await vi.importActual('@codeflyai/codefly-core');
   return {
     ...actual,
     FileDiscoveryService: vi.fn().mockImplementation(() => ({

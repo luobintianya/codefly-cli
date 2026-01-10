@@ -1,5 +1,5 @@
 {
-  "name": "@codefly/codefly-test-utils",
+  "name": "@codeflyai/codefly-test-utils",
   "version": "0.24.0-nightly.20251227.37be16243",
   "private": true,
   "main": "dist/index.js",

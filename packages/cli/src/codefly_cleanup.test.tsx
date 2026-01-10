@@ -6,8 +6,8 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { main } from './codefly.js';
-import { debugLogger } from '@codefly/codefly-core';
-import { type Config } from '@codefly/codefly-core';
+import { debugLogger } from '@codeflyai/codefly-core';
+import { type Config } from '@codeflyai/codefly-core';
 
 // Custom error to identify mock process.exit calls
 class MockProcessExitError extends Error {
@@ -17,8 +17,9 @@ class MockProcessExitError extends Error {
   }
 }
 
-vi.mock('@codefly/codefly-core', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@codefly/codefly-core')>();
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import('@codeflyai/codefly-core')>();
   return {
     ...actual,
     writeToStdout: vi.fn(),

@@ -10,7 +10,7 @@ import {
   type Todo,
   type TodoList,
   type TodoStatus,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import { theme } from '../../semantic-colors.js';
 import { useUIState } from '../../contexts/UIStateContext.js';
 import { useMemo } from 'react';

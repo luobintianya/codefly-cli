@@ -18,8 +18,8 @@ import type {
   SessionMetrics,
   ModelMetrics,
   ToolCallStats,
-} from '@codefly/codefly-core';
-import { uiTelemetryService, sessionId } from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
+import { uiTelemetryService, sessionId } from '@codeflyai/codefly-core';
 
 export enum ToolCallDecision {
   ACCEPT = 'accept',

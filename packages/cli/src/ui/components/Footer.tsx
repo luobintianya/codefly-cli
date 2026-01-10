@@ -11,7 +11,7 @@ import {
   shortenPath,
   tildeifyPath,
   getDisplayString,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import { ConsoleSummaryDisplay } from './ConsoleSummaryDisplay.js';
 import process from 'node:process';
 import { ThemedGradient } from './ThemedGradient.js';

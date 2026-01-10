@@ -9,7 +9,7 @@ import {
   checkHasEditorType,
   type EditorType,
   EDITOR_DISPLAY_NAMES,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 
 export interface EditorDisplay {
   name: string;

@@ -17,16 +17,16 @@ import { act } from 'react';
 import { renderHook } from '../../test-utils/render.js';
 import { useAutoAcceptIndicator } from './useAutoAcceptIndicator.js';
 
-import { Config, ApprovalMode } from '@codefly/codefly-core';
-import type { Config as ActualConfigType } from '@codefly/codefly-core';
+import { Config, ApprovalMode } from '@codeflyai/codefly-core';
+import type { Config as ActualConfigType } from '@codeflyai/codefly-core';
 import type { Key } from './useKeypress.js';
 import { useKeypress } from './useKeypress.js';
 import { MessageType } from '../types.js';
 
 vi.mock('./useKeypress.js');
 
-vi.mock('@codefly/codefly-core', async () => {
-  const actualServerModule = await vi.importActual('@codefly/codefly-core');
+vi.mock('@codeflyai/codefly-core', async () => {
+  const actualServerModule = await vi.importActual('@codeflyai/codefly-core');
   return {
     ...actualServerModule,
     Config: vi.fn(),

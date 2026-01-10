@@ -8,13 +8,13 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { homedir } from 'node:os';
 
-import type { MCPServerConfig } from '@codefly/codefly-core';
+import type { MCPServerConfig } from '@codeflyai/codefly-core';
 import {
   debugLogger,
   CODEFLY_DIR,
   getErrorMessage,
   type TelemetrySettings,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import stripJsonComments from 'strip-json-comments';
 
 export const USER_SETTINGS_DIR = path.join(homedir(), CODEFLY_DIR);

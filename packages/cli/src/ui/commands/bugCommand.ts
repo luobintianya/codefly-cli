@@ -14,7 +14,7 @@ import {
 import { MessageType } from '../types.js';
 import { GIT_COMMIT_INFO } from '../../generated/git-commit.js';
 import { formatMemoryUsage } from '../utils/formatters.js';
-import { IdeClient, sessionId, getVersion } from '@codefly/codefly-core';
+import { IdeClient, sessionId, getVersion } from '@codeflyai/codefly-core';
 import { terminalCapabilityManager } from '../utils/terminalCapabilityManager.js';
 
 export const bugCommand: SlashCommand = {

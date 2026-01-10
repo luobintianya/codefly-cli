@@ -16,7 +16,7 @@ import {
   getErrorMessage,
   Storage,
   coreEvents,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import stripJsonComments from 'strip-json-comments';
 import { DefaultLight } from '../ui/themes/default-light.js';
 import { DefaultDark } from '../ui/themes/default.js';

@@ -8,10 +8,10 @@ import type { MockInstance } from 'vitest';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { ideCommand } from './ideCommand.js';
 import { type CommandContext } from './types.js';
-import { IDE_DEFINITIONS } from '@codefly/codefly-core';
-import * as core from '@codefly/codefly-core';
+import { IDE_DEFINITIONS } from '@codeflyai/codefly-core';
+import * as core from '@codeflyai/codefly-core';
 
-vi.mock('@codefly/codefly-core', async (importOriginal) => {
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
   const original = await importOriginal<typeof core>();
   return {
     ...original,

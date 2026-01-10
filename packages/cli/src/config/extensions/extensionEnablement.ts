@@ -6,7 +6,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { coreEvents, type GeminiCLIExtension } from '@codefly/codefly-core';
+import { coreEvents, type GeminiCLIExtension } from '@codeflyai/codefly-core';
 import { ExtensionStorage } from './storage.js';
 
 export interface ExtensionEnablementConfig {

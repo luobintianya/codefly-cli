@@ -6,7 +6,7 @@
 
 import type React from 'react';
 import { Box, Text } from 'ink';
-import type { AnsiLine, AnsiOutput, AnsiToken } from '@codefly/codefly-core';
+import type { AnsiLine, AnsiOutput, AnsiToken } from '@codeflyai/codefly-core';
 
 const DEFAULT_HEIGHT = 24;
 

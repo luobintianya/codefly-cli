@@ -18,7 +18,7 @@ import {
   decodeTagName,
   type MessageActionReturn,
   INITIAL_HISTORY_LENGTH,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import path from 'node:path';
 import type {
   HistoryItemWithoutId,

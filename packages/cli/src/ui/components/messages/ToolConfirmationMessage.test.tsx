@@ -9,7 +9,7 @@ import { ToolConfirmationMessage } from './ToolConfirmationMessage.js';
 import type {
   ToolCallConfirmationDetails,
   Config,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import {
   renderWithProviders,
   createMockSettings,

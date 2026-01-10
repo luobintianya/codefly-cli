@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type { MCPServerConfig } from '@codefly/codefly-core';
-import { MCPServerStatus } from '@codefly/codefly-core';
+import type { MCPServerConfig } from '@codeflyai/codefly-core';
+import { MCPServerStatus } from '@codeflyai/codefly-core';
 import { Box, Text } from 'ink';
 import type React from 'react';
 import { MAX_MCP_RESOURCES_TO_SHOW } from '../../constants.js';

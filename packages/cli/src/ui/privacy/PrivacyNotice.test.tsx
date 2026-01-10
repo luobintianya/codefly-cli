@@ -11,7 +11,7 @@ import type {
   AuthType,
   Config,
   ContentGeneratorConfig,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 
 // Mock child components
 vi.mock('./GeminiPrivacyNotice.js', async () => {

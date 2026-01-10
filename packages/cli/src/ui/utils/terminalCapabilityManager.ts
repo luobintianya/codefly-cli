@@ -11,7 +11,7 @@ import {
   disableKittyKeyboardProtocol,
   enableModifyOtherKeys,
   disableModifyOtherKeys,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 
 export type TerminalBackgroundColor = string | undefined;
 

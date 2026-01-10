@@ -7,7 +7,7 @@
 import {
   getErrorMessage,
   refreshServerHierarchicalMemory,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import { MessageType } from '../types.js';
 import type { SlashCommand, SlashCommandActionReturn } from './types.js';
 import { CommandKind } from './types.js';

@@ -13,13 +13,13 @@ import { useGitBranchName } from './useGitBranchName.js';
 import { fs, vol } from 'memfs';
 import * as fsPromises from 'node:fs/promises';
 import path from 'node:path'; // For mocking fs
-import { spawnAsync as mockSpawnAsync } from '@codefly/codefly-core';
+import { spawnAsync as mockSpawnAsync } from '@codeflyai/codefly-core';
 
-// Mock @codefly/codefly-core
-vi.mock('@codefly/codefly-core', async () => {
+// Mock @codeflyai/codefly-core
+vi.mock('@codeflyai/codefly-core', async () => {
   const original = await vi.importActual<
-    typeof import('@codefly/codefly-core')
-  >('@codefly/codefly-core');
+    typeof import('@codeflyai/codefly-core')
+  >('@codeflyai/codefly-core');
   return {
     ...original,
     spawnAsync: vi.fn(),

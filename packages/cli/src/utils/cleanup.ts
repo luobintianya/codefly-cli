@@ -10,8 +10,8 @@ import {
   Storage,
   shutdownTelemetry,
   isTelemetrySdkInitialized,
-} from '@codefly/codefly-core';
-import type { Config } from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
+import type { Config } from '@codeflyai/codefly-core';
 
 const cleanupFunctions: Array<(() => void) | (() => Promise<void>)> = [];
 const syncCleanupFunctions: Array<() => void> = [];

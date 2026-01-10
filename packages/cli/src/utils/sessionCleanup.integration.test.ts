@@ -11,7 +11,7 @@ import {
   SESSION_FILE_PREFIX,
   type Config,
   debugLogger,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 
 // Create a mock config for integration testing
 function createTestConfig(): Config {

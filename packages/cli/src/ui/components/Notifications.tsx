@@ -12,7 +12,7 @@ import { theme } from '../semantic-colors.js';
 import { StreamingState } from '../types.js';
 import { UpdateNotification } from './UpdateNotification.js';
 
-import { CODEFLY_DIR, Storage, debugLogger } from '@codefly/codefly-core';
+import { CODEFLY_DIR, Storage, debugLogger } from '@codeflyai/codefly-core';
 
 import * as fs from 'node:fs/promises';
 import os from 'node:os';

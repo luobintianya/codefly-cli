@@ -35,7 +35,7 @@ import {
   type HookDefinition,
   type HookEventName,
   type OutputFormat,
-} from '@codefly/codefly-core';
+} from '@codeflyai/codefly-core';
 import type { Settings } from './settings.js';
 import { saveModelChange, loadSettings } from './settings.js';
 
@@ -47,7 +47,7 @@ import { RESUME_LATEST } from '../utils/sessionUtils.js';
 import { isWorkspaceTrusted } from './trustedFolders.js';
 import { createPolicyEngineConfig } from './policy.js';
 import { ExtensionManager } from './extension-manager.js';
-import type { ExtensionEvents } from '@codefly/codefly-core/src/utils/extensionLoader.js';
+import type { ExtensionEvents } from '@codeflyai/codefly-core/src/utils/extensionLoader.js';
 import { requestConsentNonInteractive } from './extensions/consent.js';
 import { promptForSetting } from './extensions/extensionSettings.js';
 import type { EventEmitter } from 'node:stream';

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { debugLogger, type Config } from '@codefly/codefly-core';
+import { debugLogger, type Config } from '@codeflyai/codefly-core';
 import { useStdin } from 'ink';
 import type React from 'react';
 import {
