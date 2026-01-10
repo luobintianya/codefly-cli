@@ -15,6 +15,8 @@ import {
   createContentGenerator,
   createContentGeneratorConfig,
 } from '../core/contentGenerator.js';
+import { getCodeAssistServer } from '../code_assist/codeAssist.js';
+import type { UserTierId } from '../code_assist/types.js';
 import { PromptRegistry } from '../prompts/prompt-registry.js';
 import { ResourceRegistry } from '../resources/resource-registry.js';
 import { ToolRegistry } from '../tools/tool-registry.js';
@@ -755,6 +757,15 @@ export class Config {
 
   getContentGenerator(): ContentGenerator {
     return this.contentGenerator;
+  }
+
+  getUserTier(): UserTierId | undefined {
+    // If not using CodeAssist generated content, user tier is not relevant.
+    const server = getCodeAssistServer(this);
+    if (!server) {
+      return undefined;
+    }
+    return server.userTier;
   }
 
   async refreshAuth(authMethod: AuthType) {

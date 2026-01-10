@@ -105,6 +105,11 @@ export function AuthDialog({
 
   let items = [
     {
+      label: 'Login with Google',
+      value: AuthType.LOGIN_WITH_GOOGLE,
+      key: AuthType.LOGIN_WITH_GOOGLE,
+    },
+    {
       label: 'Use Gemini API Key',
       value: AuthType.USE_GEMINI,
       key: AuthType.USE_GEMINI,

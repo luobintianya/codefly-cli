@@ -13,6 +13,7 @@ import type {
   EmbedContentParameters,
 } from '@google/genai';
 import { GoogleGenAI } from '@google/genai';
+import { createCodeAssistContentGenerator } from '../code_assist/codeAssist.js';
 import type { Config } from '../config/config.js';
 import { loadApiKey } from './apiKeyCredentialStorage.js';
 import { LoggingContentGenerator } from './loggingContentGenerator.js';
@@ -42,9 +43,11 @@ export interface ContentGenerator {
 }
 
 export enum AuthType {
+  LOGIN_WITH_GOOGLE = 'oauth-personal',
   USE_GEMINI = 'gemini-api-key',
   USE_VERTEX_AI = 'vertex-ai',
   LEGACY_CLOUD_SHELL = 'cloud-shell',
+  COMPUTE_ADC = 'compute-default-credentials',
   OPENAI = 'openai',
   ZHIPU = 'zhipu',
 }
@@ -89,6 +92,14 @@ export async function createContentGeneratorConfig(
     authType,
     proxy: config?.getProxy(),
   };
+
+  // If we are using Google auth or we are in Cloud Shell, there is nothing else to validate for now
+  if (
+    authType === AuthType.LOGIN_WITH_GOOGLE ||
+    authType === AuthType.COMPUTE_ADC
+  ) {
+    return contentGeneratorConfig;
+  }
 
   if (authType === AuthType.USE_GEMINI && geminiApiKey) {
     contentGeneratorConfig.apiKey = geminiApiKey;
@@ -157,6 +168,22 @@ export async function createContentGenerator(
       config.apiKey
     ) {
       baseHeaders['Authorization'] = `Bearer ${config.apiKey}`;
+    }
+
+    if (
+      config.authType === AuthType.LOGIN_WITH_GOOGLE ||
+      config.authType === AuthType.COMPUTE_ADC
+    ) {
+      const httpOptions = { headers: baseHeaders };
+      return new LoggingContentGenerator(
+        await createCodeAssistContentGenerator(
+          httpOptions,
+          config.authType,
+          gcConfig,
+          _sessionId,
+        ),
+        gcConfig,
+      );
     }
 
     if (

@@ -59,6 +59,7 @@ import {
   fireSessionStartHook,
   fireSessionEndHook,
   generateSummary,
+  type UserTierId,
 } from '@codefly/codefly-core';
 import { validateAuthMethod } from '../config/auth.js';
 import process from 'node:process';
@@ -251,7 +252,7 @@ export const AppContainer = (props: AppContainerProps) => {
 
   const [currentModel, setCurrentModel] = useState(config.getModel());
 
-  // const [userTier, setUserTier] = useState<UserTierId | undefined>(undefined);
+  const [userTier, setUserTier] = useState<UserTierId | undefined>(undefined);
 
   const [isConfigInitialized, setConfigInitialized] = useState(false);
 
@@ -439,6 +440,7 @@ export const AppContainer = (props: AppContainerProps) => {
   const { proQuotaRequest, handleProQuotaChoice } = useQuotaAndFallback({
     config,
     historyManager,
+    userTier,
     setModelSwitchedFromQuotaError,
   });
 
@@ -528,9 +530,9 @@ export const AppContainer = (props: AppContainerProps) => {
   // Sync user tier from config when authentication changes
   useEffect(() => {
     // Only sync when not currently authenticating
-    // if (authState === AuthState.Authenticated) {
-    //   setUserTier(config.getUserTier());
-    // }
+    if (authState === AuthState.Authenticated) {
+      setUserTier(config.getUserTier());
+    }
   }, [config, authState]);
 
   // Check for enforced auth type mismatch
@@ -1426,6 +1428,7 @@ export const AppContainer = (props: AppContainerProps) => {
       isEditorDialogOpen,
       showPrivacyNotice,
       corgiMode,
+      userTier,
       debugMessage,
       quittingMessages,
       isSettingsDialogOpen,
@@ -1509,6 +1512,7 @@ export const AppContainer = (props: AppContainerProps) => {
       themeError,
       isAuthenticating,
       isConfigInitialized,
+      userTier,
       authError,
       isAuthDialogOpen,
       editorError,

@@ -77,11 +77,11 @@ export class GeminiAgent {
   ): Promise<acp.InitializeResponse> {
     this.clientCapabilities = args.clientCapabilities;
     const authMethods = [
-      // {
-      //   id: AuthType.LOGIN_WITH_GOOGLE,
-      //   name: 'Log in with Google',
-      //   description: null,
-      // },
+      {
+        id: AuthType.LOGIN_WITH_GOOGLE,
+        name: 'Log in with Google',
+        description: null,
+      },
       {
         id: AuthType.USE_GEMINI,
         name: 'Use Gemini API key',

@@ -7,7 +7,8 @@ exports[`AuthDialog > Snapshots > renders correctly with auth error 1`] = `
 │                                                                                                                      │
 │   How would you like to authenticate for this project?                                                               │
 │                                                                                                                      │
-│   (selected) Use Gemini API Key(not selected) Vertex AI(not selected) OpenAI Compatible                              │
+│   (selected) Login with Googl(not selected) Use Gemini API Ke(not selected) Vertex A(not selected) OpenAI Compatible │
+│                                                                                                                      │
 │                                                                                                                      │
 │   Something went wrong                                                                                               │
 │                                                                                                                      │
@@ -27,7 +28,8 @@ exports[`AuthDialog > Snapshots > renders correctly with default props 1`] = `
 │                                                                                                                      │
 │   How would you like to authenticate for this project?                                                               │
 │                                                                                                                      │
-│   (selected) Use Gemini API Key(not selected) Vertex AI(not selected) OpenAI Compatible                              │
+│   (selected) Login with Googl(not selected) Use Gemini API Ke(not selected) Vertex A(not selected) OpenAI Compatible │
+│                                                                                                                      │
 │                                                                                                                      │
 │   (Use Enter to select)                                                                                              │
 │                                                                                                                      │

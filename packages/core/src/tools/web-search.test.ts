@@ -225,7 +225,7 @@ Sources:
                   segment: {
                     // Byte range of "Codefly CLI✨️" (utf-8 encoded)
                     startIndex: 17,
-                    endIndex: 33,
+                    endIndex: 34,
                   },
                   groundingChunkIndices: [1, 2],
                 },

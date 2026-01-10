@@ -9,7 +9,7 @@ import { Box, Text } from 'ink';
 import { RadioButtonSelect } from './shared/RadioButtonSelect.js';
 import { theme } from '../semantic-colors.js';
 
-// import { UserTierId } from '@codefly/codefly-core';
+import { UserTierId } from '@codefly/codefly-core';
 
 interface ProQuotaDialogProps {
   failedModel: string;
@@ -20,7 +20,7 @@ interface ProQuotaDialogProps {
   onChoice: (
     choice: 'retry_later' | 'retry_once' | 'retry_always' | 'upgrade',
   ) => void;
-  // userTier: UserTierId | undefined;
+  userTier: UserTierId | undefined;
 }
 
 export function ProQuotaDialog({
@@ -30,10 +30,11 @@ export function ProQuotaDialog({
   isTerminalQuotaError,
   isModelNotFoundError,
   onChoice,
-  // userTier,
+  userTier,
 }: ProQuotaDialogProps): React.JSX.Element {
-  // User tiers removed. Assuming standard behavior (no upgrade prompts).
-  const isPaidTier = true;
+  // Use actual user tier if available; otherwise, default to FREE tier behavior (safe default)
+  const isPaidTier =
+    userTier === UserTierId.LEGACY || userTier === UserTierId.STANDARD;
   let items;
   // Do not provide a fallback option if failed model and fallbackmodel are same.
   if (failedModel === fallbackModel) {

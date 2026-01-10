@@ -22,6 +22,7 @@ import type {
   ApprovalMode,
   IdeInfo,
   FallbackIntent,
+  UserTierId,
 } from '@codefly/codefly-core';
 import type { DOMElement } from 'ink';
 import type { SessionStatsState } from '../contexts/SessionContext.js';
@@ -136,6 +137,7 @@ export interface UIState {
   bannerVisible: boolean;
   customDialog: React.ReactNode | null;
   terminalBackgroundColor: TerminalBackgroundColor;
+  userTier: UserTierId | undefined;
 }
 
 export const UIStateContext = createContext<UIState | null>(null);

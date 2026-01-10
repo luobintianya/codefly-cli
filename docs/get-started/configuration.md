@@ -686,9 +686,9 @@ their corresponding top-level category object in your `settings.json` file.
 
 - **`tools.enableHooks`** (boolean):
   - **Description:** Enable the hooks system for intercepting and customizing
-    Gemini CLI behavior. When enabled, hooks configured in settings will execute
-    at appropriate lifecycle events (BeforeTool, AfterTool, BeforeModel, etc.).
-    Requires MessageBus integration.
+    Codefly CLI behavior. When enabled, hooks configured in settings will
+    execute at appropriate lifecycle events (BeforeTool, AfterTool, BeforeModel,
+    etc.). Requires MessageBus integration.
   - **Default:** `false`
   - **Requires restart:** Yes
 

@@ -129,6 +129,11 @@ export * from './tools/mcp-client.js';
 export * from './tools/mcp-tool.js';
 export * from './tools/write-todos.js';
 
+// Google OAuth2 for Code Assist
+export * from './code_assist/oauth2.js';
+export { OAuthCredentialStorage } from './code_assist/oauth-credential-storage.js';
+export * from './code_assist/types.js';
+
 // MCP OAuth
 export { MCPOAuthProvider } from './mcp/oauth-provider.js';
 export type {

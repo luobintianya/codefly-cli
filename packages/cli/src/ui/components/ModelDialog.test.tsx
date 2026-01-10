@@ -133,7 +133,20 @@ describe('<ModelDialog />', () => {
   it('sets model and closes when a model is selected', async () => {
     const { stdin } = renderComponent();
 
-    // Select first model (Gemini 3 Pro, index 0)
+    // Select first model (Auto (Gemini 3), index 0)
+    stdin.write('\r');
+    await waitForUpdate();
+
+    expect(mockSetModel).toHaveBeenCalledWith(PREVIEW_GEMINI_MODEL_AUTO);
+    expect(mockOnClose).toHaveBeenCalled();
+  });
+
+  it('can select Gemini 3 Pro', async () => {
+    const { stdin } = renderComponent();
+
+    // Navigate to second model (Gemini 3 Pro, index 1)
+    stdin.write('\u001B[B');
+    await waitForUpdate();
     stdin.write('\r');
     await waitForUpdate();
 
@@ -144,7 +157,11 @@ describe('<ModelDialog />', () => {
   it('can select different models with arrow keys', async () => {
     const { stdin } = renderComponent();
 
-    // Navigate to second model (Gemini 3 Flash)
+    // Navigate to third model (Gemini 3 Flash, index 2)
+    // Down -> Pro (1)
+    // Down -> Flash (2)
+    stdin.write('\u001B[B');
+    await waitForUpdate();
     stdin.write('\u001B[B');
     await waitForUpdate();
     stdin.write('\r');

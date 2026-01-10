@@ -138,8 +138,8 @@ describe('AuthDialog', () => {
       },
       {
         setup: () => {},
-        expected: AuthType.USE_GEMINI,
-        desc: 'defaults to Use Gemini',
+        expected: AuthType.LOGIN_WITH_GOOGLE,
+        desc: 'defaults to Login with Google',
       },
     ])('selects initial auth type $desc', ({ setup, expected }) => {
       setup();
