@@ -92,6 +92,7 @@ const mockConfig = {
   getIdeMode: () => false,
   getEnableInteractiveShell: () => true,
   getPreviewFeatures: () => false,
+  isSkillsSupportEnabled: () => false,
 };
 
 const configProxy = new Proxy(mockConfig, {

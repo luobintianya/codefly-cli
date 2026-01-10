@@ -116,6 +116,7 @@ export class ChatRecordingService {
   private queuedThoughts: Array<ThoughtSummary & { timestamp: string }> = [];
   private queuedTokens: TokensSummary | null = null;
   private config: Config;
+  private disabled = false;
 
   constructor(config: Config) {
     this.config = config;
@@ -173,7 +174,7 @@ export class ChatRecordingService {
       this.queuedTokens = null;
     } catch (error) {
       debugLogger.error('Error initializing chat recording service:', error);
-      throw error;
+      this.disabled = true;
     }
   }
 
@@ -203,7 +204,7 @@ export class ChatRecordingService {
     type: ConversationRecordExtra['type'];
     content: PartListUnion;
   }): void {
-    if (!this.conversationFile) return;
+    if (this.disabled || !this.conversationFile) return;
 
     try {
       this.updateConversation((conversation) => {
@@ -225,7 +226,7 @@ export class ChatRecordingService {
       });
     } catch (error) {
       debugLogger.error('Error saving message to chat history.', error);
-      throw error;
+      // Suppress error to avoid crashing the CLI
     }
   }
 
@@ -233,7 +234,7 @@ export class ChatRecordingService {
    * Records a thought from the assistant's reasoning process.
    */
   recordThought(thought: ThoughtSummary): void {
-    if (!this.conversationFile) return;
+    if (this.disabled || !this.conversationFile) return;
 
     try {
       this.queuedThoughts.push({
@@ -242,7 +243,7 @@ export class ChatRecordingService {
       });
     } catch (error) {
       debugLogger.error('Error saving thought to chat history.', error);
-      throw error;
+      // Suppress error
     }
   }
 
@@ -433,9 +434,18 @@ export class ChatRecordingService {
   private updateConversation(
     updateFn: (conversation: ConversationRecord) => void,
   ) {
-    const conversation = this.readConversation();
-    updateFn(conversation);
-    this.writeConversation(conversation);
+    if (this.disabled) return;
+    try {
+      const conversation = this.readConversation();
+      updateFn(conversation);
+      this.writeConversation(conversation);
+    } catch (error) {
+      debugLogger.error(
+        'Error updating conversation, disabling chat recording.',
+        error,
+      );
+      this.disabled = true;
+    }
   }
 
   /**
