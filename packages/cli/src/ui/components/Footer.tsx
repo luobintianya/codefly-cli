@@ -147,6 +147,12 @@ export const Footer: React.FC = () => {
       {/* Right Section: Gemini Label and Console Summary */}
       {!hideModelInfo && (
         <Box alignItems="center" justifyContent="flex-end">
+          {config.isSkillsSupportEnabled() && (
+            <Box marginRight={2}>
+              <Text color={theme.text.secondary}>Skills: </Text>
+              <Text color={theme.status.success}>On</Text>
+            </Box>
+          )}
           <Box alignItems="center">
             <Text color={theme.text.accent}>
               {getDisplayString(model, config.getPreviewFeatures())}

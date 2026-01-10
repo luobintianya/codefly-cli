@@ -24,7 +24,7 @@ describe('IdeTrustChangeDialog', () => {
     expect(frameText).toContain(
       'Workspace trust has changed due to a change in the IDE connection.',
     );
-    expect(frameText).toContain("Press 'r' to restart Gemini");
+    expect(frameText).toContain("Press 'r' to restart Codefly");
   });
 
   it('renders the correct message for TRUST_CHANGE', () => {
