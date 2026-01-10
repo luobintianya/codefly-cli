@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import * as fs from 'node:fs';
 import { writeToStdout } from './stdio.js';
 
 export function enableMouseEvents() {
@@ -31,7 +32,12 @@ export function enableModifyOtherKeys() {
 }
 
 export function disableModifyOtherKeys() {
-  writeToStdout('\x1b[>4;0m');
+  try {
+    // Use fs.writeSync to ensure output is flushed, especially during process.exit
+    fs.writeSync(process.stdout.fd, '\x1b[>4;0m');
+  } catch {
+    writeToStdout('\x1b[>4;0m');
+  }
 }
 
 export function enableLineWrapping() {

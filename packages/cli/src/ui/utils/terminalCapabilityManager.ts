@@ -22,7 +22,7 @@ export class TerminalCapabilityManager {
   private static readonly OSC_11_QUERY = '\x1b]11;?\x1b\\';
   private static readonly TERMINAL_NAME_QUERY = '\x1b[>q';
   private static readonly DEVICE_ATTRIBUTES_QUERY = '\x1b[c';
-  private static readonly MODIFY_OTHER_KEYS_QUERY = '\x1b[>4;?m';
+  // private static readonly MODIFY_OTHER_KEYS_QUERY = '\x1b[>4;?m';
 
   // Kitty keyboard flags: CSI ? flags u
   // eslint-disable-next-line no-control-regex
@@ -199,7 +199,6 @@ export class TerminalCapabilityManager {
           TerminalCapabilityManager.KITTY_QUERY +
             TerminalCapabilityManager.OSC_11_QUERY +
             TerminalCapabilityManager.TERMINAL_NAME_QUERY +
-            TerminalCapabilityManager.MODIFY_OTHER_KEYS_QUERY +
             TerminalCapabilityManager.DEVICE_ATTRIBUTES_QUERY,
         );
       } catch (e) {
