@@ -107,6 +107,10 @@ export async function checkForUpdates(
 
     return null;
   } catch (e) {
+    if (e instanceof Error && e.name === 'PackageNotFoundError') {
+      debugLogger.log('Update check skipped: ' + e.message);
+      return null;
+    }
     debugLogger.warn('Failed to check for updates: ' + e);
     return null;
   }

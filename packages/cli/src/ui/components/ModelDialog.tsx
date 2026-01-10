@@ -10,6 +10,7 @@ import { Box, Text } from 'ink';
 import {
   PREVIEW_GEMINI_MODEL,
   PREVIEW_GEMINI_FLASH_MODEL,
+  PREVIEW_GEMINI_MODEL_AUTO,
   ModelSlashCommandEvent,
   logModelSlashCommand,
   AuthType,
@@ -90,6 +91,12 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
 
     // For Gemini: Show only Gemini 3 models
     const list = [
+      {
+        value: PREVIEW_GEMINI_MODEL_AUTO,
+        title: 'Auto (Gemini 3)',
+        description: 'Automatically selects the best model',
+        key: PREVIEW_GEMINI_MODEL_AUTO,
+      },
       {
         value: PREVIEW_GEMINI_MODEL,
         title: 'Gemini 3 Pro',
