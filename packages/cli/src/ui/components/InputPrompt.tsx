@@ -430,6 +430,12 @@ export const InputPrompt: React.FC<InputPromptProps> = ({
         }
       }
 
+      if (keyMatchers[Command.PASTE_CLIPBOARD](key)) {
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        handleClipboardPaste();
+        return;
+      }
+
       if (
         key.sequence === '!' &&
         buffer.text === '' &&
