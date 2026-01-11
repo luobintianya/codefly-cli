@@ -20,7 +20,7 @@ Learn all about Codefly in our [documentation](https://codefly.dev/docs/).
 - **🧠 Powerful AI Models**: Access to 1M token context window with Gemini 2.5
   Pro.
 - **🔧 Built-in tools**: Google Search grounding, file operations, shell
-  commands, web fetching.
+  commands, web fetching, database schema inspection, and API schema analysis.
 - **🔌 Extensible**: MCP (Model Context Protocol) support for custom
   integrations.
 - **💻 Terminal-first**: Designed for developers who live in the command line.
@@ -288,6 +288,8 @@ codefly
   - [File System Operations](./docs/tools/file-system.md)
   - [Shell Commands](./docs/tools/shell.md)
   - [Web Fetch & Search](./docs/tools/web-fetch.md)
+  - [Database Schema Tool](./docs/tools/database-schema.md)
+  - [Swagger/OpenAPI Schema Tool](./docs/tools/swagger-schema.md)
 - [**MCP Server Integration**](./docs/tools/mcp-server.md) - Extend with custom
   tools.
 - [**Custom Extensions**](./docs/extensions/index.md) - Build and share your own

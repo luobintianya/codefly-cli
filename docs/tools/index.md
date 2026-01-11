@@ -86,6 +86,10 @@ Gemini CLI's built-in tools can be broadly categorized as follows:
   information across sessions.
 - **[Todo Tool](./todos.md) (`write_todos`):** For managing subtasks of complex
   requests.
+- **[Database Schema Tool](./database-schema.md) (`get_database_schema`):** For
+  retrieving database table structures from MySQL or PostgreSQL databases.
+- **[Swagger Schema Tool](./swagger-schema.md) (`get_swagger_schema`):** For
+  fetching and parsing Swagger/OpenAPI schema definitions from URLs.
 
 Additionally, these tools incorporate:
 
