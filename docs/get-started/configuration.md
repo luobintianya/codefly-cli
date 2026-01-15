@@ -98,6 +98,11 @@ their corresponding top-level category object in your `settings.json` file.
 
 #### `general`
 
+- **`general.language`** (enum):
+  - **Description:** The language for the agent to use.
+  - **Default:** `"auto"`
+  - **Values:** `"auto"`, `"en"`, `"zh"`
+
 - **`general.previewFeatures`** (boolean):
   - **Description:** Enable preview features (e.g., preview models).
   - **Default:** `false`

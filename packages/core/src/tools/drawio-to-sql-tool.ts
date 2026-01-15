@@ -7,14 +7,32 @@
 import { inflateRaw } from 'node:zlib';
 import { promisify } from 'node:util';
 import * as fs from 'node:fs/promises';
+import * as path from 'node:path';
 import { BaseDeclarativeTool, BaseToolInvocation, Kind } from './tools.js';
 import type { ToolInvocation, ToolResult } from './tools.js';
 import type { Config } from '../config/config.js';
 import { ToolErrorType } from './tool-error.js';
 import { DRAWIO_TO_SQL_TOOL_NAME } from './tool-names.js';
 import type { MessageBus } from '../confirmation-bus/message-bus.js';
+import { getResponseText } from '../utils/partUtils.js';
 
 const inflateRawAsync = promisify(inflateRaw);
+
+interface Box {
+  id: string;
+  text: string;
+  children?: string[];
+}
+
+interface Relationship {
+  source: string;
+  target: string;
+}
+
+interface ExtractResult {
+  boxes: Box[];
+  relationships: Relationship[];
+}
 
 export interface DrawioToSqlToolParams {
   filePath: string;
@@ -33,13 +51,17 @@ export class DrawioToSqlToolInvocation extends BaseToolInvocation<
   DrawioToSqlToolParams,
   ToolResult
 > {
+  private config: Config;
+
   constructor(
     params: DrawioToSqlToolParams,
+    config: Config,
     messageBus?: MessageBus,
     _toolName?: string,
     _toolDisplayName?: string,
   ) {
     super(params, messageBus, _toolName, _toolDisplayName);
+    this.config = config;
   }
 
   getDescription(): string {
@@ -50,23 +72,78 @@ export class DrawioToSqlToolInvocation extends BaseToolInvocation<
     try {
       const rawContent = await fs.readFile(this.params.filePath, 'utf-8');
       const xmlContent = await this.decodeDrawio(rawContent);
-      const sql = this.parseDrawioToSql(xmlContent);
 
-      let executionResult = '';
-      if (this.params.dbConfig && this.params.execute) {
-        executionResult = await this.executeSql(sql, this.params.dbConfig);
-      }
+      // Extract boxes and relationships from DrawIO
+      const extractResult = this.extractDrawioStructure(xmlContent);
+
+      // Prepare prompt for LLM to generate SQL
+      const prompt = this.buildSqlGenerationPrompt(extractResult);
+
+      // Use LLM to generate SQL
+      const llmResponse = await this.config.getBaseLlmClient().generateContent({
+        modelConfigKey: { model: 'default' },
+        contents: [
+          {
+            role: 'user',
+            parts: [{ text: prompt }],
+          },
+        ],
+        systemInstruction: {
+          text: 'You are a SQL generation expert. Generate complete and correct SQL CREATE TABLE and ALTER TABLE statements based on the provided DrawIO diagram structure.',
+        },
+        promptId: 'drawio-to-sql',
+        abortSignal: _signal,
+      });
+
+      // Extract SQL from LLM response
+      const llmText = getResponseText(llmResponse) || '';
+      const generatedSql = this.extractSqlFromResponse(llmText);
+
+      // Count generated tables
+      const generatedTableCount = this.countGeneratedTables(generatedSql);
+
+      // Save SQL to same directory as DrawIO file
+      const fileName = path.basename(this.params.filePath, '.drawio') + '.sql';
+      const drawioDir = path.dirname(this.params.filePath);
+      const sqlFilePath = path.join(drawioDir, fileName);
+      await fs.writeFile(sqlFilePath, generatedSql, 'utf-8');
+
+      // Build detailed output with statistics
+      let detailedOutput = '## DrawIO 转 SQL 结果\n\n';
+      detailedOutput += `### 识别统计\n\n`;
+      detailedOutput += `- **识别到的方框数量**: ${extractResult.boxes.length}\n`;
+      detailedOutput += `- **识别到的关系数量**: ${extractResult.relationships.length}\n`;
+      detailedOutput += `- **LLM 生成的表数量**: ${generatedTableCount}\n\n`;
+
+      detailedOutput += `### 识别到的方框\n\n`;
+      extractResult.boxes.forEach((box: Box, idx: number) => {
+        detailedOutput += `**${idx + 1}. ${box.text}**\n`;
+        if (box.children && box.children.length > 0) {
+          detailedOutput += `  - 子项数: ${box.children.length}\n`;
+          box.children.forEach((child: string) => {
+            detailedOutput += `    - ${child}\n`;
+          });
+        }
+        detailedOutput += '\n';
+      });
+
+      detailedOutput += `### 识别到的关系\n\n`;
+      extractResult.relationships.forEach((rel: Relationship, idx: number) => {
+        detailedOutput += `**${idx + 1}.** ${rel.source} -> ${rel.target}\n`;
+      });
+
+      detailedOutput += '\n### LLM 生成的 SQL\n\n```sql\n';
+      detailedOutput += generatedSql;
+      detailedOutput += '\n```\n';
 
       return {
-        llmContent:
-          sql +
-          (executionResult ? `\n\nExecution Result:\n${executionResult}` : ''),
-        returnDisplay: `Generated SQL from ${this.params.filePath}${executionResult ? ' and executed it' : ''}`,
+        llmContent: detailedOutput,
+        returnDisplay: `从 ${path.basename(this.params.filePath)} 生成 SQL 并保存到 ${sqlFilePath}。识别了 ${extractResult.boxes.length} 个方框，${extractResult.relationships.length} 个关系，生成了 ${generatedTableCount} 个表。`,
       };
     } catch (error) {
       return {
-        llmContent: `Error: ${error}`,
-        returnDisplay: `Error: ${error}`,
+        llmContent: `错误: ${error}`,
+        returnDisplay: `错误: ${error}`,
         error: {
           message: String(error),
           type: ToolErrorType.EXECUTION_FAILED,
@@ -114,7 +191,7 @@ export class DrawioToSqlToolInvocation extends BaseToolInvocation<
     return xmlContent;
   }
 
-  private parseDrawioToSql(xml: string): string {
+  private extractDrawioStructure(xml: string): ExtractResult {
     const cells: Record<
       string,
       {
@@ -129,9 +206,6 @@ export class DrawioToSqlToolInvocation extends BaseToolInvocation<
       }
     > = {};
 
-    // Robust regex to match tags and attributes
-    // Matches <mxCell ... /> or <mxCell ...>...</mxCell>
-    // We strictly look for the opening tag and attributes
     const cellRegex = /<mxCell\s+([^>]*?)(\/?>)/gs;
     const attrRegex = /([a-z0-9]+)="([^"]*)"/gi;
 
@@ -161,15 +235,8 @@ export class DrawioToSqlToolInvocation extends BaseToolInvocation<
       }
     }
 
-    // Identify Tables
-    // A table is:
-    // 1. A vertex (vertex="1")
-    // 2. Has a non-empty value (Name)
-    // 3. AND (Is a known table style like "swimlane" OR "table" OR doesn't have a parent that is a table)
-    // To simplify: We'll assume any vertex with children that are "columns" is a table.
-    // Or any vertex with style "swimlane".
-
-    const possibleTables: Set<string> = new Set();
+    const boxes: Box[] = [];
+    const relationships: Relationship[] = [];
     const parentToChildren: Record<string, string[]> = {};
 
     for (const id in cells) {
@@ -178,166 +245,60 @@ export class DrawioToSqlToolInvocation extends BaseToolInvocation<
         if (!parentToChildren[cell.parent]) parentToChildren[cell.parent] = [];
         parentToChildren[cell.parent].push(id);
       }
-
-      if (cell.vertex === '1' && cell.value) {
-        // Heuristic for table:
-        // - Explicit swimlane
-        // - OR just a box that ends up having children columns
-        if (
-          cell.style &&
-          (cell.style.includes('swimlane') || cell.style.includes('table'))
-        ) {
-          possibleTables.add(id);
-        }
-      }
     }
 
-    // Also look for parents that have children which look like columns
-    for (const parentId in parentToChildren) {
-      if (
-        cells[parentId] &&
-        cells[parentId].value &&
-        cells[parentId].vertex === '1'
-      ) {
-        possibleTables.add(parentId);
-      }
-    }
-
-    const tables: Record<string, string[]> = {};
-
-    for (const tableId of possibleTables) {
-      const childrenIds = parentToChildren[tableId] || [];
-
-      // Filter children to find columns
-      // Columns are vertices with values, usually not edges
-      const columns: string[] = [];
-      for (const childId of childrenIds) {
-        const child = cells[childId];
-        if (child.vertex === '1' && child.value) {
-          columns.push(child.value);
-        }
-      }
-
-      if (columns.length > 0) {
-        tables[tableId] = columns;
-      }
-    }
-
-    // Generate SQL
-    let sql = '';
-    const tableIdToName: Record<string, string> = {};
-
-    // CREATE TABLE statements
-    for (const tableId in tables) {
-      const tableName = cells[tableId].value!;
-
-      // Filter out Enum/Dictionary tables
-      // Heuristic: Check if name contains "Enum" or "Dict"
-      if (tableName.match(/(enum|dict|dictionary)/i)) {
-        continue;
-      }
-      const cleanTableName = tableName.replace(/\s+/g, '_');
-      tableIdToName[tableId] = cleanTableName;
-
-      sql += `CREATE TABLE IF NOT EXISTS ${cleanTableName} (\n`;
-      const validColumns = [];
-      for (const col of tables[tableId]) {
-        let colName = col;
-        let colType = 'VARCHAR(255)';
-
-        // Remove visibility markers
-        colName = colName.replace(/^[+\-#]\s*/, '');
-
-        // Parse "Name: Type" or "Name Type"
-        if (colName.includes(':')) {
-          const parts = colName.split(':');
-          colName = parts[0].trim();
-          if (parts[1]) colType = parts[1].trim();
-        } else if (colName.includes(' ')) {
-          const parts = colName.split(/\s+/);
-          colName = parts[0];
-          if (parts.length > 1) colType = parts.slice(1).join(' ');
-        }
-        validColumns.push(`    ${colName} ${colType}`);
-      }
-      sql += validColumns.join(',\n');
-      sql += '\n);\n\n';
-    }
-
-    // Constraint / Foreign Keys from Edges
     for (const id in cells) {
       const cell = cells[id];
-      // Check if it is an edge connecting two tables
+      // Vertex with text = likely a box/table
+      if (cell.vertex === '1' && cell.value) {
+        const isLikelyBox =
+          !cell.style?.includes('edge') &&
+          !cell.style?.includes('arrow') &&
+          (cell.style?.includes('swimlane') ||
+            cell.style?.includes('table') ||
+            (parentToChildren[id] && parentToChildren[id].length > 0));
+
+        if (isLikelyBox || !cell.parent || cell.parent === '1') {
+          const childrenIds = parentToChildren[id] || [];
+          const childrenTexts = childrenIds
+            .map((cid) => cells[cid].value)
+            .filter((v): v is string => !!v);
+
+          boxes.push({
+            id,
+            text: cell.value,
+            children: childrenTexts,
+          });
+        }
+      }
+
+      // Edges = relationships
       if (cell.edge === '1' && cell.source && cell.target) {
-        const sourceTable = tableIdToName[cell.source];
-        const targetTable = tableIdToName[cell.target];
+        const sourceVal = this.findTextForCell(cell.source, cells);
+        const targetVal = this.findTextForCell(cell.target, cells);
 
-        if (sourceTable && targetTable) {
-          // Assumption: Arrow points from Foreign Key (Child) to Primary Key (Parent)
-          // Source = Table with FK
-          // Target = Table with PK
-
-          // Construct a basic FK name
-          const constraintName = `fk_${sourceTable}_${targetTable}`;
-          // We default to assuming the FK column is explicit or follows convention like target_id
-          // But without analyzing columns we can't be sure of the column name.
-          // However, often the line connects specifically to a column, not just the table.
-          // If source points to a Column cell, we should resolve that to the Table + Column.
-
-          // Let's resolve source/target to their ultimate tables
-          const realSourceTableId = this.findTableForCell(
-            cell.source,
-            tables,
-            cells,
-          );
-          const realTargetTableId = this.findTableForCell(
-            cell.target,
-            tables,
-            cells,
-          );
-
-          if (
-            realSourceTableId &&
-            realTargetTableId &&
-            realSourceTableId !== realTargetTableId
-          ) {
-            const sourceTblName = tableIdToName[realSourceTableId];
-            const targetTblName = tableIdToName[realTargetTableId];
-
-            // Try to guess FK column name
-            // If source was a column, use that name.
-            // If source was the table, guess `target_id` or `targetId`
-            let fkColumn = `${targetTblName.toLowerCase()}_id`; // default guess
-
-            if (realSourceTableId !== cell.source) {
-              // Source was a column!
-              const colVal = cells[cell.source].value;
-              if (colVal) {
-                // Clean up column name
-                fkColumn = colVal.split(/[:\s]/)[0].replace(/^[+\-#]\s*/, '');
-              }
-            }
-
-            sql += `ALTER TABLE ${sourceTblName}\n`;
-            sql += `ADD CONSTRAINT ${constraintName}\n`;
-            sql += `FOREIGN KEY (${fkColumn}) REFERENCES ${targetTblName}(id);\n\n`;
-          }
+        if (sourceVal && targetVal) {
+          relationships.push({
+            source: sourceVal,
+            target: targetVal,
+          });
         }
       }
     }
 
-    return sql;
+    return { boxes, relationships };
   }
 
-  private findTableForCell(
+  private findTextForCell(
     cellId: string,
-    tables: Record<string, string[]>,
-    cells: Record<string, { parent?: string }>,
-  ): string | undefined {
-    if (tables[cellId]) return cellId;
-    const cell = cells[cellId];
-    if (cell && cell.parent && tables[cell.parent]) return cell.parent;
-    return undefined;
+    cells: Record<string, { value?: string; parent?: string }>,
+  ): string {
+    const current = cells[cellId];
+    if (current?.value) return current.value;
+    if (current?.parent && cells[current.parent]) {
+      return this.findTextForCell(current.parent, cells);
+    }
+    return cellId;
   }
 
   private cleanValue(val: string): string {
@@ -352,72 +313,50 @@ export class DrawioToSqlToolInvocation extends BaseToolInvocation<
       .trim();
   }
 
-  private async executeSql(
-    sql: string,
-    dbConfig: DrawioToSqlToolParams['dbConfig'],
-  ): Promise<string> {
-    if (!dbConfig) return 'No DB Config provided.';
+  private buildSqlGenerationPrompt(data: ExtractResult): string {
+    let prompt = `Analyze the following structure extracted from a DrawIO diagram and generate SQL CREATE TABLE statements.
 
-    if (dbConfig.type === 'mysql') {
-      return this.executeMysql(sql, dbConfig);
-    } else {
-      return this.executePostgres(sql, dbConfig);
-    }
+Found Boxes (Tables):
+`;
+    data.boxes.forEach((box) => {
+      prompt += `- ${box.text}\n`;
+      if (box.children && box.children.length > 0) {
+        prompt += `  Columns/Properties: ${box.children.join(', ')}\n`;
+      }
+    });
+
+    prompt += `\nFound Relationships:\n`;
+    data.relationships.forEach((rel) => {
+      prompt += `- ${rel.source} -> ${rel.target}\n`;
+    });
+
+    prompt += `
+Instructions:
+1. Identify likely tables from the boxes. Ignore boxes that don't look like tables (e.g. titles, notes).
+2. Use the "Columns/Properties" to define columns for each table. Infer appropriate SQL data types (VARCHAR, INT, DATE, etc.).
+3. Use the relationships to generate FOREIGN KEY constraints.
+4. If an entity looks like an Enum (e.g. contains "Enum" in name or simple list of values), create a dictionary table for it.
+5. Create a new table for dictionary/enum types with columns 'code' and 'label'.
+6. Table name using snake_case.
+7. Output ONLY valid SQL statements.
+`;
+    return prompt;
   }
 
-  private async executeMysql(
-    sql: string,
-    dbConfig: NonNullable<DrawioToSqlToolParams['dbConfig']>,
-  ): Promise<string> {
-    try {
-      // eslint-disable-next-line import/no-internal-modules
-      const mysql = await import('mysql2/promise');
-      const connection = await mysql.createConnection({
-        host: dbConfig.host,
-        port: dbConfig.port || 3306,
-        user: dbConfig.user,
-        password: dbConfig.password,
-        database: dbConfig.database,
-        multipleStatements: true, // Allow executing multiple statements
-      });
-
-      try {
-        const [results] = await connection.query(sql);
-        return `Successfully executed SQL. Results: ${JSON.stringify(results)}`;
-      } finally {
-        await connection.end();
-      }
-    } catch (e) {
-      throw new Error(`MySQL Error: ${e}`);
+  private extractSqlFromResponse(text: string): string {
+    // Extract code block if present
+    const match =
+      text.match(/```sql\n([\s\S]*?)\n```/) ||
+      text.match(/```\n([\s\S]*?)\n```/);
+    if (match) {
+      return match[1];
     }
+    return text;
   }
 
-  private async executePostgres(
-    sql: string,
-    dbConfig: NonNullable<DrawioToSqlToolParams['dbConfig']>,
-  ): Promise<string> {
-    try {
-      // @ts-expect-error: pg types might be missing in some environments
-      const pg = await import('pg');
-      const { Client } = pg.default || pg;
-      const client = new Client({
-        host: dbConfig.host,
-        port: dbConfig.port || 5432,
-        user: dbConfig.user,
-        password: dbConfig.password,
-        database: dbConfig.database,
-      });
-
-      await client.connect();
-      try {
-        await client.query(sql);
-        return 'Successfully executed SQL.';
-      } finally {
-        await client.end();
-      }
-    } catch (e) {
-      throw new Error(`Postgres Error: ${e}`);
-    }
+  private countGeneratedTables(sql: string): number {
+    const matches = sql.match(/CREATE\s+TABLE/gi);
+    return matches ? matches.length : 0;
   }
 }
 
@@ -426,17 +365,14 @@ export class DrawioToSqlTool extends BaseDeclarativeTool<
   ToolResult
 > {
   static readonly Name = DRAWIO_TO_SQL_TOOL_NAME;
+  private config: Config;
 
-  constructor(_config: Config, messageBus?: MessageBus) {
+  constructor(config: Config, messageBus?: MessageBus) {
     super(
       DrawioToSqlTool.Name,
       'DrawioToSql',
       'Extracts SQL CREATE TABLE statements from a .drawio file and optionally executes them on a database. Assumes a simple diagram structure where Tables are parent containers and Columns are child items.',
-      Kind.Fetch, // Or Execute? Kind.Execute makes sense if it writes to DB. Kind.Fetch/Read if just reading.
-      // Since it CAN execute, maybe Execute? But primarily it's a converter.
-      // Let's use Kind.Execute if we execute, but the tool framework requires one kind.
-      // "Generate" isn't a kind. "Other"?
-      // Let's go with "Execute" because of the side effect option.
+      Kind.Fetch,
       {
         properties: {
           filePath: {
@@ -470,6 +406,7 @@ export class DrawioToSqlTool extends BaseDeclarativeTool<
       false,
       messageBus,
     );
+    this.config = config;
   }
 
   protected createInvocation(
@@ -480,6 +417,7 @@ export class DrawioToSqlTool extends BaseDeclarativeTool<
   ): ToolInvocation<DrawioToSqlToolParams, ToolResult> {
     return new DrawioToSqlToolInvocation(
       params,
+      this.config,
       messageBus,
       _toolName,
       _toolDisplayName,

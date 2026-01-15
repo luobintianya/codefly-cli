@@ -29,6 +29,14 @@
       "default": {},
       "type": "object",
       "properties": {
+        "language": {
+          "title": "Language",
+          "description": "The language for the agent to use.",
+          "markdownDescription": "The language for the agent to use.\n\n- Category: `General`\n- Requires restart: `no`\n- Default: `auto`",
+          "default": "auto",
+          "type": "string",
+          "enum": ["auto", "en", "zh"]
+        },
         "previewFeatures": {
           "title": "Preview Features (e.g., models)",
           "description": "Enable preview features (e.g., preview models).",
