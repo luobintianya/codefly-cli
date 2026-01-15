@@ -261,6 +261,7 @@ export interface ConfigParameters {
   targetDir: string;
   debugMode: boolean;
   question?: string;
+  language?: string;
 
   coreTools?: string[];
   allowedTools?: string[];
@@ -379,6 +380,7 @@ export class Config {
   private workspaceContext: WorkspaceContext;
   private readonly debugMode: boolean;
   private readonly question: string | undefined;
+  readonly language: string;
 
   private readonly coreTools: string[] | undefined;
   private readonly allowedTools: string[] | undefined;
@@ -501,6 +503,7 @@ export class Config {
     this.pendingIncludeDirectories = params.includeDirectories ?? [];
     this.debugMode = params.debugMode;
     this.question = params.question;
+    this.language = params.language ?? 'auto';
 
     this.coreTools = params.coreTools;
     this.allowedTools = params.allowedTools;

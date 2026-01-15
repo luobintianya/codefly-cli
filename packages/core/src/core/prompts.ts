@@ -159,7 +159,21 @@ ${skillsXml}
   if (systemMdEnabled) {
     basePrompt = fs.readFileSync(systemMdPath, 'utf8');
   } else {
+    // Determine the language instruction.
+    let languageInstruction = '';
+    if (config.language === 'zh') {
+      languageInstruction = `
+# Language Instruction
+
+You MUST interact with the user in Chinese (Simplified).
+All your explanations, summaries, and responses to the user MUST be in Chinese.
+Code comments should be in English unless requested otherwise.
+Function names, variable names, and other code identifiers MUST remain in English.
+`;
+    }
+
     const promptConfig = {
+      languageInstruction,
       preamble: `You are ${interactiveMode ? 'an interactive ' : 'a non-interactive '}CLI agent specializing in software engineering tasks. Your primary goal is to help users safely and efficiently, adhering strictly to the following instructions and utilizing your available tools.`,
       coreMandates: `
 # Core Mandates
@@ -359,6 +373,7 @@ Your core function is efficient and safe assistance. Balance extreme conciseness
     };
 
     const orderedPrompts: Array<keyof typeof promptConfig> = [
+      'languageInstruction',
       'preamble',
       'coreMandates',
     ];

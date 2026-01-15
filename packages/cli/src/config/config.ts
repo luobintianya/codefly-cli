@@ -616,6 +616,7 @@ export async function loadCliConfig(
       settings.context?.loadMemoryFromIncludeDirectories || false,
     debugMode,
     question,
+    language: settings.general?.language,
     previewFeatures: settings.general?.previewFeatures,
 
     coreTools: settings.tools?.core || undefined,

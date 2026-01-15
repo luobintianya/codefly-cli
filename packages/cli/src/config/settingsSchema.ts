@@ -163,6 +163,20 @@ const SETTINGS_SCHEMA = {
     description: 'General application settings.',
     showInDialog: false,
     properties: {
+      language: {
+        type: 'enum',
+        label: 'Language',
+        category: 'General',
+        requiresRestart: false,
+        default: 'auto',
+        description: 'The language for the agent to use.',
+        showInDialog: true,
+        options: [
+          { value: 'auto', label: 'Auto' },
+          { value: 'en', label: 'English' },
+          { value: 'zh', label: 'Chinese' },
+        ],
+      },
       previewFeatures: {
         type: 'boolean',
         label: 'Preview Features (e.g., models)',

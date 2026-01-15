@@ -383,6 +383,9 @@ describe('SettingsDialog', () => {
       act(() => {
         stdin.write(TerminalKeys.DOWN_ARROW as string);
       });
+      act(() => {
+        stdin.write(TerminalKeys.DOWN_ARROW as string);
+      });
       await waitFor(() => {
         expect(lastFrame()).toContain('Vim Mode');
       });
