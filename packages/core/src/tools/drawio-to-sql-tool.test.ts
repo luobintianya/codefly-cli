@@ -31,6 +31,7 @@ describe('DrawioToSqlTool', () => {
   // Mock Config
   const mockConfig = {
     getBaseLlmClient: vi.fn(),
+    getActiveModel: vi.fn().mockReturnValue('mock-model'),
   } as unknown as Config;
 
   // Mock params for invocation

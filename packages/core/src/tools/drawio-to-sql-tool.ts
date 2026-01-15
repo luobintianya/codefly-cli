@@ -79,9 +79,8 @@ export class DrawioToSqlToolInvocation extends BaseToolInvocation<
       // Prepare prompt for LLM to generate SQL
       const prompt = this.buildSqlGenerationPrompt(extractResult);
 
-      // Use LLM to generate SQL
       const llmResponse = await this.config.getBaseLlmClient().generateContent({
-        modelConfigKey: { model: 'default' },
+        modelConfigKey: { model: this.config.getActiveModel() },
         contents: [
           {
             role: 'user',
