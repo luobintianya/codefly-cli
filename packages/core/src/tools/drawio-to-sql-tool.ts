@@ -333,11 +333,12 @@ Found Boxes (Tables):
 Instructions:
 1. Identify likely tables from the boxes. Ignore boxes that don't look like tables (e.g. titles, notes).
 2. Use the "Columns/Properties" to define columns for each table. Infer appropriate SQL data types (VARCHAR, INT, DATE, etc.).
-3. Use the relationships to generate FOREIGN KEY constraints.
-4. If an entity looks like an Enum (e.g. contains "Enum" in name or simple list of values), create a dictionary table for it.
-5. Create a new table for dictionary/enum types with columns 'code' and 'label'.
-6. Table name using snake_case.
-7. Output ONLY valid SQL statements.
+3. Generate comments for each column using the original text description from the diagram. Do not translate the comments.
+4. Use the relationships to generate FOREIGN KEY constraints.
+5. If an entity looks like an Enum (e.g. contains "Enum" in name or simple list of values), create a dictionary table for it.
+6. Create a new table for dictionary/enum types with columns 'code' and 'label'.
+7. Table name using snake_case.
+8. Output ONLY valid SQL statements.
 `;
     return prompt;
   }
