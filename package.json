@@ -1,6 +1,6 @@
 {
   "name": "@codeflyai/codefly",
-  "version": "0.24.1",
+  "version": "0.24.2",
   "engines": {
     "node": ">=20.0.0"
   },
@@ -120,6 +120,7 @@
     "yargs": "^17.7.2"
   },
   "dependencies": {
+    "clipboardy": "^5.0.2",
     "ink": "npm:@jrichman/ink@6.4.6",
     "latest-version": "^9.0.0",
     "mysql2": "^3.16.0",

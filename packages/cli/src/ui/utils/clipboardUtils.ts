@@ -293,3 +293,19 @@ export function parsePastedPaths(
 
   return anyValidPath ? processedPaths.join(' ') + ' ' : null;
 }
+
+/**
+ * Copies text to the system clipboard
+ * @param text The text to copy
+ * @returns true if successful, false otherwise
+ */
+export async function copyToClipboard(text: string): Promise<boolean> {
+  try {
+    const clipboardy = (await import('clipboardy')).default;
+    await clipboardy.write(text);
+    return true;
+  } catch (error) {
+    debugLogger.warn('Error copying to clipboard:', error);
+    return false;
+  }
+}

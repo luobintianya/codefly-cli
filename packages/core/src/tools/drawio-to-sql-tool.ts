@@ -332,8 +332,8 @@ Found Boxes (Tables):
     prompt += `
 Instructions:
 1. Identify likely tables from the boxes. Ignore boxes that don't look like tables (e.g. titles, notes).
-2. Use the "Columns/Properties" to define columns for each table. Infer appropriate SQL data types (VARCHAR, INT, DATE, etc.).
-3. Generate comments for each column using the original text description from the diagram. Do not translate the comments.
+2. Use the "Columns/Properties" line to extract: Column Name, Data Type, and Comment.
+3. Any text after the name and type should be used as the Column Comment (e.g. "selectValue varchar Multiple Values" -> Name: selectValue, Type: VARCHAR, Comment: "Multiple Values"). Use COMMENT '...' syntax. Do not translate comments.
 4. Use the relationships to generate FOREIGN KEY constraints.
 5. If an entity looks like an Enum (e.g. contains "Enum" in name or simple list of values), create a dictionary table for it.
 6. Create a new table for dictionary/enum types with columns 'code' and 'label'.
