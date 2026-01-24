@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Text, Box } from 'ink';
 import { theme } from '../semantic-colors.js';
 import { colorizeCode } from './CodeColorizer.js';
@@ -12,6 +12,7 @@ import { TableRenderer } from './TableRenderer.js';
 import { RenderInline } from './InlineMarkdownRenderer.js';
 import { useSettings } from '../contexts/SettingsContext.js';
 import { useAlternateBuffer } from '../hooks/useAlternateBuffer.js';
+import { copyToClipboard } from './clipboardUtils.js';
 
 interface MarkdownDisplayProps {
   text: string;
@@ -336,6 +337,26 @@ const RenderCodeBlockInternal: React.FC<RenderCodeBlockProps> = ({
   const MIN_LINES_FOR_MESSAGE = 1; // Minimum lines to show before the "generating more" message
   const RESERVED_LINES = 2; // Lines reserved for the message itself and potential padding
 
+  const [isCopied, setIsCopied] = React.useState(false);
+  const hasCopiedRef = useRef(false);
+
+  // Auto-copy code block content when it's complete (not pending)
+  useEffect(() => {
+    if (!isPending && content.length > 0 && !hasCopiedRef.current) {
+      const codeText = content.join('\n');
+      copyToClipboard(codeText)
+        .then(() => {
+          setIsCopied(true);
+          hasCopiedRef.current = true;
+          // Hide the "copied" message after 3 seconds
+          setTimeout(() => setIsCopied(false), 3000);
+        })
+        .catch(() => {
+          // Silently fail if clipboard is not available
+        });
+    }
+  }, [isPending, content]);
+
   // When not in alternate buffer mode we need to be careful that we don't
   // trigger flicker when the pending code is to long to fit in the terminal
   if (
@@ -393,6 +414,11 @@ const RenderCodeBlockInternal: React.FC<RenderCodeBlockProps> = ({
       flexShrink={0}
     >
       {colorizedCode}
+      {isCopied && (
+        <Text color={theme.text.secondary} dimColor>
+          📋 Code copied to clipboard
+        </Text>
+      )}
     </Box>
   );
 };
