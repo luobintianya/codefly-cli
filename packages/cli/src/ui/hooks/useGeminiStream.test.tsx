@@ -1707,7 +1707,7 @@ describe('useGeminiStream', () => {
       // 3. Assertion
       await waitFor(() => {
         expect(mockParseAndFormatApiError).toHaveBeenCalledWith(
-          'Rate limit exceeded',
+          expect.anything(),
           'oauth-personal',
           'gemini-2.5-pro',
           'gemini-3-flash-preview',

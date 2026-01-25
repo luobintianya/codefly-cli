@@ -70,6 +70,7 @@ describe('useToolExecutionScheduler', () => {
     mockMessageBus = createMockMessageBus() as unknown as MessageBus;
     mockConfig = {
       getMessageBus: () => mockMessageBus,
+      getWorkingDir: () => '/test/dir',
     } as unknown as Config;
   });
 

@@ -21,6 +21,10 @@ vi.mock('./messages/ToolGroupMessage.js', () => ({
   ToolGroupMessage: vi.fn(() => <div />),
 }));
 
+vi.mock('../utils/clipboardUtils.js', () => ({
+  copyToClipboard: vi.fn().mockImplementation(() => new Promise(() => {})),
+}));
+
 describe('<HistoryItemDisplay />', () => {
   const mockConfig = {} as unknown as Config;
   const baseItem = {

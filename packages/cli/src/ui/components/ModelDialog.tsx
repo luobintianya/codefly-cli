@@ -80,6 +80,18 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
         key: DEFAULT_GEMINI_MODEL_AUTO,
       },
       {
+        value: PREVIEW_GEMINI_MODEL,
+        title: getDisplayString(PREVIEW_GEMINI_MODEL),
+        description: 'Gemini 3 Pro (Preview)',
+        key: PREVIEW_GEMINI_MODEL,
+      },
+      {
+        value: PREVIEW_GEMINI_FLASH_MODEL,
+        title: getDisplayString(PREVIEW_GEMINI_FLASH_MODEL),
+        description: 'Gemini 3 Flash (Preview)',
+        key: PREVIEW_GEMINI_FLASH_MODEL,
+      },
+      {
         value: 'Manual',
         title: manualModelSelected
           ? `Manual (${manualModelSelected})`
@@ -89,7 +101,10 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
       },
     ];
 
-    if (shouldShowPreviewModels) {
+    if (
+      shouldShowPreviewModels &&
+      PREVIEW_GEMINI_MODEL_AUTO !== DEFAULT_GEMINI_MODEL_AUTO
+    ) {
       list.unshift({
         value: PREVIEW_GEMINI_MODEL_AUTO,
         title: getDisplayString(PREVIEW_GEMINI_MODEL_AUTO),

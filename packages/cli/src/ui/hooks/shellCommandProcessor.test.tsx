@@ -89,6 +89,7 @@ describe('useShellCommandProcessor', () => {
         terminalHeight: 20,
         terminalWidth: 80,
       }),
+      getWorkingDir: () => '/test/dir',
     } as Config;
     mockGeminiClient = { addHistory: vi.fn() } as unknown as GeminiClient;
 

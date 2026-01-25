@@ -234,6 +234,7 @@ describe('FileCommandLoader', () => {
       getExtensions: vi.fn(() => []),
       getFolderTrust: vi.fn(() => false),
       isTrustedFolder: vi.fn(() => false),
+      getWorkingDir: () => '/test/dir',
     } as unknown as Config;
     const loader = new FileCommandLoader(mockConfig);
     const commands = await loader.loadCommands(signal);
@@ -279,6 +280,7 @@ describe('FileCommandLoader', () => {
       getExtensions: vi.fn(() => []),
       getFolderTrust: vi.fn(() => false),
       isTrustedFolder: vi.fn(() => false),
+      getWorkingDir: () => '/test/dir',
     } as unknown as Config;
     const loader = new FileCommandLoader(mockConfig);
     const commands = await loader.loadCommands(signal);
@@ -572,6 +574,7 @@ describe('FileCommandLoader', () => {
         ]),
         getFolderTrust: vi.fn(() => false),
         isTrustedFolder: vi.fn(() => false),
+        getWorkingDir: () => '/test/dir',
       } as unknown as Config;
       const loader = new FileCommandLoader(mockConfig);
       const commands = await loader.loadCommands(signal);
@@ -627,6 +630,7 @@ describe('FileCommandLoader', () => {
         ]),
         getFolderTrust: vi.fn(() => false),
         isTrustedFolder: vi.fn(() => false),
+        getWorkingDir: () => '/test/dir',
       } as unknown as Config;
       const loader = new FileCommandLoader(mockConfig);
       const commands = await loader.loadCommands(signal);
@@ -740,6 +744,7 @@ describe('FileCommandLoader', () => {
         ]),
         getFolderTrust: vi.fn(() => false),
         isTrustedFolder: vi.fn(() => false),
+        getWorkingDir: () => '/test/dir',
       } as unknown as Config;
       const loader = new FileCommandLoader(mockConfig);
       const commands = await loader.loadCommands(signal);
@@ -780,6 +785,7 @@ describe('FileCommandLoader', () => {
         ]),
         getFolderTrust: vi.fn(() => false),
         isTrustedFolder: vi.fn(() => false),
+        getWorkingDir: () => '/test/dir',
       } as unknown as Config;
       const loader = new FileCommandLoader(mockConfig);
       const commands = await loader.loadCommands(signal);

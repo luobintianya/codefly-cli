@@ -341,20 +341,31 @@ const RenderCodeBlockInternal: React.FC<RenderCodeBlockProps> = ({
   const hasCopiedRef = useRef(false);
 
   // Auto-copy code block content when it's complete (not pending)
+  // Auto-copy code block content when it's complete (not pending)
   useEffect(() => {
+    let isMounted = true;
     if (!isPending && content.length > 0 && !hasCopiedRef.current) {
       const codeText = content.join('\n');
       copyToClipboard(codeText)
         .then(() => {
-          setIsCopied(true);
-          hasCopiedRef.current = true;
-          // Hide the "copied" message after 3 seconds
-          setTimeout(() => setIsCopied(false), 3000);
+          if (isMounted) {
+            setIsCopied(true);
+            hasCopiedRef.current = true;
+            // Hide the "copied" message after 3 seconds
+            setTimeout(() => {
+              if (isMounted) {
+                setIsCopied(false);
+              }
+            }, 3000);
+          }
         })
         .catch(() => {
           // Silently fail if clipboard is not available
         });
     }
+    return () => {
+      isMounted = false;
+    };
   }, [isPending, content]);
 
   // When not in alternate buffer mode we need to be careful that we don't

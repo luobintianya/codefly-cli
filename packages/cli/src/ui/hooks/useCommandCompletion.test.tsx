@@ -96,6 +96,7 @@ describe('useCommandCompletion', () => {
   const mockConfig = {
     getEnablePromptCompletion: () => false,
     getGeminiClient: vi.fn(),
+    getWorkingDir: () => '/test/dir',
   } as unknown as Config;
   const testRootDir = '/';
 

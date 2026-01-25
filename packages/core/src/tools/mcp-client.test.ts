@@ -1513,6 +1513,14 @@ describe('connectToMcpServer with OAuth', () => {
     vi.spyOn(console, 'warn').mockImplementation(() => {});
     vi.spyOn(console, 'error').mockImplementation(() => {});
 
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        status: 404,
+        headers: new Map(),
+      }),
+    );
+
     mockTokenStorage = {
       getCredentials: vi.fn().mockResolvedValue({ clientId: 'test-client' }),
     } as unknown as MCPOAuthTokenStorage;

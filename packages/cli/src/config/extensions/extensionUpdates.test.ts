@@ -151,7 +151,7 @@ describe('extensionUpdates', () => {
 
       // Setup Keychain
       const userKeychain = new KeychainTokenStorage(
-        `Gemini CLI Extensions test-ext ${extensionId}`,
+        `Codefly CLI Extensions test-ext ${extensionId}`,
       );
       await userKeychain.setSecret('VAR2', 'val2');
 

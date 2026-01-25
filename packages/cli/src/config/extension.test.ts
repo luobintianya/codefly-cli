@@ -199,6 +199,7 @@ describe('extension tests', () => {
     mockPromptForSettings.mockResolvedValue('');
     fs.mkdirSync(userExtensionsDir, { recursive: true });
     vi.mocked(os.homedir).mockReturnValue(tempHomeDir);
+    mockHomedir.mockReturnValue(tempHomeDir);
     vi.mocked(isWorkspaceTrusted).mockReturnValue({
       isTrusted: true,
       source: undefined,
@@ -257,7 +258,7 @@ describe('extension tests', () => {
       const ext1 = extensions.find((e) => e.name === 'ext1');
       const ext2 = extensions.find((e) => e.name === 'ext2');
       expect(ext1?.contextFiles).toEqual([
-        path.join(userExtensionsDir, 'ext1', 'GEMINI.md'),
+        path.join(userExtensionsDir, 'ext1', 'CODEFLY.md'),
       ]);
       expect(ext2?.contextFiles).toEqual([]);
     });
@@ -1173,7 +1174,7 @@ describe('extension tests', () => {
     it('should add the workspace to trusted folders if user consents', async () => {
       const trustedFoldersPath = path.join(
         tempHomeDir,
-        '.gemini',
+        '.codefly',
         'trustedFolders.json',
       );
       vi.mocked(isWorkspaceTrusted).mockReturnValue({

@@ -69,7 +69,7 @@ describe('<ModelDialog />', () => {
     // Default implementation for getDisplayString
     mockGetDisplayString.mockImplementation((val: string) => {
       if (val === 'auto-gemini-2.5') return 'Auto (Gemini 2.5)';
-      if (val === 'auto-gemini-3') return 'Auto (Preview)';
+      if (val === 'auto-gemini-3') return 'Auto (Gemini 3)';
       return val;
     });
   });
@@ -98,7 +98,7 @@ describe('<ModelDialog />', () => {
     mockGetPreviewFeatures.mockReturnValue(true);
     mockGetHasAccessToPreviewModel.mockReturnValue(true); // Must have access
     const { lastFrame } = renderComponent();
-    expect(lastFrame()).toContain('Auto (Preview)');
+    expect(lastFrame()).toContain('Auto (Gemini 3)');
   });
 
   it('switches to "manual" view when "Manual" is selected', async () => {
@@ -106,6 +106,8 @@ describe('<ModelDialog />', () => {
 
     // Select "Manual" (index 1)
     // Press down arrow to move to "Manual"
+    stdin.write('\u001B[B'); // Arrow Down
+    stdin.write('\u001B[B'); // Arrow Down
     stdin.write('\u001B[B'); // Arrow Down
     await waitForUpdate();
 
@@ -125,10 +127,9 @@ describe('<ModelDialog />', () => {
     mockGetModel.mockReturnValue(PREVIEW_GEMINI_MODEL_AUTO);
     const { lastFrame, stdin } = renderComponent();
 
-    // Select "Manual" (index 2 because Preview Auto is first, then Auto (Gemini 2.5))
-    // Press down enough times to ensure we reach the bottom (Manual)
+    // Select "Manual" (index 1 because Preview Auto is same as Default Auto now due to deduplication)
     stdin.write('\u001B[B'); // Arrow Down
-    await waitForUpdate();
+    stdin.write('\u001B[B'); // Arrow Down
     stdin.write('\u001B[B'); // Arrow Down
     await waitForUpdate();
 
@@ -157,6 +158,8 @@ describe('<ModelDialog />', () => {
     const { stdin } = renderComponent();
 
     // Navigate to Manual (index 1) and select
+    stdin.write('\u001B[B');
+    stdin.write('\u001B[B');
     stdin.write('\u001B[B');
     await waitForUpdate();
     stdin.write('\r');
@@ -206,6 +209,8 @@ describe('<ModelDialog />', () => {
 
     // Go to manual view
     stdin.write('\u001B[B');
+    stdin.write('\u001B[B');
+    stdin.write('\u001B[B');
     await waitForUpdate();
     stdin.write('\r');
     await waitForUpdate();
@@ -240,7 +245,7 @@ describe('<ModelDialog />', () => {
       mockGetHasAccessToPreviewModel.mockReturnValue(true);
       mockGetPreviewFeatures.mockReturnValue(true);
       const { lastFrame } = renderComponent();
-      expect(lastFrame()).toContain('Auto (Preview)');
+      expect(lastFrame()).toContain('Auto (Gemini 3)');
     });
 
     it('should show "Gemini 3 is now available" header if user has access but preview features disabled', () => {

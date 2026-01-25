@@ -68,6 +68,7 @@ const mockConfig = {
   storage: {
     getProjectTempDir: () => '/tmp',
   },
+  getWorkingDir: () => '/tmp',
   getTruncateToolOutputThreshold: () => DEFAULT_TRUNCATE_TOOL_OUTPUT_THRESHOLD,
   getTruncateToolOutputLines: () => DEFAULT_TRUNCATE_TOOL_OUTPUT_LINES,
   getAllowedTools: vi.fn(() => []),

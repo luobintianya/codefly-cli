@@ -101,6 +101,7 @@ describe('handleAtCommand', () => {
         getClient: () => undefined,
       }),
       getMessageBus: () => mockMessageBus,
+      getWorkingDir: () => '/test/dir',
     } as unknown as Config;
 
     const registry = new ToolRegistry(mockConfig, mockMessageBus);
