@@ -115,12 +115,18 @@ export async function createContentGeneratorConfig(
     return contentGeneratorConfig;
   }
 
-  if (authType === AuthType.OPENAI && openaiApiKey) {
-    contentGeneratorConfig.apiKey = openaiApiKey;
-    contentGeneratorConfig.baseUrl =
-      openaiBaseUrl || 'https://api.openai.com/v1';
-    contentGeneratorConfig.model = openaiModel || 'gpt-4o';
-    return contentGeneratorConfig;
+  if (authType === AuthType.OPENAI) {
+    const apiKey = openaiApiKey || config.openaiConfig?.apiKey;
+    if (apiKey) {
+      contentGeneratorConfig.apiKey = apiKey;
+      contentGeneratorConfig.baseUrl =
+        openaiBaseUrl ||
+        config.openaiConfig?.baseUrl ||
+        'https://api.openai.com/v1';
+      contentGeneratorConfig.model =
+        openaiModel || config.openaiConfig?.model || 'gpt-4o';
+      return contentGeneratorConfig;
+    }
   }
 
   if (authType === AuthType.ZHIPU && zhipuApiKey) {

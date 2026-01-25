@@ -50,10 +50,10 @@ describe('policyHelpers', () => {
       });
       const chain = resolvePolicyChain(config);
 
-      // Expect default chain [Flash] because Auto defaults to Flash, and Flash is the fallback so it swallows the chain?
-      // Actually because activeModel is Flash (index 1), and no wrap, so it returns [Flash].
-      expect(chain).toHaveLength(1);
-      expect(chain[0]?.model).toBe('gemini-3-flash-preview');
+      // Expect default chain [Pro, Flash] because Auto now defaults to Pro with Flash fallback
+      expect(chain).toHaveLength(2);
+      expect(chain[0]?.model).toBe('gemini-3-pro-preview');
+      expect(chain[1]?.model).toBe('gemini-3-flash-preview');
     });
 
     it('uses auto chain when preferred model is auto', () => {
@@ -61,8 +61,9 @@ describe('policyHelpers', () => {
         getModel: () => 'gemini-2.5-pro',
       });
       const chain = resolvePolicyChain(config, DEFAULT_GEMINI_MODEL_AUTO);
-      expect(chain).toHaveLength(1);
-      expect(chain[0]?.model).toBe('gemini-3-flash-preview');
+      expect(chain).toHaveLength(2);
+      expect(chain[0]?.model).toBe('gemini-3-pro-preview');
+      expect(chain[1]?.model).toBe('gemini-3-flash-preview');
     });
 
     it('uses auto chain when configured model is auto even if preferred is concrete', () => {
@@ -91,7 +92,7 @@ describe('policyHelpers', () => {
       expect(chain).toHaveLength(3);
       expect(chain[0]?.model).toBe('gemini-2.5-flash-lite');
       expect(chain[1]?.model).toBe('gemini-3-flash-preview');
-      expect(chain[2]?.model).toBe('gemini-3-flash-preview');
+      expect(chain[2]?.model).toBe('gemini-3-pro-preview');
     });
 
     it('returns flash-lite chain when configured model is flash-lite', () => {
@@ -102,7 +103,7 @@ describe('policyHelpers', () => {
       expect(chain).toHaveLength(3);
       expect(chain[0]?.model).toBe('gemini-2.5-flash-lite');
       expect(chain[1]?.model).toBe('gemini-3-flash-preview');
-      expect(chain[2]?.model).toBe('gemini-3-flash-preview');
+      expect(chain[2]?.model).toBe('gemini-3-pro-preview');
     });
 
     it('wraps around the chain when wrapsAround is true', () => {
@@ -110,11 +111,11 @@ describe('policyHelpers', () => {
         getModel: () => DEFAULT_GEMINI_MODEL_AUTO,
       });
       const chain = resolvePolicyChain(config, undefined, true);
-      // Auto -> Flash. Chain: [Pro, Flash]. Index 1.
-      // Wrap: [Flash, Pro]
+      // Auto -> Pro. Chain: [Pro, Flash]. Index 0.
+      // Wrap: [Pro, Flash]
       expect(chain).toHaveLength(2);
-      expect(chain[0]?.model).toBe('gemini-3-flash-preview');
-      expect(chain[1]?.model).toBe('gemini-3-pro-preview');
+      expect(chain[0]?.model).toBe('gemini-3-pro-preview');
+      expect(chain[1]?.model).toBe('gemini-3-flash-preview');
     });
   });
 

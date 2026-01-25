@@ -78,14 +78,14 @@ describe('supportsMultimodalFunctionResponse', () => {
 
 describe('resolveModel', () => {
   describe('delegation logic', () => {
-    it('should return the Preview Flash model when auto-gemini-3 is requested', () => {
+    it('should return the Preview Pro model when auto-gemini-3 is requested', () => {
       const model = resolveModel(PREVIEW_GEMINI_MODEL_AUTO, false);
-      expect(model).toBe(PREVIEW_GEMINI_FLASH_MODEL);
+      expect(model).toBe(PREVIEW_GEMINI_MODEL);
     });
 
-    it('should return the Default Flash model when auto-gemini-2.5 is requested', () => {
+    it('should return the Default Pro model when auto-gemini-3 is requested as default', () => {
       const model = resolveModel(DEFAULT_GEMINI_MODEL_AUTO, false);
-      expect(model).toBe(DEFAULT_GEMINI_FLASH_MODEL);
+      expect(model).toBe(PREVIEW_GEMINI_MODEL);
     });
 
     it('should return the requested model as-is for explicit specific models', () => {
@@ -210,10 +210,10 @@ describe('resolveClassifierModel', () => {
   it('should return pro model when alias is pro', () => {
     expect(
       resolveClassifierModel(DEFAULT_GEMINI_MODEL_AUTO, GEMINI_MODEL_ALIAS_PRO),
-    ).toBe(DEFAULT_GEMINI_FLASH_MODEL);
+    ).toBe(PREVIEW_GEMINI_MODEL);
     expect(
       resolveClassifierModel(PREVIEW_GEMINI_MODEL_AUTO, GEMINI_MODEL_ALIAS_PRO),
-    ).toBe(PREVIEW_GEMINI_FLASH_MODEL);
+    ).toBe(PREVIEW_GEMINI_MODEL);
   });
 
   it('should handle preview features being enabled', () => {

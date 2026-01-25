@@ -6,8 +6,8 @@
 
 export const PREVIEW_GEMINI_MODEL = 'gemini-3-pro-preview';
 export const PREVIEW_GEMINI_FLASH_MODEL = 'gemini-3-flash-preview';
-// Keep Gemini 2.x constants for backwards compatibility but use Gemini 3 Flash as default
-export const DEFAULT_GEMINI_MODEL = PREVIEW_GEMINI_FLASH_MODEL; // Default to Flash
+// Keep Gemini 2.x constants for backwards compatibility but use Gemini 3 Pro as default
+export const DEFAULT_GEMINI_MODEL = PREVIEW_GEMINI_MODEL; // Default to Pro
 export const DEFAULT_GEMINI_FLASH_MODEL = PREVIEW_GEMINI_FLASH_MODEL;
 // Gemini 2.x legacy constants (deprecated)
 export const LEGACY_GEMINI_2_5_PRO = 'gemini-2.5-pro';
@@ -50,10 +50,10 @@ export function resolveModel(
 ): string {
   switch (requestedModel) {
     case PREVIEW_GEMINI_MODEL_AUTO: {
-      return PREVIEW_GEMINI_FLASH_MODEL; // Auto uses Flash by default
+      return PREVIEW_GEMINI_MODEL; // Auto uses Pro by default for Gemini 3
     }
     case DEFAULT_GEMINI_MODEL_AUTO: {
-      return PREVIEW_GEMINI_FLASH_MODEL; // Auto uses Flash by default
+      return PREVIEW_GEMINI_MODEL; // Auto uses Pro by default for Gemini 3
     }
     case GEMINI_MODEL_ALIAS_AUTO:
     case GEMINI_MODEL_ALIAS_PRO: {

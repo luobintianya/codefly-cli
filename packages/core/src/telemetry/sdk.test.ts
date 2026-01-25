@@ -20,20 +20,20 @@ import { OTLPMetricExporter as OTLPMetricExporterHttp } from '@opentelemetry/exp
 import { ConsoleSpanExporter } from '@opentelemetry/sdk-trace-node';
 import { NodeSDK } from '@opentelemetry/sdk-node';
 import { GoogleAuth, type JWTInput } from 'google-auth-library';
-import {
-  GcpTraceExporter,
-  GcpLogExporter,
-  GcpMetricExporter,
-} from './gcp-exporters.js';
+// import {
+//   GcpTraceExporter,
+//   GcpLogExporter,
+//   GcpMetricExporter,
+// } from './gcp-exporters.js';
 import { TelemetryTarget } from './index.js';
 
 import * as os from 'node:os';
 import * as path from 'node:path';
-import { EventEmitter } from 'node:events';
+// import { EventEmitter } from 'node:events';
 import { debugLogger } from '../utils/debugLogger.js';
 
 // Mock authEvents since code_assist/oauth2.js no longer exists
-const authEvents = new EventEmitter();
+// const authEvents = new EventEmitter();
 
 vi.mock('@opentelemetry/exporter-trace-otlp-grpc');
 vi.mock('@opentelemetry/exporter-logs-otlp-grpc');
@@ -43,7 +43,7 @@ vi.mock('@opentelemetry/exporter-logs-otlp-http');
 vi.mock('@opentelemetry/exporter-metrics-otlp-http');
 vi.mock('@opentelemetry/sdk-trace-node');
 vi.mock('@opentelemetry/sdk-node');
-vi.mock('./gcp-exporters.js');
+// vi.mock('./gcp-exporters.js');
 vi.mock('google-auth-library');
 vi.mock('../utils/debugLogger.js', () => ({
   debugLogger: {
@@ -144,126 +144,6 @@ describe('Telemetry SDK', () => {
     );
   });
 
-  it('should use direct GCP exporters when target is gcp, project ID is set, and useCollector is false', async () => {
-    mockGetApplicationDefault.mockResolvedValue(undefined); // Simulate ADC available
-    vi.spyOn(mockConfig, 'getTelemetryTarget').mockReturnValue(
-      TelemetryTarget.GCP,
-    );
-    vi.spyOn(mockConfig, 'getTelemetryUseCollector').mockReturnValue(false);
-    vi.spyOn(mockConfig, 'getTelemetryOtlpEndpoint').mockReturnValue('');
-
-    const originalEnv = process.env['OTLP_GOOGLE_CLOUD_PROJECT'];
-    process.env['OTLP_GOOGLE_CLOUD_PROJECT'] = 'test-project';
-
-    try {
-      await initializeTelemetry(mockConfig);
-
-      expect(GcpTraceExporter).toHaveBeenCalledWith('test-project', undefined);
-      expect(GcpLogExporter).toHaveBeenCalledWith('test-project', undefined);
-      expect(GcpMetricExporter).toHaveBeenCalledWith('test-project', undefined);
-      expect(NodeSDK.prototype.start).toHaveBeenCalled();
-    } finally {
-      if (originalEnv) {
-        process.env['OTLP_GOOGLE_CLOUD_PROJECT'] = originalEnv;
-      } else {
-        delete process.env['OTLP_GOOGLE_CLOUD_PROJECT'];
-      }
-    }
-  });
-
-  it('should use OTLP exporters when target is gcp but useCollector is true', async () => {
-    vi.spyOn(mockConfig, 'getTelemetryTarget').mockReturnValue(
-      TelemetryTarget.GCP,
-    );
-    vi.spyOn(mockConfig, 'getTelemetryUseCollector').mockReturnValue(true);
-
-    await initializeTelemetry(mockConfig);
-
-    expect(OTLPTraceExporter).toHaveBeenCalledWith({
-      url: 'http://localhost:4317',
-      compression: 'gzip',
-    });
-    expect(OTLPLogExporter).toHaveBeenCalledWith({
-      url: 'http://localhost:4317',
-      compression: 'gzip',
-    });
-    expect(OTLPMetricExporter).toHaveBeenCalledWith({
-      url: 'http://localhost:4317',
-      compression: 'gzip',
-    });
-  });
-
-  it('should use GCP exporters even when project ID environment variable is not set', async () => {
-    mockGetApplicationDefault.mockResolvedValue(undefined); // Simulate ADC available
-    vi.spyOn(mockConfig, 'getTelemetryTarget').mockReturnValue(
-      TelemetryTarget.GCP,
-    );
-    vi.spyOn(mockConfig, 'getTelemetryUseCollector').mockReturnValue(false);
-    vi.spyOn(mockConfig, 'getTelemetryOtlpEndpoint').mockReturnValue('');
-
-    const originalOtlpEnv = process.env['OTLP_GOOGLE_CLOUD_PROJECT'];
-    const originalGoogleEnv = process.env['GOOGLE_CLOUD_PROJECT'];
-    delete process.env['OTLP_GOOGLE_CLOUD_PROJECT'];
-    delete process.env['GOOGLE_CLOUD_PROJECT'];
-
-    try {
-      await initializeTelemetry(mockConfig);
-
-      expect(GcpTraceExporter).toHaveBeenCalledWith(undefined, undefined);
-      expect(GcpLogExporter).toHaveBeenCalledWith(undefined, undefined);
-      expect(GcpMetricExporter).toHaveBeenCalledWith(undefined, undefined);
-      expect(NodeSDK.prototype.start).toHaveBeenCalled();
-    } finally {
-      if (originalOtlpEnv) {
-        process.env['OTLP_GOOGLE_CLOUD_PROJECT'] = originalOtlpEnv;
-      }
-      if (originalGoogleEnv) {
-        process.env['GOOGLE_CLOUD_PROJECT'] = originalGoogleEnv;
-      }
-    }
-  });
-
-  it('should use GOOGLE_CLOUD_PROJECT as fallback when OTLP_GOOGLE_CLOUD_PROJECT is not set', async () => {
-    mockGetApplicationDefault.mockResolvedValue(undefined); // Simulate ADC available
-    vi.spyOn(mockConfig, 'getTelemetryTarget').mockReturnValue(
-      TelemetryTarget.GCP,
-    );
-    vi.spyOn(mockConfig, 'getTelemetryUseCollector').mockReturnValue(false);
-    vi.spyOn(mockConfig, 'getTelemetryOtlpEndpoint').mockReturnValue('');
-
-    const originalOtlpEnv = process.env['OTLP_GOOGLE_CLOUD_PROJECT'];
-    const originalGoogleEnv = process.env['GOOGLE_CLOUD_PROJECT'];
-    delete process.env['OTLP_GOOGLE_CLOUD_PROJECT'];
-    process.env['GOOGLE_CLOUD_PROJECT'] = 'fallback-project';
-
-    try {
-      await initializeTelemetry(mockConfig);
-
-      expect(GcpTraceExporter).toHaveBeenCalledWith(
-        'fallback-project',
-        undefined,
-      );
-      expect(GcpLogExporter).toHaveBeenCalledWith(
-        'fallback-project',
-        undefined,
-      );
-      expect(GcpMetricExporter).toHaveBeenCalledWith(
-        'fallback-project',
-        undefined,
-      );
-      expect(NodeSDK.prototype.start).toHaveBeenCalled();
-    } finally {
-      if (originalOtlpEnv) {
-        process.env['OTLP_GOOGLE_CLOUD_PROJECT'] = originalOtlpEnv;
-      }
-      if (originalGoogleEnv) {
-        process.env['GOOGLE_CLOUD_PROJECT'] = originalGoogleEnv;
-      } else {
-        delete process.env['GOOGLE_CLOUD_PROJECT'];
-      }
-    }
-  });
-
   it('should not use OTLP exporters when telemetryOutfile is set', async () => {
     vi.spyOn(mockConfig, 'getTelemetryOutfile').mockReturnValue(
       path.join(os.tmpdir(), 'test.log'),
@@ -282,7 +162,7 @@ describe('Telemetry SDK', () => {
   it('should defer initialization when useCliAuth is true and no credentials are provided', async () => {
     vi.spyOn(mockConfig, 'getTelemetryUseCliAuth').mockReturnValue(true);
     vi.spyOn(mockConfig, 'getTelemetryTarget').mockReturnValue(
-      TelemetryTarget.GCP,
+      TelemetryTarget.LOCAL,
     );
     vi.spyOn(mockConfig, 'getTelemetryOtlpEndpoint').mockReturnValue('');
 
@@ -292,53 +172,12 @@ describe('Telemetry SDK', () => {
 
     // Verify nothing was initialized
     expect(ConsoleSpanExporter).not.toHaveBeenCalled();
-    expect(GcpTraceExporter).not.toHaveBeenCalled();
+    // expect(GcpTraceExporter).not.toHaveBeenCalled();
 
     // Verify deferral log
     expect(debugLogger.log).toHaveBeenCalledWith(
       expect.stringContaining('deferring telemetry initialization'),
     );
-  });
-
-  it.skip('should initialize with GCP exporters when credentials are provided via post_auth', async () => {
-    vi.spyOn(mockConfig, 'getTelemetryUseCliAuth').mockReturnValue(true);
-    vi.spyOn(mockConfig, 'getTelemetryTarget').mockReturnValue(
-      TelemetryTarget.GCP,
-    );
-    vi.spyOn(mockConfig, 'getTelemetryOtlpEndpoint').mockReturnValue('');
-
-    // 1. Initial state: No credentials.
-    await initializeTelemetry(mockConfig);
-
-    // Verify nothing happened yet
-    expect(GcpTraceExporter).not.toHaveBeenCalled();
-
-    // 2. Set project ID and emit post_auth event
-    vi.stubEnv('GOOGLE_CLOUD_PROJECT', 'test-project');
-    vi.stubEnv('OTLP_GOOGLE_CLOUD_PROJECT', 'test-project');
-
-    const mockCredentials = {
-      client_email: 'test@example.com',
-      private_key: '-----BEGIN PRIVATE KEY-----\n...',
-      type: 'authorized_user',
-    };
-
-    // Emit the event directly
-    authEvents.emit('post_auth', mockCredentials);
-
-    // Wait for the event handler to process.
-    await vi.waitFor(() => {
-      // Check if debugLogger was called, which indicates the listener ran
-      expect(debugLogger.log).toHaveBeenCalledWith(
-        'Telemetry reinit with credentials.',
-      );
-
-      // Should use GCP exporters now with the project ID
-      expect(GcpTraceExporter).toHaveBeenCalledWith(
-        'test-project',
-        mockCredentials,
-      );
-    });
   });
 
   describe('bufferTelemetryEvent', () => {

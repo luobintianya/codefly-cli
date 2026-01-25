@@ -18,9 +18,9 @@ import { handleError } from './utils/errors.js';
 import { runExitCleanup } from './utils/cleanup.js';
 
 function getAuthTypeFromEnv(): AuthType | undefined {
-  // if (process.env['GOOGLE_GENAI_USE_GCA'] === 'true') {
-  //   return AuthType.LOGIN_WITH_GOOGLE;
-  // }
+  if (process.env['GOOGLE_GENAI_USE_GCA'] === 'true') {
+    return AuthType.LOGIN_WITH_GOOGLE;
+  }
   if (process.env['GOOGLE_GENAI_USE_VERTEXAI'] === 'true') {
     return AuthType.USE_VERTEX_AI;
   }

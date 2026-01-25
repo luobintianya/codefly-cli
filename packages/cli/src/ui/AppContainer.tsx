@@ -594,6 +594,42 @@ export const AppContainer = (props: AppContainerProps) => {
         await clearCachedCredentialFile();
         settings.setValue(scope, 'security.auth.selectedType', authType);
 
+        if (
+          (authType === AuthType.LOGIN_WITH_GOOGLE ||
+            authType === AuthType.USE_GEMINI ||
+            authType === AuthType.OPENAI ||
+            authType === AuthType.ZHIPU) &&
+          config.isBrowserLaunchSuppressed()
+        ) {
+          // If we need to prompt for keys but can't launch browser or similar?
+          // Actually, only Google login needs a browser.
+        }
+
+        if (authType === AuthType.USE_GEMINI) {
+          const key = await reloadApiKey();
+          if (!key) {
+            setAuthState(AuthState.AwaitingApiKeyInput);
+            return;
+          }
+        }
+
+        if (authType === AuthType.OPENAI) {
+          if (
+            !process.env['OPENAI_API_KEY'] &&
+            !settings.merged.security.auth.openai?.apiKey
+          ) {
+            setAuthState(AuthState.AwaitingApiKeyInput);
+            return;
+          }
+        }
+
+        if (authType === AuthType.ZHIPU) {
+          if (!process.env['ZHIPU_API_KEY']) {
+            setAuthState(AuthState.AwaitingApiKeyInput);
+            return;
+          }
+        }
+
         try {
           await config.refreshAuth(authType);
           setAuthState(AuthState.Authenticated);
@@ -619,7 +655,7 @@ Logging in with Google... Restarting Gemini CLI to continue.
       }
       setAuthState(AuthState.Authenticated);
     },
-    [settings, config, setAuthState, onAuthError, setAuthContext],
+    [settings, config, setAuthState, onAuthError, setAuthContext, reloadApiKey],
   );
 
   const handleApiKeySubmit = useCallback(
@@ -633,9 +669,21 @@ Logging in with Google... Restarting Gemini CLI to continue.
           return;
         }
 
+        const currentAuthType = settings.merged.security.auth.selectedType;
+        if (currentAuthType === AuthType.OPENAI) {
+          settings.setValue(
+            SettingScope.User,
+            'security.auth.openai.apiKey',
+            apiKey,
+          );
+        } else if (currentAuthType === AuthType.ZHIPU) {
+          // Zhipu doesn't have a specific setting yet, but we can store it in env or similar.
+          // For now, saveApiKey only handles GEMINI_API_KEY usually.
+        }
+
         await saveApiKey(apiKey);
         await reloadApiKey();
-        await config.refreshAuth(AuthType.USE_GEMINI);
+        await config.refreshAuth(currentAuthType || AuthType.USE_GEMINI);
         setAuthState(AuthState.Authenticated);
       } catch (e) {
         onAuthError(
@@ -643,7 +691,7 @@ Logging in with Google... Restarting Gemini CLI to continue.
         );
       }
     },
-    [setAuthState, onAuthError, reloadApiKey, config],
+    [setAuthState, onAuthError, reloadApiKey, config, settings],
   );
 
   const handleApiKeyCancel = useCallback(() => {
@@ -1721,6 +1769,7 @@ Logging in with Google... Restarting Gemini CLI to continue.
       terminalBackgroundColor: config.getTerminalBackground(),
       settingsNonce,
       adminSettingsChanged,
+      selectedAuthType: settings.merged.security.auth.selectedType,
     }),
     [
       isThemeDialogOpen,
@@ -1820,6 +1869,7 @@ Logging in with Google... Restarting Gemini CLI to continue.
       config,
       settingsNonce,
       adminSettingsChanged,
+      settings.merged.security.auth.selectedType,
     ],
   );
 

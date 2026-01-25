@@ -5,7 +5,7 @@ exports[`ApiAuthDialog > renders correctly 1`] = `
 │                                                                                                  │
 │ Enter Gemini API Key                                                                             │
 │                                                                                                  │
-│ Please enter your Gemini API key. It will be securely stored in your system keychain.            │
+│ Please enter your Gemini API key. It will be securely stored.                                    │
 │ You can get an API key from https://aistudio.google.com/app/apikey                               │
 │                                                                                                  │
 │ ╭──────────────────────────────────────────────────────────────────────────────────────────────╮ │

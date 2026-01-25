@@ -76,6 +76,16 @@ export function AuthDialog({
       value: AuthType.USE_VERTEX_AI,
       key: AuthType.USE_VERTEX_AI,
     },
+    {
+      label: 'OpenAI Compatible',
+      value: AuthType.OPENAI,
+      key: AuthType.OPENAI,
+    },
+    {
+      label: 'Zhipu AI (BigModel)',
+      value: AuthType.ZHIPU,
+      key: AuthType.ZHIPU,
+    },
   ];
 
   if (settings.merged.security.auth.enforcedType) {
@@ -241,7 +251,7 @@ export function AuthDialog({
         </Box>
         <Box marginTop={1}>
           <Text color={theme.text.primary}>
-            Terms of Services and Privacy Notice for Gemini CLI
+            Terms of Services and Privacy Notice for Codefly cli
           </Text>
         </Box>
         <Box marginTop={1}>

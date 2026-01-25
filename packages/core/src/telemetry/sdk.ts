@@ -44,11 +44,11 @@ import {
   FileMetricExporter,
   FileSpanExporter,
 } from './file-exporters.js';
-import {
-  GcpTraceExporter,
-  GcpMetricExporter,
-  GcpLogExporter,
-} from './gcp-exporters.js';
+// import {
+//   GcpTraceExporter,
+//   GcpMetricExporter,
+//   GcpLogExporter,
+// } from './gcp-exporters.js';
 import { TelemetryTarget } from './index.js';
 import { debugLogger } from '../utils/debugLogger.js';
 
@@ -206,40 +206,28 @@ export async function initializeTelemetry(
   const telemetryOutfile = config.getTelemetryOutfile();
   const useOtlp = !!parsedEndpoint && !telemetryOutfile;
 
-  const gcpProjectId =
-    process.env['OTLP_GOOGLE_CLOUD_PROJECT'] ||
-    process.env['GOOGLE_CLOUD_PROJECT'];
   const useDirectGcpExport =
     telemetryTarget === TelemetryTarget.GCP && !useCollector;
 
   let spanExporter:
     | OTLPTraceExporter
     | OTLPTraceExporterHttp
-    | GcpTraceExporter
     | FileSpanExporter
     | ConsoleSpanExporter;
   let logExporter:
     | OTLPLogExporter
     | OTLPLogExporterHttp
-    | GcpLogExporter
     | FileLogExporter
     | ConsoleLogRecordExporter;
   let metricReader: PeriodicExportingMetricReader;
 
   if (useDirectGcpExport) {
     debugLogger.log(
-      'Creating GCP exporters with projectId:',
-      gcpProjectId,
-      'using',
-      credentials ? 'provided credentials' : 'ADC',
+      'GCP direct export is no longer supported. Please use OTLP collector. Falling back to Console exporter.',
     );
-    spanExporter = new GcpTraceExporter(gcpProjectId, credentials);
-    logExporter = new GcpLogExporter(gcpProjectId, credentials);
-    metricReader = new PeriodicExportingMetricReader({
-      exporter: new GcpMetricExporter(gcpProjectId, credentials),
-      exportIntervalMillis: 30000,
-    });
-  } else if (useOtlp) {
+  }
+
+  if (useOtlp) {
     if (otlpProtocol === 'http') {
       spanExporter = new OTLPTraceExporterHttp({
         url: parsedEndpoint,

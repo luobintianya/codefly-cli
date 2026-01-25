@@ -52,11 +52,11 @@ describe('DefaultStrategy', () => {
     const decision = await strategy.route(mockContext, mockConfig, mockClient);
 
     expect(decision).toEqual({
-      model: PREVIEW_GEMINI_FLASH_MODEL,
+      model: PREVIEW_GEMINI_MODEL,
       metadata: {
         source: 'default',
         latencyMs: 0,
-        reasoning: `Routing to default model: ${PREVIEW_GEMINI_FLASH_MODEL}`,
+        reasoning: `Routing to default model: ${PREVIEW_GEMINI_MODEL}`,
       },
     });
   });

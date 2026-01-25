@@ -154,6 +154,7 @@ export interface UIState {
   terminalBackgroundColor: TerminalBackgroundColor;
   settingsNonce: number;
   adminSettingsChanged: boolean;
+  selectedAuthType: string | undefined;
 }
 
 export const UIStateContext = createContext<UIState | null>(null);

@@ -14,7 +14,6 @@ import { coreEvents, CoreEvent } from '../utils/events.js';
 import { A2AClientManager } from './a2a-client-manager.js';
 import {
   DEFAULT_GEMINI_FLASH_LITE_MODEL,
-  DEFAULT_GEMINI_MODEL,
   PREVIEW_GEMINI_FLASH_MODEL,
   PREVIEW_GEMINI_MODEL,
   PREVIEW_GEMINI_MODEL_AUTO,
@@ -129,16 +128,18 @@ describe('AgentRegistry', () => {
     });
 
     it('should use default model for codebase investigator for non-preview models', async () => {
-      const previewConfig = makeMockedConfig({ model: DEFAULT_GEMINI_MODEL });
-      const previewRegistry = new TestableAgentRegistry(previewConfig);
+      const nonPreviewConfig = makeMockedConfig({
+        model: 'gemini-2.5-pro',
+      });
+      const nonPreviewRegistry = new TestableAgentRegistry(nonPreviewConfig);
 
-      await previewRegistry.initialize();
+      await nonPreviewRegistry.initialize();
 
-      const investigatorDef = previewRegistry.getDefinition(
+      const investigatorDef = nonPreviewRegistry.getDefinition(
         'codebase_investigator',
       ) as LocalAgentDefinition;
       expect(investigatorDef).toBeDefined();
-      expect(investigatorDef?.modelConfig.model).toBe(DEFAULT_GEMINI_MODEL);
+      expect(investigatorDef?.modelConfig.model).toBe('gemini-3-pro-preview');
       expect(
         investigatorDef?.modelConfig.generateContentConfig?.thinkingConfig,
       ).toStrictEqual({

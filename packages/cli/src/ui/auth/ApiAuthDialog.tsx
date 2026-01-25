@@ -11,7 +11,7 @@ import { theme } from '../semantic-colors.js';
 import { TextInput } from '../components/shared/TextInput.js';
 import { useTextBuffer } from '../components/shared/text-buffer.js';
 import { useUIState } from '../contexts/UIStateContext.js';
-import { clearApiKey, debugLogger } from '@codeflyai/codefly-core';
+import { clearApiKey, debugLogger, AuthType } from '@codeflyai/codefly-core';
 import { useKeypress } from '../hooks/useKeypress.js';
 import { keyMatchers, Command } from '../keyMatchers.js';
 
@@ -28,8 +28,17 @@ export function ApiAuthDialog({
   error,
   defaultValue = '',
 }: ApiAuthDialogProps): React.JSX.Element {
-  const { mainAreaWidth } = useUIState();
+  const { mainAreaWidth, selectedAuthType } = useUIState();
   const viewportWidth = mainAreaWidth - 8;
+
+  const isZhipu = selectedAuthType === AuthType.ZHIPU;
+  const isOpenAI = selectedAuthType === AuthType.OPENAI;
+  const providerName = isZhipu ? 'Zhipu AI' : isOpenAI ? 'OpenAI' : 'Gemini';
+  const keyLink = isZhipu
+    ? 'https://bigmodel.cn/usercenter/apikeys'
+    : isOpenAI
+      ? 'https://platform.openai.com/api-keys'
+      : 'https://aistudio.google.com/app/apikey';
 
   const pendingPromise = useRef<{ cancel: () => void } | null>(null);
 
@@ -103,18 +112,15 @@ export function ApiAuthDialog({
       width="100%"
     >
       <Text bold color={theme.text.primary}>
-        Enter Gemini API Key
+        Enter {providerName} API Key
       </Text>
       <Box marginTop={1} flexDirection="column">
         <Text color={theme.text.primary}>
-          Please enter your Gemini API key. It will be securely stored in your
-          system keychain.
+          Please enter your {providerName} API key. It will be securely stored.
         </Text>
         <Text color={theme.text.secondary}>
           You can get an API key from{' '}
-          <Text color={theme.text.link}>
-            https://aistudio.google.com/app/apikey
-          </Text>
+          <Text color={theme.text.link}>{keyLink}</Text>
         </Text>
       </Box>
       <Box marginTop={1} flexDirection="row">
