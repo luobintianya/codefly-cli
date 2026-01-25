@@ -296,9 +296,8 @@ export class SwaggerSchemaTool extends BaseDeclarativeTool<
         required: ['url'],
         type: 'object',
       },
-      true,
-      false,
       messageBus,
+      true,
     );
   }
 

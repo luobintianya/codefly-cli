@@ -19,6 +19,10 @@ import * as os from 'node:os';
 import { ToolConfirmationOutcome } from './tools.js';
 import { ToolErrorType } from './tool-error.js';
 import { CODEFLY_DIR } from '../utils/paths.js';
+import {
+  createMockMessageBus,
+  getMockMessageBusInstance,
+} from '../test-utils/mock-message-bus.js';
 
 // Mock dependencies
 vi.mock(import('node:fs/promises'), async (importOriginal) => {
@@ -200,7 +204,7 @@ describe('MemoryTool', () => {
     let performAddMemoryEntrySpy: Mock<typeof MemoryTool.performAddMemoryEntry>;
 
     beforeEach(() => {
-      memoryTool = new MemoryTool();
+      memoryTool = new MemoryTool(createMockMessageBus());
       // Spy on the static method for these tests
       performAddMemoryEntrySpy = vi
         .spyOn(MemoryTool, 'performAddMemoryEntry')
@@ -300,7 +304,9 @@ describe('MemoryTool', () => {
     let memoryTool: MemoryTool;
 
     beforeEach(() => {
-      memoryTool = new MemoryTool();
+      const bus = createMockMessageBus();
+      getMockMessageBusInstance(bus).defaultToolDecision = 'ask_user';
+      memoryTool = new MemoryTool(bus);
       // Clear the allowlist before each test
       const invocation = memoryTool.build({ fact: 'mock-fact' });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -318,13 +324,13 @@ describe('MemoryTool', () => {
       expect(result).not.toBe(false);
 
       if (result && result.type === 'edit') {
-        const expectedPath = path.join('~', CODEFLY_DIR, 'CODEFLY.md');
+        const expectedPath = path.join('~', CODEFLY_DIR, 'GEMINI.md');
         expect(result.title).toBe(`Confirm Memory Save: ${expectedPath}`);
         expect(result.fileName).toContain(
           path.join('mock', 'home', CODEFLY_DIR),
         );
-        expect(result.fileName).toContain('CODEFLY.md');
-        expect(result.fileDiff).toContain('Index: CODEFLY.md');
+        expect(result.fileName).toContain('GEMINI.md');
+        expect(result.fileDiff).toContain('Index: GEMINI.md');
         expect(result.fileDiff).toContain('+## Gemini Added Memories');
         expect(result.fileDiff).toContain('+- Test fact');
         expect(result.originalContent).toBe('');
@@ -418,9 +424,9 @@ describe('MemoryTool', () => {
       expect(result).not.toBe(false);
 
       if (result && result.type === 'edit') {
-        const expectedPath = path.join('~', CODEFLY_DIR, 'CODEFLY.md');
+        const expectedPath = path.join('~', CODEFLY_DIR, 'GEMINI.md');
         expect(result.title).toBe(`Confirm Memory Save: ${expectedPath}`);
-        expect(result.fileDiff).toContain('Index: CODEFLY.md');
+        expect(result.fileDiff).toContain('Index: GEMINI.md');
         expect(result.fileDiff).toContain('+- New fact');
         expect(result.originalContent).toBe(existingContent);
         expect(result.newContent).toContain('- Old fact');

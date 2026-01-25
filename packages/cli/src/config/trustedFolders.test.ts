@@ -36,6 +36,15 @@ vi.mock('os', async (importOriginal) => {
     platform: vi.fn(() => 'linux'),
   };
 });
+
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import('@codeflyai/codefly-core')>();
+  return {
+    ...actual,
+    homedir: () => '/mock/home/user',
+  };
+});
 vi.mock('fs', async (importOriginal) => {
   const actualFs = await importOriginal<typeof fs>();
   return {

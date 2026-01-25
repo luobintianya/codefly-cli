@@ -10,16 +10,14 @@ import { ModelDialog } from './ModelDialog.js';
 import { ConfigContext } from '../contexts/ConfigContext.js';
 import { KeypressProvider } from '../contexts/KeypressContext.js';
 import {
+  DEFAULT_GEMINI_MODEL,
   DEFAULT_GEMINI_MODEL_AUTO,
+  DEFAULT_GEMINI_FLASH_MODEL,
+  DEFAULT_GEMINI_FLASH_LITE_MODEL,
   PREVIEW_GEMINI_MODEL,
   PREVIEW_GEMINI_MODEL_AUTO,
-  PREVIEW_GEMINI_FLASH_MODEL,
 } from '@codeflyai/codefly-core';
-import type {
-  Config,
-  ModelSlashCommandEvent,
-  AuthType,
-} from '@codeflyai/codefly-core';
+import type { Config, ModelSlashCommandEvent } from '@codeflyai/codefly-core';
 
 // Mock dependencies
 const mockGetDisplayString = vi.fn();
@@ -48,14 +46,11 @@ describe('<ModelDialog />', () => {
   const mockOnClose = vi.fn();
   const mockGetHasAccessToPreviewModel = vi.fn();
 
-  const mockGetContentGeneratorConfig = vi.fn();
-
   interface MockConfig extends Partial<Config> {
-    setModel: (model: string) => void;
+    setModel: (model: string, isTemporary?: boolean) => void;
     getModel: () => string;
     getPreviewFeatures: () => boolean;
     getHasAccessToPreviewModel: () => boolean;
-    getContentGeneratorConfig: () => { authType?: AuthType };
   }
 
   const mockConfig: MockConfig = {
@@ -63,7 +58,6 @@ describe('<ModelDialog />', () => {
     getModel: mockGetModel,
     getPreviewFeatures: mockGetPreviewFeatures,
     getHasAccessToPreviewModel: mockGetHasAccessToPreviewModel,
-    getContentGeneratorConfig: mockGetContentGeneratorConfig,
   };
 
   beforeEach(() => {
@@ -71,7 +65,6 @@ describe('<ModelDialog />', () => {
     mockGetModel.mockReturnValue(DEFAULT_GEMINI_MODEL_AUTO);
     mockGetPreviewFeatures.mockReturnValue(false);
     mockGetHasAccessToPreviewModel.mockReturnValue(false);
-    mockGetContentGeneratorConfig.mockReturnValue({});
 
     // Default implementation for getDisplayString
     mockGetDisplayString.mockImplementation((val: string) => {
@@ -96,78 +89,106 @@ describe('<ModelDialog />', () => {
   it('renders the initial "main" view correctly', () => {
     const { lastFrame } = renderComponent();
     expect(lastFrame()).toContain('Select Model');
-    expect(lastFrame()).toContain(
-      'Applies to this session and future Codefly CLI sessions.',
-    );
-    expect(lastFrame()).toContain('Gemini 3 Pro');
-    expect(lastFrame()).toContain('Gemini 3 Flash');
+    expect(lastFrame()).toContain('Remember model for future sessions: false');
+    expect(lastFrame()).toContain('Auto');
+    expect(lastFrame()).toContain('Manual');
   });
 
   it('renders "main" view with preview options when preview features are enabled', () => {
     mockGetPreviewFeatures.mockReturnValue(true);
     mockGetHasAccessToPreviewModel.mockReturnValue(true); // Must have access
     const { lastFrame } = renderComponent();
-    expect(lastFrame()).toContain('Gemini 3 Pro');
-    expect(lastFrame()).toContain('Gemini 3 Flash');
+    expect(lastFrame()).toContain('Auto (Preview)');
   });
 
-  it('shows all available models directly', async () => {
-    const { lastFrame } = renderComponent();
+  it('switches to "manual" view when "Manual" is selected', async () => {
+    const { lastFrame, stdin } = renderComponent();
 
-    // Should show all models directly without Manual/Auto selection
-    expect(lastFrame()).toContain('Gemini 3 Pro');
-    expect(lastFrame()).toContain('Gemini 3 Flash');
-    expect(lastFrame()).toContain('Custom Model');
+    // Select "Manual" (index 1)
+    // Press down arrow to move to "Manual"
+    stdin.write('\u001B[B'); // Arrow Down
+    await waitForUpdate();
+
+    // Press enter to select
+    stdin.write('\r');
+    await waitForUpdate();
+
+    // Should now show manual options
+    expect(lastFrame()).toContain(DEFAULT_GEMINI_MODEL);
+    expect(lastFrame()).toContain(DEFAULT_GEMINI_FLASH_MODEL);
+    expect(lastFrame()).toContain(DEFAULT_GEMINI_FLASH_LITE_MODEL);
   });
 
-  it('shows preview models when preview features are enabled', async () => {
+  it('renders "manual" view with preview options when preview features are enabled', async () => {
     mockGetPreviewFeatures.mockReturnValue(true);
-    mockGetHasAccessToPreviewModel.mockReturnValue(true);
+    mockGetHasAccessToPreviewModel.mockReturnValue(true); // Must have access
     mockGetModel.mockReturnValue(PREVIEW_GEMINI_MODEL_AUTO);
-    const { lastFrame } = renderComponent();
+    const { lastFrame, stdin } = renderComponent();
 
-    expect(lastFrame()).toContain('Gemini 3 Pro');
-    expect(lastFrame()).toContain('Gemini 3 Flash');
-  });
+    // Select "Manual" (index 2 because Preview Auto is first, then Auto (Gemini 2.5))
+    // Press down enough times to ensure we reach the bottom (Manual)
+    stdin.write('\u001B[B'); // Arrow Down
+    await waitForUpdate();
+    stdin.write('\u001B[B'); // Arrow Down
+    await waitForUpdate();
 
-  it('sets model and closes when a model is selected', async () => {
-    const { stdin } = renderComponent();
-
-    // Select first model (Auto (Gemini 3), index 0)
+    // Press enter to select Manual
     stdin.write('\r');
     await waitForUpdate();
 
-    expect(mockSetModel).toHaveBeenCalledWith(PREVIEW_GEMINI_MODEL_AUTO);
+    expect(lastFrame()).toContain(PREVIEW_GEMINI_MODEL);
+  });
+
+  it('sets model and closes when a model is selected in "main" view', async () => {
+    const { stdin } = renderComponent();
+
+    // Select "Auto" (index 0)
+    stdin.write('\r');
+    await waitForUpdate();
+
+    expect(mockSetModel).toHaveBeenCalledWith(
+      DEFAULT_GEMINI_MODEL_AUTO,
+      true, // Session only by default
+    );
     expect(mockOnClose).toHaveBeenCalled();
   });
 
-  it('can select Gemini 3 Pro', async () => {
+  it('sets model and closes when a model is selected in "manual" view', async () => {
     const { stdin } = renderComponent();
 
-    // Navigate to second model (Gemini 3 Pro, index 1)
+    // Navigate to Manual (index 1) and select
     stdin.write('\u001B[B');
     await waitForUpdate();
     stdin.write('\r');
     await waitForUpdate();
 
-    expect(mockSetModel).toHaveBeenCalledWith(PREVIEW_GEMINI_MODEL);
+    // Now in manual view. Default selection is first item (DEFAULT_GEMINI_MODEL)
+    stdin.write('\r');
+    await waitForUpdate();
+
+    expect(mockSetModel).toHaveBeenCalledWith(DEFAULT_GEMINI_MODEL, true);
     expect(mockOnClose).toHaveBeenCalled();
   });
 
-  it('can select different models with arrow keys', async () => {
-    const { stdin } = renderComponent();
+  it('toggles persist mode with Tab key', async () => {
+    const { lastFrame, stdin } = renderComponent();
 
-    // Navigate to third model (Gemini 3 Flash, index 2)
-    // Down -> Pro (1)
-    // Down -> Flash (2)
-    stdin.write('\u001B[B');
+    expect(lastFrame()).toContain('Remember model for future sessions: false');
+
+    // Press Tab to toggle persist mode
+    stdin.write('\t');
     await waitForUpdate();
-    stdin.write('\u001B[B');
-    await waitForUpdate();
+
+    expect(lastFrame()).toContain('Remember model for future sessions: true');
+
+    // Select "Auto" (index 0)
     stdin.write('\r');
     await waitForUpdate();
 
-    expect(mockSetModel).toHaveBeenCalledWith(PREVIEW_GEMINI_FLASH_MODEL);
+    expect(mockSetModel).toHaveBeenCalledWith(
+      DEFAULT_GEMINI_MODEL_AUTO,
+      false, // Persist enabled
+    );
     expect(mockOnClose).toHaveBeenCalled();
   });
 
@@ -178,6 +199,26 @@ describe('<ModelDialog />', () => {
     await waitForUpdate();
 
     expect(mockOnClose).toHaveBeenCalled();
+  });
+
+  it('goes back to "main" view on escape in "manual" view', async () => {
+    const { lastFrame, stdin } = renderComponent();
+
+    // Go to manual view
+    stdin.write('\u001B[B');
+    await waitForUpdate();
+    stdin.write('\r');
+    await waitForUpdate();
+
+    expect(lastFrame()).toContain(DEFAULT_GEMINI_MODEL);
+
+    // Press Escape
+    stdin.write('\u001B');
+    await waitForUpdate();
+
+    expect(mockOnClose).not.toHaveBeenCalled();
+    // Should be back to main view (Manual option visible)
+    expect(lastFrame()).toContain('Manual');
   });
 
   describe('Preview Logic', () => {
@@ -199,8 +240,30 @@ describe('<ModelDialog />', () => {
       mockGetHasAccessToPreviewModel.mockReturnValue(true);
       mockGetPreviewFeatures.mockReturnValue(true);
       const { lastFrame } = renderComponent();
-      expect(lastFrame()).toContain('Gemini 3 Pro');
-      expect(lastFrame()).toContain('Gemini 3 Flash');
+      expect(lastFrame()).toContain('Auto (Preview)');
+    });
+
+    it('should show "Gemini 3 is now available" header if user has access but preview features disabled', () => {
+      mockGetHasAccessToPreviewModel.mockReturnValue(true);
+      mockGetPreviewFeatures.mockReturnValue(false);
+      const { lastFrame } = renderComponent();
+      expect(lastFrame()).toContain('Gemini 3 is now available.');
+      expect(lastFrame()).toContain('Enable "Preview features" in /settings');
+    });
+
+    it('should show "Gemini 3 is coming soon" header if user has no access', () => {
+      mockGetHasAccessToPreviewModel.mockReturnValue(false);
+      mockGetPreviewFeatures.mockReturnValue(false);
+      const { lastFrame } = renderComponent();
+      expect(lastFrame()).toContain('Gemini 3 is coming soon.');
+    });
+
+    it('should NOT show header/subheader if preview options are shown', () => {
+      mockGetHasAccessToPreviewModel.mockReturnValue(true);
+      mockGetPreviewFeatures.mockReturnValue(true);
+      const { lastFrame } = renderComponent();
+      expect(lastFrame()).not.toContain('Gemini 3 is now available.');
+      expect(lastFrame()).not.toContain('Gemini 3 is coming soon.');
     });
   });
 });

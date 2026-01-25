@@ -7,14 +7,13 @@
 import * as fs from 'node:fs/promises';
 import * as fsSync from 'node:fs';
 import * as path from 'node:path';
-import { homedir } from 'node:os';
 import { bfsFileSearch } from './bfsFileSearch.js';
 import { getAllGeminiMdFilenames } from '../tools/memoryTool.js';
 import type { FileDiscoveryService } from '../services/fileDiscoveryService.js';
 import { processImports } from './memoryImportProcessor.js';
 import type { FileFilteringOptions } from '../config/constants.js';
 import { DEFAULT_MEMORY_FILE_FILTERING_OPTIONS } from '../config/constants.js';
-import { CODEFLY_DIR } from './paths.js';
+import { CODEFLY_DIR, homedir } from './paths.js';
 import type { ExtensionLoader } from './extensionLoader.js';
 import { debugLogger } from './debugLogger.js';
 import type { Config } from '../config/config.js';
@@ -366,7 +365,7 @@ export async function loadGlobalMemory(
 }
 
 /**
- * Traverses upward from startDir to stopDir, finding all CODEFLY.md variants.
+ * Traverses upward from startDir to stopDir, finding all GEMINI.md variants.
  *
  * Files are ordered by directory level (root to leaf), with all filename
  * variants grouped together per directory.
@@ -469,7 +468,7 @@ export interface LoadServerHierarchicalMemoryResponse {
 }
 
 /**
- * Loads hierarchical CODEFLY.md files and concatenates their content.
+ * Loads hierarchical GEMINI.md files and concatenates their content.
  * This function is intended for use by the server.
  */
 export async function loadServerHierarchicalMemory(
@@ -521,7 +520,7 @@ export async function loadServerHierarchicalMemory(
 
   if (filePaths.length === 0) {
     if (debugMode)
-      logger.debug('No CODEFLY.md files found in hierarchy of the workspace.');
+      logger.debug('No GEMINI.md files found in hierarchy of the workspace.');
     return { memoryContent: '', fileCount: 0, filePaths: [] };
   }
   const contentsWithPaths = await readGeminiMdFiles(

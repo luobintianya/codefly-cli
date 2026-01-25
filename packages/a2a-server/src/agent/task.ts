@@ -375,7 +375,7 @@ export class Task {
       if (tc.status === 'awaiting_approval' && tc.confirmationDetails) {
         this.pendingToolConfirmationDetails.set(
           tc.request.callId,
-          tc.confirmationDetails,
+          tc.confirmationDetails as ToolCallConfirmationDetails,
         );
       }
 
@@ -409,7 +409,9 @@ export class Task {
       toolCalls.forEach((tc: ToolCall) => {
         if (tc.status === 'awaiting_approval' && tc.confirmationDetails) {
           // eslint-disable-next-line @typescript-eslint/no-floating-promises
-          tc.confirmationDetails.onConfirm(ToolConfirmationOutcome.ProceedOnce);
+          (tc.confirmationDetails as ToolCallConfirmationDetails).onConfirm(
+            ToolConfirmationOutcome.ProceedOnce,
+          );
           this.pendingToolConfirmationDetails.delete(tc.request.callId);
         }
       });
@@ -570,7 +572,10 @@ export class Task {
       EDIT_TOOL_NAMES.has(request.name),
     );
 
-    if (restorableToolCalls.length > 0) {
+    if (
+      restorableToolCalls.length > 0 &&
+      this.config.getCheckpointingEnabled()
+    ) {
       const gitService = await this.config.getGitService();
       if (gitService) {
         const { checkpointsToWrite, toolCallToCheckpointMap, errors } =
@@ -703,6 +708,10 @@ export class Task {
         break;
       case GeminiEventType.ModelInfo:
         this.modelInfo = event.value;
+        break;
+      case GeminiEventType.Retry:
+      case GeminiEventType.InvalidStream:
+        // An invalid stream should trigger a retry, which requires no action from the user.
         break;
       case GeminiEventType.Error:
       default: {

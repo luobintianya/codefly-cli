@@ -4,13 +4,17 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { vi } from 'vitest';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import * as fs from 'node:fs';
 import * as os from 'node:os';
 import * as path from 'node:path';
 import { createExtension } from '../../test-utils/createExtension.js';
 import { useExtensionUpdates } from './useExtensionUpdates.js';
-import { CODEFLY_DIR } from '@codeflyai/codefly-core';
+import {
+  CODEFLY_DIR,
+  loadAgentsFromDirectory,
+  loadSkillsFromDir,
+} from '@codeflyai/codefly-core';
 import { render } from '../../test-utils/render.js';
 import { waitFor } from '../../test-utils/async.js';
 import { MessageType } from '../types.js';
@@ -30,6 +34,19 @@ vi.mock('os', async (importOriginal) => {
   };
 });
 
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import('@codeflyai/codefly-core')>();
+  return {
+    ...actual,
+    homedir: () => os.homedir(),
+    loadAgentsFromDirectory: vi
+      .fn()
+      .mockResolvedValue({ agents: [], errors: [] }),
+    loadSkillsFromDir: vi.fn().mockResolvedValue([]),
+  };
+});
+
 vi.mock('../../config/extensions/update.js', () => ({
   checkForAllExtensionUpdates: vi.fn(),
   updateExtension: vi.fn(),
@@ -42,6 +59,11 @@ describe('useExtensionUpdates', () => {
   let extensionManager: ExtensionManager;
 
   beforeEach(() => {
+    vi.mocked(loadAgentsFromDirectory).mockResolvedValue({
+      agents: [],
+      errors: [],
+    });
+    vi.mocked(loadSkillsFromDir).mockResolvedValue([]);
     tempHomeDir = fs.mkdtempSync(
       path.join(os.tmpdir(), 'gemini-cli-test-home-'),
     );

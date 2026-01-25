@@ -16,6 +16,7 @@ import { appendFileSync } from 'node:fs';
 import type { ContentGenerator } from './contentGenerator.js';
 import type { FakeResponse } from './fakeContentGenerator.js';
 import { safeJsonStringify } from '../utils/safeJsonStringify.js';
+import type { UserTierId } from '../code_assist/types.js';
 
 // A ContentGenerator that wraps another content generator and records all the
 // responses, with the ability to write them out to a file. These files are
@@ -28,6 +29,14 @@ export class RecordingContentGenerator implements ContentGenerator {
     private readonly realGenerator: ContentGenerator,
     private readonly filePath: string,
   ) {}
+
+  get userTier(): UserTierId | undefined {
+    return this.realGenerator.userTier;
+  }
+
+  get userTierName(): string | undefined {
+    return this.realGenerator.userTierName;
+  }
 
   async generateContent(
     request: GenerateContentParameters,

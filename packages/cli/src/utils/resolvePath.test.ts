@@ -13,6 +13,10 @@ vi.mock('node:os', () => ({
   homedir: vi.fn(),
 }));
 
+vi.mock('@codeflyai/codefly-core', () => ({
+  homedir: () => os.homedir(),
+}));
+
 describe('resolvePath', () => {
   beforeEach(() => {
     vi.mocked(os.homedir).mockReturnValue('/home/user');

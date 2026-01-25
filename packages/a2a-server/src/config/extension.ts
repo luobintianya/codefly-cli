@@ -11,18 +11,18 @@ import {
   type MCPServerConfig,
   type ExtensionInstallMetadata,
   type GeminiCLIExtension,
+  homedir,
 } from '@codeflyai/codefly-core';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import * as os from 'node:os';
 import { logger } from '../utils/logger.js';
 
 export const EXTENSIONS_DIRECTORY_NAME = path.join(CODEFLY_DIR, 'extensions');
-export const EXTENSIONS_CONFIG_FILENAME = 'gemini-extension.json';
-export const INSTALL_METADATA_FILENAME = '.gemini-extension-install.json';
+export const EXTENSIONS_CONFIG_FILENAME = 'codefly-extension.json';
+export const INSTALL_METADATA_FILENAME = '.codefly-extension-install.json';
 
 /**
- * Extension definition as written to disk in gemini-extension.json files.
+ * Extension definition as written to disk in codefly-extension.json files.
  * This should *not* be referenced outside of the logic for reading files.
  * If information is required for manipulating extensions (load, unload, update)
  * outside of the loading process that data needs to be stored on the
@@ -39,7 +39,7 @@ interface ExtensionConfig {
 export function loadExtensions(workspaceDir: string): GeminiCLIExtension[] {
   const allExtensions = [
     ...loadExtensionsFromDir(workspaceDir),
-    ...loadExtensionsFromDir(os.homedir()),
+    ...loadExtensionsFromDir(homedir()),
   ];
 
   const uniqueExtensions: GeminiCLIExtension[] = [];
@@ -127,7 +127,7 @@ function loadExtension(extensionDir: string): GeminiCLIExtension | null {
 
 function getContextFileNames(config: ExtensionConfig): string[] {
   if (!config.contextFileName) {
-    return ['CODEFLY.md'];
+    return ['GEMINI.md'];
   } else if (!Array.isArray(config.contextFileName)) {
     return [config.contextFileName];
   }

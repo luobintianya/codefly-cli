@@ -38,6 +38,15 @@ vi.mock('node:os', async (importOriginal) => {
   };
 });
 
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import('@codeflyai/codefly-core')>();
+  return {
+    ...actual,
+    tmpdir: vi.fn(() => '/tmp'),
+  };
+});
+
 const vscodeMock = vi.hoisted(() => ({
   workspace: {
     workspaceFolders: [

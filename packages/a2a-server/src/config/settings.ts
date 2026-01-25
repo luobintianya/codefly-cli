@@ -6,7 +6,6 @@
 
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { homedir } from 'node:os';
 
 import type { MCPServerConfig } from '@codeflyai/codefly-core';
 import {
@@ -14,6 +13,7 @@ import {
   CODEFLY_DIR,
   getErrorMessage,
   type TelemetrySettings,
+  homedir,
 } from '@codeflyai/codefly-core';
 import stripJsonComments from 'strip-json-comments';
 

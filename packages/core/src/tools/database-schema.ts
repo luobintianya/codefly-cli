@@ -241,9 +241,8 @@ export class DatabaseSchemaTool extends BaseDeclarativeTool<
         required: ['type', 'host', 'user', 'database'],
         type: 'object',
       },
-      true,
-      false,
       messageBus,
+      true,
     );
   }
 

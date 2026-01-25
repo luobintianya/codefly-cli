@@ -11,8 +11,8 @@ import { waitFor } from '../../test-utils/async.js';
 import { useAtCompletion } from './useAtCompletion.js';
 import type { Config, FileSearch } from '@codeflyai/codefly-core';
 import { FileSearchFactory } from '@codeflyai/codefly-core';
-import type { FileSystemStructure } from '@codeflyai/codefly-test-utils';
-import { createTmpDir, cleanupTmpDir } from '@codeflyai/codefly-test-utils';
+import type { FileSystemStructure } from '@codeflyai/codefly-cli-test-utils';
+import { createTmpDir, cleanupTmpDir } from '@codeflyai/codefly-cli-test-utils';
 import type { Suggestion } from '../components/SuggestionsDisplay.js';
 
 // Test harness to capture the state from the hook's callbacks.
@@ -48,7 +48,7 @@ describe('useAtCompletion', () => {
         respectGeminiIgnore: true,
       })),
       getEnableRecursiveFileSearch: () => true,
-      getFileFilteringDisableFuzzySearch: () => false,
+      getFileFilteringEnableFuzzySearch: () => true,
       getResourceRegistry: vi.fn().mockReturnValue({
         getAllResources: () => [],
       }),
@@ -153,7 +153,7 @@ describe('useAtCompletion', () => {
         cache: false,
         cacheTtl: 0,
         enableRecursiveFileSearch: true,
-        disableFuzzySearch: false,
+        enableFuzzySearch: true,
       });
       await fileSearch.initialize();
 
@@ -276,7 +276,7 @@ describe('useAtCompletion', () => {
         cache: false,
         cacheTtl: 0,
         enableRecursiveFileSearch: true,
-        disableFuzzySearch: false,
+        enableFuzzySearch: true,
       });
       await realFileSearch.initialize();
 
@@ -558,7 +558,7 @@ describe('useAtCompletion', () => {
           respectGitIgnore: true,
           respectGeminiIgnore: true,
         })),
-        getFileFilteringDisableFuzzySearch: () => false,
+        getFileFilteringEnableFuzzySearch: () => true,
       } as unknown as Config;
 
       const { result } = renderHook(() =>

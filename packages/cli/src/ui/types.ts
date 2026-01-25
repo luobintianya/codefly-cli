@@ -10,9 +10,11 @@ import type {
   MCPServerConfig,
   ThoughtSummary,
   ToolCallConfirmationDetails,
-  ToolConfirmationOutcome,
+  SerializableConfirmationDetails,
   ToolResultDisplay,
+  RetrieveUserQuotaResponse,
   SkillDefinition,
+  AgentDefinition,
 } from '@codeflyai/codefly-core';
 import type { PartListUnion } from '@google/genai';
 import { type ReactNode } from 'react';
@@ -26,10 +28,10 @@ export enum AuthState {
   Updating = 'updating',
   // Waiting for user to input API key
   AwaitingApiKeyInput = 'awaiting_api_key_input',
-  // Waiting for user to input OpenAI compatible config
-  AwaitingOpenAIConfig = 'awaiting_openai_config',
   // Successfully authenticated
   Authenticated = 'authenticated',
+  // Waiting for the user to restart after a Google login
+  AwaitingGoogleLoginRestart = 'awaiting_google_login_restart',
 }
 
 // Only defining the state enum needed by the UI
@@ -62,7 +64,11 @@ export interface ToolCallEvent {
   name: string;
   args: Record<string, never>;
   resultDisplay: ToolResultDisplay | undefined;
-  confirmationDetails: ToolCallConfirmationDetails | undefined;
+  confirmationDetails:
+    | ToolCallConfirmationDetails
+    | SerializableConfirmationDetails
+    | undefined;
+  correlationId?: string;
 }
 
 export interface IndividualToolCallDisplay {
@@ -71,10 +77,14 @@ export interface IndividualToolCallDisplay {
   description: string;
   resultDisplay: ToolResultDisplay | undefined;
   status: ToolCallStatus;
-  confirmationDetails: ToolCallConfirmationDetails | undefined;
+  confirmationDetails:
+    | ToolCallConfirmationDetails
+    | SerializableConfirmationDetails
+    | undefined;
   renderOutputAsMarkdown?: boolean;
   ptyId?: number;
   outputFile?: string;
+  correlationId?: string;
 }
 
 export interface CompressionProps {
@@ -135,6 +145,7 @@ export type HistoryItemAbout = HistoryItemBase & {
   gcpProject: string;
   ideClient: string;
   userEmail?: string;
+  tier?: string;
 };
 
 export type HistoryItemHelp = HistoryItemBase & {
@@ -145,6 +156,7 @@ export type HistoryItemHelp = HistoryItemBase & {
 export type HistoryItemStats = HistoryItemBase & {
   type: 'stats';
   duration: string;
+  quotas?: RetrieveUserQuotaResponse;
 };
 
 export type HistoryItemModelStats = HistoryItemBase & {
@@ -213,6 +225,16 @@ export type HistoryItemSkillsList = HistoryItemBase & {
   showDescriptions: boolean;
 };
 
+export type AgentDefinitionJson = Pick<
+  AgentDefinition,
+  'name' | 'displayName' | 'description' | 'kind'
+>;
+
+export type HistoryItemAgentsList = HistoryItemBase & {
+  type: 'agents_list';
+  agents: AgentDefinitionJson[];
+};
+
 // JSON-friendly types for using as a simple data model showing info about an
 // MCP Server.
 export interface JsonMcpTool {
@@ -248,6 +270,14 @@ export type HistoryItemMcpStatus = HistoryItemBase & {
   authStatus: Record<
     string,
     'authenticated' | 'expired' | 'unauthenticated' | 'not-configured'
+  >;
+  enablementState: Record<
+    string,
+    {
+      enabled: boolean;
+      isSessionDisabled: boolean;
+      isPersistentDisabled: boolean;
+    }
   >;
   blockedServers: Array<{ name: string; extensionName: string }>;
   discoveryInProgress: boolean;
@@ -292,6 +322,7 @@ export type HistoryItemWithoutId =
   | HistoryItemExtensionsList
   | HistoryItemToolsList
   | HistoryItemSkillsList
+  | HistoryItemAgentsList
   | HistoryItemMcpStatus
   | HistoryItemChatList
   | HistoryItemHooksList;
@@ -315,6 +346,7 @@ export enum MessageType {
   EXTENSIONS_LIST = 'extensions_list',
   TOOLS_LIST = 'tools_list',
   SKILLS_LIST = 'skills_list',
+  AGENTS_LIST = 'agents_list',
   MCP_STATUS = 'mcp_status',
   CHAT_LIST = 'chat_list',
   HOOKS_LIST = 'hooks_list',
@@ -402,14 +434,6 @@ export type SlashCommandProcessorResult =
     }
   | SubmitPromptResult;
 
-export interface ShellConfirmationRequest {
-  commands: string[];
-  onConfirm: (
-    outcome: ToolConfirmationOutcome,
-    approvedCommands?: string[],
-  ) => void;
-}
-
 export interface ConfirmationRequest {
   prompt: ReactNode;
   onConfirm: (confirm: boolean) => void;
@@ -417,4 +441,11 @@ export interface ConfirmationRequest {
 
 export interface LoopDetectionConfirmationRequest {
   onComplete: (result: { userSelection: 'disable' | 'keep' }) => void;
+}
+
+export interface ActiveHook {
+  name: string;
+  eventName: string;
+  index?: number;
+  total?: number;
 }

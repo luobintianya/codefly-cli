@@ -9,8 +9,8 @@ import { type VariableSchema, VARIABLE_SCHEMA } from './variableSchema.js';
 import { CODEFLY_DIR } from '@codeflyai/codefly-core';
 
 export const EXTENSIONS_DIRECTORY_NAME = path.join(CODEFLY_DIR, 'extensions');
-export const EXTENSIONS_CONFIG_FILENAME = 'gemini-extension.json';
-export const INSTALL_METADATA_FILENAME = '.gemini-extension-install.json';
+export const EXTENSIONS_CONFIG_FILENAME = 'codefly-extension.json';
+export const INSTALL_METADATA_FILENAME = '.codefly-extension-install.json';
 export const EXTENSION_SETTINGS_FILENAME = '.env';
 
 export type JsonObject = { [key: string]: JsonValue };

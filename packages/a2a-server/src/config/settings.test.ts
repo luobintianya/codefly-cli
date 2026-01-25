@@ -27,13 +27,21 @@ vi.mock('node:os', async (importOriginal) => {
   };
 });
 
-vi.mock('@codeflyai/codefly-core', () => ({
-  CODEFLY_DIR: '.codefly',
-  debugLogger: {
-    error: vi.fn(),
-  },
-  getErrorMessage: (error: unknown) => String(error),
-}));
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import('@codeflyai/codefly-core')>();
+  const path = await import('node:path');
+  const os = await import('node:os');
+  return {
+    ...actual,
+    CODEFLY_DIR: '.gemini',
+    debugLogger: {
+      error: vi.fn(),
+    },
+    getErrorMessage: (error: unknown) => String(error),
+    homedir: () => path.join(os.tmpdir(), `gemini-home-${mocks.suffix}`),
+  };
+});
 
 describe('loadSettings', () => {
   const mockHomeDir = path.join(os.tmpdir(), `gemini-home-${mocks.suffix}`);
@@ -41,8 +49,8 @@ describe('loadSettings', () => {
     os.tmpdir(),
     `gemini-workspace-${mocks.suffix}`,
   );
-  const mockGeminiHomeDir = path.join(mockHomeDir, '.codefly');
-  const mockGeminiWorkspaceDir = path.join(mockWorkspaceDir, '.codefly');
+  const mockGeminiHomeDir = path.join(mockHomeDir, '.gemini');
+  const mockGeminiWorkspaceDir = path.join(mockWorkspaceDir, '.gemini');
 
   beforeEach(() => {
     vi.clearAllMocks();

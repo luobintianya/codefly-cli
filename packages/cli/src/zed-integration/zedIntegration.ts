@@ -16,7 +16,7 @@ import {
   logToolCall,
   convertToFunctionResponse,
   ToolConfirmationOutcome,
-  // clearCachedCredentialFile,
+  clearCachedCredentialFile,
   isNodeError,
   getErrorMessage,
   isWithinRoot,
@@ -27,9 +27,11 @@ import {
   ToolCallEvent,
   debugLogger,
   ReadManyFilesTool,
+  REFERENCE_CONTENT_START,
   resolveModel,
   createWorkingStdio,
   startupProfiler,
+  Kind,
 } from '@codeflyai/codefly-core';
 import * as acp from '@agentclientprotocol/sdk';
 import { AcpFileSystemService } from './fileSystemService.js';
@@ -44,6 +46,7 @@ import { z } from 'zod';
 import { randomUUID } from 'node:crypto';
 import type { CliArgs } from '../config/config.js';
 import { loadCliConfig } from '../config/config.js';
+import { runExitCleanup } from '../utils/cleanup.js';
 
 export async function runZedIntegration(
   config: Config,
@@ -55,10 +58,15 @@ export async function runZedIntegration(
   const stdin = Readable.toWeb(process.stdin) as ReadableStream<Uint8Array>;
 
   const stream = acp.ndJsonStream(stdout, stdin);
-  new acp.AgentSideConnection(
+  const connection = new acp.AgentSideConnection(
     (connection) => new GeminiAgent(config, settings, argv, connection),
     stream,
   );
+
+  // SIGTERM/SIGINT handlers (in sdk.ts) don't fire when stdin closes.
+  // We must explicitly await the connection close to flush telemetry.
+  // Use finally() to ensure cleanup runs even on stream errors.
+  await connection.closed.finally(runExitCleanup);
 }
 
 export class GeminiAgent {
@@ -115,11 +123,12 @@ export class GeminiAgent {
 
   async authenticate({ methodId }: acp.AuthenticateRequest): Promise<void> {
     const method = z.nativeEnum(AuthType).parse(methodId);
+    const selectedAuthType = this.settings.merged.security.auth.selectedType;
 
     // Only clear credentials when switching to a different auth method
-    // if (selectedAuthType && selectedAuthType !== method) {
-    //   await clearCachedCredentialFile();
-    // }
+    if (selectedAuthType && selectedAuthType !== method) {
+      await clearCachedCredentialFile();
+    }
 
     // Refresh auth with the requested method
     // This will reuse existing credentials if they're valid,
@@ -140,7 +149,7 @@ export class GeminiAgent {
     const config = await this.newSessionConfig(sessionId, cwd, mcpServers);
 
     let isAuthenticated = false;
-    if (this.settings.merged.security?.auth?.selectedType) {
+    if (this.settings.merged.security.auth.selectedType) {
       try {
         await config.refreshAuth(
           this.settings.merged.security.auth.selectedType,
@@ -455,7 +464,7 @@ export class Session {
             title: invocation.getDescription(),
             content,
             locations: invocation.toolLocations(),
-            kind: tool.kind,
+            kind: toAcpToolKind(tool.kind),
           },
         };
 
@@ -494,7 +503,7 @@ export class Session {
           title: invocation.getDescription(),
           content: [],
           locations: invocation.toolLocations(),
-          kind: tool.kind,
+          kind: toAcpToolKind(tool.kind),
         });
       }
 
@@ -608,7 +617,10 @@ export class Session {
     const ignoredPaths: string[] = [];
 
     const toolRegistry = this.config.getToolRegistry();
-    const readManyFilesTool = new ReadManyFilesTool(this.config);
+    const readManyFilesTool = new ReadManyFilesTool(
+      this.config,
+      this.config.getMessageBus(),
+    );
     const globTool = toolRegistry.getTool('glob');
 
     if (!readManyFilesTool) {
@@ -787,7 +799,7 @@ export class Session {
           title: invocation.getDescription(),
           content: [],
           locations: invocation.toolLocations(),
-          kind: readManyFilesTool.kind,
+          kind: toAcpToolKind(readManyFilesTool.kind),
         });
 
         const result = await invocation.execute(abortSignal);
@@ -807,7 +819,7 @@ export class Session {
         if (Array.isArray(result.llmContent)) {
           const fileContentRegex = /^--- (.*?) ---\n\n([\s\S]*?)\n\n$/;
           processedQueryParts.push({
-            text: '\n--- Content from referenced files ---',
+            text: `\n${REFERENCE_CONTENT_START}`,
           });
           for (const part of result.llmContent) {
             if (typeof part === 'string') {
@@ -975,5 +987,27 @@ function toPermissionOptions(
       const unreachable: never = confirmation;
       throw new Error(`Unexpected: ${unreachable}`);
     }
+  }
+}
+
+/**
+ * Maps our internal tool kind to the ACP ToolKind.
+ * Fallback to 'other' for kinds that are not supported by the ACP protocol.
+ */
+function toAcpToolKind(kind: Kind): acp.ToolKind {
+  switch (kind) {
+    case Kind.Read:
+    case Kind.Edit:
+    case Kind.Delete:
+    case Kind.Move:
+    case Kind.Search:
+    case Kind.Execute:
+    case Kind.Think:
+    case Kind.Fetch:
+    case Kind.Other:
+      return kind as acp.ToolKind;
+    case Kind.Communicate:
+    default:
+      return 'other';
   }
 }

@@ -11,7 +11,7 @@ import {
   EXTENSION_SETTINGS_FILENAME,
   EXTENSIONS_CONFIG_FILENAME,
 } from './variables.js';
-import { Storage } from '@codeflyai/codefly-core';
+import { Storage, homedir } from '@codeflyai/codefly-core';
 
 export class ExtensionStorage {
   private readonly extensionName: string;
@@ -36,10 +36,10 @@ export class ExtensionStorage {
   }
 
   static getUserExtensionsDir(): string {
-    return new Storage(os.homedir()).getExtensionsDir();
+    return new Storage(homedir()).getExtensionsDir();
   }
 
   static async createTmpDir(): Promise<string> {
-    return fs.promises.mkdtemp(path.join(os.tmpdir(), 'gemini-extension'));
+    return fs.promises.mkdtemp(path.join(os.tmpdir(), 'codefly-extension'));
   }
 }

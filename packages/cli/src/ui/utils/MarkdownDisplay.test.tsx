@@ -9,6 +9,10 @@ import { MarkdownDisplay } from './MarkdownDisplay.js';
 import { LoadedSettings } from '../../config/settings.js';
 import { renderWithProviders } from '../../test-utils/render.js';
 
+vi.mock('./clipboardUtils.js', () => ({
+  copyToClipboard: vi.fn().mockReturnValue(new Promise(() => {})),
+}));
+
 describe('<MarkdownDisplay />', () => {
   const baseProps = {
     isPending: false,
@@ -198,7 +202,7 @@ Another paragraph.
         },
         { path: '', settings: {}, originalSettings: {} },
         true,
-        new Set(),
+        [],
       );
 
       const { lastFrame } = renderWithProviders(

@@ -8,9 +8,14 @@ import { render } from '../../test-utils/render.js';
 import { ContextUsageDisplay } from './ContextUsageDisplay.js';
 import { describe, it, expect, vi } from 'vitest';
 
-vi.mock('@codeflyai/codefly-core', () => ({
-  tokenLimit: () => 10000,
-}));
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import('@codeflyai/codefly-core')>();
+  return {
+    ...actual,
+    tokenLimit: () => 10000,
+  };
+});
 
 vi.mock('../../config/settings.js', () => ({
   DEFAULT_MODEL_CONFIGS: {},

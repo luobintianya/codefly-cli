@@ -29,6 +29,7 @@ import { ExtensionsList } from './views/ExtensionsList.js';
 import { getMCPServerStatus } from '@codeflyai/codefly-core';
 import { ToolsList } from './views/ToolsList.js';
 import { SkillsList } from './views/SkillsList.js';
+import { AgentsStatus } from './views/AgentsStatus.js';
 import { McpStatus } from './views/McpStatus.js';
 import { ChatList } from './views/ChatList.js';
 import { HooksList } from './views/HooksList.js';
@@ -111,6 +112,7 @@ export const HistoryItemDisplay: React.FC<HistoryItemDisplayProps> = ({
           gcpProject={itemForDisplay.gcpProject}
           ideClient={itemForDisplay.ideClient}
           userEmail={itemForDisplay.userEmail}
+          tier={itemForDisplay.tier}
         />
       )}
       {itemForDisplay.type === 'help' && commands && (
@@ -155,6 +157,12 @@ export const HistoryItemDisplay: React.FC<HistoryItemDisplayProps> = ({
         <SkillsList
           skills={itemForDisplay.skills}
           showDescriptions={itemForDisplay.showDescriptions}
+        />
+      )}
+      {itemForDisplay.type === 'agents_list' && (
+        <AgentsStatus
+          agents={itemForDisplay.agents}
+          terminalWidth={terminalWidth}
         />
       )}
       {itemForDisplay.type === 'mcp_status' && (

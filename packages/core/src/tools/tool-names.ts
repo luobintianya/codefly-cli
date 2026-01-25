@@ -23,10 +23,7 @@ export const MEMORY_TOOL_NAME = 'save_memory';
 export const GET_INTERNAL_DOCS_TOOL_NAME = 'get_internal_docs';
 export const ACTIVATE_SKILL_TOOL_NAME = 'activate_skill';
 export const EDIT_TOOL_NAMES = new Set([EDIT_TOOL_NAME, WRITE_FILE_TOOL_NAME]);
-export const DELEGATE_TO_AGENT_TOOL_NAME = 'delegate_to_agent';
-export const DATABASE_SCHEMA_TOOL_NAME = 'get_database_schema';
-export const SWAGGER_SCHEMA_TOOL_NAME = 'get_swagger_schema';
-export const DRAWIO_TO_SQL_TOOL_NAME = 'drawio_to_sql';
+export const ASK_USER_TOOL_NAME = 'ask_user';
 
 /** Prefix used for tools discovered via the toolDiscoveryCommand. */
 export const DISCOVERED_TOOL_PREFIX = 'discovered_tool_';
@@ -48,10 +45,20 @@ export const ALL_BUILTIN_TOOL_NAMES = [
   LS_TOOL_NAME,
   MEMORY_TOOL_NAME,
   ACTIVATE_SKILL_TOOL_NAME,
-  DELEGATE_TO_AGENT_TOOL_NAME,
-  DATABASE_SCHEMA_TOOL_NAME,
-  SWAGGER_SCHEMA_TOOL_NAME,
-  DRAWIO_TO_SQL_TOOL_NAME,
+  ASK_USER_TOOL_NAME,
+] as const;
+
+/**
+ * Read-only tools available in Plan Mode.
+ * This list is used to dynamically generate the Plan Mode prompt,
+ * filtered by what tools are actually enabled in the current configuration.
+ */
+export const PLAN_MODE_TOOLS = [
+  GLOB_TOOL_NAME,
+  GREP_TOOL_NAME,
+  READ_FILE_TOOL_NAME,
+  LS_TOOL_NAME,
+  WEB_SEARCH_TOOL_NAME,
 ] as const;
 
 /**
@@ -98,3 +105,6 @@ export function isValidToolName(
 
   return false;
 }
+export const DATABASE_SCHEMA_TOOL_NAME = 'database_schema';
+export const DRAWIO_TO_SQL_TOOL_NAME = 'drawio_to_sql';
+export const SWAGGER_SCHEMA_TOOL_NAME = 'swagger_schema';

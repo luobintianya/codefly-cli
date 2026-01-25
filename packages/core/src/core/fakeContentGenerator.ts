@@ -14,6 +14,7 @@ import {
 } from '@google/genai';
 import { promises } from 'node:fs';
 import type { ContentGenerator } from './contentGenerator.js';
+import type { UserTierId } from '../code_assist/types.js';
 import { safeJsonStringify } from '../utils/safeJsonStringify.js';
 
 export type FakeResponse =
@@ -40,6 +41,8 @@ export type FakeResponse =
 // CLI argument.
 export class FakeContentGenerator implements ContentGenerator {
   private callCounter = 0;
+  userTier?: UserTierId;
+  userTierName?: string;
 
   constructor(private readonly responses: FakeResponse[]) {}
 

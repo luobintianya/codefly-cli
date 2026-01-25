@@ -27,6 +27,15 @@ vi.mock('node:os', async (importOriginal) => {
   };
 });
 
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import('@codeflyai/codefly-core')>();
+  return {
+    ...actual,
+    homedir: () => os.homedir(),
+  };
+});
+
 const validCustomTheme: CustomTheme = {
   type: 'custom',
   name: 'MyCustomTheme',

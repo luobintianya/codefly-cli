@@ -17,13 +17,10 @@ async function defaultSessionView(context: CommandContext) {
   const now = new Date();
   const { sessionStartTime } = context.session.stats;
   if (!sessionStartTime) {
-    context.ui.addItem(
-      {
-        type: MessageType.ERROR,
-        text: 'Session start time is unavailable, cannot calculate stats.',
-      },
-      Date.now(),
-    );
+    context.ui.addItem({
+      type: MessageType.ERROR,
+      text: 'Session start time is unavailable, cannot calculate stats.',
+    });
     return;
   }
   const wallDuration = now.getTime() - sessionStartTime.getTime();
@@ -33,7 +30,14 @@ async function defaultSessionView(context: CommandContext) {
     duration: formatDuration(wallDuration),
   };
 
-  context.ui.addItem(statsItem, Date.now());
+  if (context.services.config) {
+    const quota = await context.services.config.refreshUserQuota();
+    if (quota) {
+      statsItem.quotas = quota;
+    }
+  }
+
+  context.ui.addItem(statsItem);
 }
 
 export const statsCommand: SlashCommand = {
@@ -61,12 +65,9 @@ export const statsCommand: SlashCommand = {
       kind: CommandKind.BUILT_IN,
       autoExecute: true,
       action: (context: CommandContext) => {
-        context.ui.addItem(
-          {
-            type: MessageType.MODEL_STATS,
-          },
-          Date.now(),
-        );
+        context.ui.addItem({
+          type: MessageType.MODEL_STATS,
+        });
       },
     },
     {
@@ -75,12 +76,9 @@ export const statsCommand: SlashCommand = {
       kind: CommandKind.BUILT_IN,
       autoExecute: true,
       action: (context: CommandContext) => {
-        context.ui.addItem(
-          {
-            type: MessageType.TOOL_STATS,
-          },
-          Date.now(),
-        );
+        context.ui.addItem({
+          type: MessageType.TOOL_STATS,
+        });
       },
     },
   ],

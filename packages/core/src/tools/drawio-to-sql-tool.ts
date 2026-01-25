@@ -402,9 +402,8 @@ export class DrawioToSqlTool extends BaseDeclarativeTool<
         required: ['filePath'],
         type: 'object',
       },
-      true, // isOutputMarkdown
-      false,
       messageBus,
+      true,
     );
     this.config = config;
   }

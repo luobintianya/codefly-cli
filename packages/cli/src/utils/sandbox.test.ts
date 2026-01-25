@@ -12,9 +12,19 @@ import { start_sandbox } from './sandbox.js';
 import { FatalSandboxError, type SandboxConfig } from '@codeflyai/codefly-core';
 import { EventEmitter } from 'node:events';
 
-vi.mock('../config/settings.js', () => ({
-  USER_SETTINGS_DIR: '/home/user/.codefly',
+const { mockedHomedir, mockedGetContainerPath } = vi.hoisted(() => ({
+  mockedHomedir: vi.fn().mockReturnValue('/home/user'),
+  mockedGetContainerPath: vi.fn().mockImplementation((p: string) => p),
 }));
+
+vi.mock('./sandboxUtils.js', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('./sandboxUtils.js')>();
+  return {
+    ...actual,
+    getContainerPath: mockedGetContainerPath,
+  };
+});
+
 vi.mock('node:child_process');
 vi.mock('node:os');
 vi.mock('node:fs');
@@ -44,6 +54,7 @@ vi.mock('node:util', async (importOriginal) => {
     },
   };
 });
+
 vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
   const actual =
     await importOriginal<typeof import('@codeflyai/codefly-core')>();
@@ -63,8 +74,8 @@ vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
         this.name = 'FatalSandboxError';
       }
     },
-    CODEFLY_DIR: '.codefly',
-    USER_SETTINGS_DIR: '/home/user/.codefly',
+    CODEFLY_DIR: '.gemini',
+    homedir: mockedHomedir,
   };
 });
 
@@ -341,13 +352,23 @@ describe('sandbox', () => {
 
       await start_sandbox(config);
 
-      expect(spawn).toHaveBeenCalledWith(
+      // The first call is 'docker images -q ...'
+      expect(spawn).toHaveBeenNthCalledWith(
+        1,
+        'docker',
+        expect.arrayContaining(['images', '-q']),
+      );
+
+      // The second call is 'docker run ...'
+      expect(spawn).toHaveBeenNthCalledWith(
+        2,
         'docker',
         expect.arrayContaining([
+          'run',
           '--volume',
           '/host/path:/container/path:ro',
           '--volume',
-          expect.stringContaining('/home/user/.codefly'),
+          expect.stringMatching(/[\\/]home[\\/]user[\\/]\.gemini/),
         ]),
         expect.any(Object),
       );

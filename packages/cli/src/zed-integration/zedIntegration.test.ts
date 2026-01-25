@@ -24,6 +24,7 @@ import {
   ReadManyFilesTool,
   type GeminiChat,
   type Config,
+  type MessageBus,
 } from '@codeflyai/codefly-core';
 import { SettingScope, type LoadedSettings } from '../config/settings.js';
 import { loadCliConfig, type CliArgs } from '../config/config.js';
@@ -97,10 +98,15 @@ describe('GeminiAgent', () => {
       getGeminiClient: vi.fn().mockReturnValue({
         startChat: vi.fn().mockResolvedValue({}),
       }),
+      getMessageBus: vi.fn().mockReturnValue({
+        publish: vi.fn(),
+        subscribe: vi.fn(),
+        unsubscribe: vi.fn(),
+      }),
     } as unknown as Mocked<Awaited<ReturnType<typeof loadCliConfig>>>;
     mockSettings = {
       merged: {
-        security: { auth: { selectedType: 'use_gemini' } },
+        security: { auth: { selectedType: 'login_with_google' } },
         mcpServers: {},
       },
       setValue: vi.fn(),
@@ -128,14 +134,16 @@ describe('GeminiAgent', () => {
 
   it('should authenticate correctly', async () => {
     await agent.authenticate({
-      methodId: AuthType.USE_GEMINI,
+      methodId: AuthType.LOGIN_WITH_GOOGLE,
     });
 
-    expect(mockConfig.refreshAuth).toHaveBeenCalledWith(AuthType.USE_GEMINI);
+    expect(mockConfig.refreshAuth).toHaveBeenCalledWith(
+      AuthType.LOGIN_WITH_GOOGLE,
+    );
     expect(mockSettings.setValue).toHaveBeenCalledWith(
       SettingScope.User,
       'security.auth.selectedType',
-      AuthType.USE_GEMINI,
+      AuthType.LOGIN_WITH_GOOGLE,
     );
   });
 
@@ -259,6 +267,7 @@ describe('Session', () => {
   let session: Session;
   let mockToolRegistry: { getTool: Mock };
   let mockTool: { kind: string; build: Mock };
+  let mockMessageBus: Mocked<MessageBus>;
 
   beforeEach(() => {
     mockChat = {
@@ -277,6 +286,11 @@ describe('Session', () => {
     mockToolRegistry = {
       getTool: vi.fn().mockReturnValue(mockTool),
     };
+    mockMessageBus = {
+      publish: vi.fn(),
+      subscribe: vi.fn(),
+      unsubscribe: vi.fn(),
+    } as unknown as Mocked<MessageBus>;
     mockConfig = {
       getModel: vi.fn().mockReturnValue('gemini-pro'),
       getPreviewFeatures: vi.fn().mockReturnValue({}),
@@ -288,6 +302,7 @@ describe('Session', () => {
       getTargetDir: vi.fn().mockReturnValue('/tmp'),
       getEnableRecursiveFileSearch: vi.fn().mockReturnValue(false),
       getDebugMode: vi.fn().mockReturnValue(false),
+      getMessageBus: vi.fn().mockReturnValue(mockMessageBus),
     } as unknown as Mocked<Config>;
     mockConnection = {
       sessionUpdate: vi.fn(),

@@ -5,12 +5,10 @@
  */
 
 import type React from 'react';
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useState } from 'react';
 import { Box, Text } from 'ink';
 import { theme } from '../semantic-colors.js';
 import { RadioButtonSelect } from '../components/shared/RadioButtonSelect.js';
-import { TextInput } from '../components/shared/TextInput.js';
-import { useTextBuffer } from '../components/shared/text-buffer.js';
 import type {
   LoadableSettingScope,
   LoadedSettings,
@@ -18,97 +16,56 @@ import type {
 import { SettingScope } from '../../config/settings.js';
 import {
   AuthType,
-  // clearCachedCredentialFile,
+  clearCachedCredentialFile,
+  type Config,
 } from '@codeflyai/codefly-core';
 import { useKeypress } from '../hooks/useKeypress.js';
 import { AuthState } from '../types.js';
-// import { runExitCleanup } from '../../utils/cleanup.js';
+import { runExitCleanup } from '../../utils/cleanup.js';
+import { validateAuthMethodWithSettings } from './useAuth.js';
+import { RELAUNCH_EXIT_CODE } from '../../utils/processUtils.js';
 
 interface AuthDialogProps {
+  config: Config;
   settings: LoadedSettings;
   setAuthState: (state: AuthState) => void;
   authError: string | null;
   onAuthError: (error: string | null) => void;
-}
-
-// ... imports ...
-
-// Simple text input component for config collection
-// Wrapper for TextInput to handle buffer state
-function WrappedTextInput({
-  label,
-  value,
-  onChange,
-  onSubmit,
-  onCancel,
-  placeholder,
-  mask = false,
-}: {
-  label: string;
-  value: string;
-  onChange: (val: string) => void;
-  onSubmit: () => void;
-  onCancel: () => void;
-  placeholder?: string;
-  mask?: boolean;
-}) {
-  const buffer = useTextBuffer({
-    initialText: value,
-    onChange,
-    viewport: { height: 1, width: 110 },
-    isValidPath: () => false,
-    singleLine: true,
-  });
-
-  // Sync buffer with external value if it changes externally
-  useEffect(() => {
-    if (buffer.text !== value) {
-      buffer.setText(value);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value]);
-
-  return (
-    <Box flexDirection="column" marginTop={1}>
-      <Text bold>{label}</Text>
-      <Box borderStyle="round" borderColor={theme.border.focused} paddingX={1}>
-        <TextInput
-          buffer={buffer}
-          placeholder={placeholder}
-          onSubmit={() => onSubmit()}
-          onCancel={onCancel}
-          mask={mask}
-        />
-      </Box>
-      <Text color={theme.text.secondary}>
-        (Enter to confirm, Esc to cancel)
-      </Text>
-    </Box>
-  );
+  setAuthContext: (context: { requiresRestart?: boolean }) => void;
 }
 
 export function AuthDialog({
+  config,
   settings,
   setAuthState,
   authError,
   onAuthError,
+  setAuthContext,
 }: AuthDialogProps): React.JSX.Element {
-  // Wizard state
-  const [configStep, setConfigStep] = useState<
-    'none' | 'baseUrl' | 'model' | 'apiKey'
-  >('none');
-  const [openaiConfig, setOpenaiConfig] = useState({
-    baseUrl: 'https://api.openai.com/v1',
-    model: 'gpt-4o',
-    apiKey: '',
-  });
-
+  const [exiting, setExiting] = useState(false);
   let items = [
     {
       label: 'Login with Google',
       value: AuthType.LOGIN_WITH_GOOGLE,
       key: AuthType.LOGIN_WITH_GOOGLE,
     },
+    ...(process.env['CLOUD_SHELL'] === 'true'
+      ? [
+          {
+            label: 'Use Cloud Shell user credentials',
+            value: AuthType.COMPUTE_ADC,
+            key: AuthType.COMPUTE_ADC,
+          },
+        ]
+      : process.env['GEMINI_CLI_USE_COMPUTE_ADC'] === 'true'
+        ? [
+            {
+              label: 'Use metadata server application default credentials',
+              value: AuthType.COMPUTE_ADC,
+              key: AuthType.COMPUTE_ADC,
+            },
+          ]
+        : []),
     {
       label: 'Use Gemini API Key',
       value: AuthType.USE_GEMINI,
@@ -119,16 +76,11 @@ export function AuthDialog({
       value: AuthType.USE_VERTEX_AI,
       key: AuthType.USE_VERTEX_AI,
     },
-    {
-      label: 'OpenAI Compatible',
-      value: AuthType.OPENAI,
-      key: AuthType.OPENAI,
-    },
   ];
 
-  if (settings.merged.security?.auth?.enforcedType) {
+  if (settings.merged.security.auth.enforcedType) {
     items = items.filter(
-      (item) => item.value === settings.merged.security?.auth?.enforcedType,
+      (item) => item.value === settings.merged.security.auth.enforcedType,
     );
   }
 
@@ -142,7 +94,7 @@ export function AuthDialog({
   }
 
   let initialAuthIndex = items.findIndex((item) => {
-    if (settings.merged.security?.auth?.selectedType) {
+    if (settings.merged.security.auth.selectedType) {
       return item.value === settings.merged.security.auth.selectedType;
     }
 
@@ -154,28 +106,37 @@ export function AuthDialog({
       return item.value === AuthType.USE_GEMINI;
     }
 
-    return false;
+    return item.value === AuthType.LOGIN_WITH_GOOGLE;
   });
-  // Default to 0 if not found
-  if (initialAuthIndex === -1) initialAuthIndex = 0;
-
-  if (settings.merged.security?.auth?.enforcedType) {
+  if (settings.merged.security.auth.enforcedType) {
     initialAuthIndex = 0;
   }
 
   const onSelect = useCallback(
     async (authType: AuthType | undefined, scope: LoadableSettingScope) => {
+      if (exiting) {
+        return;
+      }
       if (authType) {
-        if (authType === AuthType.OPENAI) {
-          // Start wizard
-          setAuthState(AuthState.AwaitingOpenAIConfig);
-          setConfigStep('baseUrl');
+        if (authType === AuthType.LOGIN_WITH_GOOGLE) {
+          setAuthContext({ requiresRestart: true });
+        } else {
+          setAuthContext({});
+        }
+        await clearCachedCredentialFile();
+
+        settings.setValue(scope, 'security.auth.selectedType', authType);
+        if (
+          authType === AuthType.LOGIN_WITH_GOOGLE &&
+          config.isBrowserLaunchSuppressed()
+        ) {
+          setExiting(true);
+          setTimeout(async () => {
+            await runExitCleanup();
+            process.exit(RELAUNCH_EXIT_CODE);
+          }, 100);
           return;
         }
-
-        // await clearCachedCredentialFile();
-        settings.setValue(scope, 'security.auth.selectedType', authType);
-        // Google login check removed
 
         if (authType === AuthType.USE_GEMINI) {
           if (process.env['GEMINI_API_KEY'] !== undefined) {
@@ -189,59 +150,28 @@ export function AuthDialog({
       }
       setAuthState(AuthState.Unauthenticated);
     },
-    [settings, setAuthState],
+    [settings, config, setAuthState, exiting, setAuthContext],
   );
 
   const handleAuthSelect = (authMethod: AuthType) => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    onSelect(authMethod, SettingScope.User);
-  };
-
-  const handleWizardSubmit = useCallback(() => {
-    if (configStep === 'baseUrl') {
-      setConfigStep('model');
-    } else if (configStep === 'model') {
-      setConfigStep('apiKey');
-    } else if (configStep === 'apiKey') {
-      // Save all settings
-      settings.setValue(
-        SettingScope.User,
-        'security.auth.openai.baseUrl',
-        openaiConfig.baseUrl,
-      );
-      settings.setValue(
-        SettingScope.User,
-        'security.auth.openai.model',
-        openaiConfig.model,
-      );
-      settings.setValue(
-        SettingScope.User,
-        'security.auth.openai.apiKey',
-        openaiConfig.apiKey,
-      );
-      settings.setValue(
-        SettingScope.User,
-        'security.auth.selectedType',
-        AuthType.OPENAI,
-      );
-
-      // Reset wizard and trigger auth flow
-      setConfigStep('none');
-      setAuthState(AuthState.Unauthenticated); // This triggers useAuth to verify
+    const error = validateAuthMethodWithSettings(authMethod, settings);
+    if (error) {
+      onAuthError(error);
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      onSelect(authMethod, SettingScope.User);
     }
-  }, [configStep, openaiConfig, settings, setAuthState]);
+  };
 
   useKeypress(
     (key) => {
-      if (configStep !== 'none') return; // Handled by WrappedTextInput
-
       if (key.name === 'escape') {
         // Prevent exit if there is an error message.
         // This means they user is not authenticated yet.
         if (authError) {
           return;
         }
-        if (settings.merged.security?.auth?.selectedType === undefined) {
+        if (settings.merged.security.auth.selectedType === undefined) {
           // Prevent exiting if no auth method is set
           onAuthError(
             'You must select an auth method to proceed. Press Ctrl+C twice to exit.',
@@ -255,63 +185,19 @@ export function AuthDialog({
     { isActive: true },
   );
 
-  if (configStep !== 'none') {
+  if (exiting) {
     return (
       <Box
         borderStyle="round"
         borderColor={theme.border.focused}
-        flexDirection="column"
+        flexDirection="row"
         padding={1}
         width="100%"
+        alignItems="flex-start"
       >
-        <Text bold color={theme.text.primary}>
-          OpenAI Compatible Configuration
+        <Text color={theme.text.primary}>
+          Logging in with Google... Restarting Gemini CLI to continue.
         </Text>
-        {configStep === 'baseUrl' && (
-          <WrappedTextInput
-            label="Base URL"
-            value={openaiConfig.baseUrl}
-            onChange={(val) =>
-              setOpenaiConfig((prev) => ({ ...prev, baseUrl: val }))
-            }
-            onSubmit={handleWizardSubmit}
-            onCancel={() => {
-              setConfigStep('none');
-              setAuthState(AuthState.Unauthenticated);
-            }}
-            placeholder="https://api.openai.com/v1"
-          />
-        )}
-        {configStep === 'model' && (
-          <WrappedTextInput
-            label="Model Name"
-            value={openaiConfig.model}
-            onChange={(val) =>
-              setOpenaiConfig((prev) => ({ ...prev, model: val }))
-            }
-            onSubmit={handleWizardSubmit}
-            onCancel={() => {
-              setConfigStep('none');
-              setAuthState(AuthState.Unauthenticated);
-            }}
-            placeholder="gpt-4o"
-          />
-        )}
-        {configStep === 'apiKey' && (
-          <WrappedTextInput
-            label="API Key"
-            value={openaiConfig.apiKey}
-            onChange={(val) =>
-              setOpenaiConfig((prev) => ({ ...prev, apiKey: val }))
-            }
-            onSubmit={handleWizardSubmit}
-            onCancel={() => {
-              setConfigStep('none');
-              setAuthState(AuthState.Unauthenticated);
-            }}
-            mask={true}
-          />
-        )}
       </Box>
     );
   }
@@ -355,13 +241,13 @@ export function AuthDialog({
         </Box>
         <Box marginTop={1}>
           <Text color={theme.text.primary}>
-            Terms of Services and Privacy Notice for Codefly
+            Terms of Services and Privacy Notice for Gemini CLI
           </Text>
         </Box>
         <Box marginTop={1}>
           <Text color={theme.text.link}>
             {
-              'https://github.com/luobintianya/codefly-cli/blob/main/docs/tos-privacy.md'
+              'https://github.com/google-gemini/gemini-cli/blob/main/docs/tos-privacy.md'
             }
           </Text>
         </Box>
