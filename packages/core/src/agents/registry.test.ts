@@ -15,7 +15,6 @@ import { A2AClientManager } from './a2a-client-manager.js';
 import {
   DEFAULT_GEMINI_FLASH_LITE_MODEL,
   DEFAULT_GEMINI_MODEL,
-  DEFAULT_THINKING_MODE,
   PREVIEW_GEMINI_FLASH_MODEL,
   PREVIEW_GEMINI_MODEL,
   PREVIEW_GEMINI_MODEL_AUTO,
@@ -144,7 +143,7 @@ describe('AgentRegistry', () => {
         investigatorDef?.modelConfig.generateContentConfig?.thinkingConfig,
       ).toStrictEqual({
         includeThoughts: true,
-        thinkingBudget: DEFAULT_THINKING_MODE,
+        thinkingLevel: ThinkingLevel.HIGH,
       });
     });
 

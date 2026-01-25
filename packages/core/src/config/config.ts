@@ -56,6 +56,7 @@ import {
   DEFAULT_GEMINI_MODEL_AUTO,
   isPreviewModel,
   PREVIEW_GEMINI_MODEL_AUTO,
+  PREVIEW_GEMINI_MODEL,
 } from './models.js';
 import { shouldAttemptBrowserLaunch } from '../utils/browser.js';
 import type { MCPOAuthConfig } from '../mcp/oauth-provider.js';
@@ -598,7 +599,7 @@ export class Config {
     this.toolCallCommand = params.toolCallCommand;
     this.mcpServerCommand = params.mcpServerCommand;
     this.mcpServers = params.mcpServers;
-    this.usageStatisticsEnabled = params.usageStatisticsEnabled ?? false;
+    this.usageStatisticsEnabled = params.usageStatisticsEnabled ?? true;
     this.mcpEnablementCallbacks = params.mcpEnablementCallbacks;
     this.mcpEnabled = params.mcpEnabled ?? true;
     this.extensionsEnabled = params.extensionsEnabled ?? true;
@@ -1213,7 +1214,21 @@ export class Config {
   }
 
   async refreshUserQuota(): Promise<undefined> {
-    return undefined;
+    const codeAssistServer = getCodeAssistServer(this);
+    if (!codeAssistServer || !codeAssistServer.projectId) {
+      return;
+    }
+    try {
+      const quota = await codeAssistServer.retrieveUserQuota({
+        project: codeAssistServer.projectId,
+      });
+      const hasAccess = quota.buckets?.some(
+        (bucket) => bucket.modelId === PREVIEW_GEMINI_MODEL,
+      );
+      this.setHasAccessToPreviewModel(hasAccess ?? false);
+    } catch (e) {
+      debugLogger.debug('Failed to retrieve user quota', e);
+    }
   }
 
   getCoreTools(): string[] | undefined {
@@ -1677,11 +1692,19 @@ export class Config {
   }
 
   async getCompressionThreshold(): Promise<number | undefined> {
-    return this.compressionThreshold;
+    if (this.compressionThreshold !== undefined) {
+      return this.compressionThreshold;
+    }
+    const experiments = await this.getExperimentsAsync();
+    const threshold =
+      experiments?.flags?.[ExperimentFlags.CONTEXT_COMPRESSION_THRESHOLD]
+        ?.floatValue;
+    return threshold !== undefined && threshold > 0 ? threshold : undefined;
   }
 
   async getUserCaching(): Promise<boolean | undefined> {
-    return undefined;
+    const experiments = await this.getExperimentsAsync();
+    return experiments?.flags?.[ExperimentFlags.USER_CACHING]?.boolValue;
   }
 
   async getNumericalRoutingEnabled(): Promise<boolean> {

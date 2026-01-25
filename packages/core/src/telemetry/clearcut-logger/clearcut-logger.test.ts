@@ -206,6 +206,7 @@ describe('ClearcutLogger', () => {
     vi.setSystemTime(MOCK_DATE);
 
     const loggerConfig = makeFakeConfig({
+      usageStatisticsEnabled: true,
       ...config,
     });
     ClearcutLogger.clearInstance();

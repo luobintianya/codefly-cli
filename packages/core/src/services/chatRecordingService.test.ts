@@ -603,7 +603,7 @@ describe('ChatRecordingService', () => {
           content: 'Hello',
           model: 'gemini-pro',
         }),
-      ).toThrow('Permission denied');
+      ).not.toThrow();
 
       // Recording should NOT be disabled for non-ENOSPC errors (file path still exists)
       expect(chatRecordingService.getConversationFilePath()).not.toBeNull();

@@ -44,6 +44,7 @@ export {
 export { makeFakeConfig } from './src/test-utils/config.js';
 export * from './src/utils/pathReader.js';
 export { logModelSlashCommand } from './src/telemetry/loggers.js';
+export * from './src/utils/paths.js';
 export { KeychainTokenStorage } from './src/mcp/token-storage/keychain-token-storage.js';
 export * from './src/utils/googleQuotaErrors.js';
 export type { GoogleApiError } from './src/utils/googleErrors.js';

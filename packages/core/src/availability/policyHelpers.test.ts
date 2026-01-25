@@ -61,9 +61,8 @@ describe('policyHelpers', () => {
         getModel: () => 'gemini-2.5-pro',
       });
       const chain = resolvePolicyChain(config, DEFAULT_GEMINI_MODEL_AUTO);
-      expect(chain).toHaveLength(2);
-      expect(chain[0]?.model).toBe('gemini-2.5-pro');
-      expect(chain[1]?.model).toBe('gemini-2.5-flash');
+      expect(chain).toHaveLength(1);
+      expect(chain[0]?.model).toBe('gemini-3-flash-preview');
     });
 
     it('uses auto chain when configured model is auto even if preferred is concrete', () => {
@@ -71,9 +70,8 @@ describe('policyHelpers', () => {
         getModel: () => DEFAULT_GEMINI_MODEL_AUTO,
       });
       const chain = resolvePolicyChain(config, 'gemini-2.5-pro');
-      expect(chain).toHaveLength(2);
+      expect(chain).toHaveLength(1);
       expect(chain[0]?.model).toBe('gemini-2.5-pro');
-      expect(chain[1]?.model).toBe('gemini-2.5-flash');
     });
 
     it('starts chain from preferredModel when model is "auto"', () => {
@@ -92,8 +90,8 @@ describe('policyHelpers', () => {
       const chain = resolvePolicyChain(config, DEFAULT_GEMINI_FLASH_LITE_MODEL);
       expect(chain).toHaveLength(3);
       expect(chain[0]?.model).toBe('gemini-2.5-flash-lite');
-      expect(chain[1]?.model).toBe('gemini-2.5-flash');
-      expect(chain[2]?.model).toBe('gemini-2.5-pro');
+      expect(chain[1]?.model).toBe('gemini-3-flash-preview');
+      expect(chain[2]?.model).toBe('gemini-3-flash-preview');
     });
 
     it('returns flash-lite chain when configured model is flash-lite', () => {
@@ -103,8 +101,8 @@ describe('policyHelpers', () => {
       const chain = resolvePolicyChain(config);
       expect(chain).toHaveLength(3);
       expect(chain[0]?.model).toBe('gemini-2.5-flash-lite');
-      expect(chain[1]?.model).toBe('gemini-2.5-flash');
-      expect(chain[2]?.model).toBe('gemini-2.5-pro');
+      expect(chain[1]?.model).toBe('gemini-3-flash-preview');
+      expect(chain[2]?.model).toBe('gemini-3-flash-preview');
     });
 
     it('wraps around the chain when wrapsAround is true', () => {

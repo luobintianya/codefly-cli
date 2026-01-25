@@ -13,7 +13,7 @@ import os from 'node:os';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import crypto from 'node:crypto';
-import { GEMINI_DIR } from '@google/gemini-cli-core';
+import { CODEFLY_DIR } from '@codeflyai/codefly-core';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,21 +24,21 @@ const projectHash = crypto
   .update(projectRoot)
   .digest('hex');
 
-// Returns the home directory, respecting GEMINI_CLI_HOME
-const homedir = () => process.env['GEMINI_CLI_HOME'] || os.homedir();
+// Returns the home directory, respecting CODEFLY_CLI_HOME
+const homedir = () => process.env['CODEFLY_CLI_HOME'] || os.homedir();
 
-// User-level .gemini directory in home
-const USER_GEMINI_DIR = path.join(homedir(), GEMINI_DIR);
-// Project-level .gemini directory in the workspace
-const WORKSPACE_GEMINI_DIR = path.join(projectRoot, GEMINI_DIR);
+// User-level .codefly directory in home
+const USER_CODEFLY_DIR = path.join(homedir(), CODEFLY_DIR);
+// Project-level .codefly directory in the workspace
+const WORKSPACE_CODEFLY_DIR = path.join(projectRoot, CODEFLY_DIR);
 
-// Telemetry artifacts are stored in a hashed directory under the user's ~/.gemini/tmp
-export const OTEL_DIR = path.join(USER_GEMINI_DIR, 'tmp', projectHash, 'otel');
+// Telemetry artifacts are stored in a hashed directory under the user's ~/.codefly/tmp
+export const OTEL_DIR = path.join(USER_CODEFLY_DIR, 'tmp', projectHash, 'otel');
 export const BIN_DIR = path.join(OTEL_DIR, 'bin');
 
-// Workspace settings remain in the project's .gemini directory
+// Workspace settings remain in the project's .codefly directory
 export const WORKSPACE_SETTINGS_FILE = path.join(
-  WORKSPACE_GEMINI_DIR,
+  WORKSPACE_CODEFLY_DIR,
   'settings.json',
 );
 

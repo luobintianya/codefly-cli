@@ -23,6 +23,7 @@ import { InstallationManager } from '../utils/installationManager.js';
 import { FakeContentGenerator } from './fakeContentGenerator.js';
 import { parseCustomHeaders } from '../utils/customHeaderUtils.js';
 import { RecordingContentGenerator } from './recordingContentGenerator.js';
+import { OpenAICompatibleContentGenerator } from './openaiCompatibleContentGenerator.js';
 import { getVersion, resolveModel } from '../../index.js';
 
 /**
@@ -79,6 +80,10 @@ export async function createContentGeneratorConfig(
     process.env['GOOGLE_CLOUD_PROJECT_ID'] ||
     undefined;
   const googleCloudLocation = process.env['GOOGLE_CLOUD_LOCATION'] || undefined;
+  const openaiApiKey = process.env['OPENAI_API_KEY'] || undefined;
+  const openaiBaseUrl = process.env['OPENAI_BASE_URL'] || undefined;
+  const openaiModel = process.env['OPENAI_MODEL'] || undefined;
+  const zhipuApiKey = process.env['ZHIPU_API_KEY'] || undefined;
 
   const contentGeneratorConfig: ContentGeneratorConfig = {
     authType,
@@ -107,6 +112,21 @@ export async function createContentGeneratorConfig(
     contentGeneratorConfig.apiKey = googleApiKey;
     contentGeneratorConfig.vertexai = true;
 
+    return contentGeneratorConfig;
+  }
+
+  if (authType === AuthType.OPENAI && openaiApiKey) {
+    contentGeneratorConfig.apiKey = openaiApiKey;
+    contentGeneratorConfig.baseUrl =
+      openaiBaseUrl || 'https://api.openai.com/v1';
+    contentGeneratorConfig.model = openaiModel || 'gpt-4o';
+    return contentGeneratorConfig;
+  }
+
+  if (authType === AuthType.ZHIPU && zhipuApiKey) {
+    contentGeneratorConfig.apiKey = zhipuApiKey;
+    contentGeneratorConfig.baseUrl = 'https://open.bigmodel.cn/api/paas/v4';
+    contentGeneratorConfig.model = 'glm-4';
     return contentGeneratorConfig;
   }
 
@@ -187,6 +207,24 @@ export async function createContentGenerator(
         httpOptions,
       });
       return new LoggingContentGenerator(googleGenAI.models, gcConfig);
+    }
+    if (
+      config.authType === AuthType.OPENAI ||
+      config.authType === AuthType.ZHIPU
+    ) {
+      if (!config.apiKey) {
+        throw new Error(
+          `Error creating contentGenerator: Missing API key for ${config.authType}`,
+        );
+      }
+      return new LoggingContentGenerator(
+        new OpenAICompatibleContentGenerator({
+          apiKey: config.apiKey,
+          baseUrl: config.baseUrl || '',
+          model: config.model || '',
+        }),
+        gcConfig,
+      );
     }
     throw new Error(
       `Error creating contentGenerator: Unsupported authType: ${config.authType}`,

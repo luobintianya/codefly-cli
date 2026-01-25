@@ -31,9 +31,7 @@ describe('getDisplayString', () => {
   });
 
   it('should return Auto (Gemini 2.5) for default auto model', () => {
-    expect(getDisplayString(DEFAULT_GEMINI_MODEL_AUTO)).toBe(
-      'Auto (Gemini 2.5)',
-    );
+    expect(getDisplayString(DEFAULT_GEMINI_MODEL_AUTO)).toBe('Auto (Gemini 3)');
   });
 
   it('should return concrete model name for pro alias', () => {

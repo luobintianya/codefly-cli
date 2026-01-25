@@ -1708,10 +1708,9 @@ describe('useGeminiStream', () => {
       await waitFor(() => {
         expect(mockParseAndFormatApiError).toHaveBeenCalledWith(
           'Rate limit exceeded',
-          mockAuthType,
-          undefined,
+          'oauth-personal',
           'gemini-2.5-pro',
-          'gemini-2.5-flash',
+          'gemini-3-flash-preview',
         );
       });
     });
@@ -2723,10 +2722,9 @@ describe('useGeminiStream', () => {
       // Verify parseAndFormatApiError was called
       expect(mockParseAndFormatApiError).toHaveBeenCalledWith(
         { message: 'Test error' },
-        expect.any(String),
-        undefined,
+        'gemini-api-key',
         'gemini-2.5-pro',
-        'gemini-2.5-flash',
+        'gemini-3-flash-preview',
       );
     });
 

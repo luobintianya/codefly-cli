@@ -271,7 +271,6 @@ describe('createContentGeneratorConfig', () => {
 
   beforeEach(() => {
     // Reset modules to re-evaluate imports and environment variables
-    vi.resetModules();
     vi.clearAllMocks();
   });
 

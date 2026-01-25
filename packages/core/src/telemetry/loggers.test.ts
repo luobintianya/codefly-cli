@@ -219,6 +219,7 @@ describe('loggers', () => {
           }),
         }),
         isInteractive: () => false,
+        getUsageStatisticsEnabled: () => true,
       } as unknown as Config;
 
       const startSessionEvent = new StartSessionEvent(mockConfig);
@@ -263,6 +264,7 @@ describe('loggers', () => {
       getTelemetryEnabled: () => true,
       getTelemetryLogPromptsEnabled: () => true,
       isInteractive: () => false,
+      getUsageStatisticsEnabled: () => true,
     } as unknown as Config;
 
     it('should log a user prompt', () => {
@@ -299,6 +301,7 @@ describe('loggers', () => {
         getTelemetryLogPromptsEnabled: () => false,
         getTargetDir: () => 'target-dir',
         isInteractive: () => false,
+        getUsageStatisticsEnabled: () => true,
       } as unknown as Config;
       const event = new UserPromptEvent(
         11,
@@ -333,6 +336,7 @@ describe('loggers', () => {
       getTelemetryEnabled: () => true,
       getTelemetryLogPromptsEnabled: () => true,
       isInteractive: () => false,
+      getUsageStatisticsEnabled: () => true,
     } as Config;
 
     const mockMetrics = {
@@ -508,6 +512,7 @@ describe('loggers', () => {
       getTelemetryEnabled: () => true,
       getTelemetryLogPromptsEnabled: () => true,
       isInteractive: () => false,
+      getUsageStatisticsEnabled: () => true,
     } as Config;
 
     const mockMetrics = {
@@ -639,6 +644,7 @@ describe('loggers', () => {
       getTelemetryEnabled: () => true,
       getTelemetryLogPromptsEnabled: () => true,
       isInteractive: () => false,
+      getUsageStatisticsEnabled: () => true,
       getContentGeneratorConfig: () => ({
         authType: AuthType.USE_GEMINI,
       }),
@@ -714,6 +720,7 @@ describe('loggers', () => {
         getTelemetryEnabled: () => true,
         getTelemetryLogPromptsEnabled: () => true, // Enabled
         isInteractive: () => false,
+        getUsageStatisticsEnabled: () => true,
         getContentGeneratorConfig: () => ({
           authType: AuthType.USE_GEMINI,
         }),
@@ -800,6 +807,7 @@ describe('loggers', () => {
         getTelemetryEnabled: () => true,
         getTelemetryLogPromptsEnabled: () => false, // Disabled
         isInteractive: () => false,
+        getUsageStatisticsEnabled: () => true,
         getContentGeneratorConfig: () => ({
           authType: AuthType.USE_VERTEX_AI,
         }),
@@ -853,6 +861,7 @@ describe('loggers', () => {
         getTelemetryEnabled: () => true,
         getTelemetryLogPromptsEnabled: () => true,
         isInteractive: () => false,
+        getUsageStatisticsEnabled: () => true,
         getContentGeneratorConfig: () => ({
           authType: AuthType.USE_GEMINI,
         }),
@@ -887,6 +896,7 @@ describe('loggers', () => {
     const mockConfig = {
       getSessionId: () => 'test-session-id',
       isInteractive: () => false,
+      getUsageStatisticsEnabled: () => true,
     } as unknown as Config;
 
     it('should log flash fallback event', () => {
@@ -913,6 +923,7 @@ describe('loggers', () => {
     const mockConfig = {
       getSessionId: () => 'test-session-id',
       isInteractive: () => false,
+      getUsageStatisticsEnabled: () => true,
     } as unknown as Config;
 
     beforeEach(() => {});
@@ -996,6 +1007,7 @@ describe('loggers', () => {
       getTelemetryEnabled: () => true,
       getTelemetryLogPromptsEnabled: () => true,
       isInteractive: () => false,
+      getUsageStatisticsEnabled: () => true,
     } as Config;
 
     const mockMetrics = {
@@ -1559,6 +1571,7 @@ describe('loggers', () => {
       getTelemetryEnabled: () => true,
       getTelemetryLogPromptsEnabled: () => true,
       isInteractive: () => false,
+      getUsageStatisticsEnabled: () => true,
     } as Config;
 
     const mockMetrics = {
@@ -1618,6 +1631,7 @@ describe('loggers', () => {
     const mockConfig = {
       getSessionId: () => 'test-session-id',
       isInteractive: () => false,
+      getUsageStatisticsEnabled: () => true,
     } as unknown as Config;
 
     it('should log a tool output truncated event', () => {
@@ -1656,6 +1670,7 @@ describe('loggers', () => {
     const mockConfig = {
       getSessionId: () => 'test-session-id',
       isInteractive: () => false,
+      getUsageStatisticsEnabled: () => true,
     } as unknown as Config;
 
     beforeEach(() => {
@@ -1716,6 +1731,7 @@ describe('loggers', () => {
       getSessionId: () => 'test-session-id',
       getContentGeneratorConfig: () => null,
       isInteractive: () => false,
+      getUsageStatisticsEnabled: () => true,
     } as unknown as Config;
 
     beforeEach(() => {});
@@ -1759,6 +1775,7 @@ describe('loggers', () => {
       getSessionId: () => 'test-session-id',
       getContentGeneratorConfig: () => null,
       isInteractive: () => false,
+      getUsageStatisticsEnabled: () => true,
     } as unknown as Config;
 
     beforeEach(() => {});
@@ -1804,6 +1821,7 @@ describe('loggers', () => {
       getSessionId: () => 'test-session-id',
       getContentGeneratorConfig: () => null,
       isInteractive: () => false,
+      getUsageStatisticsEnabled: () => true,
     } as unknown as Config;
 
     beforeEach(() => {});
@@ -1841,6 +1859,7 @@ describe('loggers', () => {
     const mockConfig = {
       getSessionId: () => 'test-session-id',
       isInteractive: () => false,
+      getUsageStatisticsEnabled: () => true,
     } as unknown as Config;
 
     beforeEach(() => {});
@@ -1879,6 +1898,7 @@ describe('loggers', () => {
     const mockConfig = {
       getSessionId: () => 'test-session-id',
       isInteractive: () => false,
+      getUsageStatisticsEnabled: () => true,
     } as unknown as Config;
 
     beforeEach(() => {});
@@ -1917,6 +1937,7 @@ describe('loggers', () => {
     const mockConfig = {
       getSessionId: () => 'test-session-id',
       isInteractive: () => false,
+      getUsageStatisticsEnabled: () => true,
     } as unknown as Config;
 
     beforeEach(() => {});
@@ -1946,6 +1967,7 @@ describe('loggers', () => {
     const mockConfig = {
       getSessionId: () => 'test-session-id',
       isInteractive: () => false,
+      getUsageStatisticsEnabled: () => true,
     } as unknown as Config;
 
     beforeEach(() => {
@@ -1991,6 +2013,7 @@ describe('loggers', () => {
     const mockConfig = {
       getSessionId: () => 'test-session-id',
       isInteractive: () => false,
+      getUsageStatisticsEnabled: () => true,
     } as unknown as Config;
 
     beforeEach(() => {});
@@ -2020,6 +2043,7 @@ describe('loggers', () => {
       getSessionId: () => 'test-session-id',
       isInteractive: () => false,
       getTelemetryLogPromptsEnabled: () => false,
+      getUsageStatisticsEnabled: () => true,
     } as unknown as Config;
 
     beforeEach(() => {

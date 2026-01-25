@@ -850,7 +850,10 @@ describe('Server Config (config.ts)', () => {
 
   describe('UseWriteTodos Configuration', () => {
     it('should default useWriteTodos to true when not provided', () => {
-      const config = new Config(baseParams);
+      const config = new Config({
+        ...baseParams,
+        model: 'gemini-2.5-flash',
+      });
       expect(config.getUseWriteTodos()).toBe(true);
     });
 

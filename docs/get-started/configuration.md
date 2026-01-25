@@ -98,11 +98,6 @@ their corresponding top-level category object in your `settings.json` file.
 
 #### `general`
 
-- **`general.language`** (enum):
-  - **Description:** The language for the agent to use.
-  - **Default:** `"auto"`
-  - **Values:** `"auto"`, `"en"`, `"zh"`
-
 - **`general.previewFeatures`** (boolean):
   - **Description:** Enable preview features (e.g., preview models).
   - **Default:** `false`
@@ -115,13 +110,13 @@ their corresponding top-level category object in your `settings.json` file.
   - **Description:** Enable Vim keybindings
   - **Default:** `false`
 
-- **`general.disableAutoUpdate`** (boolean):
-  - **Description:** Disable automatic updates
-  - **Default:** `false`
+- **`general.enableAutoUpdate`** (boolean):
+  - **Description:** Enable automatic updates.
+  - **Default:** `true`
 
-- **`general.disableUpdateNag`** (boolean):
-  - **Description:** Disable update notification prompts.
-  - **Default:** `false`
+- **`general.enableAutoUpdateNotification`** (boolean):
+  - **Description:** Enable update notification prompts.
+  - **Default:** `true`
 
 - **`general.checkpointing.enabled`** (boolean):
   - **Description:** Enable session checkpointing for recovery
@@ -164,7 +159,7 @@ their corresponding top-level category object in your `settings.json` file.
 #### `output`
 
 - **`output.format`** (enum):
-  - **Description:** The format of the CLI output.
+  - **Description:** The format of the CLI output. Can be `text` or `json`.
   - **Default:** `"text"`
   - **Values:** `"text"`, `"json"`
 
@@ -185,9 +180,20 @@ their corresponding top-level category object in your `settings.json` file.
   - **Requires restart:** Yes
 
 - **`ui.showStatusInTitle`** (boolean):
-  - **Description:** Show Codefly status and thoughts in the terminal window
-    title
+  - **Description:** Show Gemini CLI model thoughts in the terminal window title
+    during the working phase
   - **Default:** `false`
+
+- **`ui.dynamicWindowTitle`** (boolean):
+  - **Description:** Update the terminal window title with current status icons
+    (Ready: ◇, Action Required: ✋, Working: ✦)
+  - **Default:** `true`
+
+- **`ui.showHomeDirectoryWarning`** (boolean):
+  - **Description:** Show a warning when running Gemini CLI in the home
+    directory.
+  - **Default:** `true`
+  - **Requires restart:** Yes
 
 - **`ui.hideTips`** (boolean):
   - **Description:** Hide helpful tips in the UI
@@ -198,8 +204,8 @@ their corresponding top-level category object in your `settings.json` file.
   - **Default:** `false`
 
 - **`ui.hideContextSummary`** (boolean):
-  - **Description:** Hide the context summary (CODEFLY.md, MCP servers) above
-    the input.
+  - **Description:** Hide the context summary (GEMINI.md, MCP servers) above the
+    input.
   - **Default:** `false`
 
 - **`ui.footer.hideCWD`** (boolean):
@@ -260,9 +266,9 @@ their corresponding top-level category object in your `settings.json` file.
     provided, the CLI cycles through these instead of the defaults.
   - **Default:** `[]`
 
-- **`ui.accessibility.disableLoadingPhrases`** (boolean):
-  - **Description:** Disable loading phrases for accessibility
-  - **Default:** `false`
+- **`ui.accessibility.enableLoadingPhrases`** (boolean):
+  - **Description:** Enable loading phrases during operations.
+  - **Default:** `true`
   - **Requires restart:** Yes
 
 - **`ui.accessibility.screenReader`** (boolean):
@@ -274,7 +280,7 @@ their corresponding top-level category object in your `settings.json` file.
 #### `ide`
 
 - **`ide.enabled`** (boolean):
-  - **Description:** Enable IDE integration mode
+  - **Description:** Enable IDE integration mode.
   - **Default:** `false`
   - **Requires restart:** Yes
 
@@ -285,7 +291,7 @@ their corresponding top-level category object in your `settings.json` file.
 #### `privacy`
 
 - **`privacy.usageStatisticsEnabled`** (boolean):
-  - **Description:** Enable usage statistics.
+  - **Description:** Enable collection of usage statistics
   - **Default:** `true`
   - **Requires restart:** Yes
 
@@ -551,6 +557,14 @@ their corresponding top-level category object in your `settings.json` file.
     used.
   - **Default:** `[]`
 
+#### `agents`
+
+- **`agents.overrides`** (object):
+  - **Description:** Override settings for specific agents, e.g. to disable the
+    agent, set a custom model config, or run config.
+  - **Default:** `{}`
+  - **Requires restart:** Yes
+
 #### `context`
 
 - **`context.fileName`** (string | string[]):
@@ -572,18 +586,18 @@ their corresponding top-level category object in your `settings.json` file.
   - **Default:** `[]`
 
 - **`context.loadMemoryFromIncludeDirectories`** (boolean):
-  - **Description:** Controls how /memory refresh loads CODEFLY.md files. When
+  - **Description:** Controls how /memory refresh loads GEMINI.md files. When
     true, include directories are scanned; when false, only the current
     directory is used.
   - **Default:** `false`
 
 - **`context.fileFiltering.respectGitIgnore`** (boolean):
-  - **Description:** Respect .gitignore files when searching
+  - **Description:** Respect .gitignore files when searching.
   - **Default:** `true`
   - **Requires restart:** Yes
 
 - **`context.fileFiltering.respectGeminiIgnore`** (boolean):
-  - **Description:** Respect .geminiignore files when searching
+  - **Description:** Respect .geminiignore files when searching.
   - **Default:** `true`
   - **Requires restart:** Yes
 
@@ -593,9 +607,9 @@ their corresponding top-level category object in your `settings.json` file.
   - **Default:** `true`
   - **Requires restart:** Yes
 
-- **`context.fileFiltering.disableFuzzySearch`** (boolean):
-  - **Description:** Disable fuzzy search when searching for files.
-  - **Default:** `false`
+- **`context.fileFiltering.enableFuzzySearch`** (boolean):
+  - **Description:** Enable fuzzy search when searching for files.
+  - **Default:** `true`
   - **Requires restart:** Yes
 
 #### `tools`
@@ -635,6 +649,13 @@ their corresponding top-level category object in your `settings.json` file.
   - **Description:** Automatically accept and execute tool calls that are
     considered safe (e.g., read-only operations).
   - **Default:** `false`
+
+- **`tools.approvalMode`** (enum):
+  - **Description:** The default approval mode for tool execution. 'default'
+    prompts for approval, 'auto_edit' auto-approves edit tools, and 'plan' is
+    read-only mode. 'yolo' is not supported yet.
+  - **Default:** `"default"`
+  - **Values:** `"default"`, `"auto_edit"`, `"plan"`
 
 - **`tools.core`** (array):
   - **Description:** Restrict the set of built-in tools with an allowlist. Match
@@ -689,12 +710,17 @@ their corresponding top-level category object in your `settings.json` file.
   - **Default:** `1000`
   - **Requires restart:** Yes
 
+- **`tools.disableLLMCorrection`** (boolean):
+  - **Description:** Disable LLM-based error correction for edit tools. When
+    enabled, tools will fail immediately if exact string matches are not found,
+    instead of attempting to self-correct.
+  - **Default:** `true`
+  - **Requires restart:** Yes
+
 - **`tools.enableHooks`** (boolean):
-  - **Description:** Enable the hooks system for intercepting and customizing
-    Codefly CLI behavior. When enabled, hooks configured in settings will
-    execute at appropriate lifecycle events (BeforeTool, AfterTool, BeforeModel,
-    etc.). Requires MessageBus integration.
-  - **Default:** `false`
+  - **Description:** Enables the hooks system experiment. When disabled, the
+    hooks system is completely deactivated regardless of other settings.
+  - **Default:** `true`
   - **Requires restart:** Yes
 
 #### `mcp`
@@ -758,6 +784,21 @@ their corresponding top-level category object in your `settings.json` file.
   - **Default:** `false`
   - **Requires restart:** Yes
 
+- **`security.auth.openai.apiKey`** (string):
+  - **Description:** OpenAI API key.
+  - **Default:** `undefined`
+  - **Requires restart:** Yes
+
+- **`security.auth.openai.model`** (string):
+  - **Description:** OpenAI model (e.g., gpt-4o).
+  - **Default:** `undefined`
+  - **Requires restart:** Yes
+
+- **`security.auth.openai.baseUrl`** (string):
+  - **Description:** OpenAI Base URL.
+  - **Default:** `undefined`
+  - **Requires restart:** Yes
+
 - **`security.auth.selectedType`** (string):
   - **Description:** The currently selected authentication type.
   - **Default:** `undefined`
@@ -771,21 +812,6 @@ their corresponding top-level category object in your `settings.json` file.
 
 - **`security.auth.useExternal`** (boolean):
   - **Description:** Whether to use an external authentication flow.
-  - **Default:** `undefined`
-  - **Requires restart:** Yes
-
-- **`security.auth.openai.baseUrl`** (string):
-  - **Description:** Base URL for the OpenAI compatible provider.
-  - **Default:** `"https://api.openai.com/v1"`
-  - **Requires restart:** Yes
-
-- **`security.auth.openai.model`** (string):
-  - **Description:** Model name to use.
-  - **Default:** `"gpt-4o"`
-  - **Requires restart:** Yes
-
-- **`security.auth.openai.apiKey`** (string):
-  - **Description:** API Key for the provider.
   - **Default:** `undefined`
   - **Requires restart:** Yes
 
@@ -826,6 +852,16 @@ their corresponding top-level category object in your `settings.json` file.
   - **Default:** `true`
   - **Requires restart:** Yes
 
+- **`experimental.extensionConfig`** (boolean):
+  - **Description:** Enable requesting and fetching of extension settings.
+  - **Default:** `false`
+  - **Requires restart:** Yes
+
+- **`experimental.enableEventDrivenScheduler`** (boolean):
+  - **Description:** Enables event-driven scheduler within the CLI session.
+  - **Default:** `true`
+  - **Requires restart:** Yes
+
 - **`experimental.extensionReloading`** (boolean):
   - **Description:** Enables extension loading/unloading within the CLI session.
   - **Default:** `false`
@@ -841,35 +877,13 @@ their corresponding top-level category object in your `settings.json` file.
   - **Default:** `false`
   - **Requires restart:** Yes
 
-- **`experimental.codebaseInvestigatorSettings.enabled`** (boolean):
-  - **Description:** Enable the Codebase Investigator agent.
-  - **Default:** `true`
-  - **Requires restart:** Yes
+- **`experimental.useOSC52Paste`** (boolean):
+  - **Description:** Use OSC 52 sequence for pasting instead of clipboardy
+    (useful for remote sessions).
+  - **Default:** `false`
 
-- **`experimental.codebaseInvestigatorSettings.maxNumTurns`** (number):
-  - **Description:** Maximum number of turns for the Codebase Investigator
-    agent.
-  - **Default:** `10`
-  - **Requires restart:** Yes
-
-- **`experimental.codebaseInvestigatorSettings.maxTimeMinutes`** (number):
-  - **Description:** Maximum time for the Codebase Investigator agent (in
-    minutes).
-  - **Default:** `3`
-  - **Requires restart:** Yes
-
-- **`experimental.codebaseInvestigatorSettings.thinkingBudget`** (number):
-  - **Description:** The thinking budget for the Codebase Investigator agent.
-  - **Default:** `8192`
-  - **Requires restart:** Yes
-
-- **`experimental.codebaseInvestigatorSettings.model`** (string):
-  - **Description:** The model to use for the Codebase Investigator agent.
-  - **Default:** `"auto"`
-  - **Requires restart:** Yes
-
-- **`experimental.introspectionAgentSettings.enabled`** (boolean):
-  - **Description:** Enable the Introspection Agent.
+- **`experimental.plan`** (boolean):
+  - **Description:** Enable planning features (Plan Mode and tools).
   - **Default:** `false`
   - **Requires restart:** Yes
 
@@ -880,12 +894,23 @@ their corresponding top-level category object in your `settings.json` file.
   - **Default:** `[]`
   - **Requires restart:** Yes
 
-#### `hooks`
+#### `hooksConfig`
 
-- **`hooks.disabled`** (array):
+- **`hooksConfig.enabled`** (boolean):
+  - **Description:** Canonical toggle for the hooks system. When disabled, no
+    hooks will be executed.
+  - **Default:** `true`
+
+- **`hooksConfig.disabled`** (array):
   - **Description:** List of hook names (commands) that should be disabled.
     Hooks in this list will not execute even if configured.
   - **Default:** `[]`
+
+- **`hooksConfig.notifications`** (boolean):
+  - **Description:** Show visual indicators when hooks are executing.
+  - **Default:** `true`
+
+#### `hooks`
 
 - **`hooks.BeforeTool`** (array):
   - **Description:** Hooks that execute before tool execution. Can intercept,
@@ -941,6 +966,25 @@ their corresponding top-level category object in your `settings.json` file.
   - **Description:** Hooks that execute before tool selection. Can filter or
     prioritize available tools dynamically.
   - **Default:** `[]`
+
+#### `admin`
+
+- **`admin.secureModeEnabled`** (boolean):
+  - **Description:** If true, disallows yolo mode from being used.
+  - **Default:** `false`
+
+- **`admin.extensions.enabled`** (boolean):
+  - **Description:** If false, disallows extensions from being installed or
+    used.
+  - **Default:** `true`
+
+- **`admin.mcp.enabled`** (boolean):
+  - **Description:** If false, disallows MCP servers from being used.
+  - **Default:** `true`
+
+- **`admin.skills.enabled`** (boolean):
+  - **Description:** If false, disallows agent skills from being used.
+  - **Default:** `true`
   <!-- SETTINGS-AUTOGEN:END -->
 
 #### `mcpServers`
@@ -1453,6 +1497,8 @@ conventions and context.
 By understanding and utilizing these configuration layers and the hierarchical
 nature of context files, you can effectively manage the AI's memory and tailor
 the Gemini CLI's responses to your specific needs and projects.
+
+<!-- SETTINGS-AUTOGEN:END -->
 
 ## Sandboxing
 
