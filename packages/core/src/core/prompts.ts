@@ -195,8 +195,14 @@ ${planModeToolsList}
     basePrompt = fs.readFileSync(systemMdPath, 'utf8');
     basePrompt = applySubstitutions(basePrompt, config, skillsPrompt);
   } else {
+    const language = config.language;
+    const languageInstruction =
+      language && language !== 'auto'
+        ? ` You must respond in ${language}.`
+        : '';
+
     const promptConfig = {
-      preamble: `You are ${interactiveMode ? 'an interactive ' : 'a non-interactive '}CLI agent specializing in software engineering tasks. Your primary goal is to help users safely and efficiently, adhering strictly to the following instructions and utilizing your available tools.`,
+      preamble: `You are ${interactiveMode ? 'an interactive ' : 'a non-interactive '}CLI agent specializing in software engineering tasks. Your primary goal is to help users safely and efficiently, adhering strictly to the following instructions and utilizing your available tools.${languageInstruction}`,
       coreMandates: `
 # Core Mandates
 

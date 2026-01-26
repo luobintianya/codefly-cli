@@ -1,27 +1,31 @@
-# Gemini CLI Project Context
+# Codefly CLI Project Context
 
-Gemini CLI is an open-source AI agent that brings the power of Gemini directly
-into the terminal. It is designed to be a terminal-first, extensible, and
-powerful tool for developers.
+Codefly CLI is an open-source AI agent that brings the power of AI-native
+development directly into the terminal. It is designed to be a terminal-first,
+extensible, and powerful tool for developers, integrating with OpenSpec for
+specification-driven development.
 
 ## Project Overview
 
-- **Purpose:** Provide a seamless terminal interface for Gemini models,
+- **Purpose:** Provide a seamless terminal interface for Codefly-powered agents,
   supporting code understanding, generation, automation, and integration via MCP
-  (Model Context Protocol).
+  (Model Context Protocol) and OpenSpec.
 - **Main Technologies:**
   - **Runtime:** Node.js (>=20.0.0, recommended ~20.19.0 for development)
   - **Language:** TypeScript
   - **UI Framework:** React (using [Ink](https://github.com/vadimdemedes/ink)
     for CLI rendering)
+  - **Configuration:** Customizable via `settings.json`, including a new
+    `general.language` option to set the CLI interface language (e.g., 'en',
+    'zh').
   - **Testing:** Vitest
   - **Bundling:** esbuild
   - **Linting/Formatting:** ESLint, Prettier
 - **Architecture:** Monorepo structure using npm workspaces.
   - `packages/cli`: User-facing terminal UI, input processing, and display
     rendering.
-  - `packages/core`: Backend logic, Gemini API orchestration, prompt
-    construction, and tool execution.
+  - `packages/core`: Backend logic, AI orchestration, prompt construction, and
+    tool execution. Includes OpenSpec integration.
   - `packages/core/src/tools/`: Built-in tools for file system, shell, and web
     operations.
   - `packages/a2a-server`: Experimental Agent-to-Agent server.
@@ -45,7 +49,7 @@ powerful tool for developers.
   - **Integration (E2E):** `npm run test:e2e`
   - **Workspace-Specific:** `npm test -w <pkg> -- <path>` (Note: `<path>` must
     be relative to the workspace root, e.g.,
-    `-w @google/gemini-cli-core -- src/routing/modelRouterService.test.ts`)
+    `-w @codeflyai/codefly-core -- src/routing/modelRouterService.test.ts`)
 - **Full Validation:** `npm run preflight` (Heaviest check; runs clean, install,
   build, lint, type check, and tests. Recommended before submitting PRs.)
 - **Individual Checks:** `npm run lint` / `npm run format` / `npm run typecheck`

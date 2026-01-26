@@ -1010,10 +1010,10 @@
               "default": true,
               "type": "boolean"
             },
-            "respectGeminiIgnore": {
-              "title": "Respect .geminiignore",
-              "description": "Respect .geminiignore files when searching.",
-              "markdownDescription": "Respect .geminiignore files when searching.\n\n- Category: `Context`\n- Requires restart: `yes`\n- Default: `true`",
+            "respectCodeflyIgnore": {
+              "title": "Respect .codeflyignore",
+              "description": "Respect .codeflyignore files when searching.",
+              "markdownDescription": "Respect .codeflyignore files when searching.\n\n- Category: `Context`\n- Requires restart: `yes`\n- Default: `true`",
               "default": true,
               "type": "boolean"
             },

@@ -63,7 +63,7 @@ program.hook('preAction', async (thisCommand) => {
 const availableToolIds = AI_TOOLS.filter((tool) => tool.skillsDir).map(
   (tool) => tool.value,
 );
-const toolsOptionDescription = `Configure AI tools non-interactively. Use "all", "none", or a comma-separated list of: ${availableToolIds.join(', ')}`;
+const toolsOptionDescription = `Configure AI tools non-interactively. Use "all", "none", or a comma-separated list of: ${availableToolIds.join(', ')} (default: codefly)`;
 
 program
   .command('init [path]')

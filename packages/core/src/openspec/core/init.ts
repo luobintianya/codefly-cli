@@ -236,6 +236,11 @@ export class InitCommand {
     const canPrompt = this.canPromptInteractively();
 
     if (!canPrompt || validTools.length === 0) {
+      // Default to codefly if available and no tools provided non-interactively
+      if (validTools.includes('codefly')) {
+        return ['codefly'];
+      }
+
       throw new Error(
         `Missing required option --tools. Valid tools:\n  ${validTools.join('\n  ')}\n\nUse --tools all, --tools none, or --tools claude,cursor,...`,
       );
@@ -257,7 +262,7 @@ export class InitCommand {
           name: tool?.name || toolId,
           value: toolId,
           configured,
-          preSelected: configured, // Pre-select configured tools for easy refresh
+          preSelected: configured || toolId === 'codefly', // Pre-select codefly or configured tools
         };
       })
       .sort((a, b) => {

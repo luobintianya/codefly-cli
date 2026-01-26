@@ -601,8 +601,8 @@ their corresponding top-level category object in your `settings.json` file.
   - **Default:** `true`
   - **Requires restart:** Yes
 
-- **`context.fileFiltering.respectGeminiIgnore`** (boolean):
-  - **Description:** Respect .geminiignore files when searching.
+- **`context.fileFiltering.respectCodeflyIgnore`** (boolean):
+  - **Description:** Respect .codeflyignore files when searching.
   - **Default:** `true`
   - **Requires restart:** Yes
 
