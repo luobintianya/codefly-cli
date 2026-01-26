@@ -728,6 +728,7 @@ export async function loadCliConfig(
     codeflyMdFileCount: fileCount,
     codeflyMdFilePaths: filePaths,
     approvalMode,
+    language: settings.general?.language,
     disableYoloMode:
       settings.security?.disableYoloMode || settings.admin?.secureModeEnabled,
     showMemoryUsage: settings.ui?.showMemoryUsage || false,

@@ -23,6 +23,7 @@ import {
   DEFAULT_FILE_FILTERING_OPTIONS,
 } from '@codeflyai/codefly-core';
 import { createTestMergedSettings } from './settings.js';
+import { loadCliConfig, type CliArgs } from './config.js';
 import { http, HttpResponse } from 'msw';
 
 import { setupServer } from 'msw/node';
@@ -242,6 +243,45 @@ describe('Configuration Integration Tests', () => {
       } finally {
         process.argv = originalArgv;
       }
+    });
+  });
+
+  describe('loadCliConfig', () => {
+    it('should pass language setting to Config', async () => {
+      const settings = createTestMergedSettings({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        general: { language: 'zh-CN' as any },
+      });
+      const argv: CliArgs = {
+        query: undefined,
+        model: undefined,
+        sandbox: undefined,
+        debug: undefined,
+        prompt: undefined,
+        promptInteractive: undefined,
+        yolo: undefined,
+        approvalMode: undefined,
+        allowedMcpServerNames: undefined,
+        allowedTools: undefined,
+        experimentalAcp: undefined,
+        extensions: undefined,
+        listExtensions: undefined,
+        resume: undefined,
+        listSessions: undefined,
+        deleteSession: undefined,
+        includeDirectories: undefined,
+        screenReader: undefined,
+        useWriteTodos: undefined,
+        outputFormat: undefined,
+        fakeResponses: undefined,
+        recordResponses: undefined,
+        rawOutput: undefined,
+        acceptRawOutputRisk: undefined,
+        isCommand: undefined,
+      };
+
+      const config = await loadCliConfig(settings, 'test-session', argv);
+      expect(config.language).toBe('zh-CN');
     });
   });
 });

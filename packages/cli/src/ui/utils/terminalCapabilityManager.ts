@@ -9,8 +9,6 @@ import {
   debugLogger,
   enableKittyKeyboardProtocol,
   disableKittyKeyboardProtocol,
-  enableModifyOtherKeys,
-  disableModifyOtherKeys,
   enableBracketedPasteMode,
   disableBracketedPasteMode,
 } from '@codeflyai/codefly-core';
@@ -43,7 +41,7 @@ export class TerminalCapabilityManager {
   private terminalBackgroundColor: TerminalBackgroundColor;
   private kittySupported = false;
   private kittyEnabled = false;
-  private modifyOtherKeysSupported = false;
+
   private terminalName: string | undefined;
 
   private constructor() {}
@@ -76,7 +74,7 @@ export class TerminalCapabilityManager {
       // don't bother catching errors since if one write
       // fails, the other probably will too
       disableKittyKeyboardProtocol();
-      disableModifyOtherKeys();
+
       disableBracketedPasteMode();
     };
     process.on('exit', cleanupOnExit);
@@ -192,8 +190,6 @@ export class TerminalCapabilityManager {
       if (this.kittySupported) {
         enableKittyKeyboardProtocol();
         this.kittyEnabled = true;
-      } else if (this.modifyOtherKeysSupported) {
-        enableModifyOtherKeys();
       }
       // Always enable bracketed paste since it'll be ignored if unsupported.
       enableBracketedPasteMode();
