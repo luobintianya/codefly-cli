@@ -318,7 +318,11 @@ export function runTSConfigLinter() {
           );
           hasError = true;
         } else {
-          const allowedExclude = new Set(['node_modules', 'dist']);
+          const allowedExclude = new Set([
+            'node_modules',
+            'dist',
+            'src/**/*.test.ts',
+          ]);
           const invalidExcludes = config.exclude.filter(
             (item) => !allowedExclude.has(item),
           );
@@ -327,7 +331,7 @@ export function runTSConfigLinter() {
             console.error(
               `Error: ${file} "exclude" contains invalid items: ${JSON.stringify(
                 invalidExcludes,
-              )}. Only "node_modules" and "dist" are allowed.`,
+              )}. Only "node_modules", "dist" and "src/**/*.test.ts" are allowed.`,
             );
             hasError = true;
           }

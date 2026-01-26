@@ -11,6 +11,8 @@ import { mcpCommand } from '../commands/mcp.js';
 import { extensionsCommand } from '../commands/extensions.js';
 import { skillsCommand } from '../commands/skills.js';
 import { hooksCommand } from '../commands/hooks.js';
+import { openspecCommand } from '../commands/openspec.js';
+
 import {
   Config,
   setGeminiMdFilename as setServerGeminiMdFilename,
@@ -267,6 +269,9 @@ export async function parseArguments(
     )
     // Register MCP subcommands
     .command(mcpCommand)
+    // Register OpenSpec subcommand
+    .command(openspecCommand)
+
     // Ensure validation flows through .fail() for clean UX
     .fail((msg, err) => {
       if (err) throw err;

@@ -40,6 +40,8 @@ overview of Gemini CLI, see the [main documentation page](../index.md).
   files and directories from being accessed by tools.
 - **[Context files (CODEFLY.md)](./codefly-md.md):** Provide persistent,
   hierarchical context to the model.
+- **[OpenSpec](./openspec.md):** An AI-native system for spec-driven development
+  workflows.
 - **[System prompt override](./system-prompt.md):** Replace the built‑in system
   instructions using `GEMINI_SYSTEM_MD`.
 

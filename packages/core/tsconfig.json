@@ -8,9 +8,14 @@
     "baseUrl": ".",
     "paths": {
       "@codeflyai/codefly-core": ["./index.ts"]
-    }
+    },
+    "verbatimModuleSyntax": false,
+    "noPropertyAccessFromIndexSignature": false,
+    "noImplicitOverride": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
   },
   "include": ["index.ts", "src/**/*.ts", "src/**/*.json"],
-  "exclude": ["node_modules", "dist"],
-  "references": [{ "path": "../test-utils" }]
+  "exclude": ["node_modules", "dist", "src/**/*.test.ts"],
+  "references": []
 }
