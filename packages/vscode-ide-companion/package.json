@@ -122,7 +122,7 @@
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
-    "@types/node": "20.x",
+    "@types/node": "25.x",
     "@types/vscode": "^1.99.0",
     "@vscode/vsce": "^3.6.0",
     "esbuild": "^0.25.3",
