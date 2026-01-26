@@ -5,7 +5,7 @@
  */
 
 import type { AgentDefinition } from './types.js';
-import { GEMINI_MODEL_ALIAS_FLASH } from '../config/models.js';
+import { CODEFLY_MODEL_ALIAS_FLASH } from '../config/models.js';
 import { z } from 'zod';
 import type { Config } from '../config/config.js';
 import { GetInternalDocsTool } from '../tools/get-internal-docs.js';
@@ -52,7 +52,7 @@ export const CliHelpAgent = (
   processOutput: (output) => JSON.stringify(output, null, 2),
 
   modelConfig: {
-    model: GEMINI_MODEL_ALIAS_FLASH,
+    model: CODEFLY_MODEL_ALIAS_FLASH,
     generateContentConfig: {
       temperature: 0.1,
       topP: 0.95,
@@ -86,7 +86,7 @@ export const CliHelpAgent = (
       "- **Today's Date:** ${today}\n\n" +
       (config.isAgentsEnabled()
         ? '### Sub-Agents (Local & Remote)\n' +
-          "User defined sub-agents are defined in `.gemini/agents/` or `~/.gemini/agents/` as .md files. **CRITICAL:** These files **MUST** start with YAML frontmatter enclosed in triple-dashes `---`, for example:\n\n```yaml\n---\nname: my-agent\n---\n```\n\nWithout this mandatory frontmatter, the agent will not be discovered or loaded by Gemini CLI. The Markdown body following the frontmatter becomes the agent's system prompt (`system_prompt`). Always reference the types and properties outlined here directly when answering questions about sub-agents.\n" +
+          "User defined sub-agents are defined in `.codefly/agents/` or `~/.codefly/agents/` as .md files. **CRITICAL:** These files **MUST** start with YAML frontmatter enclosed in triple-dashes `---`, for example:\n\n```yaml\n---\nname: my-agent\n---\n```\n\nWithout this mandatory frontmatter, the agent will not be discovered or loaded by Gemini CLI. The Markdown body following the frontmatter becomes the agent's system prompt (`system_prompt`). Always reference the types and properties outlined here directly when answering questions about sub-agents.\n" +
           '- **Local Agent:** `kind = "local"`, `name`, `description`, `system_prompt`, and optional `tools`, `model`, `temperate`, `max_turns`, `timeout_mins`.\n' +
           '- **Remote Agent (A2A):** `kind = "remote"`, `name`, `agent_card_url`. Remote Agents do not use `system_prompt`. Multiple remote agents can be defined by using a YAML array at the top level of the frontmatter. **Note:** When users ask about "remote agents", they are referring to this Agent2Agent functionality, which is completely distinct from MCP servers.\n' +
           '- **Agent Names:** Must be valid slugs (lowercase letters, numbers, hyphens, and underscores only).\n' +

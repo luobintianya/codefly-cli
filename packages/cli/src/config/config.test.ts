@@ -123,11 +123,11 @@ vi.mock('@codeflyai/codefly-core', async () => {
     ),
     DEFAULT_MEMORY_FILE_FILTERING_OPTIONS: {
       respectGitIgnore: false,
-      respectGeminiIgnore: true,
+      respectCodeflyIgnore: true,
     },
     DEFAULT_FILE_FILTERING_OPTIONS: {
       respectGitIgnore: true,
-      respectGeminiIgnore: true,
+      respectCodeflyIgnore: true,
     },
     createPolicyEngineConfig: vi.fn(async () => ({
       rules: [],
@@ -699,8 +699,8 @@ describe('loadCliConfig', () => {
     expect(config.getFileFilteringRespectGitIgnore()).toBe(
       DEFAULT_FILE_FILTERING_OPTIONS.respectGitIgnore,
     );
-    expect(config.getFileFilteringRespectGeminiIgnore()).toBe(
-      DEFAULT_FILE_FILTERING_OPTIONS.respectGeminiIgnore,
+    expect(config.getFileFilteringRespectCodeflyIgnore()).toBe(
+      DEFAULT_FILE_FILTERING_OPTIONS.respectCodeflyIgnore,
     );
     expect(config.getApprovalMode()).toBe(ApprovalMode.DEFAULT);
   });
@@ -781,7 +781,7 @@ describe('Hierarchical Memory Loading (config.ts) - Placeholder Suite', () => {
       'tree',
       expect.objectContaining({
         respectGitIgnore: true,
-        respectGeminiIgnore: true,
+        respectCodeflyIgnore: true,
       }),
       200, // maxDirs
     );
@@ -810,7 +810,7 @@ describe('Hierarchical Memory Loading (config.ts) - Placeholder Suite', () => {
       'tree',
       expect.objectContaining({
         respectGitIgnore: true,
-        respectGeminiIgnore: true,
+        respectCodeflyIgnore: true,
       }),
       200,
     );
@@ -838,7 +838,7 @@ describe('Hierarchical Memory Loading (config.ts) - Placeholder Suite', () => {
       'tree',
       expect.objectContaining({
         respectGitIgnore: true,
-        respectGeminiIgnore: true,
+        respectCodeflyIgnore: true,
       }),
       200,
     );
@@ -2432,13 +2432,13 @@ describe('loadCliConfig fileFiltering', () => {
       value: false,
     },
     {
-      property: 'respectGeminiIgnore',
-      getter: (c) => c.getFileFilteringRespectGeminiIgnore(),
+      property: 'respectCodeflyIgnore',
+      getter: (c) => c.getFileFilteringRespectCodeflyIgnore(),
       value: true,
     },
     {
-      property: 'respectGeminiIgnore',
-      getter: (c) => c.getFileFilteringRespectGeminiIgnore(),
+      property: 'respectCodeflyIgnore',
+      getter: (c) => c.getFileFilteringRespectCodeflyIgnore(),
       value: false,
     },
     {

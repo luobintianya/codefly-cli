@@ -10,7 +10,7 @@ import * as os from 'node:os';
 import * as path from 'node:path';
 import { SkillManager } from './skillManager.js';
 import { Storage } from '../config/storage.js';
-import { type GeminiCLIExtension } from '../config/config.js';
+import { type CodeflyCLIExtension } from '../config/config.js';
 import { loadSkillsFromDir, type SkillDefinition } from './skillLoader.js';
 import { coreEvents } from '../utils/events.js';
 import { debugLogger } from '../utils/debugLogger.js';
@@ -60,7 +60,7 @@ description: project-desc
 `,
     );
 
-    const mockExtension: GeminiCLIExtension = {
+    const mockExtension: CodeflyCLIExtension = {
       name: 'test-ext',
       version: '1.0.0',
       isActive: true,
@@ -117,7 +117,7 @@ description: project-desc
 `,
     );
 
-    const mockExtension: GeminiCLIExtension = {
+    const mockExtension: CodeflyCLIExtension = {
       name: 'test-ext',
       version: '1.0.0',
       isActive: true,

@@ -44,7 +44,7 @@ describe('createPolicyEngineConfig', () => {
           typeof path === 'string' &&
           nodePath
             .normalize(path)
-            .includes(nodePath.normalize('.gemini/policies'))
+            .includes(nodePath.normalize('.codefly/policies'))
         ) {
           // Return empty array for user policies
           return [] as unknown as Awaited<ReturnType<typeof actualFs.readdir>>;
@@ -762,7 +762,7 @@ required_context = ["environment"]
           typeof path === 'string' &&
           nodePath
             .normalize(path)
-            .includes(nodePath.normalize('.gemini/policies'))
+            .includes(nodePath.normalize('.codefly/policies'))
         ) {
           return [
             {
@@ -789,7 +789,7 @@ required_context = ["environment"]
           nodePath
             .normalize(path)
             .includes(
-              nodePath.normalize('.gemini/policies/invalid_safety.toml'),
+              nodePath.normalize('.codefly/policies/invalid_safety.toml'),
             )
         ) {
           return `

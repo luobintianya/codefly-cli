@@ -6,7 +6,7 @@
 
 import type { Content } from '@google/genai';
 import type { Config } from '../config/config.js';
-import type { GeminiChat } from '../core/geminiChat.js';
+import type { CodeflyChat } from '../core/codeflyChat.js';
 import { type ChatCompressionInfo, CompressionStatus } from '../core/turn.js';
 import { tokenLimit } from '../core/tokenLimits.js';
 import { getCompressionPrompt } from '../core/prompts.js';
@@ -25,10 +25,10 @@ import {
 } from '../utils/tokenCalculation.js';
 import {
   DEFAULT_GEMINI_FLASH_LITE_MODEL,
-  DEFAULT_GEMINI_FLASH_MODEL,
-  DEFAULT_GEMINI_MODEL,
-  PREVIEW_GEMINI_MODEL,
-  PREVIEW_GEMINI_FLASH_MODEL,
+  DEFAULT_CODEFLY_FLASH_MODEL,
+  DEFAULT_CODEFLY_MODEL,
+  PREVIEW_CODEFLY_MODEL,
+  PREVIEW_CODEFLY_FLASH_MODEL,
   LEGACY_GEMINI_2_5_PRO,
   LEGACY_GEMINI_2_5_FLASH,
 } from '../config/models.js';
@@ -106,17 +106,17 @@ export function findCompressSplitPoint(
 
 export function modelStringToModelConfigAlias(model: string): string {
   switch (model) {
-    case PREVIEW_GEMINI_MODEL:
+    case PREVIEW_CODEFLY_MODEL:
       return 'chat-compression-3-pro';
-    case PREVIEW_GEMINI_FLASH_MODEL:
+    case PREVIEW_CODEFLY_FLASH_MODEL:
       return 'chat-compression-3-flash';
     case LEGACY_GEMINI_2_5_PRO:
       return 'chat-compression-2.5-pro';
     case LEGACY_GEMINI_2_5_FLASH:
       return 'chat-compression-2.5-flash';
-    case DEFAULT_GEMINI_MODEL:
+    case DEFAULT_CODEFLY_MODEL:
       return 'chat-compression-2.5-pro';
-    case DEFAULT_GEMINI_FLASH_MODEL:
+    case DEFAULT_CODEFLY_FLASH_MODEL:
       return 'chat-compression-2.5-flash';
     case DEFAULT_GEMINI_FLASH_LITE_MODEL:
       return 'chat-compression-2.5-flash-lite';
@@ -240,7 +240,7 @@ async function truncateHistoryToBudget(
 
 export class ChatCompressionService {
   async compress(
-    chat: GeminiChat,
+    chat: CodeflyChat,
     promptId: string,
     force: boolean,
     model: string,

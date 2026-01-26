@@ -6,7 +6,7 @@
 
 import type {
   CompressionStatus,
-  GeminiCLIExtension,
+  CodeflyCLIExtension,
   MCPServerConfig,
   ThoughtSummary,
   ToolCallConfirmationDetails,
@@ -42,7 +42,7 @@ export enum StreamingState {
 }
 
 // Copied from server/src/core/turn.ts for CLI usage
-export enum GeminiEventType {
+export enum CodeflyEventType {
   Content = 'content',
   ToolCallRequest = 'tool_call_request',
   // Add other event types if the UI hook needs to handle them
@@ -194,7 +194,7 @@ export type HistoryItemCompression = HistoryItemBase & {
 
 export type HistoryItemExtensionsList = HistoryItemBase & {
   type: 'extensions_list';
-  extensions: GeminiCLIExtension[];
+  extensions: CodeflyCLIExtension[];
 };
 
 export interface ChatDetail {

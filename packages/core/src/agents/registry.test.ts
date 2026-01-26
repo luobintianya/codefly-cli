@@ -8,15 +8,15 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { AgentRegistry, getModelConfigAlias } from './registry.js';
 import { makeFakeConfig } from '../test-utils/config.js';
 import type { AgentDefinition, LocalAgentDefinition } from './types.js';
-import type { Config, GeminiCLIExtension } from '../config/config.js';
+import type { Config, CodeflyCLIExtension } from '../config/config.js';
 import { debugLogger } from '../utils/debugLogger.js';
 import { coreEvents, CoreEvent } from '../utils/events.js';
 import { A2AClientManager } from './a2a-client-manager.js';
 import {
   DEFAULT_GEMINI_FLASH_LITE_MODEL,
-  PREVIEW_GEMINI_FLASH_MODEL,
-  PREVIEW_GEMINI_MODEL,
-  PREVIEW_GEMINI_MODEL_AUTO,
+  PREVIEW_CODEFLY_FLASH_MODEL,
+  PREVIEW_CODEFLY_MODEL,
+  PREVIEW_CODEFLY_MODEL_AUTO,
 } from '../config/models.js';
 import * as tomlLoader from './agentLoader.js';
 import { SimpleExtensionLoader } from '../utils/extensionLoader.js';
@@ -149,7 +149,7 @@ describe('AgentRegistry', () => {
     });
 
     it('should use preview flash model for codebase investigator if main model is preview pro', async () => {
-      const previewConfig = makeMockedConfig({ model: PREVIEW_GEMINI_MODEL });
+      const previewConfig = makeMockedConfig({ model: PREVIEW_CODEFLY_MODEL });
       const previewRegistry = new TestableAgentRegistry(previewConfig);
 
       await previewRegistry.initialize();
@@ -159,7 +159,7 @@ describe('AgentRegistry', () => {
       ) as LocalAgentDefinition;
       expect(investigatorDef).toBeDefined();
       expect(investigatorDef?.modelConfig.model).toBe(
-        PREVIEW_GEMINI_FLASH_MODEL,
+        PREVIEW_CODEFLY_FLASH_MODEL,
       );
       expect(
         investigatorDef?.modelConfig.generateContentConfig?.thinkingConfig,
@@ -171,7 +171,7 @@ describe('AgentRegistry', () => {
 
     it('should use preview flash model for codebase investigator if main model is preview auto', async () => {
       const previewConfig = makeMockedConfig({
-        model: PREVIEW_GEMINI_MODEL_AUTO,
+        model: PREVIEW_CODEFLY_MODEL_AUTO,
       });
       const previewRegistry = new TestableAgentRegistry(previewConfig);
 
@@ -182,13 +182,13 @@ describe('AgentRegistry', () => {
       ) as LocalAgentDefinition;
       expect(investigatorDef).toBeDefined();
       expect(investigatorDef?.modelConfig.model).toBe(
-        PREVIEW_GEMINI_FLASH_MODEL,
+        PREVIEW_CODEFLY_FLASH_MODEL,
       );
     });
 
     it('should use the model from the investigator settings', async () => {
       const previewConfig = makeMockedConfig({
-        model: PREVIEW_GEMINI_MODEL,
+        model: PREVIEW_CODEFLY_MODEL,
         agents: {
           overrides: {
             codebase_investigator: {
@@ -354,7 +354,7 @@ describe('AgentRegistry', () => {
         ...MOCK_AGENT_V1,
         name: 'extension-agent',
       };
-      const extensions: GeminiCLIExtension[] = [
+      const extensions: CodeflyCLIExtension[] = [
         {
           name: 'test-extension',
           isActive: true,
@@ -381,7 +381,7 @@ describe('AgentRegistry', () => {
         ...MOCK_AGENT_V1,
         name: 'extension-agent',
       };
-      const extensions: GeminiCLIExtension[] = [
+      const extensions: CodeflyCLIExtension[] = [
         {
           name: 'test-extension',
           isActive: false,

@@ -14,7 +14,7 @@ import type {
 } from '@a2a-js/sdk/server';
 import type { ToolCallRequestInfo, Config } from '@codeflyai/codefly-core';
 import {
-  GeminiEventType,
+  CodeflyEventType,
   SimpleExtensionLoader,
 } from '@codeflyai/codefly-core';
 import { v4 as uuidv4 } from 'uuid';
@@ -480,7 +480,7 @@ export class CoderAgentExecutor implements AgentExecutor {
             );
             throw new Error('Execution aborted');
           }
-          if (event.type === GeminiEventType.ToolCallRequest) {
+          if (event.type === CodeflyEventType.ToolCallRequest) {
             toolCallRequests.push(event.value);
             continue;
           }

@@ -602,7 +602,7 @@ export class HookEventHandler {
     // Get the transcript path from the ChatRecordingService if available
     const transcriptPath =
       this.config
-        .getGeminiClient()
+        .getCodeflyClient()
         ?.getChatRecordingService()
         ?.getConversationFilePath() ?? '';
 

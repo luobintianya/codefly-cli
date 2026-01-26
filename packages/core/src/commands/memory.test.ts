@@ -26,8 +26,8 @@ describe('memory commands', () => {
   beforeEach(() => {
     mockConfig = {
       getUserMemory: vi.fn(),
-      getGeminiMdFileCount: vi.fn(),
-      getGeminiMdFilePaths: vi.fn(),
+      getCodeflyMdFileCount: vi.fn(),
+      getCodeflyMdFilePaths: vi.fn(),
       isJitContextEnabled: vi.fn(),
       updateSystemInstructionIfInitialized: vi
         .fn()
@@ -44,7 +44,7 @@ describe('memory commands', () => {
       vi.mocked(mockConfig.getUserMemory).mockReturnValue(
         'some memory content',
       );
-      vi.mocked(mockConfig.getGeminiMdFileCount).mockReturnValue(1);
+      vi.mocked(mockConfig.getCodeflyMdFileCount).mockReturnValue(1);
 
       const result = showMemory(mockConfig);
 
@@ -60,7 +60,7 @@ describe('memory commands', () => {
 
     it('should show a message if memory is empty', () => {
       vi.mocked(mockConfig.getUserMemory).mockReturnValue('');
-      vi.mocked(mockConfig.getGeminiMdFileCount).mockReturnValue(0);
+      vi.mocked(mockConfig.getCodeflyMdFileCount).mockReturnValue(0);
 
       const result = showMemory(mockConfig);
 
@@ -162,7 +162,7 @@ describe('memory commands', () => {
   describe('listMemoryFiles', () => {
     it('should list the memory files in use', () => {
       const filePaths = ['/path/to/GEMINI.md', '/other/path/GEMINI.md'];
-      vi.mocked(mockConfig.getGeminiMdFilePaths).mockReturnValue(filePaths);
+      vi.mocked(mockConfig.getCodeflyMdFilePaths).mockReturnValue(filePaths);
 
       const result = listMemoryFiles(mockConfig);
 
@@ -177,7 +177,7 @@ describe('memory commands', () => {
     });
 
     it('should show a message if no memory files are in use', () => {
-      vi.mocked(mockConfig.getGeminiMdFilePaths).mockReturnValue([]);
+      vi.mocked(mockConfig.getCodeflyMdFilePaths).mockReturnValue([]);
 
       const result = listMemoryFiles(mockConfig);
 
@@ -189,7 +189,7 @@ describe('memory commands', () => {
     });
 
     it('should show a message if file paths are undefined', () => {
-      vi.mocked(mockConfig.getGeminiMdFilePaths).mockReturnValue(
+      vi.mocked(mockConfig.getCodeflyMdFilePaths).mockReturnValue(
         undefined as unknown as string[],
       );
 

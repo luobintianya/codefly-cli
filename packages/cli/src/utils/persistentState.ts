@@ -23,7 +23,7 @@ export class PersistentState {
 
   private getPath(): string {
     if (!this.filePath) {
-      this.filePath = path.join(Storage.getGlobalGeminiDir(), STATE_FILENAME);
+      this.filePath = path.join(Storage.getGlobalCodeflyDir(), STATE_FILENAME);
     }
     return this.filePath;
   }

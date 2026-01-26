@@ -14,9 +14,9 @@ import {
   isFunctionResponse,
 } from '../../utils/messageInspectors.js';
 import {
-  DEFAULT_GEMINI_FLASH_MODEL,
-  DEFAULT_GEMINI_MODEL,
-  DEFAULT_GEMINI_MODEL_AUTO,
+  DEFAULT_CODEFLY_FLASH_MODEL,
+  DEFAULT_CODEFLY_MODEL,
+  DEFAULT_CODEFLY_MODEL_AUTO,
 } from '../../config/models.js';
 import { promptIdContext } from '../../utils/promptIdContext.js';
 import type { Content } from '@google/genai';
@@ -50,7 +50,7 @@ describe('ClassifierStrategy', () => {
       modelConfigService: {
         getResolvedConfig: vi.fn().mockReturnValue(mockResolvedConfig),
       },
-      getModel: () => DEFAULT_GEMINI_MODEL_AUTO,
+      getModel: () => DEFAULT_CODEFLY_MODEL_AUTO,
       getPreviewFeatures: () => false,
       getNumericalRoutingEnabled: vi.fn().mockResolvedValue(false),
     } as unknown as Config;
@@ -110,7 +110,7 @@ describe('ClassifierStrategy', () => {
 
     expect(mockBaseLlmClient.generateJson).toHaveBeenCalledOnce();
     expect(decision).toEqual({
-      model: DEFAULT_GEMINI_FLASH_MODEL,
+      model: DEFAULT_CODEFLY_FLASH_MODEL,
       metadata: {
         source: 'Classifier',
         latencyMs: expect.any(Number),
@@ -137,7 +137,7 @@ describe('ClassifierStrategy', () => {
 
     expect(mockBaseLlmClient.generateJson).toHaveBeenCalledOnce();
     expect(decision).toEqual({
-      model: DEFAULT_GEMINI_MODEL,
+      model: DEFAULT_CODEFLY_MODEL,
       metadata: {
         source: 'Classifier',
         latencyMs: expect.any(Number),
@@ -296,7 +296,7 @@ describe('ClassifierStrategy', () => {
   });
 
   it('should respect requestedModel from context in resolveClassifierModel', async () => {
-    const requestedModel = DEFAULT_GEMINI_MODEL; // Pro model
+    const requestedModel = DEFAULT_CODEFLY_MODEL; // Pro model
     const mockApiResponse = {
       reasoning: 'Choice is flash',
       model_choice: 'flash',
@@ -318,6 +318,6 @@ describe('ClassifierStrategy', () => {
 
     expect(decision).not.toBeNull();
     // Since requestedModel is Pro, and choice is flash, it should resolve to Flash
-    expect(decision?.model).toBe(DEFAULT_GEMINI_FLASH_MODEL);
+    expect(decision?.model).toBe(DEFAULT_CODEFLY_FLASH_MODEL);
   });
 });

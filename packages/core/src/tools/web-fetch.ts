@@ -174,7 +174,7 @@ class WebFetchToolInvocation extends BaseToolInvocation<
 
       textContent = textContent.substring(0, MAX_CONTENT_LENGTH);
 
-      const geminiClient = this.config.getGeminiClient();
+      const geminiClient = this.config.getCodeflyClient();
       const fallbackPrompt = `The user requested the following: "${this.params.prompt}".
 
 I was unable to access the URL directly. Instead, I have fetched the raw content of the page. Please use the following content to answer the request. Do not attempt to access the URL again.
@@ -268,7 +268,7 @@ ${textContent}
       return this.executeFallback(signal);
     }
 
-    const geminiClient = this.config.getGeminiClient();
+    const geminiClient = this.config.getCodeflyClient();
 
     try {
       const response = await geminiClient.generateContent(

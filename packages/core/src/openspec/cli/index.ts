@@ -39,26 +39,6 @@ import {
 const program = new Command();
 const version = process.env.CLI_VERSION || '0.0.0';
 
-/**
- * Get the full command path for nested commands.
- * For example: 'change show' -> 'change:show'
- */
-function _getCommandPath(command: Command): string {
-  const names: string[] = [];
-  let current: Command | null = command;
-
-  while (current) {
-    const name = current.name();
-    // Skip the root 'openspec' command
-    if (name && name !== 'openspec') {
-      names.unshift(name);
-    }
-    current = current.parent;
-  }
-
-  return names.join(':') || 'openspec';
-}
-
 program
   .name('openspec')
   .description('AI-native system for spec-driven development')
@@ -71,7 +51,7 @@ program.option('--no-color', 'Disable color output');
 // Note: preAction receives (thisCommand, actionCommand) where:
 // - thisCommand: the command where hook was added (root program)
 // - actionCommand: the command actually being executed (subcommand)
-program.hook('preAction', async (thisCommand, _actionCommand) => {
+program.hook('preAction', async (thisCommand) => {
   const opts = thisCommand.opts();
   if (opts.color === false) {
     process.env.NO_COLOR = '1';
@@ -99,7 +79,7 @@ program
           if (!stats.isDirectory()) {
             throw new Error(`Path "${targetPath}" is not a directory`);
           }
-        } catch (_error: any) {
+        } catch (error: any) {
           if (error.code === 'ENOENT') {
             // Directory doesn't exist, but we can create it
             console.log(
@@ -464,7 +444,7 @@ program
     try {
       const completionCommand = new CompletionCommand();
       await completionCommand.complete({ type });
-    } catch (error) {
+    } catch (_error) {
       // Silently fail for graceful shell completion experience
       process.exitCode = 1;
     }

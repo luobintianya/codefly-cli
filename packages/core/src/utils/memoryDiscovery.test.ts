@@ -16,12 +16,12 @@ import {
   refreshServerHierarchicalMemory,
 } from './memoryDiscovery.js';
 import {
-  setGeminiMdFilename,
+  setCodeflyMdFilename,
   DEFAULT_CONTEXT_FILENAME,
 } from '../tools/memoryTool.js';
 import { FileDiscoveryService } from '../services/fileDiscoveryService.js';
 import { CODEFLY_DIR } from './paths.js';
-import { Config, type GeminiCLIExtension } from '../config/config.js';
+import { Config, type CodeflyCLIExtension } from '../config/config.js';
 import { Storage } from '../config/storage.js';
 import { SimpleExtensionLoader } from './extensionLoader.js';
 import { CoreEvent, coreEvents } from './events.js';
@@ -83,7 +83,7 @@ describe('memoryDiscovery', () => {
   afterEach(async () => {
     vi.unstubAllEnvs();
     // Some tests set this to a different value.
-    setGeminiMdFilename(DEFAULT_CONTEXT_FILENAME);
+    setCodeflyMdFilename(DEFAULT_CONTEXT_FILENAME);
     // Clean up the temporary directory to prevent resource leaks.
     // Use maxRetries option for robust cleanup without race conditions
     await fsPromises.rm(testRootDir, {
@@ -195,7 +195,7 @@ default context content
 
   it('should load only the global custom context file if present and filename is changed', async () => {
     const customFilename = 'CUSTOM_AGENTS.md';
-    setGeminiMdFilename(customFilename);
+    setCodeflyMdFilename(customFilename);
 
     const customContextFile = await createTestFile(
       path.join(homedir, CODEFLY_DIR, customFilename),
@@ -222,7 +222,7 @@ custom context content
 
   it('should load context files by upward traversal with custom filename', async () => {
     const customFilename = 'PROJECT_CONTEXT.md';
-    setGeminiMdFilename(customFilename);
+    setCodeflyMdFilename(customFilename);
 
     const projectContextFile = await createTestFile(
       path.join(projectRoot, customFilename),
@@ -257,7 +257,7 @@ cwd context content
 
   it('should load context files by downward traversal with custom filename', async () => {
     const customFilename = 'LOCAL_CONTEXT.md';
-    setGeminiMdFilename(customFilename);
+    setCodeflyMdFilename(customFilename);
 
     const subdirCustomFile = await createTestFile(
       path.join(cwd, 'subdir', customFilename),
@@ -439,7 +439,7 @@ Subdir memory
       'tree',
       {
         respectGitIgnore: true,
-        respectGeminiIgnore: true,
+        respectCodeflyIgnore: true,
       },
       200, // maxDirs parameter
     );
@@ -475,7 +475,7 @@ My code memory
       'tree', // importFormat
       {
         respectGitIgnore: true,
-        respectGeminiIgnore: true,
+        respectCodeflyIgnore: true,
       },
       1, // maxDirs
     );
@@ -518,7 +518,7 @@ My code memory
         {
           contextFiles: [extensionFilePath],
           isActive: true,
-        } as GeminiCLIExtension,
+        } as CodeflyCLIExtension,
       ]),
       DEFAULT_FOLDER_TRUST,
     );
@@ -668,7 +668,7 @@ included directory memory
         {
           isActive: true,
           contextFiles: [extFile],
-        } as GeminiCLIExtension,
+        } as CodeflyCLIExtension,
       ]);
 
       const result = await loadEnvironmentMemory([], mockExtensionLoader);
@@ -763,7 +763,7 @@ included directory memory
 
     it('should keep multiple memory files from the same directory adjacent and in order', async () => {
       // Configure multiple memory filenames
-      setGeminiMdFilename(['PRIMARY.md', 'SECONDARY.md']);
+      setCodeflyMdFilename(['PRIMARY.md', 'SECONDARY.md']);
 
       const dir = await createEmptyDir(
         path.join(testRootDir, 'multi_file_dir'),
@@ -938,7 +938,7 @@ included directory memory
     coreEvents.on(CoreEvent.MemoryChanged, mockEventListener);
     const refreshResult = await refreshServerHierarchicalMemory(config);
     expect(refreshResult.fileCount).equals(1);
-    expect(config.getGeminiMdFileCount()).equals(refreshResult.fileCount);
+    expect(config.getCodeflyMdFileCount()).equals(refreshResult.fileCount);
     expect(refreshResult.memoryContent).toContain(
       'Really cool custom context!',
     );
@@ -946,7 +946,7 @@ included directory memory
     expect(refreshResult.filePaths[0]).toContain(
       path.join(extensionPath, 'CustomContext.md'),
     );
-    expect(config.getGeminiMdFilePaths()).equals(refreshResult.filePaths);
+    expect(config.getCodeflyMdFilePaths()).equals(refreshResult.filePaths);
     expect(mockEventListener).toHaveBeenCalledExactlyOnceWith({
       fileCount: refreshResult.fileCount,
     });
@@ -968,8 +968,8 @@ included directory memory
       getFileFilteringOptions: vi.fn().mockReturnValue(undefined),
       getDiscoveryMaxDirs: vi.fn().mockReturnValue(200),
       setUserMemory: vi.fn(),
-      setGeminiMdFileCount: vi.fn(),
-      setGeminiMdFilePaths: vi.fn(),
+      setCodeflyMdFileCount: vi.fn(),
+      setCodeflyMdFilePaths: vi.fn(),
       getMcpClientManager: vi.fn().mockReturnValue({
         getMcpInstructions: vi
           .fn()

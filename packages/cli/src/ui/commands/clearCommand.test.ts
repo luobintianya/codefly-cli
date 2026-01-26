@@ -21,7 +21,7 @@ vi.mock('@codeflyai/codefly-core', async () => {
   };
 });
 
-import type { GeminiClient } from '@codeflyai/codefly-core';
+import type { CodeflyClient } from '@codeflyai/codefly-core';
 import { uiTelemetryService } from '@codeflyai/codefly-core';
 
 describe('clearCommand', () => {
@@ -36,13 +36,13 @@ describe('clearCommand', () => {
     mockContext = createMockCommandContext({
       services: {
         config: {
-          getGeminiClient: () =>
+          getCodeflyClient: () =>
             ({
               resetChat: mockResetChat,
               getChat: () => ({
                 getChatRecordingService: mockGetChatRecordingService,
               }),
-            }) as unknown as GeminiClient,
+            }) as unknown as CodeflyClient,
           setSessionId: vi.fn(),
           getEnableHooks: vi.fn().mockReturnValue(false),
           getMessageBus: vi.fn().mockReturnValue(undefined),

@@ -9,12 +9,12 @@ import type { Content, GenerateContentResponse } from '@google/genai';
 import { ApiError, ThinkingLevel } from '@google/genai';
 import type { ContentGenerator } from '../core/contentGenerator.js';
 import {
-  GeminiChat,
+  CodeflyChat,
   InvalidStreamError,
   StreamEventType,
   SYNTHETIC_THOUGHT_SIGNATURE,
   type StreamEvent,
-} from './geminiChat.js';
+} from './codeflyChat.js';
 import type { Config } from '../config/config.js';
 import { setSimulate429 } from '../utils/testUtils.js';
 import { DEFAULT_THINKING_MODE } from '../config/models.js';
@@ -96,9 +96,9 @@ vi.mock('../telemetry/uiTelemetry.js', () => ({
   },
 }));
 
-describe('GeminiChat', () => {
+describe('CodeflyChat', () => {
   let mockContentGenerator: ContentGenerator;
-  let chat: GeminiChat;
+  let chat: CodeflyChat;
   let mockConfig: Config;
 
   beforeEach(() => {
@@ -191,7 +191,7 @@ describe('GeminiChat', () => {
     // Disable 429 simulation for tests
     setSimulate429(false);
     // Reset history for each test by creating a new instance
-    chat = new GeminiChat(mockConfig);
+    chat = new CodeflyChat(mockConfig);
     mockConfig.getHookSystem = vi.fn().mockReturnValue(undefined);
   });
 
@@ -206,7 +206,7 @@ describe('GeminiChat', () => {
         { role: 'user', parts: [{ text: 'Hello' }] },
         { role: 'model', parts: [{ text: 'Hi there' }] },
       ];
-      const chatWithHistory = new GeminiChat(mockConfig, '', [], history);
+      const chatWithHistory = new CodeflyChat(mockConfig, '', [], history);
       // 'Hello': 5 chars * 0.25 = 1.25
       // 'Hi there': 8 chars * 0.25 = 2.0
       // Total: 3.25 -> floor(3.25) = 3
@@ -214,7 +214,7 @@ describe('GeminiChat', () => {
     });
 
     it('should initialize lastPromptTokenCount for empty history', () => {
-      const chatEmpty = new GeminiChat(mockConfig);
+      const chatEmpty = new CodeflyChat(mockConfig);
       expect(chatEmpty.getLastPromptTokenCount()).toBe(0);
     });
   });
@@ -224,7 +224,7 @@ describe('GeminiChat', () => {
       const initialHistory: Content[] = [
         { role: 'user', parts: [{ text: 'Hello' }] },
       ];
-      const chatWithHistory = new GeminiChat(
+      const chatWithHistory = new CodeflyChat(
         mockConfig,
         '',
         [],
@@ -1953,7 +1953,7 @@ describe('GeminiChat', () => {
 
   describe('ensureActiveLoopHasThoughtSignatures', () => {
     it('should add thoughtSignature to the first functionCall in each model turn of the active loop', () => {
-      const chat = new GeminiChat(mockConfig, '', [], []);
+      const chat = new CodeflyChat(mockConfig, '', [], []);
       const history: Content[] = [
         { role: 'user', parts: [{ text: 'Old message' }] },
         {
@@ -2010,7 +2010,7 @@ describe('GeminiChat', () => {
     });
 
     it('should not modify contents if there is no user text message', () => {
-      const chat = new GeminiChat(mockConfig, '', [], []);
+      const chat = new CodeflyChat(mockConfig, '', [], []);
       const history: Content[] = [
         {
           role: 'user',
@@ -2027,14 +2027,14 @@ describe('GeminiChat', () => {
     });
 
     it('should handle an empty history', () => {
-      const chat = new GeminiChat(mockConfig, '', []);
+      const chat = new CodeflyChat(mockConfig, '', []);
       const history: Content[] = [];
       const newContents = chat.ensureActiveLoopHasThoughtSignatures(history);
       expect(newContents).toEqual([]);
     });
 
     it('should handle history with only a user message', () => {
-      const chat = new GeminiChat(mockConfig, '', []);
+      const chat = new CodeflyChat(mockConfig, '', []);
       const history: Content[] = [{ role: 'user', parts: [{ text: 'Hello' }] }];
       const newContents = chat.ensureActiveLoopHasThoughtSignatures(history);
       expect(newContents).toEqual(history);

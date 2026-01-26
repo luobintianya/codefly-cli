@@ -6,7 +6,7 @@
 
 export interface FileFilteringOptions {
   respectGitIgnore: boolean;
-  respectGeminiIgnore: boolean;
+  respectCodeflyIgnore: boolean;
   maxFileCount?: number;
   searchTimeout?: number;
 }
@@ -14,7 +14,7 @@ export interface FileFilteringOptions {
 // For memory files
 export const DEFAULT_MEMORY_FILE_FILTERING_OPTIONS: FileFilteringOptions = {
   respectGitIgnore: false,
-  respectGeminiIgnore: true,
+  respectCodeflyIgnore: true,
   maxFileCount: 20000,
   searchTimeout: 5000,
 };
@@ -22,7 +22,7 @@ export const DEFAULT_MEMORY_FILE_FILTERING_OPTIONS: FileFilteringOptions = {
 // For all other files
 export const DEFAULT_FILE_FILTERING_OPTIONS: FileFilteringOptions = {
   respectGitIgnore: true,
-  respectGeminiIgnore: true,
+  respectCodeflyIgnore: true,
   maxFileCount: 20000,
   searchTimeout: 5000,
 };

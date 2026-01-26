@@ -253,7 +253,7 @@ export function useAtCompletion(props: UseAtCompletionProps): void {
           useGitignore:
             config?.getFileFilteringOptions()?.respectGitIgnore ?? true,
           useGeminiignore:
-            config?.getFileFilteringOptions()?.respectGeminiIgnore ?? true,
+            config?.getFileFilteringOptions()?.respectCodeflyIgnore ?? true,
           cache: true,
           cacheTtl: 30, // 30 seconds
           enableRecursiveFileSearch:

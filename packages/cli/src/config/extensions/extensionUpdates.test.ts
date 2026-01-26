@@ -15,7 +15,7 @@ import {
   KeychainTokenStorage,
   debugLogger,
   type ExtensionInstallMetadata,
-  type GeminiCLIExtension,
+  type CodeflyCLIExtension,
   coreEvents,
 } from '@codeflyai/codefly-core';
 import { EXTENSION_SETTINGS_FILENAME } from './variables.js';
@@ -111,7 +111,7 @@ describe('extensionUpdates', () => {
     tempWorkspaceDir = fs.mkdtempSync(
       path.join(os.tmpdir(), 'gemini-cli-test-workspace-'),
     );
-    extensionDir = path.join(tempHomeDir, '.gemini', 'extensions', 'test-ext');
+    extensionDir = path.join(tempHomeDir, '.codefly', 'extensions', 'test-ext');
 
     // Mock ExtensionStorage to rely on our temp extension dir
     vi.spyOn(ExtensionStorage.prototype, 'getExtensionDir').mockReturnValue(
@@ -272,12 +272,12 @@ describe('extensionUpdates', () => {
           settings: [],
           resolvedSettings: [],
           skills: [],
-        } as unknown as GeminiCLIExtension,
+        } as unknown as CodeflyCLIExtension,
       ]);
       vi.spyOn(manager, 'uninstallExtension').mockResolvedValue(undefined);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       vi.spyOn(manager as any, 'loadExtension').mockResolvedValue(
-        {} as unknown as GeminiCLIExtension,
+        {} as unknown as CodeflyCLIExtension,
       );
       vi.spyOn(manager, 'enableExtension').mockResolvedValue(undefined);
 

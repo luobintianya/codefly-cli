@@ -42,9 +42,9 @@ vi.mock('@codeflyai/codefly-core', async () => ({
     USE_GEMINI: 'use_gemini',
   },
   CODEFLY_DIR: '.gemini',
-  DEFAULT_GEMINI_EMBEDDING_MODEL: 'models/embedding-001',
-  DEFAULT_GEMINI_MODEL: 'models/gemini-1.5-flash',
-  PREVIEW_GEMINI_MODEL: 'models/gemini-1.5-pro-latest',
+  DEFAULT_CODEFLY_EMBEDDING_MODEL: 'models/embedding-001',
+  DEFAULT_CODEFLY_MODEL: 'models/gemini-1.5-flash',
+  PREVIEW_CODEFLY_MODEL: 'models/gemini-1.5-pro-latest',
   homedir: () => '/tmp',
   GitService: {
     verifyGitAvailability: mockVerifyGitAvailability,

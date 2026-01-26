@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import type { ZodError } from 'zod';
-import { z } from 'zod';
 import { readFileSync, promises as fs } from 'node:fs';
 import path from 'node:path';
 import type { Spec, Change } from '../schemas/index.js';
@@ -386,7 +385,7 @@ export class Validator {
     });
   }
 
-  private applySpecRules(spec: Spec, content: string): ValidationIssue[] {
+  private applySpecRules(spec: Spec, _content: string): ValidationIssue[] {
     const issues: ValidationIssue[] = [];
 
     if (spec.overview.length < MIN_PURPOSE_LENGTH) {
@@ -418,7 +417,10 @@ export class Validator {
     return issues;
   }
 
-  private applyChangeRules(change: Change, content: string): ValidationIssue[] {
+  private applyChangeRules(
+    change: Change,
+    _content: string,
+  ): ValidationIssue[] {
     const issues: ValidationIssue[] = [];
 
     const MIN_DELTA_DESCRIPTION_LENGTH = 10;

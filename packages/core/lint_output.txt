@@ -1,0 +1,59 @@
+
+> @codeflyai/codefly-core@0.24.0-nightly.20251227.37be16243 lint
+> eslint . --ext .ts,.tsx --max-warnings 100
+
+
+/Users/robinx/code/codefly-cli/packages/core/src/openspec/commands/change.ts
+  157:20  warning  'error' is defined but never used. Allowed unused caught errors must match /^_/u  @typescript-eslint/no-unused-vars
+
+/Users/robinx/code/codefly-cli/packages/core/src/openspec/commands/show.ts
+  6:8  warning  'path' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/Users/robinx/code/codefly-cli/packages/core/src/openspec/commands/validate.ts
+  317:11  warning  'maxSuggestions' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/Users/robinx/code/codefly-cli/packages/core/src/openspec/core/archive.ts
+  373:14  warning  'error' is defined but never used. Allowed unused caught errors must match /^_/u  @typescript-eslint/no-unused-vars
+
+/Users/robinx/code/codefly-cli/packages/core/src/openspec/core/completions/generators/bash-generator.ts
+  7:10  warning  'FlagDefinition' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/Users/robinx/code/codefly-cli/packages/core/src/openspec/core/completions/generators/fish-generator.ts
+  147:11  warning  'longFlag' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/Users/robinx/code/codefly-cli/packages/core/src/openspec/core/completions/generators/powershell-generator.ts
+  7:10  warning  'FlagDefinition' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/Users/robinx/code/codefly-cli/packages/core/src/openspec/core/completions/installers/bash-installer.ts
+  361:19  warning  'options' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/Users/robinx/code/codefly-cli/packages/core/src/openspec/core/completions/installers/fish-installer.ts
+  139:19  warning  'options' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/Users/robinx/code/codefly-cli/packages/core/src/openspec/core/completions/installers/powershell-installer.ts
+    9:10  warning  'FileSystemUtils' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  370:19  warning  'options' is defined but never used. Allowed unused args must match /^_/u          @typescript-eslint/no-unused-vars
+
+/Users/robinx/code/codefly-cli/packages/core/src/openspec/core/converters/json-converter.ts
+  10:10  warning  'Spec' is defined but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+  10:16  warning  'Change' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/Users/robinx/code/codefly-cli/packages/core/src/openspec/core/parsers/change-parser.ts
+  17:11  warning  'DeltaSection' is defined but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+  83:18  warning  'error' is defined but never used. Allowed unused caught errors must match /^_/u  @typescript-eslint/no-unused-vars
+  88:14  warning  'error' is defined but never used. Allowed unused caught errors must match /^_/u  @typescript-eslint/no-unused-vars
+
+/Users/robinx/code/codefly-cli/packages/core/src/openspec/core/parsers/requirement-blocks.ts
+  79:11  warning  'headerStart' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/Users/robinx/code/codefly-cli/packages/core/src/openspec/core/project-config.ts
+    6:36  warning  'statSync' is defined but never used. Allowed unused vars must match /^_/u             @typescript-eslint/no-unused-vars
+  125:13  warning  'rulesField' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/Users/robinx/code/codefly-cli/packages/core/src/openspec/core/validation/validator.ts
+    7:10  warning  'z' is defined but never used. Allowed unused vars must match /^_/u        @typescript-eslint/no-unused-vars
+  389:38  warning  'content' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  421:44  warning  'content' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+✖ 22 problems (0 errors, 22 warnings)
+

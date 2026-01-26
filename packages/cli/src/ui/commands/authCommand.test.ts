@@ -25,7 +25,7 @@ describe('authCommand', () => {
     mockContext = createMockCommandContext({
       services: {
         config: {
-          getGeminiClient: vi.fn(),
+          getCodeflyClient: vi.fn(),
         },
       },
     });
@@ -87,11 +87,11 @@ describe('authCommand', () => {
       const mockClient = {
         stripThoughtsFromHistory: mockStripThoughts,
       } as unknown as ReturnType<
-        NonNullable<typeof mockContext.services.config>['getGeminiClient']
+        NonNullable<typeof mockContext.services.config>['getCodeflyClient']
       >;
 
       if (mockContext.services.config) {
-        mockContext.services.config.getGeminiClient = vi.fn(() => mockClient);
+        mockContext.services.config.getCodeflyClient = vi.fn(() => mockClient);
       }
 
       await logoutCommand!.action!(mockContext, '');

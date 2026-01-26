@@ -21,8 +21,8 @@ import {
 } from './policyCatalog.js';
 import {
   DEFAULT_GEMINI_FLASH_LITE_MODEL,
-  DEFAULT_GEMINI_MODEL,
-  PREVIEW_GEMINI_MODEL_AUTO,
+  DEFAULT_CODEFLY_MODEL,
+  PREVIEW_CODEFLY_MODEL_AUTO,
   isAutoModel,
   resolveModel,
 } from '../config/models.js';
@@ -51,8 +51,8 @@ export function resolvePolicyChain(
     chain = getFlashLitePolicyChain();
   } else if (isAutoPreferred || isAutoConfigured) {
     const previewEnabled =
-      preferredModel === PREVIEW_GEMINI_MODEL_AUTO ||
-      configuredModel === PREVIEW_GEMINI_MODEL_AUTO;
+      preferredModel === PREVIEW_CODEFLY_MODEL_AUTO ||
+      configuredModel === PREVIEW_CODEFLY_MODEL_AUTO;
     chain = getModelPolicyChain({
       previewEnabled,
     });
@@ -150,7 +150,7 @@ export function selectModelForAvailability(
   if (selection.selectedModel) return selection;
 
   const backupModel =
-    chain.find((p) => p.isLastResort)?.model ?? DEFAULT_GEMINI_MODEL;
+    chain.find((p) => p.isLastResort)?.model ?? DEFAULT_CODEFLY_MODEL;
 
   return { selectedModel: backupModel, skipped: [] };
 }

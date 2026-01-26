@@ -17,11 +17,11 @@ import {
   ApprovalMode,
   loadServerHierarchicalMemory,
   CODEFLY_DIR,
-  DEFAULT_GEMINI_EMBEDDING_MODEL,
-  DEFAULT_GEMINI_MODEL,
+  DEFAULT_CODEFLY_EMBEDDING_MODEL,
+  DEFAULT_CODEFLY_MODEL,
   type ExtensionLoader,
   startupProfiler,
-  PREVIEW_GEMINI_MODEL,
+  PREVIEW_CODEFLY_MODEL,
   homedir,
   GitService,
 } from '@codeflyai/codefly-core';
@@ -58,9 +58,9 @@ export async function loadConfig(
   const configParams: ConfigParameters = {
     sessionId: taskId,
     model: settings.general?.previewFeatures
-      ? PREVIEW_GEMINI_MODEL
-      : DEFAULT_GEMINI_MODEL,
-    embeddingModel: DEFAULT_GEMINI_EMBEDDING_MODEL,
+      ? PREVIEW_CODEFLY_MODEL
+      : DEFAULT_CODEFLY_MODEL,
+    embeddingModel: DEFAULT_CODEFLY_EMBEDDING_MODEL,
     sandbox: undefined, // Sandbox might not be relevant for a server-side agent
     targetDir: workspaceDir, // Or a specific directory the agent operates on
     debugMode: process.env['DEBUG'] === 'true' || false,
@@ -110,8 +110,8 @@ export async function loadConfig(
       folderTrust,
     );
   configParams.userMemory = memoryContent;
-  configParams.geminiMdFileCount = fileCount;
-  configParams.geminiMdFilePaths = filePaths;
+  configParams.codeflyMdFileCount = fileCount;
+  configParams.codeflyMdFilePaths = filePaths;
   const config = new Config({
     ...configParams,
   });

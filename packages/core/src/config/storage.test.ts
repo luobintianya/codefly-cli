@@ -20,7 +20,7 @@ import { Storage } from './storage.js';
 import { CODEFLY_DIR } from '../utils/paths.js';
 
 describe('Storage – getGlobalSettingsPath', () => {
-  it('returns path to ~/.gemini/settings.json', () => {
+  it('returns path to ~/.codefly/settings.json', () => {
     const expected = path.join(os.homedir(), CODEFLY_DIR, 'settings.json');
     expect(Storage.getGlobalSettingsPath()).toBe(expected);
   });
@@ -30,42 +30,42 @@ describe('Storage – additional helpers', () => {
   const projectRoot = '/tmp/project';
   const storage = new Storage(projectRoot);
 
-  it('getWorkspaceSettingsPath returns project/.gemini/settings.json', () => {
+  it('getWorkspaceSettingsPath returns project/.codefly/settings.json', () => {
     const expected = path.join(projectRoot, CODEFLY_DIR, 'settings.json');
     expect(storage.getWorkspaceSettingsPath()).toBe(expected);
   });
 
-  it('getUserCommandsDir returns ~/.gemini/commands', () => {
+  it('getUserCommandsDir returns ~/.codefly/commands', () => {
     const expected = path.join(os.homedir(), CODEFLY_DIR, 'commands');
     expect(Storage.getUserCommandsDir()).toBe(expected);
   });
 
-  it('getProjectCommandsDir returns project/.gemini/commands', () => {
+  it('getProjectCommandsDir returns project/.codefly/commands', () => {
     const expected = path.join(projectRoot, CODEFLY_DIR, 'commands');
     expect(storage.getProjectCommandsDir()).toBe(expected);
   });
 
-  it('getUserSkillsDir returns ~/.gemini/skills', () => {
+  it('getUserSkillsDir returns ~/.codefly/skills', () => {
     const expected = path.join(os.homedir(), CODEFLY_DIR, 'skills');
     expect(Storage.getUserSkillsDir()).toBe(expected);
   });
 
-  it('getProjectSkillsDir returns project/.gemini/skills', () => {
+  it('getProjectSkillsDir returns project/.codefly/skills', () => {
     const expected = path.join(projectRoot, CODEFLY_DIR, 'skills');
     expect(storage.getProjectSkillsDir()).toBe(expected);
   });
 
-  it('getUserAgentsDir returns ~/.gemini/agents', () => {
+  it('getUserAgentsDir returns ~/.codefly/agents', () => {
     const expected = path.join(os.homedir(), CODEFLY_DIR, 'agents');
     expect(Storage.getUserAgentsDir()).toBe(expected);
   });
 
-  it('getProjectAgentsDir returns project/.gemini/agents', () => {
+  it('getProjectAgentsDir returns project/.codefly/agents', () => {
     const expected = path.join(projectRoot, CODEFLY_DIR, 'agents');
     expect(storage.getProjectAgentsDir()).toBe(expected);
   });
 
-  it('getMcpOAuthTokensPath returns ~/.gemini/mcp-oauth-tokens.json', () => {
+  it('getMcpOAuthTokensPath returns ~/.codefly/mcp-oauth-tokens.json', () => {
     const expected = path.join(
       os.homedir(),
       CODEFLY_DIR,
@@ -74,7 +74,7 @@ describe('Storage – additional helpers', () => {
     expect(Storage.getMcpOAuthTokensPath()).toBe(expected);
   });
 
-  it('getGlobalBinDir returns ~/.gemini/tmp/bin', () => {
+  it('getGlobalBinDir returns ~/.codefly/tmp/bin', () => {
     const expected = path.join(os.homedir(), CODEFLY_DIR, 'tmp', 'bin');
     expect(Storage.getGlobalBinDir()).toBe(expected);
   });

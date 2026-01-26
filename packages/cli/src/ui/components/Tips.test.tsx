@@ -15,7 +15,7 @@ describe('Tips', () => {
     [5, '3. /help for more information'],
   ])('renders correct tips when file count is %i', (count, expectedText) => {
     const config = {
-      getGeminiMdFileCount: vi.fn().mockReturnValue(count),
+      getCodeflyMdFileCount: vi.fn().mockReturnValue(count),
     } as unknown as Config;
 
     const { lastFrame } = render(<Tips config={config} />);

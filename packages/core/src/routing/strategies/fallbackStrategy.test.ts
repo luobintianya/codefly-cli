@@ -11,9 +11,9 @@ import type { BaseLlmClient } from '../../core/baseLlmClient.js';
 import type { Config } from '../../config/config.js';
 import type { ModelAvailabilityService } from '../../availability/modelAvailabilityService.js';
 import {
-  DEFAULT_GEMINI_MODEL,
-  DEFAULT_GEMINI_FLASH_MODEL,
-  DEFAULT_GEMINI_MODEL_AUTO,
+  DEFAULT_CODEFLY_MODEL,
+  DEFAULT_CODEFLY_FLASH_MODEL,
+  DEFAULT_CODEFLY_MODEL_AUTO,
 } from '../../config/models.js';
 import { selectModelForAvailability } from '../../availability/policyHelpers.js';
 
@@ -24,7 +24,7 @@ vi.mock('../../availability/policyHelpers.js', () => ({
 const createMockConfig = (overrides: Partial<Config> = {}): Config =>
   ({
     getModelAvailabilityService: vi.fn(),
-    getModel: vi.fn().mockReturnValue(DEFAULT_GEMINI_MODEL),
+    getModel: vi.fn().mockReturnValue(DEFAULT_CODEFLY_MODEL),
     getPreviewFeatures: vi.fn().mockReturnValue(false),
     ...overrides,
   }) as unknown as Config;
@@ -54,8 +54,8 @@ describe('FallbackStrategy', () => {
 
     const decision = await strategy.route(mockContext, mockConfig, mockClient);
     expect(decision).toBeNull();
-    // Should check availability of the resolved model (DEFAULT_GEMINI_MODEL)
-    expect(mockService.snapshot).toHaveBeenCalledWith(DEFAULT_GEMINI_MODEL);
+    // Should check availability of the resolved model (DEFAULT_CODEFLY_MODEL)
+    expect(mockService.snapshot).toHaveBeenCalledWith(DEFAULT_CODEFLY_MODEL);
   });
 
   it('should return null if fallback selection is same as requested model', async () => {
@@ -66,7 +66,7 @@ describe('FallbackStrategy', () => {
     });
     // Mock selectModelForAvailability to return the SAME model (no fallback found)
     vi.mocked(selectModelForAvailability).mockReturnValue({
-      selectedModel: DEFAULT_GEMINI_MODEL,
+      selectedModel: DEFAULT_CODEFLY_MODEL,
       skipped: [],
     });
 
@@ -83,7 +83,7 @@ describe('FallbackStrategy', () => {
 
     // Mock selectModelForAvailability to find a fallback (Flash)
     vi.mocked(selectModelForAvailability).mockReturnValue({
-      selectedModel: DEFAULT_GEMINI_FLASH_MODEL,
+      selectedModel: DEFAULT_CODEFLY_FLASH_MODEL,
       skipped: [{ model: 'gemini-2.5-pro', reason: 'quota' }],
     });
 
@@ -93,7 +93,7 @@ describe('FallbackStrategy', () => {
     const decision = await strategy.route(mockContext, mockConfig, mockClient);
 
     expect(decision).not.toBeNull();
-    expect(decision?.model).toBe(DEFAULT_GEMINI_FLASH_MODEL);
+    expect(decision?.model).toBe(DEFAULT_CODEFLY_FLASH_MODEL);
     expect(decision?.metadata.source).toBe('fallback');
     expect(decision?.metadata.reasoning).toContain(
       `Model gemini-2.5-pro is unavailable`,
@@ -103,13 +103,13 @@ describe('FallbackStrategy', () => {
   it('should correctly handle "auto" alias by resolving it before checking availability', async () => {
     // Mock snapshot to return available for the RESOLVED model
     vi.mocked(mockService.snapshot).mockReturnValue({ available: true });
-    vi.mocked(mockConfig.getModel).mockReturnValue(DEFAULT_GEMINI_MODEL_AUTO);
+    vi.mocked(mockConfig.getModel).mockReturnValue(DEFAULT_CODEFLY_MODEL_AUTO);
 
     const decision = await strategy.route(mockContext, mockConfig, mockClient);
 
     expect(decision).toBeNull();
     // Important: check that it queried snapshot with the RESOLVED model, not 'auto'
-    expect(mockService.snapshot).toHaveBeenCalledWith(DEFAULT_GEMINI_MODEL);
+    expect(mockService.snapshot).toHaveBeenCalledWith(DEFAULT_CODEFLY_MODEL);
   });
 
   it('should respect requestedModel from context', async () => {

@@ -42,7 +42,7 @@ export const compressCommand: SlashCommand = {
       ui.setPendingItem(pendingMessage);
       const promptId = `compress-${Date.now()}`;
       const compressed = await context.services.config
-        ?.getGeminiClient()
+        ?.getCodeflyClient()
         ?.tryCompressChat(promptId, true);
       if (compressed) {
         ui.addItem(

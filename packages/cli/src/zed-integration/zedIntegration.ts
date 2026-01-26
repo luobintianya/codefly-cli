@@ -6,7 +6,7 @@
 
 import type {
   Config,
-  GeminiChat,
+  CodeflyChat,
   ToolResult,
   ToolCallConfirmationDetails,
   FilterFilesOptions,
@@ -174,7 +174,7 @@ export class GeminiAgent {
       config.setFileSystemService(acpFileSystemService);
     }
 
-    const geminiClient = config.getGeminiClient();
+    const geminiClient = config.getCodeflyClient();
     const chat = await geminiClient.startChat();
     const session = new Session(sessionId, chat, config, this.connection);
     this.sessions.set(sessionId, session);
@@ -255,7 +255,7 @@ export class Session {
 
   constructor(
     private readonly id: string,
-    private readonly chat: GeminiChat,
+    private readonly chat: CodeflyChat,
     private readonly config: Config,
     private readonly connection: acp.AgentSideConnection,
   ) {}

@@ -115,7 +115,7 @@ const createMockUIState = (overrides: Partial<UIState> = {}): UIState =>
     ctrlDPressedOnce: false,
     showEscapePrompt: false,
     ideContextState: null,
-    geminiMdFileCount: 0,
+    codeflyMdFileCount: 0,
     renderMarkdown: true,
     filteredConsoleMessages: [],
     history: [],

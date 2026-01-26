@@ -55,7 +55,7 @@ describe('directoryCommand', () => {
     mockConfig = {
       getWorkspaceContext: () => mockWorkspaceContext,
       isRestrictiveSandbox: vi.fn().mockReturnValue(false),
-      getGeminiClient: vi.fn().mockReturnValue({
+      getCodeflyClient: vi.fn().mockReturnValue({
         addDirectoryContext: vi.fn(),
       }),
       getWorkingDir: () => '/test/dir',
@@ -64,7 +64,7 @@ describe('directoryCommand', () => {
       getFileService: () => ({}),
       getFileFilteringOptions: () => ({ ignore: [], include: [] }),
       setUserMemory: vi.fn(),
-      setGeminiMdFileCount: vi.fn(),
+      setCodeflyMdFileCount: vi.fn(),
     } as unknown as Config;
 
     mockContext = {

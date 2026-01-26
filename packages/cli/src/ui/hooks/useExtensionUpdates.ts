@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { debugLogger, type GeminiCLIExtension } from '@codeflyai/codefly-core';
+import { debugLogger, type CodeflyCLIExtension } from '@codeflyai/codefly-core';
 import { getErrorMessage } from '../../utils/errors.js';
 import {
   ExtensionUpdateState,
@@ -122,7 +122,7 @@ export const useExtensionUpdates = (
       });
     }
 
-    function shouldDoUpdate(extension: GeminiCLIExtension): boolean {
+    function shouldDoUpdate(extension: CodeflyCLIExtension): boolean {
       if (scheduledUpdate) {
         if (scheduledUpdate.all) {
           return true;

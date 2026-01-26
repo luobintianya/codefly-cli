@@ -98,6 +98,11 @@ their corresponding top-level category object in your `settings.json` file.
 
 #### `general`
 
+- **`general.language`** (string):
+  - **Description:** The language for the CLI interface.
+  - **Default:** `"en"`
+  - **Requires restart:** Yes
+
 - **`general.previewFeatures`** (boolean):
   - **Description:** Enable preview features (e.g., preview models).
   - **Default:** `false`
@@ -844,7 +849,7 @@ their corresponding top-level category object in your `settings.json` file.
 - **`experimental.enableAgents`** (boolean):
   - **Description:** Enable local and remote subagents. Warning: Experimental
     feature, uses YOLO mode for subagents
-  - **Default:** `false`
+  - **Default:** `true`
   - **Requires restart:** Yes
 
 - **`experimental.extensionManagement`** (boolean):

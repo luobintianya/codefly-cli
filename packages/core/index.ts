@@ -8,11 +8,11 @@ export * from './src/index.js';
 export * from './src/core/apiKeyCredentialStorage.js';
 export { Storage } from './src/config/storage.js';
 export {
-  DEFAULT_GEMINI_MODEL,
-  DEFAULT_GEMINI_MODEL_AUTO,
-  DEFAULT_GEMINI_FLASH_MODEL,
+  DEFAULT_CODEFLY_MODEL,
+  DEFAULT_CODEFLY_MODEL_AUTO,
+  DEFAULT_CODEFLY_FLASH_MODEL,
   DEFAULT_GEMINI_FLASH_LITE_MODEL,
-  DEFAULT_GEMINI_EMBEDDING_MODEL,
+  DEFAULT_CODEFLY_EMBEDDING_MODEL,
 } from './src/config/models.js';
 export {
   serializeTerminalToObject,

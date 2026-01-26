@@ -164,6 +164,15 @@ const SETTINGS_SCHEMA = {
     description: 'General application settings.',
     showInDialog: false,
     properties: {
+      language: {
+        type: 'string',
+        label: 'Language',
+        category: 'General',
+        requiresRestart: true,
+        default: 'en',
+        description: 'The language for the CLI interface.',
+        showInDialog: true,
+      },
       previewFeatures: {
         type: 'boolean',
         label: 'Preview Features (e.g., models)',
@@ -894,13 +903,13 @@ const SETTINGS_SCHEMA = {
             description: 'Respect .gitignore files when searching.',
             showInDialog: true,
           },
-          respectGeminiIgnore: {
+          respectCodeflyIgnore: {
             type: 'boolean',
-            label: 'Respect .geminiignore',
+            label: 'Respect .codeflyignore',
             category: 'Context',
             requiresRestart: true,
             default: true,
-            description: 'Respect .geminiignore files when searching.',
+            description: 'Respect .codeflyignore files when searching.',
             showInDialog: true,
           },
           enableRecursiveFileSearch: {
@@ -1457,7 +1466,7 @@ const SETTINGS_SCHEMA = {
         label: 'Enable Agents',
         category: 'Experimental',
         requiresRestart: true,
-        default: false,
+        default: true,
         description:
           'Enable local and remote subagents. Warning: Experimental feature, uses YOLO mode for subagents',
         showInDialog: false,

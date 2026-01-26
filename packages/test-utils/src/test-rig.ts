@@ -11,7 +11,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { env } from 'node:process';
 import { setTimeout as sleep } from 'node:timers/promises';
-import { DEFAULT_GEMINI_MODEL, CODEFLY_DIR } from '@codeflyai/codefly-core';
+import { DEFAULT_CODEFLY_MODEL, CODEFLY_DIR } from '@codeflyai/codefly-core';
 import fs from 'node:fs';
 import * as pty from '@lydell/node-pty';
 import stripAnsi from 'strip-ansi';
@@ -341,7 +341,7 @@ export class TestRig {
         useAlternateBuffer: true,
       },
       model: {
-        name: DEFAULT_GEMINI_MODEL,
+        name: DEFAULT_CODEFLY_MODEL,
       },
       sandbox:
         env['GEMINI_SANDBOX'] !== 'false' ? env['GEMINI_SANDBOX'] : false,

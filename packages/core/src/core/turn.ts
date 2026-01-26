@@ -23,8 +23,8 @@ import {
   UnauthorizedError,
   toFriendlyError,
 } from '../utils/errors.js';
-import type { GeminiChat } from './geminiChat.js';
-import { InvalidStreamError } from './geminiChat.js';
+import type { CodeflyChat } from './codeflyChat.js';
+import { InvalidStreamError } from './codeflyChat.js';
 import { parseThought, type ThoughtSummary } from '../utils/thoughtUtils.js';
 import { createUserContent } from '@google/genai';
 import type { ModelConfigKey } from '../services/modelConfigService.js';
@@ -49,7 +49,7 @@ export interface ServerTool {
   ): Promise<ToolCallConfirmationDetails | false>;
 }
 
-export enum GeminiEventType {
+export enum CodeflyEventType {
   Content = 'content',
   ToolCallRequest = 'tool_call_request',
   ToolCallResponse = 'tool_call_response',
@@ -71,11 +71,11 @@ export enum GeminiEventType {
 }
 
 export type ServerGeminiRetryEvent = {
-  type: GeminiEventType.Retry;
+  type: CodeflyEventType.Retry;
 };
 
 export type ServerGeminiAgentExecutionStoppedEvent = {
-  type: GeminiEventType.AgentExecutionStopped;
+  type: CodeflyEventType.AgentExecutionStopped;
   value: {
     reason: string;
     systemMessage?: string;
@@ -84,7 +84,7 @@ export type ServerGeminiAgentExecutionStoppedEvent = {
 };
 
 export type ServerGeminiAgentExecutionBlockedEvent = {
-  type: GeminiEventType.AgentExecutionBlocked;
+  type: CodeflyEventType.AgentExecutionBlocked;
   value: {
     reason: string;
     systemMessage?: string;
@@ -93,7 +93,7 @@ export type ServerGeminiAgentExecutionBlockedEvent = {
 };
 
 export type ServerGeminiContextWindowWillOverflowEvent = {
-  type: GeminiEventType.ContextWindowWillOverflow;
+  type: CodeflyEventType.ContextWindowWillOverflow;
   value: {
     estimatedRequestTokenCount: number;
     remainingTokenCount: number;
@@ -101,11 +101,11 @@ export type ServerGeminiContextWindowWillOverflowEvent = {
 };
 
 export type ServerGeminiInvalidStreamEvent = {
-  type: GeminiEventType.InvalidStream;
+  type: CodeflyEventType.InvalidStream;
 };
 
 export type ServerGeminiModelInfoEvent = {
-  type: GeminiEventType.ModelInfo;
+  type: CodeflyEventType.ModelInfo;
   value: string;
 };
 
@@ -129,38 +129,38 @@ export interface ServerToolCallConfirmationDetails {
 }
 
 export type ServerGeminiContentEvent = {
-  type: GeminiEventType.Content;
+  type: CodeflyEventType.Content;
   value: string;
   traceId?: string;
 };
 
 export type ServerGeminiThoughtEvent = {
-  type: GeminiEventType.Thought;
+  type: CodeflyEventType.Thought;
   value: ThoughtSummary;
   traceId?: string;
 };
 
 export type ServerGeminiToolCallRequestEvent = {
-  type: GeminiEventType.ToolCallRequest;
+  type: CodeflyEventType.ToolCallRequest;
   value: ToolCallRequestInfo;
 };
 
 export type ServerGeminiToolCallResponseEvent = {
-  type: GeminiEventType.ToolCallResponse;
+  type: CodeflyEventType.ToolCallResponse;
   value: ToolCallResponseInfo;
 };
 
 export type ServerGeminiToolCallConfirmationEvent = {
-  type: GeminiEventType.ToolCallConfirmation;
+  type: CodeflyEventType.ToolCallConfirmation;
   value: ServerToolCallConfirmationDetails;
 };
 
 export type ServerGeminiUserCancelledEvent = {
-  type: GeminiEventType.UserCancelled;
+  type: CodeflyEventType.UserCancelled;
 };
 
 export type ServerGeminiErrorEvent = {
-  type: GeminiEventType.Error;
+  type: CodeflyEventType.Error;
   value: GeminiErrorEventValue;
 };
 
@@ -187,32 +187,32 @@ export interface ChatCompressionInfo {
   compressionStatus: CompressionStatus;
 }
 
-export type ServerGeminiChatCompressedEvent = {
-  type: GeminiEventType.ChatCompressed;
+export type ServerCodeflyChatCompressedEvent = {
+  type: CodeflyEventType.ChatCompressed;
   value: ChatCompressionInfo | null;
 };
 
 export type ServerGeminiMaxSessionTurnsEvent = {
-  type: GeminiEventType.MaxSessionTurns;
+  type: CodeflyEventType.MaxSessionTurns;
 };
 
 export type ServerGeminiFinishedEvent = {
-  type: GeminiEventType.Finished;
+  type: CodeflyEventType.Finished;
   value: GeminiFinishedEventValue;
 };
 
 export type ServerGeminiLoopDetectedEvent = {
-  type: GeminiEventType.LoopDetected;
+  type: CodeflyEventType.LoopDetected;
 };
 
 export type ServerGeminiCitationEvent = {
-  type: GeminiEventType.Citation;
+  type: CodeflyEventType.Citation;
   value: string;
 };
 
 // The original union type, now composed of the individual types
 export type ServerGeminiStreamEvent =
-  | ServerGeminiChatCompressedEvent
+  | ServerCodeflyChatCompressedEvent
   | ServerGeminiCitationEvent
   | ServerGeminiContentEvent
   | ServerGeminiErrorEvent
@@ -239,7 +239,7 @@ export class Turn {
   finishReason: FinishReason | undefined = undefined;
 
   constructor(
-    private readonly chat: GeminiChat,
+    private readonly chat: CodeflyChat,
     private readonly prompt_id: string,
   ) {}
 
@@ -261,19 +261,19 @@ export class Turn {
 
       for await (const streamEvent of responseStream) {
         if (signal?.aborted) {
-          yield { type: GeminiEventType.UserCancelled };
+          yield { type: CodeflyEventType.UserCancelled };
           return;
         }
 
         // Handle the new RETRY event
         if (streamEvent.type === 'retry') {
-          yield { type: GeminiEventType.Retry };
+          yield { type: CodeflyEventType.Retry };
           continue; // Skip to the next event in the stream
         }
 
         if (streamEvent.type === 'agent_execution_stopped') {
           yield {
-            type: GeminiEventType.AgentExecutionStopped,
+            type: CodeflyEventType.AgentExecutionStopped,
             value: { reason: streamEvent.reason },
           };
           return;
@@ -281,7 +281,7 @@ export class Turn {
 
         if (streamEvent.type === 'agent_execution_blocked') {
           yield {
-            type: GeminiEventType.AgentExecutionBlocked,
+            type: CodeflyEventType.AgentExecutionBlocked,
             value: { reason: streamEvent.reason },
           };
           continue;
@@ -300,7 +300,7 @@ export class Turn {
           if (part.thought) {
             const thought = parseThought(part.text ?? '');
             yield {
-              type: GeminiEventType.Thought,
+              type: CodeflyEventType.Thought,
               value: thought,
               traceId,
             };
@@ -309,7 +309,7 @@ export class Turn {
 
         const text = getResponseText(resp);
         if (text) {
-          yield { type: GeminiEventType.Content, value: text, traceId };
+          yield { type: CodeflyEventType.Content, value: text, traceId };
         }
 
         // Handle function calls (requesting tool execution)
@@ -332,7 +332,7 @@ export class Turn {
         if (finishReason) {
           if (this.pendingCitations.size > 0) {
             yield {
-              type: GeminiEventType.Citation,
+              type: CodeflyEventType.Citation,
               value: `Citations:\n${[...this.pendingCitations].sort().join('\n')}`,
             };
             this.pendingCitations.clear();
@@ -340,7 +340,7 @@ export class Turn {
 
           this.finishReason = finishReason;
           yield {
-            type: GeminiEventType.Finished,
+            type: CodeflyEventType.Finished,
             value: {
               reason: finishReason,
               usageMetadata: resp.usageMetadata,
@@ -350,13 +350,13 @@ export class Turn {
       }
     } catch (e) {
       if (signal.aborted) {
-        yield { type: GeminiEventType.UserCancelled };
+        yield { type: CodeflyEventType.UserCancelled };
         // Regular cancellation error, fail gracefully.
         return;
       }
 
       if (e instanceof InvalidStreamError) {
-        yield { type: GeminiEventType.InvalidStream };
+        yield { type: CodeflyEventType.InvalidStream };
         return;
       }
 
@@ -387,7 +387,7 @@ export class Turn {
         status,
       };
       await this.chat.maybeIncludeSchemaDepthContext(structuredError);
-      yield { type: GeminiEventType.Error, value: { error: structuredError } };
+      yield { type: CodeflyEventType.Error, value: { error: structuredError } };
       return;
     }
   }
@@ -414,7 +414,7 @@ export class Turn {
     this.pendingToolCalls.push(toolCallRequest);
 
     // Yield a request for the tool call, not the pending/confirming status
-    return { type: GeminiEventType.ToolCallRequest, value: toolCallRequest };
+    return { type: CodeflyEventType.ToolCallRequest, value: toolCallRequest };
   }
 
   getDebugResponses(): GenerateContentResponse[] {

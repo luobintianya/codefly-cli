@@ -24,6 +24,7 @@ they appear in the UI.
 
 | UI Label                        | Setting                            | Description                                                   | Default |
 | ------------------------------- | ---------------------------------- | ------------------------------------------------------------- | ------- |
+| Language                        | `general.language`                 | The language for the CLI interface.                           | `"en"`  |
 | Preview Features (e.g., models) | `general.previewFeatures`          | Enable preview features (e.g., preview models).               | `false` |
 | Vim Mode                        | `general.vimMode`                  | Enable Vim keybindings                                        | `false` |
 | Enable Auto Update              | `general.enableAutoUpdate`         | Enable automatic updates.                                     | `true`  |

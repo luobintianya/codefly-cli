@@ -11,26 +11,26 @@ import {
   validateModelPolicyChain,
 } from './policyCatalog.js';
 import {
-  DEFAULT_GEMINI_MODEL,
-  PREVIEW_GEMINI_MODEL,
+  DEFAULT_CODEFLY_MODEL,
+  PREVIEW_CODEFLY_MODEL,
 } from '../config/models.js';
 
 describe('policyCatalog', () => {
   it('returns preview chain when preview enabled', () => {
     const chain = getModelPolicyChain({ previewEnabled: true });
-    expect(chain[0]?.model).toBe(PREVIEW_GEMINI_MODEL);
+    expect(chain[0]?.model).toBe(PREVIEW_CODEFLY_MODEL);
     expect(chain).toHaveLength(2);
   });
 
   it('returns default chain when preview disabled', () => {
     const chain = getModelPolicyChain({ previewEnabled: false });
-    expect(chain[0]?.model).toBe(DEFAULT_GEMINI_MODEL);
+    expect(chain[0]?.model).toBe(DEFAULT_CODEFLY_MODEL);
     expect(chain).toHaveLength(2);
   });
 
   it('marks preview transients as sticky retries', () => {
     const [previewPolicy] = getModelPolicyChain({ previewEnabled: true });
-    expect(previewPolicy.model).toBe(PREVIEW_GEMINI_MODEL);
+    expect(previewPolicy.model).toBe(PREVIEW_CODEFLY_MODEL);
     expect(previewPolicy.stateTransitions.transient).toBe('terminal');
   });
 

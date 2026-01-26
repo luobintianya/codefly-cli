@@ -662,22 +662,22 @@ Current logger will overwrite one already registered from Error:
  ✓ src/services/BuiltinCommandLoader.test.ts (9 tests) 677ms
    ✓ BuiltinCommandLoader profile > should include profile command when isDevelopment is true  399ms
 stderr | src/ui/hooks/useGeminiStream.test.tsx > useGeminiStream > should submit tool responses when all tool calls are completed and ready
-Error recording completed tool call information: TypeError: config.getGeminiClient(...).getCurrentSequenceModel is not a function
+Error recording completed tool call information: TypeError: config.getCodeflyClient(...).getCurrentSequenceModel is not a function
 
 stderr | src/ui/hooks/useGeminiStream.test.tsx > useGeminiStream > should handle all tool calls being cancelled
-Error recording completed tool call information: TypeError: config.getGeminiClient(...).getCurrentSequenceModel is not a function
+Error recording completed tool call information: TypeError: config.getCodeflyClient(...).getCurrentSequenceModel is not a function
 
 stderr | src/ui/hooks/useGeminiStream.test.tsx > useGeminiStream > should stop agent execution immediately when a tool call returns STOP_EXECUTION error
-Error recording completed tool call information: TypeError: config.getGeminiClient(...).getCurrentSequenceModel is not a function
+Error recording completed tool call information: TypeError: config.getCodeflyClient(...).getCurrentSequenceModel is not a function
 
 stderr | src/ui/hooks/useGeminiStream.test.tsx > useGeminiStream > should group multiple cancelled tool call responses into a single history entry
-Error recording completed tool call information: TypeError: config.getGeminiClient(...).getCurrentSequenceModel is not a function
+Error recording completed tool call information: TypeError: config.getCodeflyClient(...).getCurrentSequenceModel is not a function
 
 stderr | src/ui/hooks/useGeminiStream.test.tsx > useGeminiStream > should not flicker streaming state to Idle between tool completion and submission
-Error recording completed tool call information: TypeError: config.getGeminiClient(...).getCurrentSequenceModel is not a function
+Error recording completed tool call information: TypeError: config.getCodeflyClient(...).getCurrentSequenceModel is not a function
 
 stderr | src/ui/hooks/useGeminiStream.test.tsx > useGeminiStream > Memory Refresh on save_memory > should call performMemoryRefresh when a save_memory tool call completes successfully
-Error recording completed tool call information: TypeError: config.getGeminiClient(...).getCurrentSequenceModel is not a function
+Error recording completed tool call information: TypeError: config.getCodeflyClient(...).getCurrentSequenceModel is not a function
 
  ✓ src/ui/hooks/useGeminiStream.test.tsx (55 tests) 174ms
 stderr | src/ui/utils/clipboardUtils.test.ts > clipboardUtils > saveClipboardImage > should handle errors gracefully
@@ -693,7 +693,7 @@ Error saving clipboard image: Error: ENOENT: no such file or directory, mkdir '/
 }
 
 stdout | src/ui/utils/clipboardUtils.test.ts > clipboardUtils > cleanupOldClipboardImages > should not throw errors
-Failed to clean up old clipboard images: Error: ENOENT: no such file or directory, scandir '/path/that/does/not/exist/.gemini-clipboard'
+Failed to clean up old clipboard images: Error: ENOENT: no such file or directory, scandir '/path/that/does/not/exist/.codefly-clipboard'
 [90m    at Proxy.readdir (node:internal/fs/promises:958:18)[39m
     at cleanupOldClipboardImages [90m(/Users/robinx/code/codefly-cli/packages/cli/[39msrc/ui/utils/clipboardUtils.ts:195:19[90m)[39m
     at [90m/Users/robinx/code/codefly-cli/packages/cli/[39msrc/ui/utils/clipboardUtils.test.ts:69:7
@@ -701,11 +701,11 @@ Failed to clean up old clipboard images: Error: ENOENT: no such file or director
   errno: [33m-2[39m,
   code: [32m'ENOENT'[39m,
   syscall: [32m'scandir'[39m,
-  path: [32m'/path/that/does/not/exist/.gemini-clipboard'[39m
+  path: [32m'/path/that/does/not/exist/.codefly-clipboard'[39m
 }
 
 stdout | src/ui/utils/clipboardUtils.test.ts > clipboardUtils > cleanupOldClipboardImages > should complete without errors on valid directory
-Failed to clean up old clipboard images: Error: ENOENT: no such file or directory, scandir '.gemini-clipboard'
+Failed to clean up old clipboard images: Error: ENOENT: no such file or directory, scandir '.codefly-clipboard'
 [90m    at Proxy.readdir (node:internal/fs/promises:958:18)[39m
     at cleanupOldClipboardImages [90m(/Users/robinx/code/codefly-cli/packages/cli/[39msrc/ui/utils/clipboardUtils.ts:195:19[90m)[39m
     at [90m/Users/robinx/code/codefly-cli/packages/cli/[39msrc/ui/utils/clipboardUtils.test.ts:75:7
@@ -713,7 +713,7 @@ Failed to clean up old clipboard images: Error: ENOENT: no such file or director
   errno: [33m-2[39m,
   code: [32m'ENOENT'[39m,
   syscall: [32m'scandir'[39m,
-  path: [32m'.gemini-clipboard'[39m
+  path: [32m'.codefly-clipboard'[39m
 }
 
 stdout | src/ui/commands/setupGithubCommand.test.ts > setupGithubCommand > throws an error when download fails
@@ -1669,7 +1669,7 @@ Number of calls: [1m1[22m
  ❯ src/ui/components/ModelDialog.test.tsx:140:26
     138|     await waitForUpdate();
     139| 
-    140|     expect(mockSetModel).toHaveBeenCalledWith(PREVIEW_GEMINI_MODEL);
+    140|     expect(mockSetModel).toHaveBeenCalledWith(PREVIEW_CODEFLY_MODEL);
        |                          ^
     141|     expect(mockOnClose).toHaveBeenCalled();
     142|   });

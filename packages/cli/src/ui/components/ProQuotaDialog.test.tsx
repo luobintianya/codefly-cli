@@ -11,8 +11,8 @@ import { ProQuotaDialog } from './ProQuotaDialog.js';
 import { RadioButtonSelect } from './shared/RadioButtonSelect.js';
 
 import {
-  PREVIEW_GEMINI_MODEL,
-  DEFAULT_GEMINI_FLASH_MODEL,
+  PREVIEW_CODEFLY_MODEL,
+  DEFAULT_CODEFLY_FLASH_MODEL,
 } from '@codeflyai/codefly-core';
 
 // Mock the child component to make it easier to test the parent
@@ -31,8 +31,8 @@ describe('ProQuotaDialog', () => {
     it('should render "Keep trying" and "Stop" options', () => {
       const { unmount } = render(
         <ProQuotaDialog
-          failedModel={DEFAULT_GEMINI_FLASH_MODEL}
-          fallbackModel={DEFAULT_GEMINI_FLASH_MODEL}
+          failedModel={DEFAULT_CODEFLY_FLASH_MODEL}
+          fallbackModel={DEFAULT_CODEFLY_FLASH_MODEL}
           message="flash error"
           isTerminalQuotaError={true} // should not matter
           onChoice={mockOnChoice}
@@ -102,8 +102,8 @@ describe('ProQuotaDialog', () => {
       it('should render "Keep trying" and "Stop" options when failed model and fallback model are the same', () => {
         const { unmount } = render(
           <ProQuotaDialog
-            failedModel={PREVIEW_GEMINI_MODEL}
-            fallbackModel={PREVIEW_GEMINI_MODEL}
+            failedModel={PREVIEW_CODEFLY_MODEL}
+            fallbackModel={PREVIEW_CODEFLY_MODEL}
             message="flash error"
             isTerminalQuotaError={true}
             onChoice={mockOnChoice}

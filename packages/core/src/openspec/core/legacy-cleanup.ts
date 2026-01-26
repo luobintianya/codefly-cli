@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import path from 'node:path';
 import { promises as fs } from 'node:fs';
 import chalk from 'chalk';
 import {
@@ -42,7 +41,7 @@ export const LEGACY_SLASH_COMMAND_PATHS: Record<
   codebuddy: { type: 'directory', path: '.codebuddy/commands/openspec' },
   qoder: { type: 'directory', path: '.qoder/commands/openspec' },
   crush: { type: 'directory', path: '.crush/commands/openspec' },
-  gemini: { type: 'directory', path: '.gemini/commands/openspec' },
+  codefly: { type: 'directory', path: '.codefly/commands/openspec' },
   costrict: { type: 'directory', path: '.cospec/openspec/commands' },
 
   // File-based: individual openspec-*.md files in a commands/workflows/prompts folder
@@ -189,7 +188,7 @@ export async function detectLegacySlashCommands(projectPath: string): Promise<{
   const directories: string[] = [];
   const files: string[] = [];
 
-  for (const [toolId, pattern] of Object.entries(LEGACY_SLASH_COMMAND_PATHS)) {
+  for (const [_toolId, pattern] of Object.entries(LEGACY_SLASH_COMMAND_PATHS)) {
     if (pattern.type === 'directory' && pattern.path) {
       const dirPath = FileSystemUtils.joinPath(projectPath, pattern.path);
       if (await FileSystemUtils.directoryExists(dirPath)) {
@@ -509,7 +508,7 @@ export function formatCleanupSummary(result: CleanupResult): string {
  * @param detection - Detection result from detectLegacyArtifacts
  * @returns Array of objects with path and explanation
  */
-function buildRemovalsList(
+function _buildRemovalsList(
   detection: LegacyDetectionResult,
 ): Array<{ path: string; explanation: string }> {
   const removals: Array<{ path: string; explanation: string }> = [];
@@ -550,7 +549,7 @@ function buildRemovalsList(
  * @param detection - Detection result from detectLegacyArtifacts
  * @returns Array of objects with path and explanation
  */
-function buildUpdatesList(
+function _buildUpdatesList(
   detection: LegacyDetectionResult,
 ): Array<{ path: string; explanation: string }> {
   const updates: Array<{ path: string; explanation: string }> = [];
@@ -575,8 +574,8 @@ export function formatDetectionSummary(
 ): string {
   const lines: string[] = [];
 
-  const removals = buildRemovalsList(detection);
-  const updates = buildUpdatesList(detection);
+  const removals = _buildRemovalsList(detection);
+  const updates = _buildUpdatesList(detection);
 
   // If nothing to show, return empty
   if (
@@ -643,11 +642,11 @@ export function getToolsFromLegacyArtifacts(
 
   // Match directories to tool IDs
   for (const dir of detection.slashCommandDirs) {
-    for (const [toolId, pattern] of Object.entries(
+    for (const [_toolId, pattern] of Object.entries(
       LEGACY_SLASH_COMMAND_PATHS,
     )) {
       if (pattern.type === 'directory' && pattern.path === dir) {
-        tools.add(toolId);
+        tools.add(_toolId);
         break;
       }
     }

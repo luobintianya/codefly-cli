@@ -31,7 +31,7 @@ export interface LSToolParams {
   ignore?: string[];
 
   /**
-   * Whether to respect .gitignore and .geminiignore patterns (optional, defaults to true)
+   * Whether to respect .gitignore and .codeflyignore patterns (optional, defaults to true)
    */
   file_filtering_options?: {
     respect_git_ignore?: boolean;
@@ -184,10 +184,10 @@ class LSToolInvocation extends BaseToolInvocation<LSToolParams, ToolResult> {
             this.params.file_filtering_options?.respect_git_ignore ??
             this.config.getFileFilteringOptions().respectGitIgnore ??
             DEFAULT_FILE_FILTERING_OPTIONS.respectGitIgnore,
-          respectGeminiIgnore:
+          respectCodeflyIgnore:
             this.params.file_filtering_options?.respect_gemini_ignore ??
-            this.config.getFileFilteringOptions().respectGeminiIgnore ??
-            DEFAULT_FILE_FILTERING_OPTIONS.respectGeminiIgnore,
+            this.config.getFileFilteringOptions().respectCodeflyIgnore ??
+            DEFAULT_FILE_FILTERING_OPTIONS.respectCodeflyIgnore,
         });
 
       const entries = [];
@@ -281,7 +281,7 @@ export class LSTool extends BaseDeclarativeTool<LSToolParams, ToolResult> {
           },
           file_filtering_options: {
             description:
-              'Optional: Whether to respect ignore patterns from .gitignore or .geminiignore',
+              'Optional: Whether to respect ignore patterns from .gitignore or .codeflyignore',
             type: 'object',
             properties: {
               respect_git_ignore: {
@@ -291,7 +291,7 @@ export class LSTool extends BaseDeclarativeTool<LSToolParams, ToolResult> {
               },
               respect_gemini_ignore: {
                 description:
-                  'Optional: Whether to respect .geminiignore patterns when listing files. Defaults to true.',
+                  'Optional: Whether to respect .codeflyignore patterns when listing files. Defaults to true.',
                 type: 'boolean',
               },
             },

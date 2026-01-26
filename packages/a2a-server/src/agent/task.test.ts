@@ -15,7 +15,7 @@ import {
 } from 'vitest';
 import { Task } from './task.js';
 import {
-  GeminiEventType,
+  CodeflyEventType,
   type Config,
   type ToolCallRequestInfo,
   type GitService,
@@ -279,7 +279,7 @@ describe('Task', () => {
 
       const citationText = 'Source: example.com';
       const citationEvent = {
-        type: GeminiEventType.Citation,
+        type: CodeflyEventType.Citation,
         value: citationText,
       };
 
@@ -322,7 +322,7 @@ describe('Task', () => {
       );
 
       const modelInfoEvent = {
-        type: GeminiEventType.ModelInfo,
+        type: CodeflyEventType.ModelInfo,
         value: 'new-model-name',
       };
 
@@ -351,8 +351,8 @@ describe('Task', () => {
     });
 
     it.each([
-      { eventType: GeminiEventType.Retry, eventName: 'Retry' },
-      { eventType: GeminiEventType.InvalidStream, eventName: 'InvalidStream' },
+      { eventType: CodeflyEventType.Retry, eventName: 'Retry' },
+      { eventType: CodeflyEventType.InvalidStream, eventName: 'InvalidStream' },
     ])(
       'should handle $eventName event without triggering error handling',
       async ({ eventType }) => {
@@ -568,7 +568,7 @@ describe('Task', () => {
   describe('currentPromptId and promptCount', () => {
     it('should correctly initialize and update promptId and promptCount', async () => {
       const mockConfig = createMockConfig();
-      mockConfig.getGeminiClient = vi.fn().mockReturnValue({
+      mockConfig.getCodeflyClient = vi.fn().mockReturnValue({
         sendMessageStream: vi.fn().mockReturnValue((async function* () {})()),
       });
       mockConfig.getSessionId = () => 'test-session-id';

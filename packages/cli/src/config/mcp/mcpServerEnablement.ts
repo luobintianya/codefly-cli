@@ -158,7 +158,7 @@ export async function canLoadServer(
   if (config.enablement?.isSessionDisabled(normalizedId)) {
     return {
       allowed: false,
-      reason: `Server '${serverId}' is disabled for this session. Run 'gemini mcp enable ${serverId} --session' to clear.`,
+      reason: `Server '${serverId}' is disabled for this session. Run 'codefly mcp enable ${serverId} --session' to clear.`,
       blockType: 'session',
     };
   }
@@ -170,7 +170,7 @@ export async function canLoadServer(
   ) {
     return {
       allowed: false,
-      reason: `Server '${serverId}' is disabled. Run 'gemini mcp enable ${serverId}' to enable.`,
+      reason: `Server '${serverId}' is disabled. Run 'codefly mcp enable ${serverId}' to enable.`,
       blockType: 'enablement',
     };
   }
@@ -215,7 +215,7 @@ export class McpServerEnablementManager {
   }
 
   constructor() {
-    this.configDir = Storage.getGlobalGeminiDir();
+    this.configDir = Storage.getGlobalCodeflyDir();
     this.configFilePath = path.join(this.configDir, MCP_ENABLEMENT_FILENAME);
   }
 

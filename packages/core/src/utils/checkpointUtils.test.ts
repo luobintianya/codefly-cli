@@ -15,7 +15,7 @@ import {
   getCheckpointInfoList,
 } from './checkpointUtils.js';
 import type { GitService } from '../services/gitService.js';
-import type { GeminiClient } from '../core/client.js';
+import type { CodeflyClient } from '../core/client.js';
 import type { ToolCallRequestInfo } from '../scheduler/types.js';
 
 describe('checkpoint utils', () => {
@@ -129,9 +129,9 @@ describe('checkpoint utils', () => {
       getCurrentCommitHash: vi.fn(),
     } as unknown as GitService;
 
-    const mockGeminiClient = {
+    const mockCodeflyClient = {
       getHistory: vi.fn(),
-    } as unknown as GeminiClient;
+    } as unknown as CodeflyClient;
 
     beforeEach(() => {
       vi.clearAllMocks();
@@ -149,7 +149,7 @@ describe('checkpoint utils', () => {
       ] as ToolCallRequestInfo[];
 
       (mockGitService.createFileSnapshot as Mock).mockResolvedValue('hash123');
-      (mockGeminiClient.getHistory as Mock).mockReturnValue([
+      (mockCodeflyClient.getHistory as Mock).mockReturnValue([
         { role: 'user', parts: [] },
       ]);
 
@@ -157,7 +157,7 @@ describe('checkpoint utils', () => {
         await processRestorableToolCalls(
           toolCalls,
           mockGitService,
-          mockGeminiClient,
+          mockCodeflyClient,
           'history-data',
         );
 
@@ -197,7 +197,7 @@ describe('checkpoint utils', () => {
       const { checkpointsToWrite, errors } = await processRestorableToolCalls(
         toolCalls,
         mockGitService,
-        mockGeminiClient,
+        mockCodeflyClient,
       );
 
       expect(errors).toHaveLength(1);
@@ -224,7 +224,7 @@ describe('checkpoint utils', () => {
       const { checkpointsToWrite, errors } = await processRestorableToolCalls(
         toolCalls,
         mockGitService,
-        mockGeminiClient,
+        mockCodeflyClient,
       );
 
       expect(errors).toHaveLength(1);
@@ -254,7 +254,7 @@ describe('checkpoint utils', () => {
       const { checkpointsToWrite, errors } = await processRestorableToolCalls(
         toolCalls,
         mockGitService,
-        mockGeminiClient,
+        mockCodeflyClient,
       );
 
       expect(errors).toHaveLength(2);

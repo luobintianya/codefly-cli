@@ -13,7 +13,7 @@ import { useCallback, useState } from 'react';
 import type {
   AnsiOutput,
   Config,
-  GeminiClient,
+  CodeflyClient,
   ShellExecutionResult,
 } from '@codeflyai/codefly-core';
 import { isBinary, ShellExecutionService } from '@codeflyai/codefly-core';
@@ -31,7 +31,7 @@ export const OUTPUT_UPDATE_INTERVAL_MS = 1000;
 const MAX_OUTPUT_LENGTH = 10000;
 
 function addShellCommandToGeminiHistory(
-  geminiClient: GeminiClient,
+  geminiClient: CodeflyClient,
   rawQuery: string,
   resultText: string,
 ) {
@@ -71,7 +71,7 @@ export const useShellCommandProcessor = (
   onExec: (command: Promise<void>) => void,
   onDebugMessage: (message: string) => void,
   config: Config,
-  geminiClient: GeminiClient,
+  geminiClient: CodeflyClient,
   setShellInputFocused: (value: boolean) => void,
   terminalWidth?: number,
   terminalHeight?: number,

@@ -15,7 +15,7 @@ import { isSlashCommand } from './ui/utils/commandUtils.js';
 import type { LoadedSettings } from './config/settings.js';
 import {
   executeToolCall,
-  GeminiEventType,
+  CodeflyEventType,
   FatalInputError,
   promptIdContext,
   OutputFormat,
@@ -201,7 +201,7 @@ export async function runNonInteractive({
         }
       });
 
-      const geminiClient = config.getGeminiClient();
+      const geminiClient = config.getCodeflyClient();
 
       // Initialize chat.  Resume if resume data is passed.
       if (resumedSessionData) {
@@ -295,7 +295,7 @@ export async function runNonInteractive({
             handleCancellationError(config);
           }
 
-          if (event.type === GeminiEventType.Content) {
+          if (event.type === CodeflyEventType.Content) {
             const isRaw =
               config.getRawOutput() || config.getAcceptRawOutputRisk();
             const output = isRaw ? event.value : stripAnsi(event.value);
@@ -314,7 +314,7 @@ export async function runNonInteractive({
                 textOutput.write(output);
               }
             }
-          } else if (event.type === GeminiEventType.ToolCallRequest) {
+          } else if (event.type === CodeflyEventType.ToolCallRequest) {
             if (streamFormatter) {
               streamFormatter.emitEvent({
                 type: JsonStreamEventType.TOOL_USE,
@@ -325,7 +325,7 @@ export async function runNonInteractive({
               });
             }
             toolCallRequests.push(event.value);
-          } else if (event.type === GeminiEventType.LoopDetected) {
+          } else if (event.type === CodeflyEventType.LoopDetected) {
             if (streamFormatter) {
               streamFormatter.emitEvent({
                 type: JsonStreamEventType.ERROR,
@@ -334,7 +334,7 @@ export async function runNonInteractive({
                 message: 'Loop detected, stopping execution',
               });
             }
-          } else if (event.type === GeminiEventType.MaxSessionTurns) {
+          } else if (event.type === CodeflyEventType.MaxSessionTurns) {
             if (streamFormatter) {
               streamFormatter.emitEvent({
                 type: JsonStreamEventType.ERROR,
@@ -343,9 +343,9 @@ export async function runNonInteractive({
                 message: 'Maximum session turns exceeded',
               });
             }
-          } else if (event.type === GeminiEventType.Error) {
+          } else if (event.type === CodeflyEventType.Error) {
             throw event.value.error;
-          } else if (event.type === GeminiEventType.AgentExecutionStopped) {
+          } else if (event.type === CodeflyEventType.AgentExecutionStopped) {
             const stopMessage = `Agent execution stopped: ${event.value.systemMessage?.trim() || event.value.reason}`;
             if (config.getOutputFormat() === OutputFormat.TEXT) {
               process.stderr.write(`${stopMessage}\n`);
@@ -365,7 +365,7 @@ export async function runNonInteractive({
               });
             }
             return;
-          } else if (event.type === GeminiEventType.AgentExecutionBlocked) {
+          } else if (event.type === CodeflyEventType.AgentExecutionBlocked) {
             const blockMessage = `Agent execution blocked: ${event.value.systemMessage?.trim() || event.value.reason}`;
             if (config.getOutputFormat() === OutputFormat.TEXT) {
               process.stderr.write(`[WARNING] ${blockMessage}\n`);

@@ -17,7 +17,7 @@ import { BuiltinCommandLoader } from '../../services/BuiltinCommandLoader.js';
 import { FileCommandLoader } from '../../services/FileCommandLoader.js';
 import { McpPromptLoader } from '../../services/McpPromptLoader.js';
 import {
-  type GeminiClient,
+  type CodeflyClient,
   SlashCommandStatus,
   makeFakeConfig,
   coreEvents,
@@ -596,8 +596,8 @@ describe('useSlashCommandProcessor', () => {
       const mockClient = {
         setHistory: vi.fn(),
         stripThoughtsFromHistory: vi.fn(),
-      } as unknown as GeminiClient;
-      vi.spyOn(mockConfig, 'getGeminiClient').mockReturnValue(mockClient);
+      } as unknown as CodeflyClient;
+      vi.spyOn(mockConfig, 'getCodeflyClient').mockReturnValue(mockClient);
 
       const command = createTestCommand({
         name: 'load',

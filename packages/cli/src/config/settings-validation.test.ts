@@ -343,10 +343,10 @@ describe('settings-validation', () => {
       if (result.error) {
         const formatted = formatValidationError(
           result.error,
-          '~/.gemini/settings.json',
+          '~/.codefly/settings.json',
         );
 
-        expect(formatted).toContain('~/.gemini/settings.json');
+        expect(formatted).toContain('~/.codefly/settings.json');
         expect(formatted).toContain('model.summarizeToolOutput');
       }
     });

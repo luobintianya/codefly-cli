@@ -34,7 +34,7 @@ vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
       if (config.isJitContextEnabled()) {
         await config.getContextManager()?.refresh();
         const memoryContent = config.getUserMemory() || '';
-        const fileCount = config.getGeminiMdFileCount() || 0;
+        const fileCount = config.getCodeflyMdFileCount() || 0;
         return {
           type: 'message',
           messageType: 'info',
@@ -86,7 +86,7 @@ describe('memoryCommand', () => {
 
       vi.mocked(showMemory).mockImplementation((config) => {
         const memoryContent = config.getUserMemory() || '';
-        const fileCount = config.getGeminiMdFileCount() || 0;
+        const fileCount = config.getCodeflyMdFileCount() || 0;
         let content;
         if (memoryContent.length > 0) {
           content = `Current memory content from ${fileCount} file(s):\n\n---\n${memoryContent}\n---`;
@@ -104,7 +104,7 @@ describe('memoryCommand', () => {
         services: {
           config: {
             getUserMemory: mockGetUserMemory,
-            getGeminiMdFileCount: mockGetGeminiMdFileCount,
+            getCodeflyMdFileCount: mockGetGeminiMdFileCount,
             getExtensionLoader: () => new SimpleExtensionLoader([]),
           },
         },
@@ -221,8 +221,8 @@ describe('memoryCommand', () => {
 
       const mockConfig = {
         setUserMemory: mockSetUserMemory,
-        setGeminiMdFileCount: mockSetGeminiMdFileCount,
-        setGeminiMdFilePaths: mockSetGeminiMdFilePaths,
+        setCodeflyMdFileCount: mockSetGeminiMdFileCount,
+        setCodeflyMdFilePaths: mockSetGeminiMdFilePaths,
         getWorkingDir: () => '/test/dir',
         getDebugMode: () => false,
         getFileService: () => ({}) as FileDiscoveryService,
@@ -245,7 +245,7 @@ describe('memoryCommand', () => {
           refresh: mockContextManagerRefresh,
         }),
         getUserMemory: vi.fn().mockReturnValue(''),
-        getGeminiMdFileCount: vi.fn().mockReturnValue(0),
+        getCodeflyMdFileCount: vi.fn().mockReturnValue(0),
       };
 
       mockContext = createMockCommandContext({
@@ -273,7 +273,7 @@ describe('memoryCommand', () => {
 
       vi.mocked(config.isJitContextEnabled).mockReturnValue(true);
       vi.mocked(config.getUserMemory).mockReturnValue('JIT Memory Content');
-      vi.mocked(config.getGeminiMdFileCount).mockReturnValue(3);
+      vi.mocked(config.getCodeflyMdFileCount).mockReturnValue(3);
 
       await refreshCommand.action(mockContext, '');
 
@@ -397,7 +397,7 @@ describe('memoryCommand', () => {
       listCommand = getSubCommand('list');
       mockGetGeminiMdfilePaths = vi.fn();
       vi.mocked(listMemoryFiles).mockImplementation((config) => {
-        const filePaths = config.getGeminiMdFilePaths() || [];
+        const filePaths = config.getCodeflyMdFilePaths() || [];
         const fileCount = filePaths.length;
         let content;
         if (fileCount > 0) {
@@ -414,7 +414,7 @@ describe('memoryCommand', () => {
       mockContext = createMockCommandContext({
         services: {
           config: {
-            getGeminiMdFilePaths: mockGetGeminiMdfilePaths,
+            getCodeflyMdFilePaths: mockGetGeminiMdfilePaths,
           },
         },
       });

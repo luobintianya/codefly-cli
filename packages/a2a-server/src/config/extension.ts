@@ -10,7 +10,7 @@ import {
   CODEFLY_DIR,
   type MCPServerConfig,
   type ExtensionInstallMetadata,
-  type GeminiCLIExtension,
+  type CodeflyCLIExtension,
   homedir,
 } from '@codeflyai/codefly-core';
 import * as fs from 'node:fs';
@@ -26,7 +26,7 @@ export const INSTALL_METADATA_FILENAME = '.codefly-extension-install.json';
  * This should *not* be referenced outside of the logic for reading files.
  * If information is required for manipulating extensions (load, unload, update)
  * outside of the loading process that data needs to be stored on the
- * GeminiCLIExtension class defined in Core.
+ * CodeflyCLIExtension class defined in Core.
  */
 interface ExtensionConfig {
   name: string;
@@ -36,13 +36,13 @@ interface ExtensionConfig {
   excludeTools?: string[];
 }
 
-export function loadExtensions(workspaceDir: string): GeminiCLIExtension[] {
+export function loadExtensions(workspaceDir: string): CodeflyCLIExtension[] {
   const allExtensions = [
     ...loadExtensionsFromDir(workspaceDir),
     ...loadExtensionsFromDir(homedir()),
   ];
 
-  const uniqueExtensions: GeminiCLIExtension[] = [];
+  const uniqueExtensions: CodeflyCLIExtension[] = [];
   const seenNames = new Set<string>();
   for (const extension of allExtensions) {
     if (!seenNames.has(extension.name)) {
@@ -57,13 +57,13 @@ export function loadExtensions(workspaceDir: string): GeminiCLIExtension[] {
   return uniqueExtensions;
 }
 
-function loadExtensionsFromDir(dir: string): GeminiCLIExtension[] {
+function loadExtensionsFromDir(dir: string): CodeflyCLIExtension[] {
   const extensionsDir = path.join(dir, EXTENSIONS_DIRECTORY_NAME);
   if (!fs.existsSync(extensionsDir)) {
     return [];
   }
 
-  const extensions: GeminiCLIExtension[] = [];
+  const extensions: CodeflyCLIExtension[] = [];
   for (const subdir of fs.readdirSync(extensionsDir)) {
     const extensionDir = path.join(extensionsDir, subdir);
 
@@ -75,7 +75,7 @@ function loadExtensionsFromDir(dir: string): GeminiCLIExtension[] {
   return extensions;
 }
 
-function loadExtension(extensionDir: string): GeminiCLIExtension | null {
+function loadExtension(extensionDir: string): CodeflyCLIExtension | null {
   if (!fs.statSync(extensionDir).isDirectory()) {
     logger.error(
       `Warning: unexpected file ${extensionDir} in extensions directory.`,
@@ -116,7 +116,7 @@ function loadExtension(extensionDir: string): GeminiCLIExtension | null {
       mcpServers: config.mcpServers,
       excludeTools: config.excludeTools,
       isActive: true, // Barring any other signals extensions should be considered Active.
-    } as GeminiCLIExtension;
+    } as CodeflyCLIExtension;
   } catch (e) {
     logger.error(
       `Warning: error parsing extension config in ${configFilePath}: ${e}`,

@@ -47,7 +47,7 @@ describe('restoreCommand', () => {
         getProjectTempCheckpointsDir: vi.fn().mockReturnValue(checkpointsDir),
         getProjectTempDir: vi.fn().mockReturnValue(geminiTempDir),
       },
-      getGeminiClient: vi.fn().mockReturnValue({
+      getCodeflyClient: vi.fn().mockReturnValue({
         setHistory: mockSetHistory,
       }),
     } as unknown as Config;
@@ -93,7 +93,7 @@ describe('restoreCommand', () => {
       ).toEqual({
         type: 'message',
         messageType: 'error',
-        content: 'Could not determine the .gemini directory path.',
+        content: 'Could not determine the .codefly directory path.',
       });
     });
 

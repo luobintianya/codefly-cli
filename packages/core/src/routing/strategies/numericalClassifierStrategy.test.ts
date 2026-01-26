@@ -10,9 +10,9 @@ import type { RoutingContext } from '../routingStrategy.js';
 import type { Config } from '../../config/config.js';
 import type { BaseLlmClient } from '../../core/baseLlmClient.js';
 import {
-  DEFAULT_GEMINI_FLASH_MODEL,
-  DEFAULT_GEMINI_MODEL,
-  DEFAULT_GEMINI_MODEL_AUTO,
+  DEFAULT_CODEFLY_FLASH_MODEL,
+  DEFAULT_CODEFLY_MODEL,
+  DEFAULT_CODEFLY_MODEL_AUTO,
 } from '../../config/models.js';
 import { promptIdContext } from '../../utils/promptIdContext.js';
 import type { Content } from '@google/genai';
@@ -46,7 +46,7 @@ describe('NumericalClassifierStrategy', () => {
       modelConfigService: {
         getResolvedConfig: vi.fn().mockReturnValue(mockResolvedConfig),
       },
-      getModel: () => DEFAULT_GEMINI_MODEL_AUTO,
+      getModel: () => DEFAULT_CODEFLY_MODEL_AUTO,
       getPreviewFeatures: () => false,
       getSessionId: vi.fn().mockReturnValue('control-group-id'), // Default to Control Group (Hash 71 >= 50)
       getNumericalRoutingEnabled: vi.fn().mockResolvedValue(true),
@@ -120,7 +120,7 @@ describe('NumericalClassifierStrategy', () => {
       );
 
       expect(decision).toEqual({
-        model: DEFAULT_GEMINI_FLASH_MODEL,
+        model: DEFAULT_CODEFLY_FLASH_MODEL,
         metadata: {
           source: 'Classifier (Control)',
           latencyMs: expect.any(Number),
@@ -146,7 +146,7 @@ describe('NumericalClassifierStrategy', () => {
       );
 
       expect(decision).toEqual({
-        model: DEFAULT_GEMINI_MODEL,
+        model: DEFAULT_CODEFLY_MODEL,
         metadata: {
           source: 'Classifier (Control)',
           latencyMs: expect.any(Number),
@@ -172,7 +172,7 @@ describe('NumericalClassifierStrategy', () => {
       );
 
       expect(decision).toEqual({
-        model: DEFAULT_GEMINI_FLASH_MODEL, // Routed to Flash because 60 < 80
+        model: DEFAULT_CODEFLY_FLASH_MODEL, // Routed to Flash because 60 < 80
         metadata: {
           source: 'Classifier (Strict)',
           latencyMs: expect.any(Number),
@@ -198,7 +198,7 @@ describe('NumericalClassifierStrategy', () => {
       );
 
       expect(decision).toEqual({
-        model: DEFAULT_GEMINI_MODEL,
+        model: DEFAULT_CODEFLY_MODEL,
         metadata: {
           source: 'Classifier (Strict)',
           latencyMs: expect.any(Number),
@@ -226,7 +226,7 @@ describe('NumericalClassifierStrategy', () => {
       );
 
       expect(decision).toEqual({
-        model: DEFAULT_GEMINI_FLASH_MODEL, // Score 60 < Threshold 70
+        model: DEFAULT_CODEFLY_FLASH_MODEL, // Score 60 < Threshold 70
         metadata: {
           source: 'Classifier (Remote)',
           latencyMs: expect.any(Number),
@@ -252,7 +252,7 @@ describe('NumericalClassifierStrategy', () => {
       );
 
       expect(decision).toEqual({
-        model: DEFAULT_GEMINI_FLASH_MODEL, // Score 40 < Threshold 45.5
+        model: DEFAULT_CODEFLY_FLASH_MODEL, // Score 40 < Threshold 45.5
         metadata: {
           source: 'Classifier (Remote)',
           latencyMs: expect.any(Number),
@@ -278,7 +278,7 @@ describe('NumericalClassifierStrategy', () => {
       );
 
       expect(decision).toEqual({
-        model: DEFAULT_GEMINI_MODEL, // Score 35 >= Threshold 30
+        model: DEFAULT_CODEFLY_MODEL, // Score 35 >= Threshold 30
         metadata: {
           source: 'Classifier (Remote)',
           latencyMs: expect.any(Number),
@@ -306,7 +306,7 @@ describe('NumericalClassifierStrategy', () => {
       );
 
       expect(decision).toEqual({
-        model: DEFAULT_GEMINI_FLASH_MODEL, // Score 40 < Default A/B Threshold 50
+        model: DEFAULT_CODEFLY_FLASH_MODEL, // Score 40 < Default A/B Threshold 50
         metadata: {
           source: 'Classifier (Control)',
           latencyMs: expect.any(Number),
@@ -333,7 +333,7 @@ describe('NumericalClassifierStrategy', () => {
       );
 
       expect(decision).toEqual({
-        model: DEFAULT_GEMINI_FLASH_MODEL,
+        model: DEFAULT_CODEFLY_FLASH_MODEL,
         metadata: {
           source: 'Classifier (Control)',
           latencyMs: expect.any(Number),
@@ -360,7 +360,7 @@ describe('NumericalClassifierStrategy', () => {
       );
 
       expect(decision).toEqual({
-        model: DEFAULT_GEMINI_MODEL,
+        model: DEFAULT_CODEFLY_MODEL,
         metadata: {
           source: 'Classifier (Control)',
           latencyMs: expect.any(Number),

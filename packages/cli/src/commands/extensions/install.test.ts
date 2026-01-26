@@ -16,7 +16,7 @@ import {
 } from 'vitest';
 import { handleInstall, installCommand } from './install.js';
 import yargs from 'yargs';
-import { debugLogger, type GeminiCLIExtension } from '@codeflyai/codefly-core';
+import { debugLogger, type CodeflyCLIExtension } from '@codeflyai/codefly-core';
 import type {
   ExtensionManager,
   inferInstallMetadata,
@@ -119,7 +119,7 @@ describe('handleInstall', () => {
   it('should install an extension from a http source', async () => {
     mockInstallOrUpdateExtension.mockResolvedValue({
       name: 'http-extension',
-    } as unknown as GeminiCLIExtension);
+    } as unknown as CodeflyCLIExtension);
 
     await handleInstall({
       source: 'http://google.com',
@@ -133,7 +133,7 @@ describe('handleInstall', () => {
   it('should install an extension from a https source', async () => {
     mockInstallOrUpdateExtension.mockResolvedValue({
       name: 'https-extension',
-    } as unknown as GeminiCLIExtension);
+    } as unknown as CodeflyCLIExtension);
 
     await handleInstall({
       source: 'https://google.com',
@@ -147,7 +147,7 @@ describe('handleInstall', () => {
   it('should install an extension from a git source', async () => {
     mockInstallOrUpdateExtension.mockResolvedValue({
       name: 'git-extension',
-    } as unknown as GeminiCLIExtension);
+    } as unknown as CodeflyCLIExtension);
 
     await handleInstall({
       source: 'git@some-url',
@@ -173,7 +173,7 @@ describe('handleInstall', () => {
   it('should install an extension from a sso source', async () => {
     mockInstallOrUpdateExtension.mockResolvedValue({
       name: 'sso-extension',
-    } as unknown as GeminiCLIExtension);
+    } as unknown as CodeflyCLIExtension);
 
     await handleInstall({
       source: 'sso://google.com',
@@ -187,7 +187,7 @@ describe('handleInstall', () => {
   it('should install an extension from a local path', async () => {
     mockInstallOrUpdateExtension.mockResolvedValue({
       name: 'local-extension',
-    } as unknown as GeminiCLIExtension);
+    } as unknown as CodeflyCLIExtension);
     mockStat.mockResolvedValue({} as Stats);
     await handleInstall({
       source: '/some/path',

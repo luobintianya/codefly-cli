@@ -9,11 +9,11 @@ import type {
   ServerGeminiToolCallRequestEvent,
   ServerGeminiErrorEvent,
 } from './turn.js';
-import { Turn, GeminiEventType } from './turn.js';
+import { Turn, CodeflyEventType } from './turn.js';
 import type { GenerateContentResponse, Part, Content } from '@google/genai';
 import { reportError } from '../utils/errorReporting.js';
-import type { GeminiChat } from './geminiChat.js';
-import { InvalidStreamError, StreamEventType } from './geminiChat.js';
+import type { CodeflyChat } from './codeflyChat.js';
+import { InvalidStreamError, StreamEventType } from './codeflyChat.js';
 
 const mockSendMessageStream = vi.fn();
 const mockGetHistory = vi.fn();
@@ -53,7 +53,7 @@ describe('Turn', () => {
       getHistory: mockGetHistory,
       maybeIncludeSchemaDepthContext: mockMaybeIncludeSchemaDepthContext,
     };
-    turn = new Turn(mockChatInstance as unknown as GeminiChat, 'prompt-id-1');
+    turn = new Turn(mockChatInstance as unknown as CodeflyChat, 'prompt-id-1');
     mockGetHistory.mockReturnValue([]);
     mockSendMessageStream.mockResolvedValue((async function* () {})());
   });
@@ -105,8 +105,8 @@ describe('Turn', () => {
       );
 
       expect(events).toEqual([
-        { type: GeminiEventType.Content, value: 'Hello' },
-        { type: GeminiEventType.Content, value: ' world' },
+        { type: CodeflyEventType.Content, value: 'Hello' },
+        { type: CodeflyEventType.Content, value: ' world' },
       ]);
       expect(turn.getDebugResponses().length).toBe(2);
     });
@@ -146,7 +146,7 @@ describe('Turn', () => {
 
       expect(events.length).toBe(2);
       const event1 = events[0] as ServerGeminiToolCallRequestEvent;
-      expect(event1.type).toBe(GeminiEventType.ToolCallRequest);
+      expect(event1.type).toBe(CodeflyEventType.ToolCallRequest);
       expect(event1.value).toEqual(
         expect.objectContaining({
           callId: 'fc1',
@@ -158,7 +158,7 @@ describe('Turn', () => {
       expect(turn.pendingToolCalls[0]).toEqual(event1.value);
 
       const event2 = events[1] as ServerGeminiToolCallRequestEvent;
-      expect(event2.type).toBe(GeminiEventType.ToolCallRequest);
+      expect(event2.type).toBe(CodeflyEventType.ToolCallRequest);
       expect(event2.value).toEqual(
         expect.objectContaining({
           name: 'tool2',
@@ -208,8 +208,8 @@ describe('Turn', () => {
         events.push(event);
       }
       expect(events).toEqual([
-        { type: GeminiEventType.Content, value: 'First part' },
-        { type: GeminiEventType.UserCancelled },
+        { type: CodeflyEventType.Content, value: 'First part' },
+        { type: CodeflyEventType.UserCancelled },
       ]);
       expect(turn.getDebugResponses().length).toBe(1);
     });
@@ -231,7 +231,7 @@ describe('Turn', () => {
         events.push(event);
       }
 
-      expect(events).toEqual([{ type: GeminiEventType.InvalidStream }]);
+      expect(events).toEqual([{ type: CodeflyEventType.InvalidStream }]);
       expect(turn.getDebugResponses().length).toBe(0);
       expect(reportError).not.toHaveBeenCalled(); // Should not report as error
     });
@@ -256,7 +256,7 @@ describe('Turn', () => {
 
       expect(events.length).toBe(1);
       const errorEvent = events[0] as ServerGeminiErrorEvent;
-      expect(errorEvent.type).toBe(GeminiEventType.Error);
+      expect(errorEvent.type).toBe(CodeflyEventType.Error);
       expect(errorEvent.value).toEqual({
         error: { message: 'API Error', status: undefined },
       });
@@ -373,9 +373,9 @@ describe('Turn', () => {
       }
 
       expect(events).toEqual([
-        { type: GeminiEventType.Content, value: contentText },
+        { type: CodeflyEventType.Content, value: contentText },
         {
-          type: GeminiEventType.Finished,
+          type: CodeflyEventType.Finished,
           value: { reason: finishReason, usageMetadata },
         },
       ]);
@@ -411,7 +411,7 @@ describe('Turn', () => {
 
       expect(events).toEqual([
         {
-          type: GeminiEventType.Content,
+          type: CodeflyEventType.Content,
           value: 'Response without finish reason',
         },
       ]);
@@ -455,10 +455,10 @@ describe('Turn', () => {
       }
 
       expect(events).toEqual([
-        { type: GeminiEventType.Content, value: 'First part' },
-        { type: GeminiEventType.Content, value: 'Second part' },
+        { type: CodeflyEventType.Content, value: 'First part' },
+        { type: CodeflyEventType.Content, value: 'Second part' },
         {
-          type: GeminiEventType.Finished,
+          type: CodeflyEventType.Finished,
           value: { reason: 'OTHER', usageMetadata: undefined },
         },
       ]);
@@ -498,13 +498,13 @@ describe('Turn', () => {
       }
 
       expect(events).toEqual([
-        { type: GeminiEventType.Content, value: 'Some text.' },
+        { type: CodeflyEventType.Content, value: 'Some text.' },
         {
-          type: GeminiEventType.Citation,
+          type: CodeflyEventType.Citation,
           value: 'Citations:\n(Source 1 Title) https://example.com/source1',
         },
         {
-          type: GeminiEventType.Finished,
+          type: CodeflyEventType.Finished,
           value: { reason: 'STOP', usageMetadata: undefined },
         },
       ]);
@@ -548,14 +548,14 @@ describe('Turn', () => {
       }
 
       expect(events).toEqual([
-        { type: GeminiEventType.Content, value: 'Some text.' },
+        { type: CodeflyEventType.Content, value: 'Some text.' },
         {
-          type: GeminiEventType.Citation,
+          type: CodeflyEventType.Citation,
           value:
             'Citations:\n(Title1) https://example.com/source1\n(Title2) https://example.com/source2',
         },
         {
-          type: GeminiEventType.Finished,
+          type: CodeflyEventType.Finished,
           value: { reason: 'STOP', usageMetadata: undefined },
         },
       ]);
@@ -595,10 +595,10 @@ describe('Turn', () => {
       }
 
       expect(events).toEqual([
-        { type: GeminiEventType.Content, value: 'Some text.' },
+        { type: CodeflyEventType.Content, value: 'Some text.' },
       ]);
       // No Citation event (but we do get a Finished event with undefined reason)
-      expect(events.some((e) => e.type === GeminiEventType.Citation)).toBe(
+      expect(events.some((e) => e.type === CodeflyEventType.Citation)).toBe(
         false,
       );
     });
@@ -641,13 +641,13 @@ describe('Turn', () => {
       }
 
       expect(events).toEqual([
-        { type: GeminiEventType.Content, value: 'Some text.' },
+        { type: CodeflyEventType.Content, value: 'Some text.' },
         {
-          type: GeminiEventType.Citation,
+          type: CodeflyEventType.Citation,
           value: 'Citations:\n(Good Source) https://example.com/source1',
         },
         {
-          type: GeminiEventType.Finished,
+          type: CodeflyEventType.Finished,
           value: { reason: 'STOP', usageMetadata: undefined },
         },
       ]);
@@ -678,7 +678,7 @@ describe('Turn', () => {
         events.push(event);
       }
 
-      expect(events).toEqual([{ type: GeminiEventType.UserCancelled }]);
+      expect(events).toEqual([{ type: CodeflyEventType.UserCancelled }]);
 
       expect(reportError).not.toHaveBeenCalled();
     });
@@ -705,8 +705,8 @@ describe('Turn', () => {
       }
 
       expect(events).toEqual([
-        { type: GeminiEventType.Retry },
-        { type: GeminiEventType.Content, value: 'Success' },
+        { type: CodeflyEventType.Retry },
+        { type: CodeflyEventType.Content, value: 'Success' },
       ]);
     });
 
@@ -716,7 +716,7 @@ describe('Turn', () => {
         part: { text: 'Hello' },
         responseId: 'trace-123',
         expectedEvent: {
-          type: GeminiEventType.Content,
+          type: CodeflyEventType.Content,
           value: 'Hello',
           traceId: 'trace-123',
         },
@@ -726,7 +726,7 @@ describe('Turn', () => {
         part: { text: '[Thought: thinking]', thought: 'thinking' },
         responseId: 'trace-456',
         expectedEvent: {
-          type: GeminiEventType.Thought,
+          type: CodeflyEventType.Thought,
           value: { subject: '', description: '[Thought: thinking]' },
           traceId: 'trace-456',
         },
@@ -806,31 +806,31 @@ describe('Turn', () => {
       expect(events.length).toBe(5);
 
       const thoughtEvent = events.find(
-        (e) => e.type === GeminiEventType.Thought,
+        (e) => e.type === CodeflyEventType.Thought,
       );
       expect(thoughtEvent).toBeDefined();
       expect(thoughtEvent).toMatchObject({
-        type: GeminiEventType.Thought,
+        type: CodeflyEventType.Thought,
         value: { subject: 'Planning', description: 'the solution' },
         traceId: 'trace-789',
       });
 
       const contentEvent = events.find(
-        (e) => e.type === GeminiEventType.Content,
+        (e) => e.type === CodeflyEventType.Content,
       );
       expect(contentEvent).toBeDefined();
       expect(contentEvent).toMatchObject({
-        type: GeminiEventType.Content,
+        type: CodeflyEventType.Content,
         value: 'I will help you with that.',
         traceId: 'trace-789',
       });
 
       const toolCallEvent = events.find(
-        (e) => e.type === GeminiEventType.ToolCallRequest,
+        (e) => e.type === CodeflyEventType.ToolCallRequest,
       );
       expect(toolCallEvent).toBeDefined();
       expect(toolCallEvent).toMatchObject({
-        type: GeminiEventType.ToolCallRequest,
+        type: CodeflyEventType.ToolCallRequest,
         value: expect.objectContaining({
           callId: 'fc1',
           name: 'ReadFile',
@@ -839,20 +839,20 @@ describe('Turn', () => {
       });
 
       const citationEvent = events.find(
-        (e) => e.type === GeminiEventType.Citation,
+        (e) => e.type === CodeflyEventType.Citation,
       );
       expect(citationEvent).toBeDefined();
       expect(citationEvent).toMatchObject({
-        type: GeminiEventType.Citation,
+        type: CodeflyEventType.Citation,
         value: expect.stringContaining('https://example.com'),
       });
 
       const finishedEvent = events.find(
-        (e) => e.type === GeminiEventType.Finished,
+        (e) => e.type === CodeflyEventType.Finished,
       );
       expect(finishedEvent).toBeDefined();
       expect(finishedEvent).toMatchObject({
-        type: GeminiEventType.Finished,
+        type: CodeflyEventType.Finished,
         value: { reason: 'STOP' },
       });
     });

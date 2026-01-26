@@ -42,7 +42,7 @@ describe('useSessionBrowser', () => {
     },
     setSessionId: vi.fn(),
     getSessionId: vi.fn(),
-    getGeminiClient: vi.fn().mockReturnValue({
+    getCodeflyClient: vi.fn().mockReturnValue({
       getChatRecordingService: vi.fn().mockReturnValue({
         deleteSession: vi.fn(),
       }),

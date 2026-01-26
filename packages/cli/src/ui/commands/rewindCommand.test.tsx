@@ -96,7 +96,7 @@ describe('rewindCommand', () => {
     mockContext = createMockCommandContext({
       services: {
         config: {
-          getGeminiClient: () => ({
+          getCodeflyClient: () => ({
             getChatRecordingService: mockGetChatRecordingService,
             setHistory: mockSetHistory,
             sendMessageStream: mockSendMessageStream,
@@ -291,7 +291,7 @@ describe('rewindCommand', () => {
   it('should fail if client is not initialized', () => {
     const context = createMockCommandContext({
       services: {
-        config: { getGeminiClient: () => undefined },
+        config: { getCodeflyClient: () => undefined },
       },
     }) as unknown as CommandContext;
 
@@ -308,7 +308,9 @@ describe('rewindCommand', () => {
     const context = createMockCommandContext({
       services: {
         config: {
-          getGeminiClient: () => ({ getChatRecordingService: () => undefined }),
+          getCodeflyClient: () => ({
+            getChatRecordingService: () => undefined,
+          }),
         },
       },
     }) as unknown as CommandContext;

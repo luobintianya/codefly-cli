@@ -8,13 +8,13 @@ import type React from 'react';
 import { useCallback, useContext, useMemo, useState } from 'react';
 import { Box, Text } from 'ink';
 import {
-  PREVIEW_GEMINI_MODEL,
-  PREVIEW_GEMINI_FLASH_MODEL,
-  PREVIEW_GEMINI_MODEL_AUTO,
-  DEFAULT_GEMINI_MODEL,
-  DEFAULT_GEMINI_FLASH_MODEL,
+  PREVIEW_CODEFLY_MODEL,
+  PREVIEW_CODEFLY_FLASH_MODEL,
+  PREVIEW_CODEFLY_MODEL_AUTO,
+  DEFAULT_CODEFLY_MODEL,
+  DEFAULT_CODEFLY_FLASH_MODEL,
   DEFAULT_GEMINI_FLASH_LITE_MODEL,
-  DEFAULT_GEMINI_MODEL_AUTO,
+  DEFAULT_CODEFLY_MODEL_AUTO,
   ModelSlashCommandEvent,
   logModelSlashCommand,
   getDisplayString,
@@ -35,18 +35,18 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
   const [persistMode, setPersistMode] = useState(false);
 
   // Determine the Preferred Model (read once when the dialog opens).
-  const preferredModel = config?.getModel() || DEFAULT_GEMINI_MODEL_AUTO;
+  const preferredModel = config?.getModel() || DEFAULT_CODEFLY_MODEL_AUTO;
 
   const shouldShowPreviewModels =
     config?.getPreviewFeatures() && config.getHasAccessToPreviewModel();
 
   const manualModelSelected = useMemo(() => {
     const manualModels = [
-      DEFAULT_GEMINI_MODEL,
-      DEFAULT_GEMINI_FLASH_MODEL,
+      DEFAULT_CODEFLY_MODEL,
+      DEFAULT_CODEFLY_FLASH_MODEL,
       DEFAULT_GEMINI_FLASH_LITE_MODEL,
-      PREVIEW_GEMINI_MODEL,
-      PREVIEW_GEMINI_FLASH_MODEL,
+      PREVIEW_CODEFLY_MODEL,
+      PREVIEW_CODEFLY_FLASH_MODEL,
     ];
     if (manualModels.includes(preferredModel)) {
       return preferredModel;
@@ -73,23 +73,23 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
   const mainOptions = useMemo(() => {
     const list = [
       {
-        value: DEFAULT_GEMINI_MODEL_AUTO,
-        title: getDisplayString(DEFAULT_GEMINI_MODEL_AUTO),
+        value: DEFAULT_CODEFLY_MODEL_AUTO,
+        title: getDisplayString(DEFAULT_CODEFLY_MODEL_AUTO),
         description:
           'Let Gemini CLI decide the best model for the task: gemini-2.5-pro, gemini-2.5-flash',
-        key: DEFAULT_GEMINI_MODEL_AUTO,
+        key: DEFAULT_CODEFLY_MODEL_AUTO,
       },
       {
-        value: PREVIEW_GEMINI_MODEL,
-        title: getDisplayString(PREVIEW_GEMINI_MODEL),
+        value: PREVIEW_CODEFLY_MODEL,
+        title: getDisplayString(PREVIEW_CODEFLY_MODEL),
         description: 'Gemini 3 Pro (Preview)',
-        key: PREVIEW_GEMINI_MODEL,
+        key: PREVIEW_CODEFLY_MODEL,
       },
       {
-        value: PREVIEW_GEMINI_FLASH_MODEL,
-        title: getDisplayString(PREVIEW_GEMINI_FLASH_MODEL),
+        value: PREVIEW_CODEFLY_FLASH_MODEL,
+        title: getDisplayString(PREVIEW_CODEFLY_FLASH_MODEL),
         description: 'Gemini 3 Flash (Preview)',
-        key: PREVIEW_GEMINI_FLASH_MODEL,
+        key: PREVIEW_CODEFLY_FLASH_MODEL,
       },
       {
         value: 'Manual',
@@ -103,14 +103,14 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
 
     if (
       shouldShowPreviewModels &&
-      PREVIEW_GEMINI_MODEL_AUTO !== DEFAULT_GEMINI_MODEL_AUTO
+      PREVIEW_CODEFLY_MODEL_AUTO !== DEFAULT_CODEFLY_MODEL_AUTO
     ) {
       list.unshift({
-        value: PREVIEW_GEMINI_MODEL_AUTO,
-        title: getDisplayString(PREVIEW_GEMINI_MODEL_AUTO),
+        value: PREVIEW_CODEFLY_MODEL_AUTO,
+        title: getDisplayString(PREVIEW_CODEFLY_MODEL_AUTO),
         description:
           'Let Gemini CLI decide the best model for the task: gemini-3-pro, gemini-3-flash',
-        key: PREVIEW_GEMINI_MODEL_AUTO,
+        key: PREVIEW_CODEFLY_MODEL_AUTO,
       });
     }
     return list;
@@ -119,14 +119,14 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
   const manualOptions = useMemo(() => {
     const list = [
       {
-        value: DEFAULT_GEMINI_MODEL,
-        title: DEFAULT_GEMINI_MODEL,
-        key: DEFAULT_GEMINI_MODEL,
+        value: DEFAULT_CODEFLY_MODEL,
+        title: DEFAULT_CODEFLY_MODEL,
+        key: DEFAULT_CODEFLY_MODEL,
       },
       {
-        value: DEFAULT_GEMINI_FLASH_MODEL,
-        title: DEFAULT_GEMINI_FLASH_MODEL,
-        key: DEFAULT_GEMINI_FLASH_MODEL,
+        value: DEFAULT_CODEFLY_FLASH_MODEL,
+        title: DEFAULT_CODEFLY_FLASH_MODEL,
+        key: DEFAULT_CODEFLY_FLASH_MODEL,
       },
       {
         value: DEFAULT_GEMINI_FLASH_LITE_MODEL,
@@ -138,14 +138,14 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
     if (shouldShowPreviewModels) {
       list.unshift(
         {
-          value: PREVIEW_GEMINI_MODEL,
-          title: PREVIEW_GEMINI_MODEL,
-          key: PREVIEW_GEMINI_MODEL,
+          value: PREVIEW_CODEFLY_MODEL,
+          title: PREVIEW_CODEFLY_MODEL,
+          key: PREVIEW_CODEFLY_MODEL,
         },
         {
-          value: PREVIEW_GEMINI_FLASH_MODEL,
-          title: PREVIEW_GEMINI_FLASH_MODEL,
-          key: PREVIEW_GEMINI_FLASH_MODEL,
+          value: PREVIEW_CODEFLY_FLASH_MODEL,
+          title: PREVIEW_CODEFLY_FLASH_MODEL,
+          key: PREVIEW_CODEFLY_FLASH_MODEL,
         },
       );
     }

@@ -23,7 +23,7 @@ import type { ValidationRequiredError } from '../utils/googleQuotaErrors.js';
 import type { Config } from '../config/config.js';
 import {
   resolveModel,
-  isGemini2Model,
+  isCodefly2Model,
   isPreviewModel,
 } from '../config/models.js';
 import { hasCycleInSchema } from '../tools/tools.js';
@@ -230,7 +230,7 @@ export class AgentExecutionBlockedError extends Error {
  * @remarks
  * The session maintains all the turns between user and model.
  */
-export class GeminiChat {
+export class CodeflyChat {
   // A promise to represent the current state of the message being sent to the
   // model.
   private sendPromise: Promise<void> = Promise.resolve();
@@ -316,7 +316,7 @@ export class GeminiChat {
     const requestContents = this.getHistory(true);
 
     const streamWithRetries = async function* (
-      this: GeminiChat,
+      this: CodeflyChat,
     ): AsyncGenerator<StreamEvent, void, void> {
       try {
         let lastError: unknown = new Error('Request failed after all retries.');
@@ -386,7 +386,7 @@ export class GeminiChat {
             );
 
             if (
-              (isContentError && isGemini2Model(model)) ||
+              (isContentError && isCodefly2Model(model)) ||
               (isRetryable && !signal.aborted)
             ) {
               // Check if we have more attempts left.
@@ -418,7 +418,7 @@ export class GeminiChat {
         if (lastError) {
           if (
             lastError instanceof InvalidStreamError &&
-            isGemini2Model(model)
+            isCodefly2Model(model)
           ) {
             logContentRetryFailure(
               this.config,

@@ -7,7 +7,7 @@
 import type { Content } from '@google/genai';
 import { createHash } from 'node:crypto';
 import type { ServerGeminiStreamEvent } from '../core/turn.js';
-import { GeminiEventType } from '../core/turn.js';
+import { CodeflyEventType } from '../core/turn.js';
 import {
   logLoopDetected,
   logLoopDetectionDisabled,
@@ -156,13 +156,13 @@ export class LoopDetectionService {
     }
 
     switch (event.type) {
-      case GeminiEventType.ToolCallRequest:
+      case CodeflyEventType.ToolCallRequest:
         // content chanting only happens in one single stream, reset if there
         // is a tool call in between
         this.resetContentTracking();
         this.loopDetected = this.checkToolCallLoop(event.value);
         break;
-      case GeminiEventType.Content:
+      case CodeflyEventType.Content:
         this.loopDetected = this.checkContentLoop(event.value);
         break;
       default:
@@ -420,7 +420,7 @@ export class LoopDetectionService {
 
   private async checkForLoopWithLLM(signal: AbortSignal) {
     const recentHistory = this.config
-      .getGeminiClient()
+      .getCodeflyClient()
       .getHistory()
       .slice(-LLM_LOOP_CHECK_HISTORY_COUNT);
 

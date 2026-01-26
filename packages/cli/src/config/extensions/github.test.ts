@@ -26,7 +26,7 @@ import type { ExtensionManager } from '../extension-manager.js';
 import { fetchJson } from './github_fetch.js';
 import { EventEmitter } from 'node:events';
 import type {
-  GeminiCLIExtension,
+  CodeflyCLIExtension,
   ExtensionInstallMetadata,
 } from '@codeflyai/codefly-core';
 import type { ExtensionConfig } from '../extension.js';
@@ -38,7 +38,7 @@ vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
     ...actual,
     Storage: {
       getGlobalSettingsPath: vi.fn().mockReturnValue('/mock/settings.json'),
-      getGlobalGeminiDir: vi.fn().mockReturnValue('/mock/.gemini'),
+      getGlobalCodeflyDir: vi.fn().mockReturnValue('/mock/.codefly'),
     },
     debugLogger: {
       error: vi.fn(),
@@ -229,7 +229,7 @@ describe('github.ts', () => {
 
       const linkExt = {
         installMetadata: { type: 'link' },
-      } as unknown as GeminiCLIExtension;
+      } as unknown as CodeflyCLIExtension;
       expect(await checkForExtensionUpdate(linkExt, mockExtensionManager)).toBe(
         ExtensionUpdateState.NOT_UPDATABLE,
       );
@@ -245,7 +245,7 @@ describe('github.ts', () => {
       const ext = {
         path: '/path',
         installMetadata: { type: 'git', source: 'url' },
-      } as unknown as GeminiCLIExtension;
+      } as unknown as CodeflyCLIExtension;
       expect(await checkForExtensionUpdate(ext, mockExtensionManager)).toBe(
         ExtensionUpdateState.UPDATE_AVAILABLE,
       );
@@ -261,7 +261,7 @@ describe('github.ts', () => {
       const ext = {
         path: '/path',
         installMetadata: { type: 'git', source: 'url' },
-      } as unknown as GeminiCLIExtension;
+      } as unknown as CodeflyCLIExtension;
       expect(await checkForExtensionUpdate(ext, mockExtensionManager)).toBe(
         ExtensionUpdateState.UP_TO_DATE,
       );
@@ -279,7 +279,7 @@ describe('github.ts', () => {
         version: '1.0.0',
         path: '/path/to/installed/ext',
         installMetadata: { type: 'local', source: '/path/to/source/ext' },
-      } as unknown as GeminiCLIExtension;
+      } as unknown as CodeflyCLIExtension;
 
       expect(await checkForExtensionUpdate(ext, mockExtensionManager)).toBe(
         ExtensionUpdateState.NOT_UPDATABLE,

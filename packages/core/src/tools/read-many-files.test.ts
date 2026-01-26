@@ -69,7 +69,7 @@ describe('ReadManyFilesTool', () => {
     tempDirOutsideRoot = fs.realpathSync(
       fs.mkdtempSync(path.join(os.tmpdir(), 'read-many-files-external-')),
     );
-    fs.writeFileSync(path.join(tempRootDir, '.geminiignore'), 'foo.*');
+    fs.writeFileSync(path.join(tempRootDir, '.codeflyignore'), 'foo.*');
     const fileService = new FileDiscoveryService(tempRootDir);
     const mockConfig = {
       getFileService: () => fileService,
@@ -77,7 +77,7 @@ describe('ReadManyFilesTool', () => {
 
       getFileFilteringOptions: () => ({
         respectGitIgnore: true,
-        respectGeminiIgnore: true,
+        respectCodeflyIgnore: true,
       }),
       getTargetDir: () => tempRootDir,
       getWorkspaceDirs: () => [tempRootDir],
@@ -468,7 +468,7 @@ describe('ReadManyFilesTool', () => {
       ]);
     });
 
-    it('should return error if path is ignored by a .geminiignore pattern', async () => {
+    it('should return error if path is ignored by a .codeflyignore pattern', async () => {
       createFile('foo.bar', '');
       createFile('bar.ts', '');
       createFile('foo.quux', '');
@@ -493,7 +493,7 @@ describe('ReadManyFilesTool', () => {
         getFileSystemService: () => new StandardFileSystemService(),
         getFileFilteringOptions: () => ({
           respectGitIgnore: true,
-          respectGeminiIgnore: true,
+          respectCodeflyIgnore: true,
         }),
         getWorkspaceContext: () => new WorkspaceContext(tempDir1, [tempDir2]),
         getTargetDir: () => tempDir1,

@@ -12,6 +12,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export async function getVersion(): Promise<string> {
+  if (process.env['CLI_VERSION']) {
+    return process.env['CLI_VERSION'];
+  }
   const pkgJson = await getPackageJson(__dirname);
-  return process.env['CLI_VERSION'] || pkgJson?.version || 'unknown';
+  return pkgJson?.version || 'unknown';
 }

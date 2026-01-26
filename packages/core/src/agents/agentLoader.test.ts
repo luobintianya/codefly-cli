@@ -14,7 +14,7 @@ import {
   loadAgentsFromDirectory,
   AgentLoadError,
 } from './agentLoader.js';
-import { GEMINI_MODEL_ALIAS_PRO } from '../config/models.js';
+import { CODEFLY_MODEL_ALIAS_PRO } from '../config/models.js';
 import type { LocalAgentDefinition } from './types.js';
 
 describe('loader', () => {
@@ -259,14 +259,14 @@ Body`);
         kind: 'local' as const,
         name: 'test-agent',
         description: 'A test agent',
-        model: GEMINI_MODEL_ALIAS_PRO,
+        model: CODEFLY_MODEL_ALIAS_PRO,
         system_prompt: 'You are a test agent.',
       };
 
       const result = markdownToAgentDefinition(
         markdown,
       ) as LocalAgentDefinition;
-      expect(result.modelConfig.model).toBe(GEMINI_MODEL_ALIAS_PRO);
+      expect(result.modelConfig.model).toBe(CODEFLY_MODEL_ALIAS_PRO);
     });
 
     it('should pass through unknown model names (e.g. auto)', () => {

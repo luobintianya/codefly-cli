@@ -10,7 +10,10 @@ exports[`SettingsDialog > Initial Rendering > should render settings list with v
 │ ╰──────────────────────────────────────────────────────────────────────────────────────────────╯ │
 │                                                                                                  │
 │  ▲                                                                                               │
-│  ● Preview Features (e.g., models)                                                        false  │
+│  ● Language                                                                                  en  │
+│    The language for the CLI interface.                                                           │
+│                                                                                                  │
+│    Preview Features (e.g., models)                                                        false  │
 │    Enable preview features (e.g., preview models).                                               │
 │                                                                                                  │
 │    Vim Mode                                                                               false  │
@@ -30,9 +33,6 @@ exports[`SettingsDialog > Initial Rendering > should render settings list with v
 │                                                                                                  │
 │    Output Format                                                                           Text  │
 │    The format of the CLI output. Can be \`text\` or \`json\`.                                        │
-│                                                                                                  │
-│    Hide Window Title                                                                      false  │
-│    Hide the window title bar                                                                     │
 │                                                                                                  │
 │  ▼                                                                                               │
 │                                                                                                  │
@@ -56,7 +56,10 @@ exports[`SettingsDialog > Snapshot Tests > should render 'accessibility settings
 │ ╰──────────────────────────────────────────────────────────────────────────────────────────────╯ │
 │                                                                                                  │
 │  ▲                                                                                               │
-│  ● Preview Features (e.g., models)                                                        false  │
+│  ● Language                                                                                  en  │
+│    The language for the CLI interface.                                                           │
+│                                                                                                  │
+│    Preview Features (e.g., models)                                                        false  │
 │    Enable preview features (e.g., preview models).                                               │
 │                                                                                                  │
 │    Vim Mode                                                                               true*  │
@@ -76,9 +79,6 @@ exports[`SettingsDialog > Snapshot Tests > should render 'accessibility settings
 │                                                                                                  │
 │    Output Format                                                                           Text  │
 │    The format of the CLI output. Can be \`text\` or \`json\`.                                        │
-│                                                                                                  │
-│    Hide Window Title                                                                      false  │
-│    Hide the window title bar                                                                     │
 │                                                                                                  │
 │  ▼                                                                                               │
 │                                                                                                  │
@@ -102,7 +102,10 @@ exports[`SettingsDialog > Snapshot Tests > should render 'all boolean settings d
 │ ╰──────────────────────────────────────────────────────────────────────────────────────────────╯ │
 │                                                                                                  │
 │  ▲                                                                                               │
-│  ● Preview Features (e.g., models)                                                        false  │
+│  ● Language                                                                                  en  │
+│    The language for the CLI interface.                                                           │
+│                                                                                                  │
+│    Preview Features (e.g., models)                                                        false  │
 │    Enable preview features (e.g., preview models).                                               │
 │                                                                                                  │
 │    Vim Mode                                                                              false*  │
@@ -122,9 +125,6 @@ exports[`SettingsDialog > Snapshot Tests > should render 'all boolean settings d
 │                                                                                                  │
 │    Output Format                                                                           Text  │
 │    The format of the CLI output. Can be \`text\` or \`json\`.                                        │
-│                                                                                                  │
-│    Hide Window Title                                                                     false*  │
-│    Hide the window title bar                                                                     │
 │                                                                                                  │
 │  ▼                                                                                               │
 │                                                                                                  │
@@ -148,7 +148,10 @@ exports[`SettingsDialog > Snapshot Tests > should render 'default state' correct
 │ ╰──────────────────────────────────────────────────────────────────────────────────────────────╯ │
 │                                                                                                  │
 │  ▲                                                                                               │
-│  ● Preview Features (e.g., models)                                                        false  │
+│  ● Language                                                                                  en  │
+│    The language for the CLI interface.                                                           │
+│                                                                                                  │
+│    Preview Features (e.g., models)                                                        false  │
 │    Enable preview features (e.g., preview models).                                               │
 │                                                                                                  │
 │    Vim Mode                                                                               false  │
@@ -168,9 +171,6 @@ exports[`SettingsDialog > Snapshot Tests > should render 'default state' correct
 │                                                                                                  │
 │    Output Format                                                                           Text  │
 │    The format of the CLI output. Can be \`text\` or \`json\`.                                        │
-│                                                                                                  │
-│    Hide Window Title                                                                      false  │
-│    Hide the window title bar                                                                     │
 │                                                                                                  │
 │  ▼                                                                                               │
 │                                                                                                  │
@@ -194,7 +194,10 @@ exports[`SettingsDialog > Snapshot Tests > should render 'file filtering setting
 │ ╰──────────────────────────────────────────────────────────────────────────────────────────────╯ │
 │                                                                                                  │
 │  ▲                                                                                               │
-│  ● Preview Features (e.g., models)                                                        false  │
+│  ● Language                                                                                  en  │
+│    The language for the CLI interface.                                                           │
+│                                                                                                  │
+│    Preview Features (e.g., models)                                                        false  │
 │    Enable preview features (e.g., preview models).                                               │
 │                                                                                                  │
 │    Vim Mode                                                                               false  │
@@ -214,9 +217,6 @@ exports[`SettingsDialog > Snapshot Tests > should render 'file filtering setting
 │                                                                                                  │
 │    Output Format                                                                           Text  │
 │    The format of the CLI output. Can be \`text\` or \`json\`.                                        │
-│                                                                                                  │
-│    Hide Window Title                                                                      false  │
-│    Hide the window title bar                                                                     │
 │                                                                                                  │
 │  ▼                                                                                               │
 │                                                                                                  │
@@ -240,6 +240,9 @@ exports[`SettingsDialog > Snapshot Tests > should render 'focused on scope selec
 │ ╰──────────────────────────────────────────────────────────────────────────────────────────────╯ │
 │                                                                                                  │
 │  ▲                                                                                               │
+│    Language                                                                                  en  │
+│    The language for the CLI interface.                                                           │
+│                                                                                                  │
 │    Preview Features (e.g., models)                                                        false  │
 │    Enable preview features (e.g., preview models).                                               │
 │                                                                                                  │
@@ -260,9 +263,6 @@ exports[`SettingsDialog > Snapshot Tests > should render 'focused on scope selec
 │                                                                                                  │
 │    Output Format                                                                           Text  │
 │    The format of the CLI output. Can be \`text\` or \`json\`.                                        │
-│                                                                                                  │
-│    Hide Window Title                                                                      false  │
-│    Hide the window title bar                                                                     │
 │                                                                                                  │
 │  ▼                                                                                               │
 │                                                                                                  │
@@ -286,7 +286,10 @@ exports[`SettingsDialog > Snapshot Tests > should render 'mixed boolean and numb
 │ ╰──────────────────────────────────────────────────────────────────────────────────────────────╯ │
 │                                                                                                  │
 │  ▲                                                                                               │
-│  ● Preview Features (e.g., models)                                                        false  │
+│  ● Language                                                                                  en  │
+│    The language for the CLI interface.                                                           │
+│                                                                                                  │
+│    Preview Features (e.g., models)                                                        false  │
 │    Enable preview features (e.g., preview models).                                               │
 │                                                                                                  │
 │    Vim Mode                                                                              false*  │
@@ -306,9 +309,6 @@ exports[`SettingsDialog > Snapshot Tests > should render 'mixed boolean and numb
 │                                                                                                  │
 │    Output Format                                                                           Text  │
 │    The format of the CLI output. Can be \`text\` or \`json\`.                                        │
-│                                                                                                  │
-│    Hide Window Title                                                                     false*  │
-│    Hide the window title bar                                                                     │
 │                                                                                                  │
 │  ▼                                                                                               │
 │                                                                                                  │
@@ -332,7 +332,10 @@ exports[`SettingsDialog > Snapshot Tests > should render 'tools and security set
 │ ╰──────────────────────────────────────────────────────────────────────────────────────────────╯ │
 │                                                                                                  │
 │  ▲                                                                                               │
-│  ● Preview Features (e.g., models)                                                        false  │
+│  ● Language                                                                                  en  │
+│    The language for the CLI interface.                                                           │
+│                                                                                                  │
+│    Preview Features (e.g., models)                                                        false  │
 │    Enable preview features (e.g., preview models).                                               │
 │                                                                                                  │
 │    Vim Mode                                                                               false  │
@@ -352,9 +355,6 @@ exports[`SettingsDialog > Snapshot Tests > should render 'tools and security set
 │                                                                                                  │
 │    Output Format                                                                           Text  │
 │    The format of the CLI output. Can be \`text\` or \`json\`.                                        │
-│                                                                                                  │
-│    Hide Window Title                                                                      false  │
-│    Hide the window title bar                                                                     │
 │                                                                                                  │
 │  ▼                                                                                               │
 │                                                                                                  │
@@ -378,7 +378,10 @@ exports[`SettingsDialog > Snapshot Tests > should render 'various boolean settin
 │ ╰──────────────────────────────────────────────────────────────────────────────────────────────╯ │
 │                                                                                                  │
 │  ▲                                                                                               │
-│  ● Preview Features (e.g., models)                                                        false  │
+│  ● Language                                                                                  en  │
+│    The language for the CLI interface.                                                           │
+│                                                                                                  │
+│    Preview Features (e.g., models)                                                        false  │
 │    Enable preview features (e.g., preview models).                                               │
 │                                                                                                  │
 │    Vim Mode                                                                               true*  │
@@ -398,9 +401,6 @@ exports[`SettingsDialog > Snapshot Tests > should render 'various boolean settin
 │                                                                                                  │
 │    Output Format                                                                           Text  │
 │    The format of the CLI output. Can be \`text\` or \`json\`.                                        │
-│                                                                                                  │
-│    Hide Window Title                                                                      true*  │
-│    Hide the window title bar                                                                     │
 │                                                                                                  │
 │  ▼                                                                                               │
 │                                                                                                  │

@@ -354,11 +354,11 @@ export class BashInstaller {
   /**
    * Uninstall the completion script
    *
-   * @param options - Optional uninstall options
-   * @param options.yes - Skip confirmation prompt (handled by command layer)
+   * @param _options - Optional uninstall options
+   * @param _options.yes - Skip confirmation prompt (handled by command layer)
    * @returns Uninstallation result
    */
-  async uninstall(options?: {
+  async uninstall(_options?: {
     yes?: boolean;
   }): Promise<{ success: boolean; message: string }> {
     try {

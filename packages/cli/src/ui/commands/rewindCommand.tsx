@@ -19,7 +19,7 @@ import { checkExhaustive } from '../../utils/checks.js';
 import type { Content } from '@google/genai';
 import type {
   ChatRecordingService,
-  GeminiClient,
+  CodeflyClient,
 } from '@codeflyai/codefly-core';
 import { coreEvents, debugLogger } from '@codeflyai/codefly-core';
 
@@ -36,7 +36,7 @@ import { coreEvents, debugLogger } from '@codeflyai/codefly-core';
  */
 async function rewindConversation(
   context: CommandContext,
-  client: GeminiClient,
+  client: CodeflyClient,
   recordingService: ChatRecordingService,
   messageId: string,
   newText: string,
@@ -100,7 +100,7 @@ export const rewindCommand: SlashCommand = {
         content: 'Config not found',
       };
 
-    const client = config.getGeminiClient();
+    const client = config.getCodeflyClient();
     if (!client)
       return {
         type: 'message',

@@ -370,7 +370,7 @@ export class ArchiveCommand {
         choices,
       });
       return answer;
-    } catch (error) {
+    } catch (_error) {
       // User cancelled (Ctrl+C)
       return null;
     }

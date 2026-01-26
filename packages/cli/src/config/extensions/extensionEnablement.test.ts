@@ -17,7 +17,7 @@ vi.mock('./storage.js');
 import {
   coreEvents,
   CODEFLY_DIR,
-  type GeminiCLIExtension,
+  type CodeflyCLIExtension,
 } from '@codeflyai/codefly-core';
 
 vi.mock('node:os', () => ({
@@ -389,7 +389,7 @@ describe('ExtensionEnablementManager', () => {
       const extensions = [
         { name: 'ext-one' },
         { name: 'ext-two' },
-      ] as GeminiCLIExtension[];
+      ] as CodeflyCLIExtension[];
       manager.validateExtensionOverrides(extensions);
       expect(coreEventsEmitSpy).not.toHaveBeenCalled();
     });
@@ -403,7 +403,7 @@ describe('ExtensionEnablementManager', () => {
       const extensions = [
         { name: 'ext-one' },
         { name: 'ext-two' },
-      ] as GeminiCLIExtension[];
+      ] as CodeflyCLIExtension[];
       manager.validateExtensionOverrides(extensions);
       expect(coreEventsEmitSpy).toHaveBeenCalledTimes(2);
       expect(coreEventsEmitSpy).toHaveBeenCalledWith(

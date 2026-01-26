@@ -29,7 +29,7 @@ import type {
 import {
   ApprovalMode,
   AuthType,
-  GeminiEventType as ServerGeminiEventType,
+  CodeflyEventType as ServerCodeflyEventType,
   ToolErrorType,
   ToolConfirmationOutcome,
   tokenLimit,
@@ -50,7 +50,7 @@ const mockSendMessageStream = vi
   .mockReturnValue((async function* () {})());
 const mockStartChat = vi.fn();
 
-const MockedGeminiClientClass = vi.hoisted(() =>
+const MockedCodeflyClientClass = vi.hoisted(() =>
   vi.fn().mockImplementation(function (this: any, _config: any) {
     // _config
     this.startChat = mockStartChat;
@@ -81,7 +81,7 @@ vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
   return {
     ...actualCoreModule,
     GitService: vi.fn(),
-    GeminiClient: MockedGeminiClientClass,
+    CodeflyClient: MockedCodeflyClientClass,
     UserPromptEvent: MockedUserPromptEvent,
     parseAndFormatApiError: mockParseAndFormatApiError,
     tokenLimit: vi.fn().mockReturnValue(100), // Mock tokenLimit
@@ -172,11 +172,11 @@ describe('useGeminiStream', () => {
     vi.clearAllMocks(); // Clear mocks before each test
 
     mockAddItem = vi.fn();
-    // Define the mock for getGeminiClient
-    const mockGetGeminiClient = vi.fn().mockImplementation(() => {
-      // MockedGeminiClientClass is defined in the module scope by the previous change.
+    // Define the mock for getCodeflyClient
+    const mockGetCodeflyClient = vi.fn().mockImplementation(() => {
+      // MockedCodeflyClientClass is defined in the module scope by the previous change.
       // It will use the mockStartChat and mockSendMessageStream that are managed within beforeEach.
-      const clientInstance = new MockedGeminiClientClass(mockConfig);
+      const clientInstance = new MockedCodeflyClientClass(mockConfig);
       return clientInstance;
     });
 
@@ -207,7 +207,7 @@ describe('useGeminiStream', () => {
       mcpServers: undefined,
       userAgent: 'test-agent',
       userMemory: '',
-      geminiMdFileCount: 0,
+      codeflyMdFileCount: 0,
       alwaysSkipModificationConfirmation: false,
       vertexai: false,
       showMemoryUsage: false,
@@ -217,7 +217,7 @@ describe('useGeminiStream', () => {
       ),
       getProjectRoot: vi.fn(() => '/test/dir'),
       getCheckpointingEnabled: vi.fn(() => false),
-      getGeminiClient: mockGetGeminiClient,
+      getCodeflyClient: mockGetCodeflyClient,
       getMcpClientManager: () => mockMcpClientManager as any,
       getApprovalMode: () => ApprovalMode.DEFAULT,
       getUsageStatisticsEnabled: () => true,
@@ -259,11 +259,11 @@ describe('useGeminiStream', () => {
       0, // lastToolOutputTime
     ]);
 
-    // Reset mocks for GeminiClient instance methods (startChat and sendMessageStream)
-    // The GeminiClient constructor itself is mocked at the module level.
+    // Reset mocks for CodeflyClient instance methods (startChat and sendMessageStream)
+    // The CodeflyClient constructor itself is mocked at the module level.
     mockStartChat.mockClear().mockResolvedValue({
       sendMessageStream: mockSendMessageStream,
-    } as unknown as any); // GeminiChat -> any
+    } as unknown as any); // CodeflyChat -> any
     mockSendMessageStream
       .mockClear()
       .mockReturnValue((async function* () {})());
@@ -274,7 +274,7 @@ describe('useGeminiStream', () => {
   const mockLoadedSettings: LoadedSettings = {
     merged: { preferredEditor: 'vscode' },
     user: { path: '/user/settings.json', settings: {} },
-    workspace: { path: '/workspace/.gemini/settings.json', settings: {} },
+    workspace: { path: '/workspace/.codefly/settings.json', settings: {} },
     errors: [],
     forScope: vi.fn(),
     setValue: vi.fn(),
@@ -284,7 +284,7 @@ describe('useGeminiStream', () => {
     initialToolCalls: TrackedToolCall[] = [],
     geminiClient?: any,
   ) => {
-    const client = geminiClient || mockConfig.getGeminiClient();
+    const client = geminiClient || mockConfig.getCodeflyClient();
 
     const initialProps = {
       client,
@@ -452,7 +452,7 @@ describe('useGeminiStream', () => {
 
     return renderHook(() =>
       useGeminiStream(
-        new MockedGeminiClientClass(mockConfig),
+        new MockedCodeflyClientClass(mockConfig),
         [],
         mockAddItem,
         mockConfig,
@@ -593,7 +593,7 @@ describe('useGeminiStream', () => {
 
     renderHook(() =>
       useGeminiStream(
-        new MockedGeminiClientClass(mockConfig),
+        new MockedCodeflyClientClass(mockConfig),
         [],
         mockAddItem,
         mockConfig,
@@ -661,7 +661,7 @@ describe('useGeminiStream', () => {
         } as unknown as AnyToolInvocation,
       } as TrackedCancelledToolCall,
     ];
-    const client = new MockedGeminiClientClass(mockConfig);
+    const client = new MockedCodeflyClientClass(mockConfig);
 
     // Capture the onComplete callback
     let capturedOnComplete:
@@ -740,7 +740,7 @@ describe('useGeminiStream', () => {
         } as unknown as AnyToolInvocation,
       } as unknown as TrackedCompletedToolCall,
     ];
-    const client = new MockedGeminiClientClass(mockConfig);
+    const client = new MockedCodeflyClientClass(mockConfig);
 
     // Capture the onComplete callback
     let capturedOnComplete:
@@ -865,7 +865,7 @@ describe('useGeminiStream', () => {
       responseSubmittedToGemini: false,
     };
     const allCancelledTools = [cancelledToolCall1, cancelledToolCall2];
-    const client = new MockedGeminiClientClass(mockConfig);
+    const client = new MockedCodeflyClientClass(mockConfig);
 
     let capturedOnComplete:
       | ((completedTools: TrackedToolCall[]) => Promise<void>)
@@ -991,7 +991,7 @@ describe('useGeminiStream', () => {
 
     const { result, rerender } = renderHook(() =>
       useGeminiStream(
-        new MockedGeminiClientClass(mockConfig),
+        new MockedCodeflyClientClass(mockConfig),
         [],
         mockAddItem,
         mockConfig,
@@ -1122,7 +1122,7 @@ describe('useGeminiStream', () => {
 
       const { result } = renderHook(() =>
         useGeminiStream(
-          mockConfig.getGeminiClient(),
+          mockConfig.getCodeflyClient(),
           [],
           mockAddItem,
           mockConfig,
@@ -1163,7 +1163,7 @@ describe('useGeminiStream', () => {
 
       const { result } = renderHook(() =>
         useGeminiStream(
-          mockConfig.getGeminiClient(),
+          mockConfig.getCodeflyClient(),
           [],
           mockAddItem,
           mockConfig,
@@ -1380,7 +1380,7 @@ describe('useGeminiStream', () => {
 
       // Start a query to make isResponding true
       const mockStream = (async function* () {
-        yield { type: ServerGeminiEventType.Content, value: 'Part 1' };
+        yield { type: ServerCodeflyEventType.Content, value: 'Part 1' };
         await new Promise(() => {}); // Keep stream open
       })();
       mockSendMessageStream.mockReturnValue(mockStream);
@@ -1557,7 +1557,7 @@ describe('useGeminiStream', () => {
     it('should not call handleSlashCommand is shell mode is active', async () => {
       const { result } = renderHook(() =>
         useGeminiStream(
-          new MockedGeminiClientClass(mockConfig),
+          new MockedCodeflyClientClass(mockConfig),
           [],
           mockAddItem,
           mockConfig,
@@ -1630,7 +1630,7 @@ describe('useGeminiStream', () => {
 
       renderHook(() =>
         useGeminiStream(
-          new MockedGeminiClientClass(mockConfig),
+          new MockedCodeflyClientClass(mockConfig),
           [],
           mockAddItem,
           mockConfig,
@@ -1686,7 +1686,7 @@ describe('useGeminiStream', () => {
 
       const { result } = renderHook(() =>
         useGeminiStream(
-          new MockedGeminiClientClass(testConfig),
+          new MockedCodeflyClientClass(testConfig),
           [],
           mockAddItem,
           testConfig,
@@ -1974,11 +1974,11 @@ describe('useGeminiStream', () => {
       mockSendMessageStream.mockReturnValue(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.Content,
+            type: ServerCodeflyEventType.Content,
             value: 'This is a truncated response...',
           };
           yield {
-            type: ServerGeminiEventType.Finished,
+            type: ServerCodeflyEventType.Finished,
             value: { reason: 'MAX_TOKENS', usageMetadata: undefined },
           };
         })(),
@@ -1986,7 +1986,7 @@ describe('useGeminiStream', () => {
 
       const { result } = renderHook(() =>
         useGeminiStream(
-          new MockedGeminiClientClass(mockConfig),
+          new MockedCodeflyClientClass(mockConfig),
           [],
           mockAddItem,
           mockConfig,
@@ -2049,7 +2049,7 @@ describe('useGeminiStream', () => {
           mockSendMessageStream.mockReturnValue(
             (async function* () {
               yield {
-                type: ServerGeminiEventType.ContextWindowWillOverflow,
+                type: ServerCodeflyEventType.ContextWindowWillOverflow,
                 value: {
                   estimatedRequestTokenCount: requestTokens,
                   remainingTokenCount: remainingTokens,
@@ -2080,7 +2080,7 @@ describe('useGeminiStream', () => {
       mockSendMessageStream.mockReturnValue(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.ContextWindowWillOverflow,
+            type: ServerCodeflyEventType.ContextWindowWillOverflow,
             value: {
               estimatedRequestTokenCount: 100,
               remainingTokenCount: 50,
@@ -2091,7 +2091,7 @@ describe('useGeminiStream', () => {
 
       const { result } = renderHook(() =>
         useGeminiStream(
-          new MockedGeminiClientClass(mockConfig),
+          new MockedCodeflyClientClass(mockConfig),
           [],
           mockAddItem,
           mockConfig,
@@ -2178,11 +2178,11 @@ describe('useGeminiStream', () => {
         mockSendMessageStream.mockReturnValue(
           (async function* () {
             yield {
-              type: ServerGeminiEventType.Content,
+              type: ServerCodeflyEventType.Content,
               value: `Response for ${reason}`,
             };
             yield {
-              type: ServerGeminiEventType.Finished,
+              type: ServerCodeflyEventType.Finished,
               value: { reason, usageMetadata: undefined },
             };
           })(),
@@ -2260,7 +2260,7 @@ describe('useGeminiStream', () => {
 
     const { result } = renderHook(() =>
       useGeminiStream(
-        new MockedGeminiClientClass(mockConfig),
+        new MockedCodeflyClientClass(mockConfig),
         [],
         mockAddItem,
         mockConfig,
@@ -2282,11 +2282,11 @@ describe('useGeminiStream', () => {
 
     const mockStream = (async function* () {
       yield {
-        type: ServerGeminiEventType.Content,
+        type: ServerCodeflyEventType.Content,
         value: 'Rationale rationale.',
       };
       yield {
-        type: ServerGeminiEventType.ToolCallRequest,
+        type: ServerCodeflyEventType.ToolCallRequest,
         value: { callId: '1', name: 'test_tool', args: {} },
       };
     })();
@@ -2326,7 +2326,7 @@ describe('useGeminiStream', () => {
 
     const { result } = renderHook(() =>
       useGeminiStream(
-        mockConfig.getGeminiClient(),
+        mockConfig.getCodeflyClient(),
         [],
         mockAddItem,
         mockConfig,
@@ -2404,11 +2404,11 @@ describe('useGeminiStream', () => {
     mockSendMessageStream.mockReturnValue(
       (async function* () {
         yield {
-          type: ServerGeminiEventType.Content,
+          type: ServerCodeflyEventType.Content,
           value: modelResponseContent,
         };
         yield {
-          type: ServerGeminiEventType.Finished,
+          type: ServerCodeflyEventType.Finished,
           value: { reason: 'STOP' },
         };
       })(),
@@ -2466,18 +2466,18 @@ describe('useGeminiStream', () => {
       mockSendMessageStream.mockReturnValue(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.Thought,
+            type: ServerCodeflyEventType.Thought,
             value: {
               subject: 'Previous thought',
               description: 'Old description',
             },
           };
           yield {
-            type: ServerGeminiEventType.Content,
+            type: ServerCodeflyEventType.Content,
             value: 'Some response content',
           };
           yield {
-            type: ServerGeminiEventType.Finished,
+            type: ServerCodeflyEventType.Finished,
             value: { reason: 'STOP', usageMetadata: undefined },
           };
         })(),
@@ -2485,7 +2485,7 @@ describe('useGeminiStream', () => {
 
       const { result } = renderHook(() =>
         useGeminiStream(
-          new MockedGeminiClientClass(mockConfig),
+          new MockedCodeflyClientClass(mockConfig),
           [],
           mockAddItem,
           mockConfig,
@@ -2525,11 +2525,11 @@ describe('useGeminiStream', () => {
       mockSendMessageStream.mockReturnValue(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.Content,
+            type: ServerCodeflyEventType.Content,
             value: 'New response content',
           };
           yield {
-            type: ServerGeminiEventType.Finished,
+            type: ServerCodeflyEventType.Finished,
             value: { reason: 'STOP', usageMetadata: undefined },
           };
         })(),
@@ -2565,7 +2565,7 @@ describe('useGeminiStream', () => {
 
       const { result, rerender } = renderHook(() =>
         useGeminiStream(
-          mockConfig.getGeminiClient(),
+          mockConfig.getCodeflyClient(),
           [],
           mockAddItem,
           mockConfig,
@@ -2625,16 +2625,16 @@ describe('useGeminiStream', () => {
       mockSendMessageStream.mockReturnValue(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.Thought,
+            type: ServerCodeflyEventType.Thought,
             value: { subject: 'Some thought', description: 'Description' },
           };
-          yield { type: ServerGeminiEventType.UserCancelled };
+          yield { type: ServerCodeflyEventType.UserCancelled };
         })(),
       );
 
       const { result } = renderHook(() =>
         useGeminiStream(
-          new MockedGeminiClientClass(mockConfig),
+          new MockedCodeflyClientClass(mockConfig),
           [],
           mockAddItem,
           mockConfig,
@@ -2679,11 +2679,11 @@ describe('useGeminiStream', () => {
       mockSendMessageStream.mockReturnValue(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.Thought,
+            type: ServerCodeflyEventType.Thought,
             value: { subject: 'Some thought', description: 'Description' },
           };
           yield {
-            type: ServerGeminiEventType.Error,
+            type: ServerCodeflyEventType.Error,
             value: { error: { message: 'Test error' } },
           };
         })(),
@@ -2691,7 +2691,7 @@ describe('useGeminiStream', () => {
 
       const { result } = renderHook(() =>
         useGeminiStream(
-          new MockedGeminiClientClass(mockConfig),
+          new MockedCodeflyClientClass(mockConfig),
           [],
           mockAddItem,
           mockConfig,
@@ -2744,13 +2744,13 @@ describe('useGeminiStream', () => {
       mockSendMessageStream.mockReturnValue(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.Thought,
+            type: ServerCodeflyEventType.Thought,
             value: { subject: 'Thinking...', description: '' },
           };
           // Advance time for the next event
           vi.advanceTimersByTime(1000);
           yield {
-            type: ServerGeminiEventType.Content,
+            type: ServerCodeflyEventType.Content,
             value: 'Hello',
           };
         })(),
@@ -2758,7 +2758,7 @@ describe('useGeminiStream', () => {
 
       const { result } = renderHook(() =>
         useGeminiStream(
-          new MockedGeminiClientClass(mockConfig),
+          new MockedCodeflyClientClass(mockConfig),
           [],
           mockAddItem,
           mockConfig,
@@ -2797,8 +2797,8 @@ describe('useGeminiStream', () => {
       const mockLoopDetectionService = {
         disableForSession: vi.fn(),
       };
-      mockConfig.getGeminiClient = vi.fn().mockReturnValue({
-        ...new MockedGeminiClientClass(mockConfig),
+      mockConfig.getCodeflyClient = vi.fn().mockReturnValue({
+        ...new MockedCodeflyClientClass(mockConfig),
         getLoopDetectionService: () => mockLoopDetectionService,
       });
     });
@@ -2807,11 +2807,11 @@ describe('useGeminiStream', () => {
       mockSendMessageStream.mockReturnValue(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.Content,
+            type: ServerCodeflyEventType.Content,
             value: 'Some content',
           };
           yield {
-            type: ServerGeminiEventType.LoopDetected,
+            type: ServerCodeflyEventType.LoopDetected,
           };
         })(),
       );
@@ -2835,16 +2835,16 @@ describe('useGeminiStream', () => {
         disableForSession: vi.fn(),
       };
       const mockClient = {
-        ...new MockedGeminiClientClass(mockConfig),
+        ...new MockedCodeflyClientClass(mockConfig),
         getLoopDetectionService: () => mockLoopDetectionService,
       };
-      mockConfig.getGeminiClient = vi.fn().mockReturnValue(mockClient);
+      mockConfig.getCodeflyClient = vi.fn().mockReturnValue(mockClient);
 
       // Mock for the initial request
       mockSendMessageStream.mockReturnValueOnce(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.LoopDetected,
+            type: ServerCodeflyEventType.LoopDetected,
           };
         })(),
       );
@@ -2853,11 +2853,11 @@ describe('useGeminiStream', () => {
       mockSendMessageStream.mockReturnValueOnce(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.Content,
+            type: ServerCodeflyEventType.Content,
             value: 'Retry successful',
           };
           yield {
-            type: ServerGeminiEventType.Finished,
+            type: ServerCodeflyEventType.Finished,
             value: { reason: 'STOP' },
           };
         })(),
@@ -2912,15 +2912,15 @@ describe('useGeminiStream', () => {
         disableForSession: vi.fn(),
       };
       const mockClient = {
-        ...new MockedGeminiClientClass(mockConfig),
+        ...new MockedCodeflyClientClass(mockConfig),
         getLoopDetectionService: () => mockLoopDetectionService,
       };
-      mockConfig.getGeminiClient = vi.fn().mockReturnValue(mockClient);
+      mockConfig.getCodeflyClient = vi.fn().mockReturnValue(mockClient);
 
       mockSendMessageStream.mockReturnValue(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.LoopDetected,
+            type: ServerCodeflyEventType.LoopDetected,
           };
         })(),
       );
@@ -2966,7 +2966,7 @@ describe('useGeminiStream', () => {
       mockSendMessageStream.mockReturnValueOnce(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.LoopDetected,
+            type: ServerCodeflyEventType.LoopDetected,
           };
         })(),
       );
@@ -2999,7 +2999,7 @@ describe('useGeminiStream', () => {
       mockSendMessageStream.mockReturnValueOnce(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.LoopDetected,
+            type: ServerCodeflyEventType.LoopDetected,
           };
         })(),
       );
@@ -3008,11 +3008,11 @@ describe('useGeminiStream', () => {
       mockSendMessageStream.mockReturnValueOnce(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.Content,
+            type: ServerCodeflyEventType.Content,
             value: 'Retry successful',
           };
           yield {
-            type: ServerGeminiEventType.Finished,
+            type: ServerCodeflyEventType.Finished,
             value: { reason: 'STOP' },
           };
         })(),
@@ -3058,11 +3058,11 @@ describe('useGeminiStream', () => {
       mockSendMessageStream.mockReturnValue(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.Content,
+            type: ServerCodeflyEventType.Content,
             value: 'Some response content',
           };
           yield {
-            type: ServerGeminiEventType.LoopDetected,
+            type: ServerCodeflyEventType.LoopDetected,
           };
         })(),
       );
@@ -3096,7 +3096,7 @@ describe('useGeminiStream', () => {
       mockSendMessageStream.mockReturnValue(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.AgentExecutionStopped,
+            type: ServerCodeflyEventType.AgentExecutionStopped,
             value: {
               reason: 'hook-reason',
               systemMessage: 'Custom stop message',
@@ -3127,7 +3127,7 @@ describe('useGeminiStream', () => {
       mockSendMessageStream.mockReturnValue(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.AgentExecutionStopped,
+            type: ServerCodeflyEventType.AgentExecutionStopped,
             value: { reason: 'Stopped by hook' },
           };
         })(),
@@ -3155,7 +3155,7 @@ describe('useGeminiStream', () => {
       mockSendMessageStream.mockReturnValue(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.AgentExecutionBlocked,
+            type: ServerCodeflyEventType.AgentExecutionBlocked,
             value: {
               reason: 'hook-reason',
               systemMessage: 'Custom block message',
@@ -3185,7 +3185,7 @@ describe('useGeminiStream', () => {
       mockSendMessageStream.mockReturnValue(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.AgentExecutionBlocked,
+            type: ServerCodeflyEventType.AgentExecutionBlocked,
             value: { reason: 'Blocked by hook' },
           };
         })(),

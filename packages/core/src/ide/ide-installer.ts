@@ -121,7 +121,7 @@ class VsCodeInstaller implements IdeInstaller {
         commandPath,
         [
           '--install-extension',
-          'google.gemini-cli-vscode-ide-companion',
+          'google.codefly-cli-vscode-ide-companion',
           '--force',
         ],
         { stdio: 'pipe', shell: this.platform === 'win32' },
@@ -174,7 +174,7 @@ class AntigravityInstaller implements IdeInstaller {
         commandPath,
         [
           '--install-extension',
-          'google.gemini-cli-vscode-ide-companion',
+          'google.codefly-cli-vscode-ide-companion',
           '--force',
         ],
         { stdio: 'pipe', shell: this.platform === 'win32' },

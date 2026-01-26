@@ -9,7 +9,7 @@ import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import type { SlashCommand, CommandContext } from './types.js';
 import { createMockCommandContext } from '../../test-utils/mockCommandContext.js';
 import type { Content } from '@google/genai';
-import { AuthType, type GeminiClient } from '@codeflyai/codefly-core';
+import { AuthType, type CodeflyClient } from '@codeflyai/codefly-core';
 
 import * as fsPromises from 'node:fs/promises';
 import { chatCommand, debugCommand } from './chatCommand.js';
@@ -72,12 +72,12 @@ describe('chatCommand', () => {
       services: {
         config: {
           getProjectRoot: () => '/project/root',
-          getGeminiClient: () =>
+          getCodeflyClient: () =>
             ({
               getChat: mockGetChat,
-            }) as unknown as GeminiClient,
+            }) as unknown as CodeflyClient,
           storage: {
-            getProjectTempDir: () => '/project/root/.gemini/tmp/mockhash',
+            getProjectTempDir: () => '/project/root/.codefly/tmp/mockhash',
           },
           getContentGeneratorConfig: () => ({
             authType: AuthType.USE_VERTEX_AI,

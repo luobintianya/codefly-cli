@@ -6,7 +6,7 @@
 
 import type { AgentDefinition } from './types.js';
 import { GetInternalDocsTool } from '../tools/get-internal-docs.js';
-import { GEMINI_MODEL_ALIAS_FLASH } from '../config/models.js';
+import { CODEFLY_MODEL_ALIAS_FLASH } from '../config/models.js';
 import { z } from 'zod';
 
 const IntrospectionReportSchema = z.object({
@@ -51,7 +51,7 @@ export const IntrospectionAgent: AgentDefinition<
   processOutput: (output) => JSON.stringify(output, null, 2),
 
   modelConfig: {
-    model: GEMINI_MODEL_ALIAS_FLASH,
+    model: CODEFLY_MODEL_ALIAS_FLASH,
     generateContentConfig: {
       temperature: 0.1,
       topP: 0.95,

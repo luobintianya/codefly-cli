@@ -5,7 +5,7 @@
  */
 
 import type { Content } from '@google/genai';
-import type { GeminiClient } from '../core/client.js';
+import type { CodeflyClient } from '../core/client.js';
 import type { BaseLlmClient } from '../core/baseLlmClient.js';
 import type { EditToolParams } from '../tools/edit.js';
 import {
@@ -89,7 +89,7 @@ function getTimestampFromFunctionId(fcnId: string): number {
  */
 async function findLastEditTimestamp(
   filePath: string,
-  client: GeminiClient,
+  client: CodeflyClient,
 ): Promise<number> {
   const history = client.getHistory() ?? [];
 
@@ -160,7 +160,7 @@ async function findLastEditTimestamp(
  *
  * @param currentContent The current content of the file.
  * @param originalParams The original EditToolParams
- * @param client The GeminiClient for LLM calls.
+ * @param client The CodeflyClient for LLM calls.
  * @returns A promise resolving to an object containing the (potentially corrected)
  *          EditToolParams (as CorrectedEditParams) and the final occurrences count.
  */
@@ -168,7 +168,7 @@ export async function ensureCorrectEdit(
   filePath: string,
   currentContent: string,
   originalParams: EditToolParams, // This is the EditToolParams from edit.ts, without 'corrected'
-  geminiClient: GeminiClient,
+  geminiClient: CodeflyClient,
   baseLlmClient: BaseLlmClient,
   abortSignal: AbortSignal,
   disableLLMCorrection: boolean,

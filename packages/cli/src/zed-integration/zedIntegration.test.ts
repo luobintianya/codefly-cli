@@ -22,7 +22,7 @@ import {
   StreamEventType,
   isWithinRoot,
   ReadManyFilesTool,
-  type GeminiChat,
+  type CodeflyChat,
   type Config,
   type MessageBus,
 } from '@codeflyai/codefly-core';
@@ -95,7 +95,7 @@ describe('GeminiAgent', () => {
       initialize: vi.fn(),
       getFileSystemService: vi.fn(),
       setFileSystemService: vi.fn(),
-      getGeminiClient: vi.fn().mockReturnValue({
+      getCodeflyClient: vi.fn().mockReturnValue({
         startChat: vi.fn().mockResolvedValue({}),
       }),
       getMessageBus: vi.fn().mockReturnValue({
@@ -156,7 +156,7 @@ describe('GeminiAgent', () => {
     expect(response.sessionId).toBe('test-session-id');
     expect(loadCliConfig).toHaveBeenCalled();
     expect(mockConfig.initialize).toHaveBeenCalled();
-    expect(mockConfig.getGeminiClient).toHaveBeenCalled();
+    expect(mockConfig.getCodeflyClient).toHaveBeenCalled();
   });
 
   it('should create a new session with mcp servers', async () => {
@@ -261,7 +261,7 @@ describe('GeminiAgent', () => {
 });
 
 describe('Session', () => {
-  let mockChat: Mocked<GeminiChat>;
+  let mockChat: Mocked<CodeflyChat>;
   let mockConfig: Mocked<Config>;
   let mockConnection: Mocked<acp.AgentSideConnection>;
   let session: Session;
@@ -273,7 +273,7 @@ describe('Session', () => {
     mockChat = {
       sendMessageStream: vi.fn(),
       addHistory: vi.fn(),
-    } as unknown as Mocked<GeminiChat>;
+    } as unknown as Mocked<CodeflyChat>;
     mockTool = {
       kind: 'native',
       build: vi.fn().mockReturnValue({

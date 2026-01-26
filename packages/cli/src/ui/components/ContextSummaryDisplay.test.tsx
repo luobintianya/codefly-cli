@@ -31,7 +31,7 @@ const renderWithWidth = (
 
 describe('<ContextSummaryDisplay />', () => {
   const baseProps = {
-    geminiMdFileCount: 0,
+    codeflyMdFileCount: 0,
     contextFileNames: [],
     mcpServers: {},
     ideContext: {
@@ -45,7 +45,7 @@ describe('<ContextSummaryDisplay />', () => {
   it('should render on a single line on a wide screen', () => {
     const props = {
       ...baseProps,
-      geminiMdFileCount: 1,
+      codeflyMdFileCount: 1,
       contextFileNames: ['GEMINI.md'],
       mcpServers: { 'test-server': { command: 'test' } },
       ideContext: {
@@ -62,7 +62,7 @@ describe('<ContextSummaryDisplay />', () => {
   it('should render on multiple lines on a narrow screen', () => {
     const props = {
       ...baseProps,
-      geminiMdFileCount: 1,
+      codeflyMdFileCount: 1,
       contextFileNames: ['GEMINI.md'],
       mcpServers: { 'test-server': { command: 'test' } },
       ideContext: {
@@ -79,7 +79,7 @@ describe('<ContextSummaryDisplay />', () => {
   it('should switch layout at the 80-column breakpoint', () => {
     const props = {
       ...baseProps,
-      geminiMdFileCount: 1,
+      codeflyMdFileCount: 1,
       contextFileNames: ['GEMINI.md'],
       mcpServers: { 'test-server': { command: 'test' } },
       ideContext: {
@@ -109,7 +109,7 @@ describe('<ContextSummaryDisplay />', () => {
   it('should not render empty parts', () => {
     const props = {
       ...baseProps,
-      geminiMdFileCount: 0,
+      codeflyMdFileCount: 0,
       contextFileNames: [],
       mcpServers: {},
       skillCount: 0,

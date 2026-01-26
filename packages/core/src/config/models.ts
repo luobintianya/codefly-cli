@@ -4,34 +4,34 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export const PREVIEW_GEMINI_MODEL = 'gemini-3-pro-preview';
-export const PREVIEW_GEMINI_FLASH_MODEL = 'gemini-3-flash-preview';
+export const PREVIEW_CODEFLY_MODEL = 'gemini-3-pro-preview';
+export const PREVIEW_CODEFLY_FLASH_MODEL = 'gemini-3-flash-preview';
 // Keep Gemini 2.x constants for backwards compatibility but use Gemini 3 Pro as default
-export const DEFAULT_GEMINI_MODEL = PREVIEW_GEMINI_MODEL; // Default to Pro
-export const DEFAULT_GEMINI_FLASH_MODEL = PREVIEW_GEMINI_FLASH_MODEL;
+export const DEFAULT_CODEFLY_MODEL = PREVIEW_CODEFLY_MODEL; // Default to Pro
+export const DEFAULT_CODEFLY_FLASH_MODEL = PREVIEW_CODEFLY_FLASH_MODEL;
 // Gemini 2.x legacy constants (deprecated)
 export const LEGACY_GEMINI_2_5_PRO = 'gemini-2.5-pro';
 export const LEGACY_GEMINI_2_5_FLASH = 'gemini-2.5-flash';
 export const DEFAULT_GEMINI_FLASH_LITE_MODEL = 'gemini-2.5-flash-lite';
 
-export const VALID_GEMINI_MODELS = new Set([
-  PREVIEW_GEMINI_MODEL,
-  PREVIEW_GEMINI_FLASH_MODEL,
+export const VALID_CODEFLY_MODELS = new Set([
+  PREVIEW_CODEFLY_MODEL,
+  PREVIEW_CODEFLY_FLASH_MODEL,
   LEGACY_GEMINI_2_5_PRO,
   LEGACY_GEMINI_2_5_FLASH,
   DEFAULT_GEMINI_FLASH_LITE_MODEL,
 ]);
 
-export const PREVIEW_GEMINI_MODEL_AUTO = 'auto-gemini-3';
-export const DEFAULT_GEMINI_MODEL_AUTO = 'auto-gemini-3';
+export const PREVIEW_CODEFLY_MODEL_AUTO = 'auto-gemini-3';
+export const DEFAULT_CODEFLY_MODEL_AUTO = 'auto-gemini-3';
 
 // Model aliases for user convenience.
-export const GEMINI_MODEL_ALIAS_AUTO = 'auto';
-export const GEMINI_MODEL_ALIAS_PRO = 'pro';
-export const GEMINI_MODEL_ALIAS_FLASH = 'flash';
-export const GEMINI_MODEL_ALIAS_FLASH_LITE = 'flash-lite';
+export const CODEFLY_MODEL_ALIAS_AUTO = 'auto';
+export const CODEFLY_MODEL_ALIAS_PRO = 'pro';
+export const CODEFLY_MODEL_ALIAS_FLASH = 'flash';
+export const CODEFLY_MODEL_ALIAS_FLASH_LITE = 'flash-lite';
 
-export const DEFAULT_GEMINI_EMBEDDING_MODEL = 'gemini-embedding-001';
+export const DEFAULT_CODEFLY_EMBEDDING_MODEL = 'gemini-embedding-001';
 
 // Cap the thinking at 8192 to prevent run-away thinking loops.
 export const DEFAULT_THINKING_MODE = 8192;
@@ -49,24 +49,24 @@ export function resolveModel(
   previewFeaturesEnabled: boolean = false,
 ): string {
   switch (requestedModel) {
-    case PREVIEW_GEMINI_MODEL_AUTO: {
-      return PREVIEW_GEMINI_MODEL; // Auto uses Pro by default for Gemini 3
+    case PREVIEW_CODEFLY_MODEL_AUTO: {
+      return PREVIEW_CODEFLY_MODEL; // Auto uses Pro by default for Gemini 3
     }
-    case DEFAULT_GEMINI_MODEL_AUTO: {
-      return PREVIEW_GEMINI_MODEL; // Auto uses Pro by default for Gemini 3
+    case DEFAULT_CODEFLY_MODEL_AUTO: {
+      return PREVIEW_CODEFLY_MODEL; // Auto uses Pro by default for Gemini 3
     }
-    case GEMINI_MODEL_ALIAS_AUTO:
-    case GEMINI_MODEL_ALIAS_PRO: {
+    case CODEFLY_MODEL_ALIAS_AUTO:
+    case CODEFLY_MODEL_ALIAS_PRO: {
       return previewFeaturesEnabled
-        ? PREVIEW_GEMINI_MODEL
-        : DEFAULT_GEMINI_MODEL;
+        ? PREVIEW_CODEFLY_MODEL
+        : DEFAULT_CODEFLY_MODEL;
     }
-    case GEMINI_MODEL_ALIAS_FLASH: {
+    case CODEFLY_MODEL_ALIAS_FLASH: {
       return previewFeaturesEnabled
-        ? PREVIEW_GEMINI_FLASH_MODEL
-        : DEFAULT_GEMINI_FLASH_MODEL;
+        ? PREVIEW_CODEFLY_FLASH_MODEL
+        : DEFAULT_CODEFLY_FLASH_MODEL;
     }
-    case GEMINI_MODEL_ALIAS_FLASH_LITE: {
+    case CODEFLY_MODEL_ALIAS_FLASH_LITE: {
       return DEFAULT_GEMINI_FLASH_LITE_MODEL;
     }
     default: {
@@ -88,20 +88,20 @@ export function resolveClassifierModel(
   modelAlias: string,
   previewFeaturesEnabled: boolean = false,
 ): string {
-  if (modelAlias === GEMINI_MODEL_ALIAS_FLASH) {
+  if (modelAlias === CODEFLY_MODEL_ALIAS_FLASH) {
     if (
-      requestedModel === DEFAULT_GEMINI_MODEL_AUTO ||
-      requestedModel === DEFAULT_GEMINI_MODEL
+      requestedModel === DEFAULT_CODEFLY_MODEL_AUTO ||
+      requestedModel === DEFAULT_CODEFLY_MODEL
     ) {
-      return DEFAULT_GEMINI_FLASH_MODEL;
+      return DEFAULT_CODEFLY_FLASH_MODEL;
     }
     if (
-      requestedModel === PREVIEW_GEMINI_MODEL_AUTO ||
-      requestedModel === PREVIEW_GEMINI_MODEL
+      requestedModel === PREVIEW_CODEFLY_MODEL_AUTO ||
+      requestedModel === PREVIEW_CODEFLY_MODEL
     ) {
-      return PREVIEW_GEMINI_FLASH_MODEL;
+      return PREVIEW_CODEFLY_FLASH_MODEL;
     }
-    return resolveModel(GEMINI_MODEL_ALIAS_FLASH, previewFeaturesEnabled);
+    return resolveModel(CODEFLY_MODEL_ALIAS_FLASH, previewFeaturesEnabled);
   }
   return resolveModel(requestedModel, previewFeaturesEnabled);
 }
@@ -110,18 +110,18 @@ export function getDisplayString(
   previewFeaturesEnabled: boolean = false,
 ) {
   switch (model) {
-    case PREVIEW_GEMINI_MODEL_AUTO:
+    case PREVIEW_CODEFLY_MODEL_AUTO:
       return 'Auto (Gemini 3)';
-    case DEFAULT_GEMINI_MODEL_AUTO:
+    case DEFAULT_CODEFLY_MODEL_AUTO:
       return 'Auto (Gemini 2.5)';
-    case GEMINI_MODEL_ALIAS_PRO:
+    case CODEFLY_MODEL_ALIAS_PRO:
       return previewFeaturesEnabled
-        ? PREVIEW_GEMINI_MODEL
-        : DEFAULT_GEMINI_MODEL;
-    case GEMINI_MODEL_ALIAS_FLASH:
+        ? PREVIEW_CODEFLY_MODEL
+        : DEFAULT_CODEFLY_MODEL;
+    case CODEFLY_MODEL_ALIAS_FLASH:
       return previewFeaturesEnabled
-        ? PREVIEW_GEMINI_FLASH_MODEL
-        : DEFAULT_GEMINI_FLASH_MODEL;
+        ? PREVIEW_CODEFLY_FLASH_MODEL
+        : DEFAULT_CODEFLY_FLASH_MODEL;
     default:
       return model;
   }
@@ -135,9 +135,9 @@ export function getDisplayString(
  */
 export function isPreviewModel(model: string): boolean {
   return (
-    model === PREVIEW_GEMINI_MODEL ||
-    model === PREVIEW_GEMINI_FLASH_MODEL ||
-    model === PREVIEW_GEMINI_MODEL_AUTO
+    model === PREVIEW_CODEFLY_MODEL ||
+    model === PREVIEW_CODEFLY_FLASH_MODEL ||
+    model === PREVIEW_CODEFLY_MODEL_AUTO
   );
 }
 
@@ -147,7 +147,7 @@ export function isPreviewModel(model: string): boolean {
  * @param model The model name to check.
  * @returns True if the model is a Gemini-2.x model.
  */
-export function isGemini2Model(model: string): boolean {
+export function isCodefly2Model(model: string): boolean {
   return /^gemini-2(\.|$)/.test(model);
 }
 
@@ -159,9 +159,9 @@ export function isGemini2Model(model: string): boolean {
  */
 export function isAutoModel(model: string): boolean {
   return (
-    model === GEMINI_MODEL_ALIAS_AUTO ||
-    model === PREVIEW_GEMINI_MODEL_AUTO ||
-    model === DEFAULT_GEMINI_MODEL_AUTO
+    model === CODEFLY_MODEL_ALIAS_AUTO ||
+    model === PREVIEW_CODEFLY_MODEL_AUTO ||
+    model === DEFAULT_CODEFLY_MODEL_AUTO
   );
 }
 

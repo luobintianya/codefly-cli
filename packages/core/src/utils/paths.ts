@@ -25,7 +25,7 @@ export const SHELL_SPECIAL_CHARS = /[ \t()[\]{};|*?$`'"#&<>!~]/;
  * Otherwise, it returns the user's home directory.
  */
 export function homedir(): string {
-  const envHome = process.env['GEMINI_CLI_HOME'];
+  const envHome = process.env['CODEFLY_CLI_HOME'];
   if (envHome) {
     return envHome;
   }

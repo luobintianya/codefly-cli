@@ -6,8 +6,8 @@
 
 import {
   CoreToolScheduler,
-  type GeminiClient,
-  GeminiEventType,
+  type CodeflyClient,
+  CodeflyEventType,
   ToolConfirmationOutcome,
   ApprovalMode,
   getAllMCPServerStatuses,
@@ -63,7 +63,7 @@ export class Task {
   contextId: string;
   scheduler: CoreToolScheduler;
   config: Config;
-  geminiClient: GeminiClient;
+  geminiClient: CodeflyClient;
   pendingToolConfirmationDetails: Map<string, ToolCallConfirmationDetails>;
   taskState: TaskState;
   eventBus?: ExecutionEventBus;
@@ -93,7 +93,7 @@ export class Task {
     this.contextId = contextId;
     this.config = config;
     this.scheduler = this.createScheduler();
-    this.geminiClient = this.config.getGeminiClient();
+    this.geminiClient = this.config.getCodeflyClient();
     this.pendingToolConfirmationDetails = new Map();
     this.taskState = 'submitted';
     this.eventBus = eventBus;
@@ -648,18 +648,18 @@ export class Task {
       'traceId' in event && event.traceId ? event.traceId : undefined;
 
     switch (event.type) {
-      case GeminiEventType.Content:
+      case CodeflyEventType.Content:
         logger.info('[Task] Sending agent message content...');
         this._sendTextContent(event.value, traceId);
         break;
-      case GeminiEventType.ToolCallRequest:
+      case CodeflyEventType.ToolCallRequest:
         // This is now handled by the agent loop, which collects all requests
         // and calls scheduleToolCalls once.
         logger.warn(
           '[Task] A single tool call request was passed to acceptAgentMessage. This should be handled in a batch by the agent. Ignoring.',
         );
         break;
-      case GeminiEventType.ToolCallResponse:
+      case CodeflyEventType.ToolCallResponse:
         // This event type from ServerGeminiStreamEvent might be for when LLM *generates* a tool response part.
         // The actual execution result comes via user message.
         logger.info(
@@ -667,7 +667,7 @@ export class Task {
           event.value,
         );
         break;
-      case GeminiEventType.ToolCallConfirmation:
+      case CodeflyEventType.ToolCallConfirmation:
         // This is when LLM requests confirmation, not when user provides it.
         logger.info(
           '[Task] Received tool call confirmation request from LLM:',
@@ -680,7 +680,7 @@ export class Task {
         // This will be handled by the scheduler and _schedulerToolCallsUpdate will set InputRequired if needed.
         // No direct state change here, scheduler drives it.
         break;
-      case GeminiEventType.UserCancelled:
+      case CodeflyEventType.UserCancelled:
         logger.info('[Task] Received user cancelled event from LLM stream.');
         this.cancelPendingTools('User cancelled via LLM stream event');
         this.setTaskStateAndPublishUpdate(
@@ -693,27 +693,27 @@ export class Task {
           traceId,
         );
         break;
-      case GeminiEventType.Thought:
+      case CodeflyEventType.Thought:
         logger.info('[Task] Sending agent thought...');
         this._sendThought(event.value, traceId);
         break;
-      case GeminiEventType.Citation:
+      case CodeflyEventType.Citation:
         logger.info('[Task] Received citation from LLM stream.');
         this._sendCitation(event.value);
         break;
-      case GeminiEventType.ChatCompressed:
+      case CodeflyEventType.ChatCompressed:
         break;
-      case GeminiEventType.Finished:
+      case CodeflyEventType.Finished:
         logger.info(`[Task ${this.id}] Agent finished its turn.`);
         break;
-      case GeminiEventType.ModelInfo:
+      case CodeflyEventType.ModelInfo:
         this.modelInfo = event.value;
         break;
-      case GeminiEventType.Retry:
-      case GeminiEventType.InvalidStream:
+      case CodeflyEventType.Retry:
+      case CodeflyEventType.InvalidStream:
         // An invalid stream should trigger a retry, which requires no action from the user.
         break;
-      case GeminiEventType.Error:
+      case CodeflyEventType.Error:
       default: {
         // Block scope for lexical declaration
         const errorEvent = event as ServerGeminiErrorEvent; // Type assertion

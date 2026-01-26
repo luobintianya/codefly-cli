@@ -6,7 +6,7 @@
 
 import type {
   Config,
-  GeminiCLIExtension,
+  CodeflyCLIExtension,
   MCPServerConfig,
 } from '../config/config.js';
 import type { ToolRegistry } from './tool-registry.js';
@@ -69,7 +69,7 @@ export class McpClientManager {
    *    - Disconnects all MCP clients from their servers.
    *    - Updates the Gemini chat configuration to load the new tools.
    */
-  async stopExtension(extension: GeminiCLIExtension) {
+  async stopExtension(extension: CodeflyCLIExtension) {
     debugLogger.log(`Unloading extension: ${extension.name}`);
     await Promise.all(
       Object.keys(extension.mcpServers ?? {}).map((name) =>
@@ -86,7 +86,7 @@ export class McpClientManager {
    *    - Connects MCP clients to each server and discovers their tools.
    *    - Updates the Gemini chat configuration to load the new tools.
    */
-  async startExtension(extension: GeminiCLIExtension) {
+  async startExtension(extension: CodeflyCLIExtension) {
     debugLogger.log(`Loading extension: ${extension.name}`);
     await Promise.all(
       Object.entries(extension.mcpServers ?? {}).map(([name, config]) =>

@@ -51,7 +51,7 @@ import {
 } from './shellCommandProcessor.js';
 import {
   type Config,
-  type GeminiClient,
+  type CodeflyClient,
   type ShellExecutionResult,
   type ShellOutputEvent,
 } from '@codeflyai/codefly-core';
@@ -67,7 +67,7 @@ describe('useShellCommandProcessor', () => {
   let onExecMock: Mock;
   let onDebugMessageMock: Mock;
   let mockConfig: Config;
-  let mockGeminiClient: GeminiClient;
+  let mockCodeflyClient: CodeflyClient;
 
   let mockShellOutputCallback: (event: ShellOutputEvent) => void;
   let resolveExecutionPromise: (result: ShellExecutionResult) => void;
@@ -91,7 +91,7 @@ describe('useShellCommandProcessor', () => {
       }),
       getWorkingDir: () => '/test/dir',
     } as Config;
-    mockGeminiClient = { addHistory: vi.fn() } as unknown as GeminiClient;
+    mockCodeflyClient = { addHistory: vi.fn() } as unknown as CodeflyClient;
 
     vi.mocked(os.platform).mockReturnValue('linux');
     vi.mocked(os.tmpdir).mockReturnValue('/tmp');
@@ -121,7 +121,7 @@ describe('useShellCommandProcessor', () => {
         onExecMock,
         onDebugMessageMock,
         mockConfig,
-        mockGeminiClient,
+        mockCodeflyClient,
         setShellInputFocusedMock,
       );
       return null;
@@ -211,7 +211,7 @@ describe('useShellCommandProcessor', () => {
         ],
       }),
     );
-    expect(mockGeminiClient.addHistory).toHaveBeenCalled();
+    expect(mockCodeflyClient.addHistory).toHaveBeenCalled();
     expect(setShellInputFocusedMock).toHaveBeenCalledWith(false);
   });
 

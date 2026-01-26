@@ -253,7 +253,7 @@ describe('RipGrepTool', () => {
     getTargetDir: () => tempRootDir,
     getWorkspaceContext: () => createMockWorkspaceContext(tempRootDir),
     getDebugMode: () => false,
-    getFileFilteringRespectGeminiIgnore: () => true,
+    getFileFilteringRespectCodeflyIgnore: () => true,
   } as unknown as Config;
 
   beforeEach(async () => {
@@ -737,7 +737,7 @@ describe('RipGrepTool', () => {
         getWorkspaceContext: () =>
           createMockWorkspaceContext(tempRootDir, [secondDir]),
         getDebugMode: () => false,
-        getFileFilteringRespectGeminiIgnore: () => true,
+        getFileFilteringRespectCodeflyIgnore: () => true,
       } as unknown as Config;
 
       // Setup specific mock for this test - multi-directory search for 'world'
@@ -882,7 +882,7 @@ describe('RipGrepTool', () => {
         getWorkspaceContext: () =>
           createMockWorkspaceContext(tempRootDir, [secondDir]),
         getDebugMode: () => false,
-        getFileFilteringRespectGeminiIgnore: () => true,
+        getFileFilteringRespectCodeflyIgnore: () => true,
       } as unknown as Config;
 
       // Setup specific mock for this test - searching in 'sub' should only return matches from that directory
@@ -1654,14 +1654,14 @@ describe('RipGrepTool', () => {
       expect(result.llmContent).toContain('L1: secret log entry');
     });
 
-    it('should add .geminiignore when enabled and patterns exist', async () => {
-      const geminiIgnorePath = path.join(tempRootDir, '.geminiignore');
+    it('should add .codeflyignore when enabled and patterns exist', async () => {
+      const geminiIgnorePath = path.join(tempRootDir, '.codeflyignore');
       await fs.writeFile(geminiIgnorePath, 'ignored.log');
       const configWithGeminiIgnore = {
         getTargetDir: () => tempRootDir,
         getWorkspaceContext: () => createMockWorkspaceContext(tempRootDir),
         getDebugMode: () => false,
-        getFileFilteringRespectGeminiIgnore: () => true,
+        getFileFilteringRespectCodeflyIgnore: () => true,
       } as unknown as Config;
       const geminiIgnoreTool = new RipGrepTool(
         configWithGeminiIgnore,
@@ -1694,14 +1694,14 @@ describe('RipGrepTool', () => {
       );
     });
 
-    it('should skip .geminiignore when disabled', async () => {
-      const geminiIgnorePath = path.join(tempRootDir, '.geminiignore');
+    it('should skip .codeflyignore when disabled', async () => {
+      const geminiIgnorePath = path.join(tempRootDir, '.codeflyignore');
       await fs.writeFile(geminiIgnorePath, 'ignored.log');
       const configWithoutGeminiIgnore = {
         getTargetDir: () => tempRootDir,
         getWorkspaceContext: () => createMockWorkspaceContext(tempRootDir),
         getDebugMode: () => false,
-        getFileFilteringRespectGeminiIgnore: () => false,
+        getFileFilteringRespectCodeflyIgnore: () => false,
       } as unknown as Config;
       const geminiIgnoreTool = new RipGrepTool(
         configWithoutGeminiIgnore,

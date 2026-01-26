@@ -51,7 +51,7 @@ describe('ContextManager', () => {
     it('should load and format global and environment memory', async () => {
       const mockGlobalResult: memoryDiscovery.MemoryLoadResult = {
         files: [
-          { path: '/home/user/.gemini/CODEFLY.md', content: 'Global Content' },
+          { path: '/home/user/.codefly/CODEFLY.md', content: 'Global Content' },
         ],
       };
       vi.mocked(memoryDiscovery.loadGlobalMemory).mockResolvedValue(
@@ -87,7 +87,7 @@ describe('ContextManager', () => {
       );
 
       expect(contextManager.getLoadedPaths()).toContain(
-        '/home/user/.gemini/CODEFLY.md',
+        '/home/user/.codefly/CODEFLY.md',
       );
       expect(contextManager.getLoadedPaths()).toContain('/app/CODEFLY.md');
     });

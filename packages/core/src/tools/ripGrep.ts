@@ -23,7 +23,7 @@ import {
   FileExclusions,
   COMMON_DIRECTORY_EXCLUDES,
 } from '../utils/ignorePatterns.js';
-import { GeminiIgnoreParser } from '../utils/geminiIgnoreParser.js';
+import { CodeflyIgnoreParser } from '../utils/codeflyIgnoreParser.js';
 
 const DEFAULT_TOTAL_MAX_MATCHES = 20000;
 
@@ -190,7 +190,7 @@ class GrepToolInvocation extends BaseToolInvocation<
 > {
   constructor(
     private readonly config: Config,
-    private readonly geminiIgnoreParser: GeminiIgnoreParser,
+    private readonly codeflyIgnoreParser: CodeflyIgnoreParser,
     params: RipGrepToolParams,
     messageBus: MessageBus,
     _toolName?: string,
@@ -390,9 +390,9 @@ class GrepToolInvocation extends BaseToolInvocation<
         rgArgs.push('--glob', `!${exclude}`);
       });
 
-      if (this.config.getFileFilteringRespectGeminiIgnore()) {
-        // Add .geminiignore support (ripgrep natively handles .gitignore)
-        const geminiIgnorePath = this.geminiIgnoreParser.getIgnoreFilePath();
+      if (this.config.getFileFilteringRespectCodeflyIgnore()) {
+        // Add .codeflyignore support (ripgrep natively handles .gitignore)
+        const geminiIgnorePath = this.codeflyIgnoreParser.getIgnoreFilePath();
         if (geminiIgnorePath) {
           rgArgs.push('--ignore-file', geminiIgnorePath);
         }
@@ -489,7 +489,7 @@ export class RipGrepTool extends BaseDeclarativeTool<
   ToolResult
 > {
   static readonly Name = GREP_TOOL_NAME;
-  private readonly geminiIgnoreParser: GeminiIgnoreParser;
+  private readonly codeflyIgnoreParser: CodeflyIgnoreParser;
 
   constructor(
     private readonly config: Config,
@@ -555,7 +555,7 @@ export class RipGrepTool extends BaseDeclarativeTool<
       true, // isOutputMarkdown
       false, // canUpdateOutput
     );
-    this.geminiIgnoreParser = new GeminiIgnoreParser(config.getTargetDir());
+    this.codeflyIgnoreParser = new CodeflyIgnoreParser(config.getTargetDir());
   }
 
   /**
@@ -592,7 +592,7 @@ export class RipGrepTool extends BaseDeclarativeTool<
   ): ToolInvocation<RipGrepToolParams, ToolResult> {
     return new GrepToolInvocation(
       this.config,
-      this.geminiIgnoreParser,
+      this.codeflyIgnoreParser,
       params,
       messageBus ?? this.messageBus,
       _toolName,

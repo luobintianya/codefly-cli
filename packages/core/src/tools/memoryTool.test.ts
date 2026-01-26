@@ -8,9 +8,9 @@ import type { Mock } from 'vitest';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import {
   MemoryTool,
-  setGeminiMdFilename,
-  getCurrentGeminiMdFilename,
-  getAllGeminiMdFilenames,
+  setCodeflyMdFilename,
+  getCurrentCodeflyMdFilename,
+  getAllCodeflyMdFilenames,
   DEFAULT_CONTEXT_FILENAME,
 } from './memoryTool.js';
 import * as fs from 'node:fs/promises';
@@ -77,30 +77,30 @@ describe('MemoryTool', () => {
   afterEach(() => {
     vi.restoreAllMocks();
     // Reset GEMINI_MD_FILENAME to its original value after each test
-    setGeminiMdFilename(DEFAULT_CONTEXT_FILENAME);
+    setCodeflyMdFilename(DEFAULT_CONTEXT_FILENAME);
   });
 
-  describe('setGeminiMdFilename', () => {
-    it('should update currentGeminiMdFilename when a valid new name is provided', () => {
+  describe('setCodeflyMdFilename', () => {
+    it('should update currentCodeflyMdFilename when a valid new name is provided', () => {
       const newName = 'CUSTOM_CONTEXT.md';
-      setGeminiMdFilename(newName);
-      expect(getCurrentGeminiMdFilename()).toBe(newName);
+      setCodeflyMdFilename(newName);
+      expect(getCurrentCodeflyMdFilename()).toBe(newName);
     });
 
-    it('should not update currentGeminiMdFilename if the new name is empty or whitespace', () => {
-      const initialName = getCurrentGeminiMdFilename(); // Get current before trying to change
-      setGeminiMdFilename('  ');
-      expect(getCurrentGeminiMdFilename()).toBe(initialName);
+    it('should not update currentCodeflyMdFilename if the new name is empty or whitespace', () => {
+      const initialName = getCurrentCodeflyMdFilename(); // Get current before trying to change
+      setCodeflyMdFilename('  ');
+      expect(getCurrentCodeflyMdFilename()).toBe(initialName);
 
-      setGeminiMdFilename('');
-      expect(getCurrentGeminiMdFilename()).toBe(initialName);
+      setCodeflyMdFilename('');
+      expect(getCurrentCodeflyMdFilename()).toBe(initialName);
     });
 
     it('should handle an array of filenames', () => {
       const newNames = ['CUSTOM_CONTEXT.md', 'ANOTHER_CONTEXT.md'];
-      setGeminiMdFilename(newNames);
-      expect(getCurrentGeminiMdFilename()).toBe('CUSTOM_CONTEXT.md');
-      expect(getAllGeminiMdFilenames()).toEqual(newNames);
+      setCodeflyMdFilename(newNames);
+      expect(getCurrentCodeflyMdFilename()).toBe('CUSTOM_CONTEXT.md');
+      expect(getAllCodeflyMdFilenames()).toEqual(newNames);
     });
   });
 
@@ -239,11 +239,11 @@ describe('MemoryTool', () => {
       const params = { fact: 'The sky is blue' };
       const invocation = memoryTool.build(params);
       const result = await invocation.execute(mockAbortSignal);
-      // Use getCurrentGeminiMdFilename for the default expectation before any setGeminiMdFilename calls in a test
+      // Use getCurrentCodeflyMdFilename for the default expectation before any setCodeflyMdFilename calls in a test
       const expectedFilePath = path.join(
         os.homedir(),
         CODEFLY_DIR,
-        getCurrentGeminiMdFilename(), // This will be DEFAULT_CONTEXT_FILENAME unless changed by a test
+        getCurrentCodeflyMdFilename(), // This will be DEFAULT_CONTEXT_FILENAME unless changed by a test
       );
 
       // For this test, we expect the actual fs methods to be passed
@@ -344,7 +344,7 @@ describe('MemoryTool', () => {
       const memoryFilePath = path.join(
         os.homedir(),
         CODEFLY_DIR,
-        getCurrentGeminiMdFilename(),
+        getCurrentCodeflyMdFilename(),
       );
 
       const invocation = memoryTool.build(params);
@@ -362,7 +362,7 @@ describe('MemoryTool', () => {
       const memoryFilePath = path.join(
         os.homedir(),
         CODEFLY_DIR,
-        getCurrentGeminiMdFilename(),
+        getCurrentCodeflyMdFilename(),
       );
 
       const invocation = memoryTool.build(params);
@@ -388,7 +388,7 @@ describe('MemoryTool', () => {
       const memoryFilePath = path.join(
         os.homedir(),
         CODEFLY_DIR,
-        getCurrentGeminiMdFilename(),
+        getCurrentCodeflyMdFilename(),
       );
 
       const invocation = memoryTool.build(params);

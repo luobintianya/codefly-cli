@@ -14,7 +14,7 @@ import { createDefaultPolicy } from './policyCatalog.js';
 import type { Config } from '../config/config.js';
 import {
   DEFAULT_GEMINI_FLASH_LITE_MODEL,
-  DEFAULT_GEMINI_MODEL_AUTO,
+  DEFAULT_CODEFLY_MODEL_AUTO,
 } from '../config/models.js';
 
 const createMockConfig = (overrides: Partial<Config> = {}): Config =>
@@ -46,7 +46,7 @@ describe('policyHelpers', () => {
 
     it('returns the default chain when active model is "auto"', () => {
       const config = createMockConfig({
-        getModel: () => DEFAULT_GEMINI_MODEL_AUTO,
+        getModel: () => DEFAULT_CODEFLY_MODEL_AUTO,
       });
       const chain = resolvePolicyChain(config);
 
@@ -60,7 +60,7 @@ describe('policyHelpers', () => {
       const config = createMockConfig({
         getModel: () => 'gemini-2.5-pro',
       });
-      const chain = resolvePolicyChain(config, DEFAULT_GEMINI_MODEL_AUTO);
+      const chain = resolvePolicyChain(config, DEFAULT_CODEFLY_MODEL_AUTO);
       expect(chain).toHaveLength(2);
       expect(chain[0]?.model).toBe('gemini-3-pro-preview');
       expect(chain[1]?.model).toBe('gemini-3-flash-preview');
@@ -68,7 +68,7 @@ describe('policyHelpers', () => {
 
     it('uses auto chain when configured model is auto even if preferred is concrete', () => {
       const config = createMockConfig({
-        getModel: () => DEFAULT_GEMINI_MODEL_AUTO,
+        getModel: () => DEFAULT_CODEFLY_MODEL_AUTO,
       });
       const chain = resolvePolicyChain(config, 'gemini-2.5-pro');
       expect(chain).toHaveLength(1);
@@ -77,7 +77,7 @@ describe('policyHelpers', () => {
 
     it('starts chain from preferredModel when model is "auto"', () => {
       const config = createMockConfig({
-        getModel: () => DEFAULT_GEMINI_MODEL_AUTO,
+        getModel: () => DEFAULT_CODEFLY_MODEL_AUTO,
       });
       const chain = resolvePolicyChain(config, 'gemini-3-flash-preview');
       expect(chain).toHaveLength(1);
@@ -86,7 +86,7 @@ describe('policyHelpers', () => {
 
     it('returns flash-lite chain when preferred model is flash-lite', () => {
       const config = createMockConfig({
-        getModel: () => DEFAULT_GEMINI_MODEL_AUTO,
+        getModel: () => DEFAULT_CODEFLY_MODEL_AUTO,
       });
       const chain = resolvePolicyChain(config, DEFAULT_GEMINI_FLASH_LITE_MODEL);
       expect(chain).toHaveLength(3);
@@ -108,7 +108,7 @@ describe('policyHelpers', () => {
 
     it('wraps around the chain when wrapsAround is true', () => {
       const config = createMockConfig({
-        getModel: () => DEFAULT_GEMINI_MODEL_AUTO,
+        getModel: () => DEFAULT_CODEFLY_MODEL_AUTO,
       });
       const chain = resolvePolicyChain(config, undefined, true);
       // Auto -> Pro. Chain: [Pro, Flash]. Index 0.

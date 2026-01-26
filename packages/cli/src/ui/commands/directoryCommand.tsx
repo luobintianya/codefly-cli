@@ -53,7 +53,7 @@ async function finishAddingDirectories(
   }
 
   if (added.length > 0) {
-    const gemini = config.getGeminiClient();
+    const gemini = config.getCodeflyClient();
     if (gemini) {
       await gemini.addDirectoryContext();
     }

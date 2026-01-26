@@ -6,7 +6,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { coreEvents, type GeminiCLIExtension } from '@codeflyai/codefly-core';
+import { coreEvents, type CodeflyCLIExtension } from '@codeflyai/codefly-core';
 import { ExtensionStorage } from './storage.js';
 
 export interface ExtensionEnablementConfig {
@@ -123,7 +123,7 @@ export class ExtensionEnablementManager {
       enabledExtensionNames?.map((name) => name.toLowerCase()) ?? [];
   }
 
-  validateExtensionOverrides(extensions: GeminiCLIExtension[]) {
+  validateExtensionOverrides(extensions: CodeflyCLIExtension[]) {
     for (const name of this.enabledExtensionNamesOverride) {
       if (name === 'none') continue;
       if (

@@ -25,10 +25,10 @@ import {
   makeFakeConfig,
   type GoogleApiError,
   RetryableQuotaError,
-  PREVIEW_GEMINI_MODEL,
+  PREVIEW_CODEFLY_MODEL,
   ModelNotFoundError,
-  DEFAULT_GEMINI_MODEL,
-  DEFAULT_GEMINI_FLASH_MODEL,
+  DEFAULT_CODEFLY_MODEL,
+  DEFAULT_CODEFLY_FLASH_MODEL,
 } from '@codeflyai/codefly-core';
 import { useQuotaAndFallback } from './useQuotaAndFallback.js';
 import type { UseHistoryManagerReturn } from './useHistoryManager.js';
@@ -443,8 +443,8 @@ To disable gemini-3-pro-preview, disable "Preview features" in /settings.`,
       let promise: Promise<FallbackIntent | null>;
       act(() => {
         promise = handler(
-          PREVIEW_GEMINI_MODEL,
-          DEFAULT_GEMINI_MODEL,
+          PREVIEW_CODEFLY_MODEL,
+          DEFAULT_CODEFLY_MODEL,
           new Error('preview model failed'),
         );
       });
@@ -459,7 +459,7 @@ To disable gemini-3-pro-preview, disable "Preview features" in /settings.`,
       const lastCall = (mockHistoryManager.addItem as Mock).mock.calls[0][0];
       expect(lastCall.type).toBe(MessageType.INFO);
       expect(lastCall.text).toContain(
-        `Switched to fallback model ${DEFAULT_GEMINI_MODEL}`,
+        `Switched to fallback model ${DEFAULT_CODEFLY_MODEL}`,
       );
     });
 
@@ -478,8 +478,8 @@ To disable gemini-3-pro-preview, disable "Preview features" in /settings.`,
       let promise: Promise<FallbackIntent | null>;
       act(() => {
         promise = handler(
-          PREVIEW_GEMINI_MODEL,
-          DEFAULT_GEMINI_FLASH_MODEL,
+          PREVIEW_CODEFLY_MODEL,
+          DEFAULT_CODEFLY_FLASH_MODEL,
           new Error('preview model failed'),
         );
       });
@@ -494,7 +494,7 @@ To disable gemini-3-pro-preview, disable "Preview features" in /settings.`,
       const lastCall = (mockHistoryManager.addItem as Mock).mock.calls[0][0];
       expect(lastCall.type).toBe(MessageType.INFO);
       expect(lastCall.text).toContain(
-        `Switched to fallback model ${DEFAULT_GEMINI_FLASH_MODEL}`,
+        `Switched to fallback model ${DEFAULT_CODEFLY_FLASH_MODEL}`,
       );
     });
   });

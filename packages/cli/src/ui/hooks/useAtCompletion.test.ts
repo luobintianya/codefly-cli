@@ -45,7 +45,7 @@ describe('useAtCompletion', () => {
     mockConfig = {
       getFileFilteringOptions: vi.fn(() => ({
         respectGitIgnore: true,
-        respectGeminiIgnore: true,
+        respectCodeflyIgnore: true,
       })),
       getEnableRecursiveFileSearch: () => true,
       getFileFilteringEnableFuzzySearch: () => true,
@@ -556,7 +556,7 @@ describe('useAtCompletion', () => {
         getEnableRecursiveFileSearch: () => false,
         getFileFilteringOptions: vi.fn(() => ({
           respectGitIgnore: true,
-          respectGeminiIgnore: true,
+          respectCodeflyIgnore: true,
         })),
         getFileFilteringEnableFuzzySearch: () => true,
       } as unknown as Config;

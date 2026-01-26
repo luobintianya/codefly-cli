@@ -284,7 +284,7 @@ ${testRootDir}${path.sep}
       const structure = await getFolderStructure(testRootDir, {
         fileService,
         fileFilteringOptions: {
-          respectGeminiIgnore: false,
+          respectCodeflyIgnore: false,
           respectGitIgnore: false,
         },
       });
@@ -297,7 +297,7 @@ ${testRootDir}${path.sep}
   describe('with geminiignore', () => {
     it('should ignore geminiignore files by default', async () => {
       await fsPromises.writeFile(
-        nodePath.join(testRootDir, '.geminiignore'),
+        nodePath.join(testRootDir, '.codeflyignore'),
         `ignored.txt\nnode_modules/\n${CODEFLY_DIR}/\n!/${CODEFLY_DIR}/config.yaml`,
       );
       await createTestFile('file1.txt');
@@ -315,9 +315,9 @@ ${testRootDir}${path.sep}
       expect(structure).not.toContain('logs.json');
     });
 
-    it('should not ignore files if respectGeminiIgnore is false', async () => {
+    it('should not ignore files if respectCodeflyIgnore is false', async () => {
       await fsPromises.writeFile(
-        nodePath.join(testRootDir, '.geminiignore'),
+        nodePath.join(testRootDir, '.codeflyignore'),
         `ignored.txt\nnode_modules/\n${CODEFLY_DIR}/\n!/${CODEFLY_DIR}/config.yaml`,
       );
       await createTestFile('file1.txt');
@@ -330,7 +330,7 @@ ${testRootDir}${path.sep}
       const structure = await getFolderStructure(testRootDir, {
         fileService,
         fileFilteringOptions: {
-          respectGeminiIgnore: false,
+          respectCodeflyIgnore: false,
           respectGitIgnore: true, // Explicitly disable gemini ignore only
         },
       });

@@ -20,10 +20,10 @@ import { ToolRegistry } from '../tools/tool-registry.js';
 import { LSTool } from '../tools/ls.js';
 import { LS_TOOL_NAME, READ_FILE_TOOL_NAME } from '../tools/tool-names.js';
 import {
-  GeminiChat,
+  CodeflyChat,
   StreamEventType,
   type StreamEvent,
-} from '../core/geminiChat.js';
+} from '../core/codeflyChat.js';
 import {
   type FunctionCall,
   type Part,
@@ -88,11 +88,12 @@ vi.mock('../services/chatCompressionService.js', () => ({
   })),
 }));
 
-vi.mock('../core/geminiChat.js', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../core/geminiChat.js')>();
+vi.mock('../core/codeflyChat.js', async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import('../core/codeflyChat.js')>();
   return {
     ...actual,
-    GeminiChat: vi.fn().mockImplementation(() => ({
+    CodeflyChat: vi.fn().mockImplementation(() => ({
       sendMessageStream: mockSendMessageStream,
       getHistory: vi.fn((_curated?: boolean) => [...mockChatHistory]),
       setHistory: mockSetHistory,
@@ -147,7 +148,7 @@ vi.mock('../utils/promptIdContext.js', async (importOriginal) => {
   };
 });
 
-const MockedGeminiChat = vi.mocked(GeminiChat);
+const MockedCodeflyChat = vi.mocked(CodeflyChat);
 const mockedGetDirectoryContextString = vi.mocked(getDirectoryContextString);
 const mockedPromptIdContext = vi.mocked(promptIdContext);
 const mockedLogAgentStart = vi.mocked(logAgentStart);
@@ -289,7 +290,7 @@ describe('LocalAgentExecutor', () => {
       info: { compressionStatus: CompressionStatus.NOOP },
     });
 
-    MockedGeminiChat.mockImplementation(
+    MockedCodeflyChat.mockImplementation(
       () =>
         ({
           sendMessageStream: mockSendMessageStream,
@@ -297,7 +298,7 @@ describe('LocalAgentExecutor', () => {
           getHistory: vi.fn((_curated?: boolean) => [...mockChatHistory]),
           getLastPromptTokenCount: vi.fn(() => 100),
           setHistory: mockSetHistory,
-        }) as unknown as GeminiChat,
+        }) as unknown as CodeflyChat,
     );
 
     vi.useFakeTimers();
@@ -419,7 +420,7 @@ describe('LocalAgentExecutor', () => {
       );
       await executor.run(inputs, signal);
 
-      const chatConstructorArgs = MockedGeminiChat.mock.calls[0];
+      const chatConstructorArgs = MockedCodeflyChat.mock.calls[0];
       const startHistory = chatConstructorArgs[3]; // history is the 4th arg
 
       expect(startHistory).toBeDefined();
@@ -585,7 +586,7 @@ describe('LocalAgentExecutor', () => {
 
       expect(mockSendMessageStream).toHaveBeenCalledTimes(2);
 
-      const systemInstruction = MockedGeminiChat.mock.calls[0][1];
+      const systemInstruction = MockedCodeflyChat.mock.calls[0][1];
       expect(systemInstruction).toContain(
         `MUST call the \`${TASK_COMPLETE_TOOL_NAME}\` tool`,
       );
@@ -598,7 +599,7 @@ describe('LocalAgentExecutor', () => {
       const { modelConfigKey } = getMockMessageParams(0);
       expect(modelConfigKey.model).toBe(getModelConfigAlias(definition));
 
-      const chatConstructorArgs = MockedGeminiChat.mock.calls[0];
+      const chatConstructorArgs = MockedCodeflyChat.mock.calls[0];
       // tools are the 3rd argument (index 2), passed as [{ functionDeclarations: [...] }]
       const passedToolsArg = chatConstructorArgs[2] as Tool[];
       const sentTools = passedToolsArg[0].functionDeclarations;
@@ -731,7 +732,7 @@ describe('LocalAgentExecutor', () => {
       const { modelConfigKey } = getMockMessageParams(0);
       expect(modelConfigKey.model).toBe(getModelConfigAlias(definition));
 
-      const chatConstructorArgs = MockedGeminiChat.mock.calls[0];
+      const chatConstructorArgs = MockedCodeflyChat.mock.calls[0];
       const passedToolsArg = chatConstructorArgs[2] as Tool[];
       const sentTools = passedToolsArg[0].functionDeclarations;
       expect(sentTools).toBeDefined();
@@ -1165,10 +1166,10 @@ describe('LocalAgentExecutor', () => {
       expect(output.terminate_reason).toBe(AgentTerminateMode.GOAL);
     });
 
-    it('should throw and log if GeminiChat creation fails', async () => {
+    it('should throw and log if CodeflyChat creation fails', async () => {
       const definition = createTestDefinition();
       const initError = new Error('Chat creation failed');
-      MockedGeminiChat.mockImplementationOnce(() => {
+      MockedCodeflyChat.mockImplementationOnce(() => {
         throw initError;
       });
 

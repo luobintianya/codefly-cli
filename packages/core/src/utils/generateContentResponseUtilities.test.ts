@@ -25,8 +25,8 @@ import type {
 } from '@google/genai';
 import { FinishReason } from '@google/genai';
 import {
-  DEFAULT_GEMINI_MODEL,
-  PREVIEW_GEMINI_MODEL,
+  DEFAULT_CODEFLY_MODEL,
+  PREVIEW_CODEFLY_MODEL,
 } from '../config/models.js';
 
 const mockTextPart = (text: string): Part => ({ text });
@@ -88,7 +88,7 @@ describe('generateContentResponseUtilities', () => {
         toolName,
         callId,
         llmContent,
-        DEFAULT_GEMINI_MODEL,
+        DEFAULT_CODEFLY_MODEL,
       );
       expect(result).toEqual([
         {
@@ -107,7 +107,7 @@ describe('generateContentResponseUtilities', () => {
         toolName,
         callId,
         llmContent,
-        DEFAULT_GEMINI_MODEL,
+        DEFAULT_CODEFLY_MODEL,
       );
       expect(result).toEqual([
         {
@@ -126,7 +126,7 @@ describe('generateContentResponseUtilities', () => {
         toolName,
         callId,
         llmContent,
-        DEFAULT_GEMINI_MODEL,
+        DEFAULT_CODEFLY_MODEL,
       );
       expect(result).toEqual([
         {
@@ -145,7 +145,7 @@ describe('generateContentResponseUtilities', () => {
         toolName,
         callId,
         llmContent,
-        DEFAULT_GEMINI_MODEL,
+        DEFAULT_CODEFLY_MODEL,
       );
       expect(result).toEqual([
         {
@@ -166,7 +166,7 @@ describe('generateContentResponseUtilities', () => {
         toolName,
         callId,
         llmContent,
-        PREVIEW_GEMINI_MODEL,
+        PREVIEW_CODEFLY_MODEL,
       );
       expect(result).toEqual([
         {
@@ -188,7 +188,7 @@ describe('generateContentResponseUtilities', () => {
         toolName,
         callId,
         llmContent,
-        PREVIEW_GEMINI_MODEL,
+        PREVIEW_CODEFLY_MODEL,
       );
       expect(result).toEqual([
         {
@@ -210,7 +210,7 @@ describe('generateContentResponseUtilities', () => {
         toolName,
         callId,
         llmContent,
-        DEFAULT_GEMINI_MODEL,
+        DEFAULT_CODEFLY_MODEL,
       );
       expect(result).toEqual([
         {
@@ -244,7 +244,7 @@ describe('generateContentResponseUtilities', () => {
         toolName,
         callId,
         input,
-        DEFAULT_GEMINI_MODEL,
+        DEFAULT_CODEFLY_MODEL,
       );
 
       expect(result).toHaveLength(1);
@@ -265,7 +265,7 @@ describe('generateContentResponseUtilities', () => {
         toolName,
         callId,
         llmContent,
-        PREVIEW_GEMINI_MODEL,
+        PREVIEW_CODEFLY_MODEL,
       );
       expect(result).toEqual([
         {
@@ -293,7 +293,7 @@ describe('generateContentResponseUtilities', () => {
         toolName,
         callId,
         llmContent,
-        PREVIEW_GEMINI_MODEL,
+        PREVIEW_CODEFLY_MODEL,
       );
       expect(result).toEqual([
         {
@@ -313,7 +313,7 @@ describe('generateContentResponseUtilities', () => {
         toolName,
         callId,
         llmContent,
-        PREVIEW_GEMINI_MODEL,
+        PREVIEW_CODEFLY_MODEL,
       );
       expect(result).toEqual([
         {
@@ -332,7 +332,7 @@ describe('generateContentResponseUtilities', () => {
         toolName,
         callId,
         llmContent,
-        PREVIEW_GEMINI_MODEL,
+        PREVIEW_CODEFLY_MODEL,
       );
       expect(result).toEqual([
         {
@@ -351,7 +351,7 @@ describe('generateContentResponseUtilities', () => {
         toolName,
         callId,
         llmContent,
-        PREVIEW_GEMINI_MODEL,
+        PREVIEW_CODEFLY_MODEL,
       );
       expect(result).toEqual([
         {
@@ -370,7 +370,7 @@ describe('generateContentResponseUtilities', () => {
         toolName,
         callId,
         llmContent,
-        PREVIEW_GEMINI_MODEL,
+        PREVIEW_CODEFLY_MODEL,
       );
       expect(result).toEqual([
         {

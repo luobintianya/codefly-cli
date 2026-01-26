@@ -6,7 +6,7 @@
 
 import type {
   ExtensionLoader,
-  GeminiCLIExtension,
+  CodeflyCLIExtension,
 } from '@codeflyai/codefly-core';
 import { createMockCommandContext } from '../../test-utils/mockCommandContext.js';
 import { MessageType } from '../types.js';
@@ -64,7 +64,7 @@ const mockInstallExtension = vi.fn();
 const mockUninstallExtension = vi.fn();
 const mockGetExtensions = vi.fn();
 
-const inactiveExt: GeminiCLIExtension = {
+const inactiveExt: CodeflyCLIExtension = {
   name: 'ext-one',
   id: 'ext-one-id',
   version: '1.0.0',
@@ -77,7 +77,7 @@ const inactiveExt: GeminiCLIExtension = {
     source: 'https://github.com/some/extension.git',
   },
 };
-const activeExt: GeminiCLIExtension = {
+const activeExt: CodeflyCLIExtension = {
   name: 'ext-two',
   id: 'ext-two-id',
   version: '1.0.0',
@@ -90,7 +90,7 @@ const activeExt: GeminiCLIExtension = {
     source: 'https://github.com/some/extension.git',
   },
 };
-const allExt: GeminiCLIExtension = {
+const allExt: CodeflyCLIExtension = {
   name: 'all-ext',
   id: 'all-ext-id',
   version: '1.0.0',
@@ -839,7 +839,7 @@ describe('extensionsCommand', () => {
         { name: 'ext1', isActive: true },
         { name: 'ext2', isActive: true },
         { name: 'ext3', isActive: false },
-      ] as GeminiCLIExtension[];
+      ] as CodeflyCLIExtension[];
       mockGetExtensions.mockReturnValue(mockExtensions);
 
       await restartAction!(mockContext, '--all');
@@ -874,7 +874,7 @@ describe('extensionsCommand', () => {
         { name: 'ext1', isActive: false },
         { name: 'ext2', isActive: true },
         { name: 'ext3', isActive: true },
-      ] as GeminiCLIExtension[];
+      ] as CodeflyCLIExtension[];
       mockGetExtensions.mockReturnValue(mockExtensions);
 
       await restartAction!(mockContext, 'ext1 ext3');
@@ -916,7 +916,7 @@ describe('extensionsCommand', () => {
     it('handles errors during extension restart', async () => {
       const mockExtensions = [
         { name: 'ext1', isActive: true },
-      ] as GeminiCLIExtension[];
+      ] as CodeflyCLIExtension[];
       mockGetExtensions.mockReturnValue(mockExtensions);
       mockRestartExtension.mockRejectedValue(new Error('Failed to restart'));
 
@@ -934,7 +934,7 @@ describe('extensionsCommand', () => {
     it('shows a warning if an extension is not found', async () => {
       const mockExtensions = [
         { name: 'ext1', isActive: true },
-      ] as GeminiCLIExtension[];
+      ] as CodeflyCLIExtension[];
       mockGetExtensions.mockReturnValue(mockExtensions);
 
       await restartAction!(mockContext, 'ext1 ext2');
@@ -952,7 +952,7 @@ describe('extensionsCommand', () => {
     it('does not restart any extensions if none are found', async () => {
       const mockExtensions = [
         { name: 'ext1', isActive: true },
-      ] as GeminiCLIExtension[];
+      ] as CodeflyCLIExtension[];
       mockGetExtensions.mockReturnValue(mockExtensions);
 
       await restartAction!(mockContext, 'ext2 ext3');
@@ -971,7 +971,7 @@ describe('extensionsCommand', () => {
       const mockExtensions = [
         { name: 'ext1', isActive: true },
         { name: 'ext2', isActive: false },
-      ] as GeminiCLIExtension[];
+      ] as CodeflyCLIExtension[];
       mockGetExtensions.mockReturnValue(mockExtensions);
 
       const suggestions = completeExtensions(mockContext, 'ext');

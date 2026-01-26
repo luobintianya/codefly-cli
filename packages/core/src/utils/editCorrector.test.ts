@@ -29,7 +29,7 @@ vi.mock('fs', () => ({
 }));
 
 vi.mock('../core/client.js', () => ({
-  GeminiClient: vi.fn().mockImplementation(function (
+  CodeflyClient: vi.fn().mockImplementation(function (
     this: any,
     _config: Config,
   ) {
@@ -48,7 +48,7 @@ import {
   unescapeStringForGeminiBug,
   resetEditCorrectorCaches_TEST_ONLY,
 } from './editCorrector.js';
-import { GeminiClient } from '../core/client.js';
+import { CodeflyClient } from '../core/client.js';
 import type { Config } from '../config/config.js';
 import { ToolRegistry } from '../tools/tool-registry.js';
 
@@ -157,7 +157,7 @@ describe('editCorrector', () => {
   });
 
   describe('ensureCorrectEdit', () => {
-    let mockGeminiClientInstance: Mocked<GeminiClient>;
+    let mockCodeflyClientInstance: Mocked<CodeflyClient>;
     let mockBaseLlmClientInstance: Mocked<BaseLlmClient>;
     let mockToolRegistry: Mocked<ToolRegistry>;
     let mockConfigInstance: Config;
@@ -206,9 +206,9 @@ describe('editCorrector', () => {
         setUserMemory: vi.fn((mem: string) => {
           configParams.userMemory = mem;
         }),
-        getGeminiMdFileCount: vi.fn(() => configParams.geminiMdFileCount),
-        setGeminiMdFileCount: vi.fn((count: number) => {
-          configParams.geminiMdFileCount = count;
+        getCodeflyMdFileCount: vi.fn(() => configParams.codeflyMdFileCount),
+        setCodeflyMdFileCount: vi.fn((count: number) => {
+          configParams.codeflyMdFileCount = count;
         }),
         getAlwaysSkipModificationConfirmation: vi.fn(
           () => configParams.alwaysSkipModificationConfirmation,
@@ -237,10 +237,10 @@ describe('editCorrector', () => {
       mockStartChat = vi.fn();
       mockSendMessageStream = vi.fn();
 
-      mockGeminiClientInstance = new GeminiClient(
+      mockCodeflyClientInstance = new CodeflyClient(
         mockConfigInstance,
-      ) as Mocked<GeminiClient>;
-      mockGeminiClientInstance.getHistory = vi.fn().mockReturnValue([]);
+      ) as Mocked<CodeflyClient>;
+      mockCodeflyClientInstance.getHistory = vi.fn().mockReturnValue([]);
       mockBaseLlmClientInstance = {
         generateJson: mockGenerateJson,
         config: {
@@ -270,7 +270,7 @@ describe('editCorrector', () => {
           '/test/file.txt',
           currentContent,
           originalParams,
-          mockGeminiClientInstance,
+          mockCodeflyClientInstance,
           mockBaseLlmClientInstance,
           abortSignal,
           false,
@@ -291,7 +291,7 @@ describe('editCorrector', () => {
           '/test/file.txt',
           currentContent,
           originalParams,
-          mockGeminiClientInstance,
+          mockCodeflyClientInstance,
           mockBaseLlmClientInstance,
           abortSignal,
           false,
@@ -315,7 +315,7 @@ describe('editCorrector', () => {
           '/test/file.txt',
           currentContent,
           originalParams,
-          mockGeminiClientInstance,
+          mockCodeflyClientInstance,
           mockBaseLlmClientInstance,
           abortSignal,
           false,
@@ -336,7 +336,7 @@ describe('editCorrector', () => {
           '/test/file.txt',
           currentContent,
           originalParams,
-          mockGeminiClientInstance,
+          mockCodeflyClientInstance,
           mockBaseLlmClientInstance,
           abortSignal,
           false,
@@ -361,7 +361,7 @@ describe('editCorrector', () => {
           '/test/file.txt',
           currentContent,
           originalParams,
-          mockGeminiClientInstance,
+          mockCodeflyClientInstance,
           mockBaseLlmClientInstance,
           abortSignal,
           false,
@@ -382,7 +382,7 @@ describe('editCorrector', () => {
           '/test/file.txt',
           currentContent,
           originalParams,
-          mockGeminiClientInstance,
+          mockCodeflyClientInstance,
           mockBaseLlmClientInstance,
           abortSignal,
           false,
@@ -403,7 +403,7 @@ describe('editCorrector', () => {
           '/test/file.txt',
           currentContent,
           originalParams,
-          mockGeminiClientInstance,
+          mockCodeflyClientInstance,
           mockBaseLlmClientInstance,
           abortSignal,
           false,
@@ -429,7 +429,7 @@ describe('editCorrector', () => {
           '/test/file.txt',
           currentContent,
           originalParams,
-          mockGeminiClientInstance,
+          mockCodeflyClientInstance,
           mockBaseLlmClientInstance,
           abortSignal,
           false,
@@ -454,7 +454,7 @@ describe('editCorrector', () => {
           '/test/file.txt',
           currentContent,
           originalParams,
-          mockGeminiClientInstance,
+          mockCodeflyClientInstance,
           mockBaseLlmClientInstance,
           abortSignal,
           false,
@@ -477,7 +477,7 @@ describe('editCorrector', () => {
           '/test/file.txt',
           currentContent,
           originalParams,
-          mockGeminiClientInstance,
+          mockCodeflyClientInstance,
           mockBaseLlmClientInstance,
           abortSignal,
           false,
@@ -502,7 +502,7 @@ describe('editCorrector', () => {
           '/test/file.txt',
           currentContent,
           originalParams,
-          mockGeminiClientInstance,
+          mockCodeflyClientInstance,
           mockBaseLlmClientInstance,
           abortSignal,
           false,
@@ -526,7 +526,7 @@ describe('editCorrector', () => {
           '/test/file.txt',
           currentContent,
           originalParams,
-          mockGeminiClientInstance,
+          mockCodeflyClientInstance,
           mockBaseLlmClientInstance,
           abortSignal,
           false,
@@ -547,7 +547,7 @@ describe('editCorrector', () => {
           '/test/file.txt',
           currentContent,
           originalParams,
-          mockGeminiClientInstance,
+          mockCodeflyClientInstance,
           mockBaseLlmClientInstance,
           abortSignal,
           false,
@@ -573,7 +573,7 @@ describe('editCorrector', () => {
           '/test/file.txt',
           currentContent,
           originalParams,
-          mockGeminiClientInstance,
+          mockCodeflyClientInstance,
           mockBaseLlmClientInstance,
           abortSignal,
           false,
@@ -623,13 +623,13 @@ describe('editCorrector', () => {
             ],
           },
         ];
-        (mockGeminiClientInstance.getHistory as Mock).mockReturnValue(history);
+        (mockCodeflyClientInstance.getHistory as Mock).mockReturnValue(history);
 
         const result = await ensureCorrectEdit(
           filePath,
           currentContent,
           originalParams,
-          mockGeminiClientInstance,
+          mockCodeflyClientInstance,
           mockBaseLlmClientInstance,
           abortSignal,
           false,

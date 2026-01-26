@@ -597,7 +597,7 @@ export async function start_sandbox(
       // finally switch to that user to run the gemini process. This is
       // necessary on Linux to ensure the user exists within the
       // container's /etc/passwd file, which is required by os.userInfo().
-      const username = 'gemini';
+      const username = 'codefly';
       const homeDir = getContainerPath(homedir());
 
       const setupUserCommands = [

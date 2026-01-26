@@ -39,7 +39,7 @@ const createMockUIState = (overrides: UIStateOverrides = {}): UIState =>
     queueErrorMessage: null,
     activeHooks: [],
     ideContextState: null,
-    geminiMdFileCount: 0,
+    codeflyMdFileCount: 0,
     contextFileNames: [],
     buffer: { text: '' },
     history: [{ id: 1, type: 'user', text: 'test' }],

@@ -30,7 +30,7 @@ import {
   ToolConfirmationOutcome,
   ApprovalMode,
   HookSystem,
-  PREVIEW_GEMINI_MODEL,
+  PREVIEW_CODEFLY_MODEL,
   PolicyDecision,
 } from '@codeflyai/codefly-core';
 import { MockTool } from '@codeflyai/codefly-core/src/test-utils/mock-tool.js';
@@ -72,12 +72,12 @@ const mockConfig = {
   getTruncateToolOutputThreshold: () => DEFAULT_TRUNCATE_TOOL_OUTPUT_THRESHOLD,
   getTruncateToolOutputLines: () => DEFAULT_TRUNCATE_TOOL_OUTPUT_LINES,
   getAllowedTools: vi.fn(() => []),
-  getActiveModel: () => PREVIEW_GEMINI_MODEL,
+  getActiveModel: () => PREVIEW_CODEFLY_MODEL,
   getContentGeneratorConfig: () => ({
     model: 'test-model',
     authType: 'oauth-personal',
   }),
-  getGeminiClient: () => null, // No client needed for these tests
+  getCodeflyClient: () => null, // No client needed for these tests
   getShellExecutionConfig: () => ({ terminalWidth: 80, terminalHeight: 24 }),
   getMessageBus: () => null,
   isInteractive: () => false,

@@ -20,7 +20,7 @@ import { checkForExtensionUpdate } from './github.js';
 import { loadInstallMetadata } from '../extension.js';
 import * as fs from 'node:fs';
 import type { ExtensionManager } from '../extension-manager.js';
-import type { GeminiCLIExtension } from '@codeflyai/codefly-core';
+import type { CodeflyCLIExtension } from '@codeflyai/codefly-core';
 
 // Mock dependencies
 vi.mock('./storage.js', () => ({
@@ -56,11 +56,11 @@ vi.mock('node:fs', async (importOriginal) => {
 describe('Extension Update Logic', () => {
   let mockExtensionManager: ExtensionManager;
   let mockDispatch: ReturnType<typeof vi.fn>;
-  const mockExtension: GeminiCLIExtension = {
+  const mockExtension: CodeflyCLIExtension = {
     name: 'test-extension',
     version: '1.0.0',
     path: '/path/to/extension',
-  } as GeminiCLIExtension;
+  } as CodeflyCLIExtension;
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -252,7 +252,7 @@ describe('Extension Update Logic', () => {
 
   describe('updateAllUpdatableExtensions', () => {
     it('should update all extensions with UPDATE_AVAILABLE status', async () => {
-      const extensions: GeminiCLIExtension[] = [
+      const extensions: CodeflyCLIExtension[] = [
         { ...mockExtension, name: 'ext1' },
         { ...mockExtension, name: 'ext2' },
         { ...mockExtension, name: 'ext3' },
@@ -297,7 +297,7 @@ describe('Extension Update Logic', () => {
     });
 
     it('should set state to NOT_UPDATABLE if no install metadata', async () => {
-      const extensions: GeminiCLIExtension[] = [
+      const extensions: CodeflyCLIExtension[] = [
         { ...mockExtension, installMetadata: undefined },
       ];
 
@@ -317,7 +317,7 @@ describe('Extension Update Logic', () => {
     });
 
     it('should check for updates and update state', async () => {
-      const extensions: GeminiCLIExtension[] = [
+      const extensions: CodeflyCLIExtension[] = [
         { ...mockExtension, installMetadata: { type: 'git', source: '...' } },
       ];
       vi.mocked(checkForExtensionUpdate).mockResolvedValue(

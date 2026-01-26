@@ -9,7 +9,7 @@ import { OverrideStrategy } from './overrideStrategy.js';
 import type { RoutingContext } from '../routingStrategy.js';
 import type { BaseLlmClient } from '../../core/baseLlmClient.js';
 import type { Config } from '../../config/config.js';
-import { DEFAULT_GEMINI_MODEL_AUTO } from '../../config/models.js';
+import { DEFAULT_CODEFLY_MODEL_AUTO } from '../../config/models.js';
 
 describe('OverrideStrategy', () => {
   const strategy = new OverrideStrategy();
@@ -18,7 +18,7 @@ describe('OverrideStrategy', () => {
 
   it('should return null when the override model is auto', async () => {
     const mockConfig = {
-      getModel: () => DEFAULT_GEMINI_MODEL_AUTO,
+      getModel: () => DEFAULT_CODEFLY_MODEL_AUTO,
       getPreviewFeatures: () => false,
     } as Config;
 

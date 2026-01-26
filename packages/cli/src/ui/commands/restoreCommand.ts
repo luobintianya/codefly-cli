@@ -46,7 +46,7 @@ async function restoreAction(
     return {
       type: 'message',
       messageType: 'error',
-      content: 'Could not determine the .gemini directory path.',
+      content: 'Could not determine the .codefly directory path.',
     };
   }
 
@@ -116,7 +116,7 @@ async function restoreAction(
       } else if (action.type === 'load_history' && loadHistory) {
         loadHistory(action.history);
         if (action.clientHistory) {
-          config?.getGeminiClient()?.setHistory(action.clientHistory);
+          config?.getCodeflyClient()?.setHistory(action.clientHistory);
         }
       }
     }

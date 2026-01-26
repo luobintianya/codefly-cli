@@ -8,7 +8,11 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import type { GenerateContentResponse } from '@google/genai';
 import { ApiError } from '@google/genai';
 import type { ContentGenerator } from '../core/contentGenerator.js';
-import { GeminiChat, StreamEventType, type StreamEvent } from './geminiChat.js';
+import {
+  CodeflyChat,
+  StreamEventType,
+  type StreamEvent,
+} from './codeflyChat.js';
 import type { Config } from '../config/config.js';
 import { setSimulate429 } from '../utils/testUtils.js';
 import { HookSystem } from '../hooks/hookSystem.js';
@@ -57,9 +61,9 @@ vi.mock('../telemetry/loggers.js', () => ({
   logContentRetryFailure: mockLogContentRetryFailure,
 }));
 
-describe('GeminiChat Network Retries', () => {
+describe('CodeflyChat Network Retries', () => {
   let mockContentGenerator: ContentGenerator;
-  let chat: GeminiChat;
+  let chat: CodeflyChat;
   let mockConfig: Config;
 
   beforeEach(() => {
@@ -113,7 +117,7 @@ describe('GeminiChat Network Retries', () => {
       .mockReturnValue(new HookSystem(mockConfig));
 
     setSimulate429(false);
-    chat = new GeminiChat(mockConfig);
+    chat = new CodeflyChat(mockConfig);
   });
 
   afterEach(() => {

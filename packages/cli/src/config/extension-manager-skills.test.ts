@@ -54,7 +54,7 @@ describe('ExtensionManager skills validation', () => {
     mockHomedir.mockReturnValue(tempDir);
 
     // Create the extensions directory that ExtensionManager expects
-    extensionsDir = path.join(tempDir, '.gemini', EXTENSIONS_DIRECTORY_NAME);
+    extensionsDir = path.join(tempDir, '.codefly', EXTENSIONS_DIRECTORY_NAME);
     fs.mkdirSync(extensionsDir, { recursive: true });
 
     extensionManager = new ExtensionManager({

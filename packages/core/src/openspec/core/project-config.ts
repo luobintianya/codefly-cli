@@ -3,7 +3,7 @@
  * Copyright 2026 Google LLC
  * SPDX-License-Identifier: Apache-2.0
  */
-import { existsSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { parse as parseYaml } from 'yaml';
 import { z } from 'zod';
@@ -122,7 +122,7 @@ export function readProjectConfig(projectRoot: string): ProjectConfig | null {
 
     // Parse rules field using Zod
     if (raw.rules !== undefined) {
-      const rulesField = z.record(z.string(), z.array(z.string()));
+      const _rulesField = z.record(z.string(), z.array(z.string()));
 
       // First check if it's an object structure (guard against null since typeof null === 'object')
       if (

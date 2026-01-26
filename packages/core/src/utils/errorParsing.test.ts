@@ -6,7 +6,7 @@
 
 import { describe, it, expect } from 'vitest';
 import { parseAndFormatApiError } from './errorParsing.js';
-import { DEFAULT_GEMINI_FLASH_MODEL } from '../config/models.js';
+import { DEFAULT_CODEFLY_FLASH_MODEL } from '../config/models.js';
 import { AuthType } from '../core/contentGenerator.js';
 import type { StructuredError } from '../core/turn.js';
 
@@ -29,7 +29,7 @@ describe('parseAndFormatApiError', () => {
       errorMessage,
       undefined,
       'gemini-2.5-pro',
-      DEFAULT_GEMINI_FLASH_MODEL,
+      DEFAULT_CODEFLY_FLASH_MODEL,
     );
     expect(result).toContain('[API Error: Rate limit exceeded');
     expect(result).toContain(

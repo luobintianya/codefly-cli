@@ -67,10 +67,10 @@ describe('handleAtCommand', () => {
       getExcludeTools: vi.fn(),
       getFileService: () => new FileDiscoveryService(testRootDir),
       getFileFilteringRespectGitIgnore: () => true,
-      getFileFilteringRespectGeminiIgnore: () => true,
+      getFileFilteringRespectCodeflyIgnore: () => true,
       getFileFilteringOptions: () => ({
         respectGitIgnore: true,
-        respectGeminiIgnore: true,
+        respectCodeflyIgnore: true,
       }),
       getFileSystemService: () => new StandardFileSystemService(),
       getEnableRecursiveFileSearch: vi.fn(() => true),
@@ -598,7 +598,7 @@ describe('handleAtCommand', () => {
   describe('gemini-ignore filtering', () => {
     it('should skip gemini-ignored files in @ commands', async () => {
       await createTestFile(
-        path.join(testRootDir, '.geminiignore'),
+        path.join(testRootDir, '.codeflyignore'),
         'build/output.js',
       );
       const geminiIgnoredFile = await createTestFile(
@@ -627,9 +627,9 @@ describe('handleAtCommand', () => {
       );
     });
   });
-  it('should process non-ignored files when .geminiignore is present', async () => {
+  it('should process non-ignored files when .codeflyignore is present', async () => {
     await createTestFile(
-      path.join(testRootDir, '.geminiignore'),
+      path.join(testRootDir, '.codeflyignore'),
       'build/output.js',
     );
     const validFile = await createTestFile(
@@ -660,7 +660,7 @@ describe('handleAtCommand', () => {
 
   it('should handle mixed gemini-ignored and valid files', async () => {
     await createTestFile(
-      path.join(testRootDir, '.geminiignore'),
+      path.join(testRootDir, '.codeflyignore'),
       'dist/bundle.js',
     );
     const validFile = await createTestFile(

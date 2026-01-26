@@ -405,7 +405,7 @@ describe('AppContainer State Management', () => {
       themeError: null,
       authError: null,
       shouldOpenAuthDialog: false,
-      geminiMdFileCount: 0,
+      codeflyMdFileCount: 0,
     } as InitializationResult;
   });
 
@@ -675,7 +675,7 @@ describe('AppContainer State Management', () => {
         recordToolCalls: vi.fn(),
       };
 
-      const mockGeminiClient = {
+      const mockCodeflyClient = {
         isInitialized: vi.fn(() => true),
         resumeChat: vi.fn(),
         getUserTier: vi.fn(),
@@ -684,7 +684,7 @@ describe('AppContainer State Management', () => {
 
       const configWithRecording = {
         ...mockConfig,
-        getGeminiClient: vi.fn(() => mockGeminiClient),
+        getCodeflyClient: vi.fn(() => mockCodeflyClient),
       } as unknown as Config;
 
       expect(() => {
@@ -708,7 +708,7 @@ describe('AppContainer State Management', () => {
         getCurrentConversation: vi.fn(),
       };
 
-      const mockGeminiClient = {
+      const mockCodeflyClient = {
         isInitialized: vi.fn(() => true),
         resumeChat: vi.fn(),
         getUserTier: vi.fn(),
@@ -718,7 +718,7 @@ describe('AppContainer State Management', () => {
 
       const configWithRecording = {
         ...mockConfig,
-        getGeminiClient: vi.fn(() => mockGeminiClient),
+        getCodeflyClient: vi.fn(() => mockCodeflyClient),
         getSessionId: vi.fn(() => 'test-session-123'),
       } as unknown as Config;
 
@@ -732,8 +732,8 @@ describe('AppContainer State Management', () => {
       }).not.toThrow();
 
       // Verify the recording service structure is correct
-      expect(configWithRecording.getGeminiClient).toBeDefined();
-      expect(mockGeminiClient.getChatRecordingService).toBeDefined();
+      expect(configWithRecording.getCodeflyClient).toBeDefined();
+      expect(mockCodeflyClient.getChatRecordingService).toBeDefined();
       expect(mockChatRecordingService.initialize).toBeDefined();
       expect(mockChatRecordingService.recordMessage).toBeDefined();
     });
@@ -750,7 +750,7 @@ describe('AppContainer State Management', () => {
         getSessionId: vi.fn(() => 'test-session-123'),
       };
 
-      const mockGeminiClient = {
+      const mockCodeflyClient = {
         isInitialized: vi.fn(() => true),
         getChatRecordingService: vi.fn(() => mockChatRecordingService),
         getUserTier: vi.fn(),
@@ -758,7 +758,7 @@ describe('AppContainer State Management', () => {
 
       const configWithRecording = {
         ...mockConfig,
-        getGeminiClient: vi.fn(() => mockGeminiClient),
+        getCodeflyClient: vi.fn(() => mockCodeflyClient),
       } as unknown as Config;
 
       renderAppContainer({
@@ -778,7 +778,7 @@ describe('AppContainer State Management', () => {
   describe('Session Resume Flow', () => {
     it('accepts resumed session data', () => {
       const mockResumeChat = vi.fn();
-      const mockGeminiClient = {
+      const mockCodeflyClient = {
         isInitialized: vi.fn(() => true),
         resumeChat: mockResumeChat,
         getUserTier: vi.fn(),
@@ -792,7 +792,7 @@ describe('AppContainer State Management', () => {
 
       const configWithClient = {
         ...mockConfig,
-        getGeminiClient: vi.fn(() => mockGeminiClient),
+        getCodeflyClient: vi.fn(() => mockCodeflyClient),
       } as unknown as Config;
 
       const resumedData = {
@@ -833,13 +833,13 @@ describe('AppContainer State Management', () => {
       }).not.toThrow();
 
       // Verify the resume functionality structure is in place
-      expect(mockGeminiClient.resumeChat).toBeDefined();
+      expect(mockCodeflyClient.resumeChat).toBeDefined();
       expect(resumedData.conversation.messages).toHaveLength(2);
     });
 
     it('does not attempt resume when client is not initialized', () => {
       const mockResumeChat = vi.fn();
-      const mockGeminiClient = {
+      const mockCodeflyClient = {
         isInitialized: vi.fn(() => false), // Not initialized
         resumeChat: mockResumeChat,
         getUserTier: vi.fn(),
@@ -848,7 +848,7 @@ describe('AppContainer State Management', () => {
 
       const configWithClient = {
         ...mockConfig,
-        getGeminiClient: vi.fn(() => mockGeminiClient),
+        getCodeflyClient: vi.fn(() => mockCodeflyClient),
       } as unknown as Config;
 
       const resumedData = {
@@ -893,7 +893,7 @@ describe('AppContainer State Management', () => {
         })),
       };
 
-      const mockGeminiClient = {
+      const mockCodeflyClient = {
         isInitialized: vi.fn(() => true),
         getChatRecordingService: vi.fn(() => mockChatRecordingService),
         getUserTier: vi.fn(),
@@ -901,7 +901,7 @@ describe('AppContainer State Management', () => {
 
       const configWithRecording = {
         ...mockConfig,
-        getGeminiClient: vi.fn(() => mockGeminiClient),
+        getCodeflyClient: vi.fn(() => mockCodeflyClient),
       } as unknown as Config;
 
       renderAppContainer({

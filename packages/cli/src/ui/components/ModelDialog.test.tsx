@@ -10,12 +10,12 @@ import { ModelDialog } from './ModelDialog.js';
 import { ConfigContext } from '../contexts/ConfigContext.js';
 import { KeypressProvider } from '../contexts/KeypressContext.js';
 import {
-  DEFAULT_GEMINI_MODEL,
-  DEFAULT_GEMINI_MODEL_AUTO,
-  DEFAULT_GEMINI_FLASH_MODEL,
+  DEFAULT_CODEFLY_MODEL,
+  DEFAULT_CODEFLY_MODEL_AUTO,
+  DEFAULT_CODEFLY_FLASH_MODEL,
   DEFAULT_GEMINI_FLASH_LITE_MODEL,
-  PREVIEW_GEMINI_MODEL,
-  PREVIEW_GEMINI_MODEL_AUTO,
+  PREVIEW_CODEFLY_MODEL,
+  PREVIEW_CODEFLY_MODEL_AUTO,
 } from '@codeflyai/codefly-core';
 import type { Config, ModelSlashCommandEvent } from '@codeflyai/codefly-core';
 
@@ -62,7 +62,7 @@ describe('<ModelDialog />', () => {
 
   beforeEach(() => {
     vi.resetAllMocks();
-    mockGetModel.mockReturnValue(DEFAULT_GEMINI_MODEL_AUTO);
+    mockGetModel.mockReturnValue(DEFAULT_CODEFLY_MODEL_AUTO);
     mockGetPreviewFeatures.mockReturnValue(false);
     mockGetHasAccessToPreviewModel.mockReturnValue(false);
 
@@ -116,15 +116,15 @@ describe('<ModelDialog />', () => {
     await waitForUpdate();
 
     // Should now show manual options
-    expect(lastFrame()).toContain(DEFAULT_GEMINI_MODEL);
-    expect(lastFrame()).toContain(DEFAULT_GEMINI_FLASH_MODEL);
+    expect(lastFrame()).toContain(DEFAULT_CODEFLY_MODEL);
+    expect(lastFrame()).toContain(DEFAULT_CODEFLY_FLASH_MODEL);
     expect(lastFrame()).toContain(DEFAULT_GEMINI_FLASH_LITE_MODEL);
   });
 
   it('renders "manual" view with preview options when preview features are enabled', async () => {
     mockGetPreviewFeatures.mockReturnValue(true);
     mockGetHasAccessToPreviewModel.mockReturnValue(true); // Must have access
-    mockGetModel.mockReturnValue(PREVIEW_GEMINI_MODEL_AUTO);
+    mockGetModel.mockReturnValue(PREVIEW_CODEFLY_MODEL_AUTO);
     const { lastFrame, stdin } = renderComponent();
 
     // Select "Manual" (index 1 because Preview Auto is same as Default Auto now due to deduplication)
@@ -137,7 +137,7 @@ describe('<ModelDialog />', () => {
     stdin.write('\r');
     await waitForUpdate();
 
-    expect(lastFrame()).toContain(PREVIEW_GEMINI_MODEL);
+    expect(lastFrame()).toContain(PREVIEW_CODEFLY_MODEL);
   });
 
   it('sets model and closes when a model is selected in "main" view', async () => {
@@ -148,7 +148,7 @@ describe('<ModelDialog />', () => {
     await waitForUpdate();
 
     expect(mockSetModel).toHaveBeenCalledWith(
-      DEFAULT_GEMINI_MODEL_AUTO,
+      DEFAULT_CODEFLY_MODEL_AUTO,
       true, // Session only by default
     );
     expect(mockOnClose).toHaveBeenCalled();
@@ -165,11 +165,11 @@ describe('<ModelDialog />', () => {
     stdin.write('\r');
     await waitForUpdate();
 
-    // Now in manual view. Default selection is first item (DEFAULT_GEMINI_MODEL)
+    // Now in manual view. Default selection is first item (DEFAULT_CODEFLY_MODEL)
     stdin.write('\r');
     await waitForUpdate();
 
-    expect(mockSetModel).toHaveBeenCalledWith(DEFAULT_GEMINI_MODEL, true);
+    expect(mockSetModel).toHaveBeenCalledWith(DEFAULT_CODEFLY_MODEL, true);
     expect(mockOnClose).toHaveBeenCalled();
   });
 
@@ -189,7 +189,7 @@ describe('<ModelDialog />', () => {
     await waitForUpdate();
 
     expect(mockSetModel).toHaveBeenCalledWith(
-      DEFAULT_GEMINI_MODEL_AUTO,
+      DEFAULT_CODEFLY_MODEL_AUTO,
       false, // Persist enabled
     );
     expect(mockOnClose).toHaveBeenCalled();
@@ -215,7 +215,7 @@ describe('<ModelDialog />', () => {
     stdin.write('\r');
     await waitForUpdate();
 
-    expect(lastFrame()).toContain(DEFAULT_GEMINI_MODEL);
+    expect(lastFrame()).toContain(DEFAULT_CODEFLY_MODEL);
 
     // Press Escape
     stdin.write('\u001B');

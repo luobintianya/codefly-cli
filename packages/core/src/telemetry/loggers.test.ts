@@ -13,7 +13,7 @@ import type {
 import {
   AuthType,
   EditTool,
-  GeminiClient,
+  CodeflyClient,
   ToolConfirmationOutcome,
   ToolErrorType,
   ToolRegistry,
@@ -97,7 +97,7 @@ import { FileOperation } from './metrics.js';
 import * as sdk from './sdk.js';
 import { createMockMessageBus } from '../test-utils/mock-message-bus.js';
 import { vi, describe, beforeEach, it, expect, afterEach } from 'vitest';
-import { type GeminiCLIExtension } from '../config/config.js';
+import { type CodeflyCLIExtension } from '../config/config.js';
 import {
   FinishReason,
   type CallableTool,
@@ -210,7 +210,7 @@ describe('loggers', () => {
           [
             { name: 'ext-one', id: 'id-one' },
             { name: 'ext-two', id: 'id-two' },
-          ] as GeminiCLIExtension[],
+          ] as CodeflyCLIExtension[],
         getMcpClientManager: () => ({
           getMcpServers: () => ({
             'test-server': {
@@ -969,7 +969,7 @@ describe('loggers', () => {
     const cfg1 = {
       getSessionId: () => 'test-session-id',
       getTargetDir: () => 'target-dir',
-      getGeminiClient: () => mockGeminiClient,
+      getCodeflyClient: () => mockCodeflyClient,
     } as Config;
     const cfg2 = {
       getSessionId: () => 'test-session-id',
@@ -999,11 +999,11 @@ describe('loggers', () => {
       getUserMemory: () => 'user-memory',
     } as unknown as Config;
 
-    const mockGeminiClient = new GeminiClient(cfg2);
+    const mockCodeflyClient = new CodeflyClient(cfg2);
     const mockConfig = {
       getSessionId: () => 'test-session-id',
       getTargetDir: () => 'target-dir',
-      getGeminiClient: () => mockGeminiClient,
+      getCodeflyClient: () => mockCodeflyClient,
       getTelemetryEnabled: () => true,
       getTelemetryLogPromptsEnabled: () => true,
       isInteractive: () => false,

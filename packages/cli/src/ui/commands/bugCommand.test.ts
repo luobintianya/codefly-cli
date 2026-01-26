@@ -87,7 +87,7 @@ describe('bugCommand', () => {
           getModel: () => 'gemini-pro',
           getBugCommand: () => undefined,
           getIdeMode: () => true,
-          getGeminiClient: () => ({
+          getCodeflyClient: () => ({
             getChat: () => ({
               getHistory: () => [],
             }),
@@ -128,7 +128,7 @@ describe('bugCommand', () => {
           getModel: () => 'gemini-pro',
           getBugCommand: () => undefined,
           getIdeMode: () => true,
-          getGeminiClient: () => ({
+          getCodeflyClient: () => ({
             getChat: () => ({
               getHistory: () => history,
             }),
@@ -173,7 +173,7 @@ describe('bugCommand', () => {
           getModel: () => 'gemini-pro',
           getBugCommand: () => ({ urlTemplate: customTemplate }),
           getIdeMode: () => true,
-          getGeminiClient: () => ({
+          getCodeflyClient: () => ({
             getChat: () => ({
               getHistory: () => [],
             }),

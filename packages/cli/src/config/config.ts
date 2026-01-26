@@ -15,11 +15,11 @@ import { openspecCommand } from '../commands/openspec.js';
 
 import {
   Config,
-  setGeminiMdFilename as setServerGeminiMdFilename,
-  getCurrentGeminiMdFilename,
+  setCodeflyMdFilename as setServerGeminiMdFilename,
+  getCurrentCodeflyMdFilename,
   ApprovalMode,
-  DEFAULT_GEMINI_MODEL_AUTO,
-  DEFAULT_GEMINI_EMBEDDING_MODEL,
+  DEFAULT_CODEFLY_MODEL_AUTO,
+  DEFAULT_CODEFLY_EMBEDDING_MODEL,
   DEFAULT_FILE_FILTERING_OPTIONS,
   DEFAULT_MEMORY_FILE_FILTERING_OPTIONS,
   FileDiscoveryService,
@@ -34,12 +34,12 @@ import {
   loadServerHierarchicalMemory,
   WEB_FETCH_TOOL_NAME,
   getVersion,
-  PREVIEW_GEMINI_MODEL_AUTO,
+  PREVIEW_CODEFLY_MODEL_AUTO,
   type HookDefinition,
   type HookEventName,
   type OutputFormat,
   coreEvents,
-  GEMINI_MODEL_ALIAS_AUTO,
+  CODEFLY_MODEL_ALIAS_AUTO,
 } from '@codeflyai/codefly-core';
 import {
   type Settings,
@@ -99,9 +99,9 @@ export async function parseArguments(
   const startupMessages: string[] = [];
   const yargsInstance = yargs(rawArgv)
     .locale('en')
-    .scriptName('gemini')
+    .scriptName('codefly')
     .usage(
-      'Usage: gemini [options] [command]\n\nGemini CLI - Defaults to interactive mode. Use -p/--prompt for non-interactive (headless) mode.',
+      'Usage: codefly [options] [command]\n\nCodefly CLI - Defaults to interactive mode. Use -p/--prompt for non-interactive (headless) mode.',
     )
     .option('debug', {
       alias: 'd',
@@ -109,7 +109,7 @@ export async function parseArguments(
       description: 'Run in debug mode (open debug console with F12)',
       default: false,
     })
-    .command('$0 [query..]', 'Launch Gemini CLI', (yargsInstance) =>
+    .command('$0 [query..]', 'Launch Codefly CLI', (yargsInstance) =>
       yargsInstance
         .positional('query', {
           description:
@@ -429,7 +429,7 @@ export async function loadCliConfig(
   const loadedSettings = loadSettings(cwd);
 
   if (argv.sandbox) {
-    process.env['GEMINI_SANDBOX'] = 'true';
+    process.env['CODEFLY_SANDBOX'] = 'true';
   }
 
   const memoryImportFormat = settings.context?.importFormat || 'tree';
@@ -441,13 +441,13 @@ export async function loadCliConfig(
 
   // Set the context filename in the server's memoryTool module BEFORE loading memory
   // TODO(b/343434939): This is a bit of a hack. The contextFileName should ideally be passed
-  // directly to the Config constructor in core, and have core handle setGeminiMdFilename.
-  // However, loadHierarchicalGeminiMemory is called *before* createServerConfig.
+  // directly to the Config constructor in core, and have core handle setCodeflyMdFilename.
+  // However, loadHierarchicalCodeflyMemory is called *before* createServerConfig.
   if (settings.context?.fileName) {
     setServerGeminiMdFilename(settings.context.fileName);
   } else {
     // Reset to default if not provided in settings.
-    setServerGeminiMdFilename(getCurrentGeminiMdFilename());
+    setServerGeminiMdFilename(getCurrentCodeflyMdFilename());
   }
 
   const fileService = new FileDiscoveryService(cwd);
@@ -484,7 +484,7 @@ export async function loadCliConfig(
   let filePaths: string[] = [];
 
   if (!experimentalJitContext) {
-    // Call the (now wrapper) loadHierarchicalGeminiMemory which calls the server's version
+    // Call the (now wrapper) loadHierarchicalCodeflyMemory which calls the server's version
     const result = await loadServerHierarchicalMemory(
       cwd,
       settings.context?.loadMemoryFromIncludeDirectories || false
@@ -659,13 +659,13 @@ export async function loadCliConfig(
   policyEngineConfig.nonInteractive = !interactive;
 
   const defaultModel = settings.general?.previewFeatures
-    ? PREVIEW_GEMINI_MODEL_AUTO
-    : DEFAULT_GEMINI_MODEL_AUTO;
+    ? PREVIEW_CODEFLY_MODEL_AUTO
+    : DEFAULT_CODEFLY_MODEL_AUTO;
   const specifiedModel =
-    argv.model || process.env['GEMINI_MODEL'] || settings.model?.name;
+    argv.model || process.env['CODEFLY_MODEL'] || settings.model?.name;
 
   const resolvedModel =
-    specifiedModel === GEMINI_MODEL_ALIAS_AUTO
+    specifiedModel === CODEFLY_MODEL_ALIAS_AUTO
       ? defaultModel
       : specifiedModel || defaultModel;
   const sandboxConfig = await loadSandboxConfig(settings, argv);
@@ -689,7 +689,7 @@ export async function loadCliConfig(
   return new Config({
     sessionId,
     clientVersion: await getVersion(),
-    embeddingModel: DEFAULT_GEMINI_EMBEDDING_MODEL,
+    embeddingModel: DEFAULT_CODEFLY_EMBEDDING_MODEL,
     sandbox: sandboxConfig,
     targetDir: cwd,
     includeDirectories,
@@ -725,8 +725,8 @@ export async function loadCliConfig(
     enableEnvironmentVariableRedaction:
       settings.security?.environmentVariableRedaction?.enabled,
     userMemory: memoryContent,
-    geminiMdFileCount: fileCount,
-    geminiMdFilePaths: filePaths,
+    codeflyMdFileCount: fileCount,
+    codeflyMdFilePaths: filePaths,
     approvalMode,
     disableYoloMode:
       settings.security?.disableYoloMode || settings.admin?.secureModeEnabled,

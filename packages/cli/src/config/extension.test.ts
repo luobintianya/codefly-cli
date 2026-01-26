@@ -18,7 +18,7 @@ import * as fs from 'node:fs';
 import * as os from 'node:os';
 import * as path from 'node:path';
 import {
-  type GeminiCLIExtension,
+  type CodeflyCLIExtension,
   ExtensionUninstallEvent,
   ExtensionDisableEvent,
   ExtensionEnableEvent,
@@ -2040,7 +2040,7 @@ ${INSTALL_WARNING_MESSAGE}`,
       vi.restoreAllMocks();
     });
 
-    const getActiveExtensions = (): GeminiCLIExtension[] => {
+    const getActiveExtensions = (): CodeflyCLIExtension[] => {
       const extensions = extensionManager.getExtensions();
       return extensions.filter((e) => e.isActive);
     };

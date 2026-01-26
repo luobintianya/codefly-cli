@@ -5,7 +5,7 @@
  */
 
 import { isApiError, isStructuredError } from './quotaErrorDetection.js';
-import { DEFAULT_GEMINI_FLASH_MODEL } from '../config/models.js';
+import { DEFAULT_CODEFLY_FLASH_MODEL } from '../config/models.js';
 import { AuthType } from '../core/contentGenerator.js';
 
 const RATE_LIMIT_ERROR_MESSAGE_USE_GEMINI =
@@ -13,7 +13,7 @@ const RATE_LIMIT_ERROR_MESSAGE_USE_GEMINI =
 const RATE_LIMIT_ERROR_MESSAGE_VERTEX =
   '\nPlease wait and try again later. To increase your limits, request a quota increase through Vertex, or switch to another /auth method';
 const getRateLimitErrorMessageDefault = (
-  fallbackModel: string = DEFAULT_GEMINI_FLASH_MODEL,
+  fallbackModel: string = DEFAULT_CODEFLY_FLASH_MODEL,
 ) =>
   `\nPossible quota limitations in place or slow response times detected. Switching to the ${fallbackModel} model for the rest of this session.`;
 

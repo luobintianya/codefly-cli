@@ -18,12 +18,12 @@ import {
 } from '../utils/environmentContext.js';
 import type { ServerGeminiStreamEvent, ChatCompressionInfo } from './turn.js';
 import { CompressionStatus } from './turn.js';
-import { Turn, GeminiEventType } from './turn.js';
+import { Turn, CodeflyEventType } from './turn.js';
 import type { Config } from '../config/config.js';
 import { getCoreSystemPrompt } from './prompts.js';
 import { checkNextSpeaker } from '../utils/nextSpeakerChecker.js';
 import { reportError } from '../utils/errorReporting.js';
-import { GeminiChat } from './geminiChat.js';
+import { CodeflyChat } from './codeflyChat.js';
 import { retryWithBackoff } from '../utils/retry.js';
 import type { ValidationRequiredError } from '../utils/googleQuotaErrors.js';
 import { getErrorMessage } from '../utils/errors.js';
@@ -68,18 +68,18 @@ const MAX_TURNS = 100;
 
 type BeforeAgentHookReturn =
   | {
-      type: GeminiEventType.AgentExecutionStopped;
+      type: CodeflyEventType.AgentExecutionStopped;
       value: { reason: string; systemMessage?: string };
     }
   | {
-      type: GeminiEventType.AgentExecutionBlocked;
+      type: CodeflyEventType.AgentExecutionBlocked;
       value: { reason: string; systemMessage?: string };
     }
   | { additionalContext: string | undefined }
   | undefined;
 
-export class GeminiClient {
-  private chat?: GeminiChat;
+export class CodeflyClient {
+  private chat?: CodeflyChat;
   private sessionTurnCount = 0;
 
   private readonly loopDetector: LoopDetectionService;
@@ -151,7 +151,7 @@ export class GeminiClient {
 
     if (hookOutput?.shouldStopExecution()) {
       return {
-        type: GeminiEventType.AgentExecutionStopped,
+        type: CodeflyEventType.AgentExecutionStopped,
         value: {
           reason: hookOutput.getEffectiveReason(),
           systemMessage: hookOutput.systemMessage,
@@ -161,7 +161,7 @@ export class GeminiClient {
 
     if (hookOutput?.isBlockingDecision()) {
       return {
-        type: GeminiEventType.AgentExecutionBlocked,
+        type: CodeflyEventType.AgentExecutionBlocked,
         value: {
           reason: hookOutput.getEffectiveReason(),
           systemMessage: hookOutput.systemMessage,
@@ -228,7 +228,7 @@ export class GeminiClient {
     this.getChat().addHistory(content);
   }
 
-  getChat(): GeminiChat {
+  getChat(): CodeflyChat {
     if (!this.chat) {
       throw new Error('Chat not initialized');
     }
@@ -315,7 +315,7 @@ export class GeminiClient {
   async startChat(
     extraHistory?: Content[],
     resumedSessionData?: ResumedSessionData,
-  ): Promise<GeminiChat> {
+  ): Promise<CodeflyChat> {
     this.forceFullIdeContext = true;
     this.hasFailedCompressionAttempt = false;
 
@@ -330,7 +330,7 @@ export class GeminiClient {
         ? this.config.getGlobalMemory()
         : this.config.getUserMemory();
       const systemInstruction = getCoreSystemPrompt(this.config, systemMemory);
-      return new GeminiChat(
+      return new CodeflyChat(
         this.config,
         systemInstruction,
         tools,
@@ -541,7 +541,7 @@ export class GeminiClient {
       this.config.getMaxSessionTurns() > 0 &&
       this.sessionTurnCount > this.config.getMaxSessionTurns()
     ) {
-      yield { type: GeminiEventType.MaxSessionTurns };
+      yield { type: CodeflyEventType.MaxSessionTurns };
       return turn;
     }
 
@@ -555,7 +555,7 @@ export class GeminiClient {
     const compressed = await this.tryCompressChat(prompt_id, false);
 
     if (compressed.compressionStatus === CompressionStatus.COMPRESSED) {
-      yield { type: GeminiEventType.ChatCompressed, value: compressed };
+      yield { type: CodeflyEventType.ChatCompressed, value: compressed };
     }
 
     const remainingTokenCount =
@@ -571,7 +571,7 @@ export class GeminiClient {
 
     if (estimatedRequestTokenCount > remainingTokenCount) {
       yield {
-        type: GeminiEventType.ContextWindowWillOverflow,
+        type: CodeflyEventType.ContextWindowWillOverflow,
         value: { estimatedRequestTokenCount, remainingTokenCount },
       };
       return turn;
@@ -612,7 +612,7 @@ export class GeminiClient {
 
     const loopDetected = await this.loopDetector.turnStarted(signal);
     if (loopDetected) {
-      yield { type: GeminiEventType.LoopDetected };
+      yield { type: CodeflyEventType.LoopDetected };
       return turn;
     }
 
@@ -644,7 +644,7 @@ export class GeminiClient {
     modelToUse = finalModel;
 
     if (!signal.aborted && !this.currentSequenceModel) {
-      yield { type: GeminiEventType.ModelInfo, value: modelToUse };
+      yield { type: CodeflyEventType.ModelInfo, value: modelToUse };
     }
     this.currentSequenceModel = modelToUse;
     const resultStream = turn.run(modelConfigKey, request, linkedSignal);
@@ -653,7 +653,7 @@ export class GeminiClient {
 
     for await (const event of resultStream) {
       if (this.loopDetector.addAndCheck(event)) {
-        yield { type: GeminiEventType.LoopDetected };
+        yield { type: CodeflyEventType.LoopDetected };
         controller.abort();
         return turn;
       }
@@ -661,10 +661,10 @@ export class GeminiClient {
 
       this.updateTelemetryTokenCount();
 
-      if (event.type === GeminiEventType.InvalidStream) {
+      if (event.type === CodeflyEventType.InvalidStream) {
         isInvalidStream = true;
       }
-      if (event.type === GeminiEventType.Error) {
+      if (event.type === CodeflyEventType.Error) {
         isError = true;
       }
     }
@@ -774,7 +774,7 @@ export class GeminiClient {
       if (hookResult) {
         if (
           'type' in hookResult &&
-          hookResult.type === GeminiEventType.AgentExecutionStopped
+          hookResult.type === CodeflyEventType.AgentExecutionStopped
         ) {
           // Add user message to history before returning so it's kept in the transcript
           this.getChat().addHistory(createUserContent(request));
@@ -782,7 +782,7 @@ export class GeminiClient {
           return new Turn(this.getChat(), prompt_id);
         } else if (
           'type' in hookResult &&
-          hookResult.type === GeminiEventType.AgentExecutionBlocked
+          hookResult.type === CodeflyEventType.AgentExecutionBlocked
         ) {
           yield hookResult;
           return new Turn(this.getChat(), prompt_id);
@@ -825,7 +825,7 @@ export class GeminiClient {
         if (afterAgentOutput?.shouldStopExecution()) {
           const contextCleared = afterAgentOutput.shouldClearContext();
           yield {
-            type: GeminiEventType.AgentExecutionStopped,
+            type: CodeflyEventType.AgentExecutionStopped,
             value: {
               reason: afterAgentOutput.getEffectiveReason(),
               systemMessage: afterAgentOutput.systemMessage,
@@ -843,7 +843,7 @@ export class GeminiClient {
           const continueReason = afterAgentOutput.getEffectiveReason();
           const contextCleared = afterAgentOutput.shouldClearContext();
           yield {
-            type: GeminiEventType.AgentExecutionBlocked,
+            type: CodeflyEventType.AgentExecutionBlocked,
             value: {
               reason: continueReason,
               systemMessage: afterAgentOutput.systemMessage,

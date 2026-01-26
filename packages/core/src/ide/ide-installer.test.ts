@@ -131,7 +131,7 @@ describe('ide-installer', () => {
           'code',
           [
             '--install-extension',
-            'google.gemini-cli-vscode-ide-companion',
+            'google.codefly-cli-vscode-ide-companion',
             '--force',
           ],
           { stdio: 'pipe', shell: false },
@@ -148,7 +148,7 @@ describe('ide-installer', () => {
           'C:\\Program Files\\Microsoft VS Code\\bin\\code.cmd',
           [
             '--install-extension',
-            'google.gemini-cli-vscode-ide-companion',
+            'google.codefly-cli-vscode-ide-companion',
             '--force',
           ],
           { stdio: 'pipe', shell: true },
@@ -228,7 +228,7 @@ describe('AntigravityInstaller', () => {
       'agy',
       [
         '--install-extension',
-        'google.gemini-cli-vscode-ide-companion',
+        'google.codefly-cli-vscode-ide-companion',
         '--force',
       ],
       { stdio: 'pipe', shell: false },

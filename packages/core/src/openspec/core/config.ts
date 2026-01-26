@@ -108,11 +108,11 @@ export const AI_TOOLS: AIToolOption[] = [
     skillsDir: '.factory',
   },
   {
-    name: 'Gemini CLI',
-    value: 'gemini',
+    name: 'Codefly CLI',
+    value: 'codefly',
     available: true,
-    successLabel: 'Gemini CLI',
-    skillsDir: '.gemini',
+    successLabel: 'Codefly CLI',
+    skillsDir: '.codefly',
   },
   {
     name: 'GitHub Copilot',

@@ -11,7 +11,7 @@ import {
 } from '../../ui/state/extensions.js';
 import { loadInstallMetadata } from '../extension.js';
 import { checkForExtensionUpdate } from './github.js';
-import { debugLogger, type GeminiCLIExtension } from '@codeflyai/codefly-core';
+import { debugLogger, type CodeflyCLIExtension } from '@codeflyai/codefly-core';
 import * as fs from 'node:fs';
 import { getErrorMessage } from '../../utils/errors.js';
 import { copyExtension, type ExtensionManager } from '../extension-manager.js';
@@ -24,7 +24,7 @@ export interface ExtensionUpdateInfo {
 }
 
 export async function updateExtension(
-  extension: GeminiCLIExtension,
+  extension: CodeflyCLIExtension,
   extensionManager: ExtensionManager,
   currentState: ExtensionUpdateState,
   dispatchExtensionStateUpdate: (action: ExtensionUpdateAction) => void,
@@ -62,7 +62,7 @@ export async function updateExtension(
     const previousExtensionConfig = await extensionManager.loadExtensionConfig(
       extension.path,
     );
-    let updatedExtension: GeminiCLIExtension;
+    let updatedExtension: CodeflyCLIExtension;
     try {
       updatedExtension = await extensionManager.installOrUpdateExtension(
         installMetadata,
@@ -108,7 +108,7 @@ export async function updateExtension(
 }
 
 export async function updateAllUpdatableExtensions(
-  extensions: GeminiCLIExtension[],
+  extensions: CodeflyCLIExtension[],
   extensionsState: Map<string, ExtensionUpdateStatus>,
   extensionManager: ExtensionManager,
   dispatch: (action: ExtensionUpdateAction) => void,
@@ -141,7 +141,7 @@ export interface ExtensionUpdateCheckResult {
 }
 
 export async function checkForAllExtensionUpdates(
-  extensions: GeminiCLIExtension[],
+  extensions: CodeflyCLIExtension[],
   extensionManager: ExtensionManager,
   dispatch: (action: ExtensionUpdateAction) => void,
 ): Promise<void> {

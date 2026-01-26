@@ -69,10 +69,10 @@ describe('handleAtCommand with Agents', () => {
       getExcludeTools: vi.fn(),
       getFileService: () => new FileDiscoveryService(testRootDir),
       getFileFilteringRespectGitIgnore: () => true,
-      getFileFilteringRespectGeminiIgnore: () => true,
+      getFileFilteringRespectCodeflyIgnore: () => true,
       getFileFilteringOptions: () => ({
         respectGitIgnore: true,
-        respectGeminiIgnore: true,
+        respectCodeflyIgnore: true,
       }),
       getFileSystemService: () => new StandardFileSystemService(),
       getEnableRecursiveFileSearch: vi.fn(() => true),

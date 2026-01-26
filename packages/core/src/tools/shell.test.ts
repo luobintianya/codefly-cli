@@ -99,7 +99,7 @@ describe('ShellTool', () => {
       getWorkspaceContext: vi
         .fn()
         .mockReturnValue(new WorkspaceContext(tempRootDir)),
-      getGeminiClient: vi.fn(),
+      getCodeflyClient: vi.fn(),
       getEnableInteractiveShell: vi.fn().mockReturnValue(false),
       isInteractive: vi.fn().mockReturnValue(true),
       getShellToolInactivityTimeout: vi.fn().mockReturnValue(300000),
@@ -383,7 +383,7 @@ describe('ShellTool', () => {
         mockConfig,
         { model: 'summarizer-shell' },
         expect.any(String),
-        mockConfig.getGeminiClient(),
+        mockConfig.getCodeflyClient(),
         mockAbortSignal,
       );
       expect(result.llmContent).toBe('summarized output');

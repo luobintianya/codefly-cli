@@ -16,7 +16,7 @@ import {
   TerminalQuotaError,
   RetryableQuotaError,
 } from './googleQuotaErrors.js';
-import { PREVIEW_GEMINI_MODEL } from '../config/models.js';
+import { PREVIEW_CODEFLY_MODEL } from '../config/models.js';
 import type { ModelPolicy } from '../availability/modelPolicy.js';
 import { createAvailabilityServiceMock } from '../availability/testUtils.js';
 import type { ModelAvailabilityService } from '../availability/modelAvailabilityService.js';
@@ -539,7 +539,7 @@ describe('retryWithBackoff', () => {
   });
 
   it('should trigger fallback for OAuth personal users on ModelNotFoundError', async () => {
-    const fallbackCallback = vi.fn().mockResolvedValue(PREVIEW_GEMINI_MODEL);
+    const fallbackCallback = vi.fn().mockResolvedValue(PREVIEW_CODEFLY_MODEL);
 
     let fallbackOccurred = false;
     const mockFn = vi.fn().mockImplementation(async () => {

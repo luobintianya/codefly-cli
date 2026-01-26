@@ -367,7 +367,7 @@ export class ShellToolInvocation extends BaseToolInvocation<
           this.config,
           { model: 'summarizer-shell' },
           llmContent,
-          this.config.getGeminiClient(),
+          this.config.getCodeflyClient(),
           signal,
         );
         return {

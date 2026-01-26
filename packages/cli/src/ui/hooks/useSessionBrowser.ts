@@ -97,7 +97,7 @@ export const useSessionBrowser = (
         // (without the ".json" extension), not the full session UUID.
         try {
           const chatRecordingService = config
-            .getGeminiClient()
+            .getCodeflyClient()
             ?.getChatRecordingService();
           if (chatRecordingService) {
             chatRecordingService.deleteSession(session.file);

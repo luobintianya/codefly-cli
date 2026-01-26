@@ -18,7 +18,7 @@ import type { ExtensionSetting } from './extensions/extensionSettings.js';
  * This should *not* be referenced outside of the logic for reading files.
  * If information is required for manipulating extensions (load, unload, update)
  * outside of the loading process that data needs to be stored on the
- * GeminiCLIExtension class defined in Core.
+ * CodeflyCLIExtension class defined in Core.
  */
 export interface ExtensionConfig {
   name: string;

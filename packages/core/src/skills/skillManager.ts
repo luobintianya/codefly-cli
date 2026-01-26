@@ -8,7 +8,7 @@ import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Storage } from '../config/storage.js';
 import { type SkillDefinition, loadSkillsFromDir } from './skillLoader.js';
-import type { GeminiCLIExtension } from '../config/config.js';
+import type { CodeflyCLIExtension } from '../config/config.js';
 import { debugLogger } from '../utils/debugLogger.js';
 import { coreEvents } from '../utils/events.js';
 
@@ -46,7 +46,7 @@ export class SkillManager {
    */
   async discoverSkills(
     storage: Storage,
-    extensions: GeminiCLIExtension[] = [],
+    extensions: CodeflyCLIExtension[] = [],
   ): Promise<void> {
     this.clearSkills();
 

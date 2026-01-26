@@ -106,7 +106,7 @@ export function useHistory({
           case 'user':
           case 'gemini':
           case 'gemini_content':
-            // Core conversation recording handled by GeminiChat.
+            // Core conversation recording handled by CodeflyChat.
             break;
           default:
             // Ignore the rest.

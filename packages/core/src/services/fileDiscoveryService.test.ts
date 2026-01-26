@@ -53,8 +53,8 @@ describe('FileDiscoveryService', () => {
       expect(service.shouldIgnoreFile('node_modules/foo.js')).toBe(false);
     });
 
-    it('should load .geminiignore patterns even when not in a git repo', async () => {
-      await createTestFile('.geminiignore', 'secrets.txt');
+    it('should load .codeflyignore patterns even when not in a git repo', async () => {
+      await createTestFile('.codeflyignore', 'secrets.txt');
       const service = new FileDiscoveryService(projectRoot);
 
       expect(service.shouldIgnoreFile('secrets.txt')).toBe(true);
@@ -66,7 +66,7 @@ describe('FileDiscoveryService', () => {
     beforeEach(async () => {
       await fs.mkdir(path.join(projectRoot, '.git'));
       await createTestFile('.gitignore', 'node_modules/\n.git/\ndist');
-      await createTestFile('.geminiignore', 'logs/');
+      await createTestFile('.codeflyignore', 'logs/');
     });
 
     it('should filter out git-ignored and gemini-ignored files by default', () => {
@@ -98,7 +98,7 @@ describe('FileDiscoveryService', () => {
 
       const filtered = service.filterFiles(files, {
         respectGitIgnore: false,
-        respectGeminiIgnore: true, // still respect this one
+        respectCodeflyIgnore: true, // still respect this one
       });
 
       expect(filtered).toEqual(
@@ -108,7 +108,7 @@ describe('FileDiscoveryService', () => {
       );
     });
 
-    it('should not filter files when respectGeminiIgnore is false', () => {
+    it('should not filter files when respectCodeflyIgnore is false', () => {
       const files = [
         'src/index.ts',
         'node_modules/package/index.js',
@@ -119,7 +119,7 @@ describe('FileDiscoveryService', () => {
 
       const filtered = service.filterFiles(files, {
         respectGitIgnore: true,
-        respectGeminiIgnore: false,
+        respectCodeflyIgnore: false,
       });
 
       expect(filtered).toEqual(
@@ -140,7 +140,7 @@ describe('FileDiscoveryService', () => {
     beforeEach(async () => {
       await fs.mkdir(path.join(projectRoot, '.git'));
       await createTestFile('.gitignore', 'node_modules/');
-      await createTestFile('.geminiignore', '*.log');
+      await createTestFile('.codeflyignore', '*.log');
     });
 
     it('should return filtered paths and correct ignored count', () => {
@@ -177,7 +177,7 @@ describe('FileDiscoveryService', () => {
     beforeEach(async () => {
       await fs.mkdir(path.join(projectRoot, '.git'));
       await createTestFile('.gitignore', 'node_modules/');
-      await createTestFile('.geminiignore', '*.log');
+      await createTestFile('.codeflyignore', '*.log');
     });
 
     it('should return true for git-ignored files', () => {
@@ -245,14 +245,14 @@ describe('FileDiscoveryService', () => {
       ]);
     });
   });
-  describe('precedence (.geminiignore over .gitignore)', () => {
+  describe('precedence (.codeflyignore over .gitignore)', () => {
     beforeEach(async () => {
       await fs.mkdir(path.join(projectRoot, '.git'));
     });
 
-    it('should un-ignore a file in .geminiignore that is ignored in .gitignore', async () => {
+    it('should un-ignore a file in .codeflyignore that is ignored in .gitignore', async () => {
       await createTestFile('.gitignore', '*.txt');
-      await createTestFile('.geminiignore', '!important.txt');
+      await createTestFile('.codeflyignore', '!important.txt');
 
       const service = new FileDiscoveryService(projectRoot);
       const files = ['file.txt', 'important.txt'].map((f) =>
@@ -263,9 +263,9 @@ describe('FileDiscoveryService', () => {
       expect(filtered).toEqual([path.join(projectRoot, 'important.txt')]);
     });
 
-    it('should un-ignore a directory in .geminiignore that is ignored in .gitignore', async () => {
+    it('should un-ignore a directory in .codeflyignore that is ignored in .gitignore', async () => {
       await createTestFile('.gitignore', 'logs/');
-      await createTestFile('.geminiignore', '!logs/');
+      await createTestFile('.codeflyignore', '!logs/');
 
       const service = new FileDiscoveryService(projectRoot);
       const files = ['logs/app.log', 'other/app.log'].map((f) =>
@@ -276,9 +276,9 @@ describe('FileDiscoveryService', () => {
       expect(filtered).toEqual(files);
     });
 
-    it('should extend ignore rules in .geminiignore', async () => {
+    it('should extend ignore rules in .codeflyignore', async () => {
       await createTestFile('.gitignore', '*.log');
-      await createTestFile('.geminiignore', 'temp/');
+      await createTestFile('.codeflyignore', 'temp/');
 
       const service = new FileDiscoveryService(projectRoot);
       const files = ['app.log', 'temp/file.txt'].map((f) =>
@@ -289,9 +289,9 @@ describe('FileDiscoveryService', () => {
       expect(filtered).toEqual([]);
     });
 
-    it('should use .gitignore rules if respectGeminiIgnore is false', async () => {
+    it('should use .gitignore rules if respectCodeflyIgnore is false', async () => {
       await createTestFile('.gitignore', '*.txt');
-      await createTestFile('.geminiignore', '!important.txt');
+      await createTestFile('.codeflyignore', '!important.txt');
 
       const service = new FileDiscoveryService(projectRoot);
       const files = ['file.txt', 'important.txt'].map((f) =>
@@ -300,15 +300,15 @@ describe('FileDiscoveryService', () => {
 
       const filtered = service.filterFiles(files, {
         respectGitIgnore: true,
-        respectGeminiIgnore: false,
+        respectCodeflyIgnore: false,
       });
 
       expect(filtered).toEqual([]);
     });
 
-    it('should use .geminiignore rules if respectGitIgnore is false', async () => {
+    it('should use .codeflyignore rules if respectGitIgnore is false', async () => {
       await createTestFile('.gitignore', '*.txt');
-      await createTestFile('.geminiignore', '!important.txt\ntemp/');
+      await createTestFile('.codeflyignore', '!important.txt\ntemp/');
 
       const service = new FileDiscoveryService(projectRoot);
       const files = ['file.txt', 'important.txt', 'temp/file.js'].map((f) =>
@@ -317,11 +317,11 @@ describe('FileDiscoveryService', () => {
 
       const filtered = service.filterFiles(files, {
         respectGitIgnore: false,
-        respectGeminiIgnore: true,
+        respectCodeflyIgnore: true,
       });
 
       // .gitignore is ignored, so *.txt is not applied.
-      // .geminiignore un-ignores important.txt (which wasn't ignored anyway)
+      // .codeflyignore un-ignores important.txt (which wasn't ignored anyway)
       // and ignores temp/
       expect(filtered).toEqual(
         ['file.txt', 'important.txt'].map((f) => path.join(projectRoot, f)),

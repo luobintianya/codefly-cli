@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import type { CompletionGenerator, CommandDefinition } from '../types.js';
-import { FlagDefinition } from '../types.js';
 import { POWERSHELL_DYNAMIC_HELPERS } from '../templates/powershell-templates.js';
 
 /**

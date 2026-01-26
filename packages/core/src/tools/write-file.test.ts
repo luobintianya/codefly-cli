@@ -30,7 +30,7 @@ import type { ToolRegistry } from './tool-registry.js';
 import path from 'node:path';
 import fs from 'node:fs';
 import os from 'node:os';
-import { GeminiClient } from '../core/client.js';
+import { CodeflyClient } from '../core/client.js';
 import type { BaseLlmClient } from '../core/baseLlmClient.js';
 import type { CorrectedEditResult } from '../utils/editCorrector.js';
 import {
@@ -56,7 +56,7 @@ vi.mock('../ide/ide-client.js', () => ({
     getInstance: vi.fn(),
   },
 }));
-let mockGeminiClientInstance: Mocked<GeminiClient>;
+let mockCodeflyClientInstance: Mocked<CodeflyClient>;
 let mockBaseLlmClientInstance: Mocked<BaseLlmClient>;
 const mockEnsureCorrectEdit = vi.fn<typeof ensureCorrectEdit>();
 const mockEnsureCorrectFileContent = vi.fn<typeof ensureCorrectFileContent>();
@@ -80,7 +80,7 @@ const mockConfigInternal = {
   getTargetDir: () => rootDir,
   getApprovalMode: vi.fn(() => ApprovalMode.DEFAULT),
   setApprovalMode: vi.fn(),
-  getGeminiClient: vi.fn(), // Initialize as a plain mock function
+  getCodeflyClient: vi.fn(), // Initialize as a plain mock function
   getBaseLlmClient: vi.fn(), // Initialize as a plain mock function
   getFileSystemService: () => fsService,
   getIdeMode: vi.fn(() => false),
@@ -98,8 +98,8 @@ const mockConfigInternal = {
   getUserAgent: () => 'test-agent',
   getUserMemory: () => '',
   setUserMemory: vi.fn(),
-  getGeminiMdFileCount: () => 0,
-  setGeminiMdFileCount: vi.fn(),
+  getCodeflyMdFileCount: () => 0,
+  setCodeflyMdFileCount: vi.fn(),
   getToolRegistry: () =>
     ({
       registerTool: vi.fn(),
@@ -131,11 +131,13 @@ describe('WriteFileTool', () => {
       fs.mkdirSync(rootDir, { recursive: true });
     }
 
-    // Setup GeminiClient mock
-    mockGeminiClientInstance = new (vi.mocked(GeminiClient))(
+    // Setup CodeflyClient mock
+    mockCodeflyClientInstance = new (vi.mocked(CodeflyClient))(
       mockConfig,
-    ) as Mocked<GeminiClient>;
-    vi.mocked(GeminiClient).mockImplementation(() => mockGeminiClientInstance);
+    ) as Mocked<CodeflyClient>;
+    vi.mocked(CodeflyClient).mockImplementation(
+      () => mockCodeflyClientInstance,
+    );
 
     // Setup BaseLlmClient mock
     mockBaseLlmClientInstance = {
@@ -148,8 +150,8 @@ describe('WriteFileTool', () => {
     );
 
     // Now that mock instances are initialized, set the mock implementations for config getters
-    mockConfigInternal.getGeminiClient.mockReturnValue(
-      mockGeminiClientInstance,
+    mockConfigInternal.getCodeflyClient.mockReturnValue(
+      mockCodeflyClientInstance,
     );
     mockConfigInternal.getBaseLlmClient.mockReturnValue(
       mockBaseLlmClientInstance,
@@ -171,7 +173,7 @@ describe('WriteFileTool', () => {
         filePath: string,
         _currentContent: string,
         params: EditToolParams,
-        _client: GeminiClient,
+        _client: CodeflyClient,
         _baseClient: BaseLlmClient,
         signal?: AbortSignal,
       ): Promise<CorrectedEditResult> => {
@@ -336,7 +338,7 @@ describe('WriteFileTool', () => {
           new_string: proposedContent,
           file_path: filePath,
         },
-        mockGeminiClientInstance,
+        mockCodeflyClientInstance,
         mockBaseLlmClientInstance,
         abortSignal,
         true,
@@ -465,7 +467,7 @@ describe('WriteFileTool', () => {
           new_string: proposedContent,
           file_path: filePath,
         },
-        mockGeminiClientInstance,
+        mockCodeflyClientInstance,
         mockBaseLlmClientInstance,
         abortSignal,
         true,
@@ -718,7 +720,7 @@ describe('WriteFileTool', () => {
           new_string: proposedContent,
           file_path: filePath,
         },
-        mockGeminiClientInstance,
+        mockCodeflyClientInstance,
         mockBaseLlmClientInstance,
         abortSignal,
         true,
@@ -964,7 +966,7 @@ describe('WriteFileTool', () => {
         filePath,
         originalContent,
         expect.anything(), // params object
-        mockGeminiClientInstance,
+        mockCodeflyClientInstance,
         mockBaseLlmClientInstance,
         abortSignal,
         true,

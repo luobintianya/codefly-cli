@@ -10,7 +10,7 @@ import type { MessageActionReturn, ToolActionReturn } from './types.js';
 
 export function showMemory(config: Config): MessageActionReturn {
   const memoryContent = config.getUserMemory() || '';
-  const fileCount = config.getGeminiMdFileCount() || 0;
+  const fileCount = config.getCodeflyMdFileCount() || 0;
   let content: string;
 
   if (memoryContent.length > 0) {
@@ -52,7 +52,7 @@ export async function refreshMemory(
   if (config.isJitContextEnabled()) {
     await config.getContextManager()?.refresh();
     memoryContent = config.getUserMemory();
-    fileCount = config.getGeminiMdFileCount();
+    fileCount = config.getCodeflyMdFileCount();
   } else {
     const result = await refreshServerHierarchicalMemory(config);
     memoryContent = result.memoryContent;
@@ -76,7 +76,7 @@ export async function refreshMemory(
 }
 
 export function listMemoryFiles(config: Config): MessageActionReturn {
-  const filePaths = config.getGeminiMdFilePaths() || [];
+  const filePaths = config.getCodeflyMdFilePaths() || [];
   const fileCount = filePaths.length;
   let content: string;
 

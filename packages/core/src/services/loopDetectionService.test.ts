@@ -7,14 +7,14 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Content } from '@google/genai';
 import type { Config } from '../config/config.js';
-import type { GeminiClient } from '../core/client.js';
+import type { CodeflyClient } from '../core/client.js';
 import type { BaseLlmClient } from '../core/baseLlmClient.js';
 import type {
   ServerGeminiContentEvent,
   ServerGeminiStreamEvent,
   ServerGeminiToolCallRequestEvent,
 } from '../core/turn.js';
-import { GeminiEventType } from '../core/turn.js';
+import { CodeflyEventType } from '../core/turn.js';
 import * as loggers from '../telemetry/loggers.js';
 import { LoopType } from '../telemetry/types.js';
 import { LoopDetectionService } from './loopDetectionService.js';
@@ -50,7 +50,7 @@ describe('LoopDetectionService', () => {
     name: string,
     args: Record<string, unknown>,
   ): ServerGeminiToolCallRequestEvent => ({
-    type: GeminiEventType.ToolCallRequest,
+    type: CodeflyEventType.ToolCallRequest,
     value: {
       name,
       args,
@@ -61,7 +61,7 @@ describe('LoopDetectionService', () => {
   });
 
   const createContentEvent = (content: string): ServerGeminiContentEvent => ({
-    type: GeminiEventType.Content,
+    type: CodeflyEventType.Content,
     value: content,
   });
 
@@ -723,14 +723,14 @@ describe('LoopDetectionService', () => {
 describe('LoopDetectionService LLM Checks', () => {
   let service: LoopDetectionService;
   let mockConfig: Config;
-  let mockGeminiClient: GeminiClient;
+  let mockCodeflyClient: CodeflyClient;
   let mockBaseLlmClient: BaseLlmClient;
   let abortController: AbortController;
 
   beforeEach(() => {
-    mockGeminiClient = {
+    mockCodeflyClient = {
       getHistory: vi.fn().mockReturnValue([]),
-    } as unknown as GeminiClient;
+    } as unknown as CodeflyClient;
 
     mockBaseLlmClient = {
       generateJson: vi.fn(),
@@ -740,7 +740,7 @@ describe('LoopDetectionService LLM Checks', () => {
     vi.mocked(mockAvailability.snapshot).mockReturnValue({ available: true });
 
     mockConfig = {
-      getGeminiClient: () => mockGeminiClient,
+      getCodeflyClient: () => mockCodeflyClient,
       getBaseLlmClient: () => mockBaseLlmClient,
       getDebugMode: () => false,
       getTelemetryEnabled: () => true,
@@ -888,7 +888,9 @@ describe('LoopDetectionService LLM Checks', () => {
         parts: [{ text: 'Some follow up text' }],
       },
     ];
-    vi.mocked(mockGeminiClient.getHistory).mockReturnValue(functionCallHistory);
+    vi.mocked(mockCodeflyClient.getHistory).mockReturnValue(
+      functionCallHistory,
+    );
 
     mockBaseLlmClient.generateJson = vi
       .fn()

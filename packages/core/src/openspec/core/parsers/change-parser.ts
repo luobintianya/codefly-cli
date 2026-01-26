@@ -14,7 +14,7 @@ import type {
 import path from 'node:path';
 import { promises as fs } from 'node:fs';
 
-interface DeltaSection {
+interface _DeltaSection {
   operation: DeltaOperation;
   requirements: Requirement[];
   renames?: Array<{ from: string; to: string }>;
@@ -80,12 +80,12 @@ export class ChangeParser extends MarkdownParser {
           const content = await fs.readFile(specFile, 'utf-8');
           const specDeltas = this.parseSpecDeltas(specName, content);
           deltas.push(...specDeltas);
-        } catch (error) {
+        } catch (_error) {
           // Spec file might not exist, which is okay
           continue;
         }
       }
-    } catch (error) {
+    } catch (_error) {
       // Specs directory might not exist, which is okay
       return [];
     }

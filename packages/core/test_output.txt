@@ -21,12 +21,12 @@
  ✓ src/config/models.test.ts > resolveModel > delegation logic > with preview features > should return the flash model when the flash model name is explicitly requested and preview is on 0ms
  ✓ src/config/models.test.ts > resolveModel > delegation logic > with preview features > should return the lite model when the lite model name is requested and preview is on 0ms
  ✓ src/config/models.test.ts > resolveModel > delegation logic > with preview features > should return the default gemini model when the model is explicitly set and preview is on 0ms
- ✓ src/config/models.test.ts > isGemini2Model > should return true for gemini-2.5-pro 0ms
- ✓ src/config/models.test.ts > isGemini2Model > should return true for gemini-2.5-flash 0ms
- ✓ src/config/models.test.ts > isGemini2Model > should return true for gemini-2.0-flash 0ms
- ✓ src/config/models.test.ts > isGemini2Model > should return false for gemini-1.5-pro 0ms
- ✓ src/config/models.test.ts > isGemini2Model > should return false for gemini-3-pro 0ms
- ✓ src/config/models.test.ts > isGemini2Model > should return false for arbitrary strings 0ms
+ ✓ src/config/models.test.ts > isCodefly2Model > should return true for gemini-2.5-pro 0ms
+ ✓ src/config/models.test.ts > isCodefly2Model > should return true for gemini-2.5-flash 0ms
+ ✓ src/config/models.test.ts > isCodefly2Model > should return true for gemini-2.0-flash 0ms
+ ✓ src/config/models.test.ts > isCodefly2Model > should return false for gemini-1.5-pro 0ms
+ ✓ src/config/models.test.ts > isCodefly2Model > should return false for gemini-3-pro 0ms
+ ✓ src/config/models.test.ts > isCodefly2Model > should return false for arbitrary strings 0ms
  ✓ src/config/models.test.ts > resolveClassifierModel > should return flash model when alias is flash 0ms
  × src/config/models.test.ts > resolveClassifierModel > should return pro model when alias is pro 1ms
    → expected 'gemini-3-flash-preview' to be 'gemini-3-pro-preview' // Object.is equality
@@ -576,7 +576,7 @@ Number of calls: [1m1[22m
  ✓ src/services/fileDiscoveryService.test.ts > FileDiscoveryService > initialization > should load .geminiignore patterns even when not in a git repo 2ms
  ✓ src/services/fileDiscoveryService.test.ts > FileDiscoveryService > filterFiles > should filter out git-ignored and gemini-ignored files by default 5ms
  ✓ src/services/fileDiscoveryService.test.ts > FileDiscoveryService > filterFiles > should not filter files when respectGitIgnore is false 2ms
- ✓ src/services/fileDiscoveryService.test.ts > FileDiscoveryService > filterFiles > should not filter files when respectGeminiIgnore is false 4ms
+ ✓ src/services/fileDiscoveryService.test.ts > FileDiscoveryService > filterFiles > should not filter files when respectCodeflyIgnore is false 4ms
  ✓ src/services/fileDiscoveryService.test.ts > FileDiscoveryService > filterFiles > should handle empty file list 5ms
  ✓ src/services/fileDiscoveryService.test.ts > FileDiscoveryService > filterFilesWithReport > should return filtered paths and correct ignored count 5ms
  ✓ src/services/fileDiscoveryService.test.ts > FileDiscoveryService > filterFilesWithReport > should handle no ignored files 4ms
@@ -589,11 +589,11 @@ Number of calls: [1m1[22m
  ✓ src/services/fileDiscoveryService.test.ts > FileDiscoveryService > precedence (.geminiignore over .gitignore) > should un-ignore a file in .geminiignore that is ignored in .gitignore 2ms
  ✓ src/services/fileDiscoveryService.test.ts > FileDiscoveryService > precedence (.geminiignore over .gitignore) > should un-ignore a directory in .geminiignore that is ignored in .gitignore 2ms
  ✓ src/services/fileDiscoveryService.test.ts > FileDiscoveryService > precedence (.geminiignore over .gitignore) > should extend ignore rules in .geminiignore 3ms
- ✓ src/services/fileDiscoveryService.test.ts > FileDiscoveryService > precedence (.geminiignore over .gitignore) > should use .gitignore rules if respectGeminiIgnore is false 4ms
+ ✓ src/services/fileDiscoveryService.test.ts > FileDiscoveryService > precedence (.geminiignore over .gitignore) > should use .gitignore rules if respectCodeflyIgnore is false 4ms
  ✓ src/services/fileDiscoveryService.test.ts > FileDiscoveryService > precedence (.geminiignore over .gitignore) > should use .geminiignore rules if respectGitIgnore is false 6ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > constructor > should initialize lastPromptTokenCount based on history size 2ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > constructor > should initialize lastPromptTokenCount for empty history 0ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > sendMessageStream > should succeed if a tool call is followed by an empty part 2ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > constructor > should initialize lastPromptTokenCount based on history size 2ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > constructor > should initialize lastPromptTokenCount for empty history 0ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > sendMessageStream > should succeed if a tool call is followed by an empty part 2ms
  ✓ src/telemetry/metrics.test.ts > Telemetry Metrics > recordFlickerFrame > does not record metrics if not initialized 311ms
  ✓ src/tools/grep.test.ts > GrepTool > validateToolParams > should return null for valid params (pattern only) 21ms
  ✓ src/tools/grep.test.ts > GrepTool > validateToolParams > should return null for valid params (pattern and path) 3ms
@@ -742,12 +742,12 @@ Number of calls: [1m1[22m
  ✓ src/tools/glob.test.ts > GlobTool > execute > should return a PATH_NOT_IN_WORKSPACE error if path is outside workspace 57ms
  ✓ src/core/coreToolScheduler.test.ts > CoreToolScheduler Sequential Execution > should cancel subsequent tools when the signal is aborted. 102ms
  ✓ src/core/coreToolScheduler.test.ts > CoreToolScheduler Sequential Execution > should pass confirmation diff data into modifyWithEditor overrides 1ms
- ✓ src/core/geminiChat_network_retry.test.ts > GeminiChat Network Retries > should retry when a 503 ApiError occurs during stream iteration 506ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > sendMessageStream > should fail if the stream ends with an empty part and has no finishReason 502ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > sendMessageStream > should succeed if the stream ends with an invalid part but has a finishReason and contained a valid part 1ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > sendMessageStream > should consolidate subsequent text chunks after receiving an empty text chunk 1ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > sendMessageStream > should consolidate adjacent text parts that arrive in separate stream chunks 1ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > sendMessageStream > should preserve text parts that stream in the same chunk as a thought 1ms
+ ✓ src/core/geminiChat_network_retry.test.ts > CodeflyChat Network Retries > should retry when a 503 ApiError occurs during stream iteration 506ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > sendMessageStream > should fail if the stream ends with an empty part and has no finishReason 502ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > sendMessageStream > should succeed if the stream ends with an invalid part but has a finishReason and contained a valid part 1ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > sendMessageStream > should consolidate subsequent text chunks after receiving an empty text chunk 1ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > sendMessageStream > should consolidate adjacent text parts that arrive in separate stream chunks 1ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > sendMessageStream > should preserve text parts that stream in the same chunk as a thought 1ms
  ✓ src/telemetry/metrics.test.ts > Telemetry Metrics > recordSlowRender > does not record metrics if not initialized 107ms
  ✓ src/tools/glob.test.ts > GlobTool > execute > should return a GLOB_EXECUTION_ERROR on glob failure 61ms
  ✓ src/tools/glob.test.ts > GlobTool > validateToolParams > 'should return null for valid paramete…' 58ms
@@ -938,7 +938,7 @@ Number of calls: [1m1[22m
  ✓ src/utils/getFolderStructure.test.ts > getFolderStructure > with gitignore > should ignore files and folders specified in .gitignore 11ms
  ✓ src/utils/getFolderStructure.test.ts > getFolderStructure > with gitignore > should not ignore files if respectGitIgnore is false 4ms
  ✓ src/utils/getFolderStructure.test.ts > getFolderStructure > with geminiignore > should ignore geminiignore files by default 5ms
- ✓ src/utils/getFolderStructure.test.ts > getFolderStructure > with geminiignore > should not ignore files if respectGeminiIgnore is false 4ms
+ ✓ src/utils/getFolderStructure.test.ts > getFolderStructure > with geminiignore > should not ignore files if respectCodeflyIgnore is false 4ms
  ✓ src/tools/read-many-files.test.ts > ReadManyFilesTool > execute > should include PDF files as inlineData parts if explicitly requested by name 5ms
  ✓ src/tools/read-many-files.test.ts > ReadManyFilesTool > execute > should return error if path is ignored by a .geminiignore pattern 5ms
  ✓ src/tools/read-many-files.test.ts > ReadManyFilesTool > execute > should read files from multiple workspace directories 6ms
@@ -998,8 +998,8 @@ Number of calls: [1m1[22m
  ✓ src/policy/toml-loader.test.ts > policy-toml-loader > Negative Tests > should return a file_read error if readdir fails 10ms
  ✓ src/tools/glob.test.ts > GlobTool > validateToolParams > 'should return error if pattern is onl…' 66ms
  ✓ src/tools/glob.test.ts > GlobTool > validateToolParams > 'should return error if dir_path is no…' 57ms
- ✓ src/core/geminiChat_network_retry.test.ts > GeminiChat Network Retries > should retry on generic network error if retryFetchErrors is true 501ms
- ✓ src/core/geminiChat_network_retry.test.ts > GeminiChat Network Retries > should NOT retry on 400 ApiError 1ms
+ ✓ src/core/geminiChat_network_retry.test.ts > CodeflyChat Network Retries > should retry on generic network error if retryFetchErrors is true 501ms
+ ✓ src/core/geminiChat_network_retry.test.ts > CodeflyChat Network Retries > should NOT retry on 400 ApiError 1ms
  ✓ src/tools/edit.test.ts > EditTool > applyReplacement > should return newString if isNewFile is true 2ms
  ✓ src/tools/edit.test.ts > EditTool > applyReplacement > should return newString if currentContent is null and oldString is empty (defensive) 1ms
  ✓ src/tools/edit.test.ts > EditTool > applyReplacement > should return empty string if currentContent is null and oldString is not empty (defensive) 0ms
@@ -1129,8 +1129,8 @@ Number of calls: [1m1[22m
  ✓ src/services/gitService.test.ts > GitService > setupShadowGitRepository > should initialize git repo in historyDir if not already initialized 11ms
  ✓ src/services/gitService.test.ts > GitService > setupShadowGitRepository > should not initialize git repo if already initialized 9ms
  ✓ src/services/gitService.test.ts > GitService > setupShadowGitRepository > should copy .gitignore from projectRoot if it exists 9ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > sendMessageStream > should throw an error when a tool call is followed by an empty stream response 501ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > sendMessageStream > should succeed when there is a tool call without finish reason 1ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > sendMessageStream > should throw an error when a tool call is followed by an empty stream response 501ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > sendMessageStream > should succeed when there is a tool call without finish reason 1ms
  ✓ src/utils/gitIgnoreParser.test.ts > GitIgnoreParser > nested .gitignore files > should handle nested .gitignore files correctly 14ms
  ✓ src/utils/gitIgnoreParser.test.ts > GitIgnoreParser > precedence rules > should prioritize nested .gitignore over root .gitignore 5ms
  ✓ src/utils/gitIgnoreParser.test.ts > GitIgnoreParser > precedence rules > should prioritize .gitignore over .git/info/exclude 4ms
@@ -1376,7 +1376,7 @@ Number of calls: [1m1[22m
  ✓ src/tools/shell.test.ts > ShellTool > shouldConfirmExecute > in non-interactive mode > should require all segments of a chained command to be allowlisted 1ms
  ✓ src/tools/shell.test.ts > ShellTool > getDescription > should return the windows description when on windows 4ms
  ✓ src/tools/shell.test.ts > ShellTool > getDescription > should return the non-windows description when not on windows 1ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > sendMessageStream > should throw InvalidStreamError when no tool call and no finish reason 502ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > sendMessageStream > should throw InvalidStreamError when no tool call and no finish reason 502ms
  ✓ src/utils/terminalSerializer.test.ts > terminalSerializer > serializeTerminalToObject > should handle an empty terminal 5ms
  ✓ src/utils/terminalSerializer.test.ts > terminalSerializer > serializeTerminalToObject > should serialize a single line of text 3ms
  ✓ src/utils/terminalSerializer.test.ts > terminalSerializer > serializeTerminalToObject > should serialize multiple lines of text 2ms
@@ -1567,8 +1567,8 @@ Number of calls: [1m1[22m
  ✓ src/telemetry/gcp-exporters.test.ts > GCP Exporters > GcpLogExporter > shutdown > should handle shutdown gracefully 0ms
  ✓ src/telemetry/gcp-exporters.test.ts > GCP Exporters > GcpLogExporter > shutdown > should wait for pending writes before shutting down 2ms
  ✓ src/telemetry/gcp-exporters.test.ts > GCP Exporters > GcpLogExporter > shutdown > should clear pending writes array after shutdown 12ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > sendMessageStream > should throw InvalidStreamError when no tool call and empty response text 503ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > sendMessageStream > should succeed when there is finish reason and response text 1ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > sendMessageStream > should throw InvalidStreamError when no tool call and empty response text 503ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > sendMessageStream > should succeed when there is finish reason and response text 1ms
  ✓ src/utils/workspaceContext.test.ts > WorkspaceContext with real filesystem > initialization > should initialize with a single directory (cwd) 2ms
  ✓ src/utils/workspaceContext.test.ts > WorkspaceContext with real filesystem > initialization > should validate and resolve directories to absolute paths 1ms
  ✓ src/utils/workspaceContext.test.ts > WorkspaceContext with real filesystem > initialization > should handle empty initialization 1ms
@@ -1603,17 +1603,17 @@ Number of calls: [1m1[22m
  ✓ src/utils/workspaceContext.test.ts > WorkspaceContext with real filesystem > getDirectories > should return a copy of directories array 1ms
  ✓ src/utils/workspaceContext.test.ts > WorkspaceContext with optional directories > should skip a missing optional directory and log a warning 1ms
  ✓ src/utils/workspaceContext.test.ts > WorkspaceContext with optional directories > should include an existing optional directory 1ms
- ✓ src/utils/geminiIgnoreParser.test.ts > GeminiIgnoreParser > when .geminiignore exists > should ignore files specified in .geminiignore 10ms
- ✓ src/utils/geminiIgnoreParser.test.ts > GeminiIgnoreParser > when .geminiignore exists > should return ignore file path when patterns exist 10ms
- ✓ src/utils/geminiIgnoreParser.test.ts > GeminiIgnoreParser > when .geminiignore exists > should return true for hasPatterns when patterns exist 5ms
- ✓ src/utils/geminiIgnoreParser.test.ts > GeminiIgnoreParser > when .geminiignore exists > should return false for hasPatterns when .geminiignore is deleted 28ms
- ✓ src/utils/geminiIgnoreParser.test.ts > GeminiIgnoreParser > when .geminiignore does not exist > should not load any patterns and not ignore any files 1ms
- ✓ src/utils/geminiIgnoreParser.test.ts > GeminiIgnoreParser > when .geminiignore does not exist > should return null for getIgnoreFilePath when no patterns exist 14ms
- ✓ src/utils/geminiIgnoreParser.test.ts > GeminiIgnoreParser > when .geminiignore does not exist > should return false for hasPatterns when no patterns exist 4ms
- ✓ src/utils/geminiIgnoreParser.test.ts > GeminiIgnoreParser > when .geminiignore is empty > should return null for getIgnoreFilePath 7ms
- ✓ src/utils/geminiIgnoreParser.test.ts > GeminiIgnoreParser > when .geminiignore is empty > should return false for hasPatterns 5ms
- ✓ src/utils/geminiIgnoreParser.test.ts > GeminiIgnoreParser > when .geminiignore only has comments > should return null for getIgnoreFilePath 9ms
- ✓ src/utils/geminiIgnoreParser.test.ts > GeminiIgnoreParser > when .geminiignore only has comments > should return false for hasPatterns 7ms
+ ✓ src/utils/codeflyIgnoreParser.test.ts > CodeflyIgnoreParser > when .geminiignore exists > should ignore files specified in .geminiignore 10ms
+ ✓ src/utils/codeflyIgnoreParser.test.ts > CodeflyIgnoreParser > when .geminiignore exists > should return ignore file path when patterns exist 10ms
+ ✓ src/utils/codeflyIgnoreParser.test.ts > CodeflyIgnoreParser > when .geminiignore exists > should return true for hasPatterns when patterns exist 5ms
+ ✓ src/utils/codeflyIgnoreParser.test.ts > CodeflyIgnoreParser > when .geminiignore exists > should return false for hasPatterns when .geminiignore is deleted 28ms
+ ✓ src/utils/codeflyIgnoreParser.test.ts > CodeflyIgnoreParser > when .geminiignore does not exist > should not load any patterns and not ignore any files 1ms
+ ✓ src/utils/codeflyIgnoreParser.test.ts > CodeflyIgnoreParser > when .geminiignore does not exist > should return null for getIgnoreFilePath when no patterns exist 14ms
+ ✓ src/utils/codeflyIgnoreParser.test.ts > CodeflyIgnoreParser > when .geminiignore does not exist > should return false for hasPatterns when no patterns exist 4ms
+ ✓ src/utils/codeflyIgnoreParser.test.ts > CodeflyIgnoreParser > when .geminiignore is empty > should return null for getIgnoreFilePath 7ms
+ ✓ src/utils/codeflyIgnoreParser.test.ts > CodeflyIgnoreParser > when .geminiignore is empty > should return false for hasPatterns 5ms
+ ✓ src/utils/codeflyIgnoreParser.test.ts > CodeflyIgnoreParser > when .geminiignore only has comments > should return null for getIgnoreFilePath 9ms
+ ✓ src/utils/codeflyIgnoreParser.test.ts > CodeflyIgnoreParser > when .geminiignore only has comments > should return false for hasPatterns 7ms
  ✓ src/tools/get-internal-docs.test.ts > GetInternalDocsTool (Integration) > should find the documentation root and list files 20ms
  ✓ src/tools/get-internal-docs.test.ts > GetInternalDocsTool (Integration) > should read a specific documentation file 3ms
  ✓ src/tools/get-internal-docs.test.ts > GetInternalDocsTool (Integration) > should prevent access to files outside the docs directory (Path Traversal) 2ms
@@ -1794,8 +1794,8 @@ Number of calls: [1m1[22m
  ✓ src/config/config.test.ts > Server Config (config.ts) > refreshAuth > should not strip thoughts when switching from Vertex to GenAI 0ms
  ✓ src/config/config.test.ts > Server Config (config.ts) > Config constructor should store userMemory correctly 0ms
  ✓ src/config/config.test.ts > Server Config (config.ts) > Config constructor should default userMemory to empty string if not provided 0ms
- ✓ src/config/config.test.ts > Server Config (config.ts) > Config constructor should call setGeminiMdFilename with contextFileName if provided 0ms
- ✓ src/config/config.test.ts > Server Config (config.ts) > Config constructor should not call setGeminiMdFilename if contextFileName is not provided 0ms
+ ✓ src/config/config.test.ts > Server Config (config.ts) > Config constructor should call setCodeflyMdFilename with contextFileName if provided 0ms
+ ✓ src/config/config.test.ts > Server Config (config.ts) > Config constructor should not call setCodeflyMdFilename if contextFileName is not provided 0ms
  ✓ src/config/config.test.ts > Server Config (config.ts) > should set default file filtering settings when not provided 0ms
  ✓ src/config/config.test.ts > Server Config (config.ts) > should set custom file filtering settings when provided 0ms
  ✓ src/config/config.test.ts > Server Config (config.ts) > Config constructor should set telemetry to true when provided as true 0ms
@@ -1887,7 +1887,7 @@ Number of calls: [1m1[22m
  ✓ src/agents/local-executor.test.ts > LocalAgentExecutor > run (Execution Loop and Logic) > should execute parallel tool calls and then complete 1ms
  ✓ src/agents/local-executor.test.ts > LocalAgentExecutor > run (Execution Loop and Logic) > SECURITY: should block unauthorized tools and provide explicit failure to model 1ms
  ✓ src/agents/local-executor.test.ts > LocalAgentExecutor > Edge Cases and Error Handling > should report an error if complete_task output fails schema validation 1ms
- ✓ src/agents/local-executor.test.ts > LocalAgentExecutor > Edge Cases and Error Handling > should throw and log if GeminiChat creation fails 6ms
+ ✓ src/agents/local-executor.test.ts > LocalAgentExecutor > Edge Cases and Error Handling > should throw and log if CodeflyChat creation fails 6ms
  ✓ src/agents/local-executor.test.ts > LocalAgentExecutor > Edge Cases and Error Handling > should handle a failed tool call and feed the error to the model 1ms
  ✓ src/agents/local-executor.test.ts > LocalAgentExecutor > run (Termination Conditions) > should terminate when max_turns is reached 0ms
  ✓ src/agents/local-executor.test.ts > LocalAgentExecutor > run (Termination Conditions) > should terminate with TIMEOUT if a model call takes too long 2ms
@@ -1920,7 +1920,7 @@ Number of calls: [1m1[22m
  ✓ src/utils/events.test.ts > CoreEventEmitter > Output Event > should buffer output when no listener is present 0ms
  ✓ src/utils/events.test.ts > CoreEventEmitter > Output Event > should respect the backlog size limit for output 6ms
  ✓ src/utils/events.test.ts > CoreEventEmitter > ModelChanged Event > should emit ModelChanged event with correct payload 0ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > sendMessageStream > should throw InvalidStreamError when finishReason is MALFORMED_FUNCTION_CALL 503ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > sendMessageStream > should throw InvalidStreamError when finishReason is MALFORMED_FUNCTION_CALL 503ms
  ✓ src/agents/delegate-to-agent-tool.test.ts > DelegateToAgentTool > should use dynamic description from registry 2ms
  ✓ src/agents/delegate-to-agent-tool.test.ts > DelegateToAgentTool > should validate agent_name exists in registry 14ms
  ✓ src/agents/delegate-to-agent-tool.test.ts > DelegateToAgentTool > should validate correct arguments 2ms
@@ -1929,9 +1929,9 @@ Number of calls: [1m1[22m
  ✓ src/agents/delegate-to-agent-tool.test.ts > DelegateToAgentTool > should allow optional arguments to be omitted 1ms
  ✓ src/agents/delegate-to-agent-tool.test.ts > DelegateToAgentTool > should throw error if an agent has an input named "agent_name" 1ms
  ✓ src/agents/delegate-to-agent-tool.test.ts > DelegateToAgentTool > should use correct tool name "delegate_to_agent" when requesting confirmation 2ms
- ✓ src/tools/memoryTool.test.ts > MemoryTool > setGeminiMdFilename > should update currentGeminiMdFilename when a valid new name is provided 2ms
- ✓ src/tools/memoryTool.test.ts > MemoryTool > setGeminiMdFilename > should not update currentGeminiMdFilename if the new name is empty or whitespace 0ms
- ✓ src/tools/memoryTool.test.ts > MemoryTool > setGeminiMdFilename > should handle an array of filenames 0ms
+ ✓ src/tools/memoryTool.test.ts > MemoryTool > setCodeflyMdFilename > should update currentCodeflyMdFilename when a valid new name is provided 2ms
+ ✓ src/tools/memoryTool.test.ts > MemoryTool > setCodeflyMdFilename > should not update currentCodeflyMdFilename if the new name is empty or whitespace 0ms
+ ✓ src/tools/memoryTool.test.ts > MemoryTool > setCodeflyMdFilename > should handle an array of filenames 0ms
  ✓ src/tools/memoryTool.test.ts > MemoryTool > performAddMemoryEntry (static method) > should create section and save a fact if file does not exist 1ms
  ✓ src/tools/memoryTool.test.ts > MemoryTool > performAddMemoryEntry (static method) > should create section and save a fact if file is empty 0ms
  ✓ src/tools/memoryTool.test.ts > MemoryTool > performAddMemoryEntry (static method) > should add a fact to an existing section 0ms
@@ -2149,13 +2149,13 @@ Number of calls: [1m1[22m
  ✓ src/utils/editor.test.ts > editor utils > isEditorAvailable > should return true for vim when installed and in sandbox mode 0ms
  ✓ src/utils/editor.test.ts > editor utils > isEditorAvailable > should return true for emacs when installed and in sandbox mode 0ms
  ✓ src/utils/editor.test.ts > editor utils > isEditorAvailable > should return true for neovim when installed and in sandbox mode 0ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > sendMessageStream > should retry when finishReason is MALFORMED_FUNCTION_CALL 503ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > sendMessageStream > should call generateContentStream with the correct parameters 3ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > sendMessageStream > should use thinkingLevel and remove thinkingBudget for gemini-3 models 2ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > sendMessageStream > should use thinkingBudget and remove thinkingLevel for non-gemini-3 models 1ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > addHistory > should add a new content item to the history 1ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > addHistory > should add multiple items correctly 1ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > sendMessageStream with retries > should not retry on invalid content if model does not start with gemini-2 1ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > sendMessageStream > should retry when finishReason is MALFORMED_FUNCTION_CALL 503ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > sendMessageStream > should call generateContentStream with the correct parameters 3ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > sendMessageStream > should use thinkingLevel and remove thinkingBudget for gemini-3 models 2ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > sendMessageStream > should use thinkingBudget and remove thinkingLevel for non-gemini-3 models 1ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > addHistory > should add a new content item to the history 1ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > addHistory > should add multiple items correctly 1ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > sendMessageStream with retries > should not retry on invalid content if model does not start with gemini-2 1ms
  ✓ src/policy/persistence.test.ts > createPolicyUpdater > should persist policy when persist flag is true 8ms
  ✓ src/policy/persistence.test.ts > createPolicyUpdater > should not persist policy when persist flag is false or undefined 2ms
  ✓ src/policy/persistence.test.ts > createPolicyUpdater > should persist policy with commandPrefix when provided 2ms
@@ -2294,7 +2294,7 @@ Number of calls: [1m1[22m
  ✓ src/tools/web-search.test.ts > WebSearchTool > execute > should return a WEB_SEARCH_FAILED error on failure 5ms
  ✓ src/tools/web-search.test.ts > WebSearchTool > execute > should correctly format results with sources and citations 1ms
  ✓ src/tools/web-search.test.ts > WebSearchTool > execute > should insert markers at correct byte positions for multibyte text 1ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > sendMessageStream with retries > should yield a RETRY event when an invalid stream is encountered 503ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > sendMessageStream with retries > should yield a RETRY event when an invalid stream is encountered 503ms
  ✓ src/hooks/hookRegistry.test.ts > HookRegistry > initialize > should initialize successfully with no hooks 2ms
  ✓ src/hooks/hookRegistry.test.ts > HookRegistry > initialize > should not load hooks if folder is not trusted 0ms
  ✓ src/hooks/hookRegistry.test.ts > HookRegistry > initialize > should load hooks from project configuration 0ms
@@ -2481,7 +2481,7 @@ Number of calls: [1m1[22m
  ✓ src/utils/debugLogger.test.ts > DebugLogger > should call console.debug with the correct arguments 0ms
  ✓ src/utils/debugLogger.test.ts > DebugLogger > should handle multiple arguments correctly for all methods 0ms
  ✓ src/utils/debugLogger.test.ts > DebugLogger > should handle calls with no arguments 0ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > sendMessageStream with retries > should retry on invalid content, succeed, and report metrics 502ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > sendMessageStream with retries > should retry on invalid content, succeed, and report metrics 502ms
  ✓ src/routing/modelRouterService.test.ts > ModelRouterService > should initialize with a CompositeStrategy 3ms
  ✓ src/routing/modelRouterService.test.ts > ModelRouterService > should initialize the CompositeStrategy with the correct child strategies in order 2ms
  ✓ src/routing/modelRouterService.test.ts > ModelRouterService > route() > should delegate routing to the composite strategy 5ms
@@ -2644,7 +2644,7 @@ Number of calls: [1m1[22m
  ✓ src/routing/strategies/classifierStrategy.test.ts > ClassifierStrategy > should filter out tool-related history before sending to classifier 0ms
  ✓ src/routing/strategies/classifierStrategy.test.ts > ClassifierStrategy > should respect HISTORY_SEARCH_WINDOW and HISTORY_TURNS_FOR_CONTEXT 0ms
  ✓ src/routing/strategies/classifierStrategy.test.ts > ClassifierStrategy > should use a fallback promptId if not found in context 0ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > sendMessageStream with retries > should set temperature to 1 on retry 504ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > sendMessageStream with retries > should set temperature to 1 on retry 504ms
  ✓ src/utils/pathCorrector.test.ts > pathCorrector > should correct a relative path if it is unambiguous in the target dir 2ms
  ✓ src/utils/pathCorrector.test.ts > pathCorrector > should correct a partial relative path if it is unambiguous in another workspace dir 2ms
  ✓ src/utils/pathCorrector.test.ts > pathCorrector > should return an error for a relative path that does not exist 4ms
@@ -2825,11 +2825,11 @@ Number of calls: [1m1[22m
  ✓ src/tools/mcp-client-manager.test.ts > McpClientManager > getMcpInstructions > should not return instructions for servers that do not have instructions 0ms
  ✓ src/tools/mcp-client-manager.test.ts > McpClientManager > Promise rejection handling > should handle errors thrown during client initialization 0ms
  ✓ src/tools/mcp-client-manager.test.ts > McpClientManager > Promise rejection handling > should handle errors thrown in the async IIFE before try block 0ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > sendMessageStream with retries > should fail after all retries on persistent invalid content and report metrics 505ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > sendMessageStream with retries > API error retry behavior > should not retry on 400 Bad Request errors 2ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > sendMessageStream with retries > API error retry behavior > should retry on 429 Rate Limit errors 1ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > sendMessageStream with retries > API error retry behavior > should retry on 5xx server errors 1ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > sendMessageStream with retries > API error retry behavior > should retry on specific fetch errors when configured 1ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > sendMessageStream with retries > should fail after all retries on persistent invalid content and report metrics 505ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > sendMessageStream with retries > API error retry behavior > should not retry on 400 Bad Request errors 2ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > sendMessageStream with retries > API error retry behavior > should retry on 429 Rate Limit errors 1ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > sendMessageStream with retries > API error retry behavior > should retry on 5xx server errors 1ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > sendMessageStream with retries > API error retry behavior > should retry on specific fetch errors when configured 1ms
  ✓ src/core/apiKeyCredentialStorage.test.ts > ApiKeyCredentialStorage > should load an API key 2ms
  ✓ src/core/apiKeyCredentialStorage.test.ts > ApiKeyCredentialStorage > should return null if no API key is stored 0ms
  ✓ src/core/apiKeyCredentialStorage.test.ts > ApiKeyCredentialStorage > should save an API key 1ms
@@ -3216,7 +3216,7 @@ Number of calls: [1m1[22m
  ✓ src/hooks/hookPlanner.test.ts > HookPlanner > createExecutionPlan > should deduplicate identical hooks 1ms
  ✓ src/hooks/hookPlanner.test.ts > HookPlanner > createExecutionPlan > should deduplicate based on both name and command 1ms
  ✓ src/hooks/hookPlanner.test.ts > HookPlanner > createExecutionPlan > should match trigger for session events 0ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > should correctly retry and append to an existing history mid-conversation 503ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > should correctly retry and append to an existing history mid-conversation 503ms
  ✓ src/telemetry/high-water-mark-tracker.test.ts > HighWaterMarkTracker > constructor > should initialize with default values 1ms
  ✓ src/telemetry/high-water-mark-tracker.test.ts > HighWaterMarkTracker > constructor > should initialize with custom values 0ms
  ✓ src/telemetry/high-water-mark-tracker.test.ts > HighWaterMarkTracker > constructor > should throw on negative threshold 2ms
@@ -3414,9 +3414,9 @@ working stdoutworking stderr ✓ src/utils/stdio.test.ts > stdio utils > patchSt
  ✓ src/safety/registry.test.ts > CheckerRegistry > should validate checker names 0ms
  ✓ src/safety/registry.test.ts > CheckerRegistry > should throw for unknown external checkers (for now) 0ms
  ✓ src/telemetry/metrics.test.ts > Telemetry Metrics > recordFileOperationMetric > 'should record file read with minimal …' 375ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > should retry if the model returns a completely empty stream (no chunks) 502ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > should queue a subsequent sendMessageStream call until the first stream is fully consumed 2ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > Fallback Integration (Retries) > should call handleFallback with the specific failed model and retry if handler returns true 1ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > should retry if the model returns a completely empty stream (no chunks) 502ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > should queue a subsequent sendMessageStream call until the first stream is fully consumed 2ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > Fallback Integration (Retries) > should call handleFallback with the specific failed model and retry if handler returns true 1ms
  ✓ src/core/turn.test.ts > Turn > constructor > should initialize pendingToolCalls and debugResponses 1ms
  ✓ src/core/turn.test.ts > Turn > run > should yield content events for text parts 1ms
  ✓ src/core/turn.test.ts > Turn > run > should yield tool_call_request events for function calls 1ms
@@ -3615,16 +3615,16 @@ working stdoutworking stderr ✓ src/utils/stdio.test.ts > stdio utils > patchSt
  ✓ src/core/tokenLimits.test.ts > tokenLimit > should return the default token limit for an unknown model 0ms
  ✓ src/core/tokenLimits.test.ts > tokenLimit > should return the default token limit if no model is provided 0ms
  ✓ src/core/tokenLimits.test.ts > tokenLimit > should have the correct default token limit value 0ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > should discard valid partial content from a failed attempt upon retry 502ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > stripThoughtsFromHistory > should strip thought signatures 2ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > ensureActiveLoopHasThoughtSignatures > should add thoughtSignature to the first functionCall in each model turn of the active loop 2ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > ensureActiveLoopHasThoughtSignatures > should not modify contents if there is no user text message 2ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > ensureActiveLoopHasThoughtSignatures > should handle an empty history 2ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > ensureActiveLoopHasThoughtSignatures > should handle history with only a user message 2ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > Availability Service Integration > should mark healthy on successful stream 2ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > Availability Service Integration > caps retries to a single attempt when selection is sticky 2ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > Availability Service Integration > should pass attempted model to onPersistent429 callback which calls handleFallback 3ms
- ✓ src/core/geminiChat.test.ts > GeminiChat > Availability Service Integration > re-resolves generateContentConfig when active model changes between retries 2ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > should discard valid partial content from a failed attempt upon retry 502ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > stripThoughtsFromHistory > should strip thought signatures 2ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > ensureActiveLoopHasThoughtSignatures > should add thoughtSignature to the first functionCall in each model turn of the active loop 2ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > ensureActiveLoopHasThoughtSignatures > should not modify contents if there is no user text message 2ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > ensureActiveLoopHasThoughtSignatures > should handle an empty history 2ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > ensureActiveLoopHasThoughtSignatures > should handle history with only a user message 2ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > Availability Service Integration > should mark healthy on successful stream 2ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > Availability Service Integration > caps retries to a single attempt when selection is sticky 2ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > Availability Service Integration > should pass attempted model to onPersistent429 callback which calls handleFallback 3ms
+ ✓ src/core/geminiChat.test.ts > CodeflyChat > Availability Service Integration > re-resolves generateContentConfig when active model changes between retries 2ms
  ✓ src/telemetry/metrics.test.ts > Telemetry Metrics > recordFileOperationMetric > 'should record file update with some a…' 519ms
  ✓ src/config/storage.test.ts > Storage – getGlobalSettingsPath > returns path to ~/.gemini/settings.json 1ms
  ✓ src/config/storage.test.ts > Storage – additional helpers > getWorkspaceSettingsPath returns project/.gemini/settings.json 0ms
@@ -3851,8 +3851,8 @@ Received: [31m"gemini-3-[7mflash[27m-preview"[39m
 
  ❯ src/config/models.test.ts:45:21
      43|     it('should return the Preview Pro model when auto-gemini-3 is requ…
-     44|       const model = resolveModel(PREVIEW_GEMINI_MODEL_AUTO, false);
-     45|       expect(model).toBe(PREVIEW_GEMINI_MODEL);
+     44|       const model = resolveModel(PREVIEW_CODEFLY_MODEL_AUTO, false);
+     45|       expect(model).toBe(PREVIEW_CODEFLY_MODEL);
        |                     ^
      46|     });
      47| 
@@ -3867,8 +3867,8 @@ Received: [31m"gemini-3-[7mflash[27m-preview"[39m
 
  ❯ src/config/models.test.ts:158:7
     156|     expect(
-    157|       resolveClassifierModel(PREVIEW_GEMINI_MODEL_AUTO, GEMINI_MODEL_A…
-    158|     ).toBe(PREVIEW_GEMINI_MODEL);
+    157|       resolveClassifierModel(PREVIEW_CODEFLY_MODEL_AUTO, GEMINI_MODEL_A…
+    158|     ).toBe(PREVIEW_CODEFLY_MODEL);
        |       ^
     159|   });
     160| 
@@ -3881,11 +3881,11 @@ AssertionError: expected "spy" to be called with arguments: [ [ 'gemini-3-flash-
 Number of calls: [1m0[22m
 [39m
  ❯ src/fallback/handler.test.ts:138:49
-    136|       await handleFallback(policyConfig, DEFAULT_GEMINI_MODEL, AUTH_OA…
+    136|       await handleFallback(policyConfig, DEFAULT_CODEFLY_MODEL, AUTH_OA…
     137| 
     138|       expect(availability.selectFirstAvailable).toHaveBeenCalledWith([
        |                                                 ^
-    139|         DEFAULT_GEMINI_FLASH_MODEL,
+    139|         DEFAULT_CODEFLY_FLASH_MODEL,
     140|       ]);
 
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/34]⎯
@@ -4786,7 +4786,7 @@ AssertionError: expected null not to be null
      91| 
      92|     expect(decision).not.toBeNull();
        |                          ^
-     93|     expect(decision?.model).toBe(DEFAULT_GEMINI_FLASH_MODEL);
+     93|     expect(decision?.model).toBe(DEFAULT_CODEFLY_FLASH_MODEL);
      94|     expect(decision?.metadata.source).toBe('fallback');
 
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[32/34]⎯

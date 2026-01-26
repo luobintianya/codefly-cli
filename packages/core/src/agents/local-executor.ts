@@ -6,7 +6,7 @@
 
 import type { Config } from '../config/config.js';
 import { reportError } from '../utils/errorReporting.js';
-import { GeminiChat, StreamEventType } from '../core/geminiChat.js';
+import { CodeflyChat, StreamEventType } from '../core/codeflyChat.js';
 import { Type } from '@google/genai';
 import type {
   Content,
@@ -40,7 +40,7 @@ import type {
 } from './types.js';
 import { AgentTerminateMode, DEFAULT_QUERY_STRING } from './types.js';
 import { templateString } from './utils.js';
-import { DEFAULT_GEMINI_MODEL, isAutoModel } from '../config/models.js';
+import { DEFAULT_CODEFLY_MODEL, isAutoModel } from '../config/models.js';
 import type { RoutingContext } from '../routing/routingStrategy.js';
 import { parseThought } from '../utils/thoughtUtils.js';
 import { type z } from 'zod';
@@ -201,7 +201,7 @@ export class LocalAgentExecutor<TOutput extends z.ZodTypeAny> {
    * or stop the agent loop.
    */
   private async executeTurn(
-    chat: GeminiChat,
+    chat: CodeflyChat,
     currentMessage: Content,
     turnCounter: number,
     combinedSignal: AbortSignal,
@@ -290,7 +290,7 @@ export class LocalAgentExecutor<TOutput extends z.ZodTypeAny> {
    * @returns The final result string if recovery was successful, or `null` if it failed.
    */
   private async executeFinalWarningTurn(
-    chat: GeminiChat,
+    chat: CodeflyChat,
     turnCounter: number,
     reason:
       | AgentTerminateMode.TIMEOUT
@@ -401,7 +401,7 @@ export class LocalAgentExecutor<TOutput extends z.ZodTypeAny> {
       new AgentStartEvent(this.agentId, this.definition.name),
     );
 
-    let chat: GeminiChat | undefined;
+    let chat: CodeflyChat | undefined;
     let tools: FunctionDeclaration[] | undefined;
     try {
       // Inject standard runtime context into inputs
@@ -578,10 +578,10 @@ export class LocalAgentExecutor<TOutput extends z.ZodTypeAny> {
   }
 
   private async tryCompressChat(
-    chat: GeminiChat,
+    chat: CodeflyChat,
     prompt_id: string,
   ): Promise<void> {
-    const model = this.definition.modelConfig.model ?? DEFAULT_GEMINI_MODEL;
+    const model = this.definition.modelConfig.model ?? DEFAULT_CODEFLY_MODEL;
 
     const { newHistory, info } = await this.compressionService.compress(
       chat,
@@ -611,7 +611,7 @@ export class LocalAgentExecutor<TOutput extends z.ZodTypeAny> {
    * @returns The model's response, including any tool calls or text.
    */
   private async callModel(
-    chat: GeminiChat,
+    chat: CodeflyChat,
     message: Content,
     signal: AbortSignal,
     promptId: string,
@@ -645,7 +645,7 @@ export class LocalAgentExecutor<TOutput extends z.ZodTypeAny> {
         modelToUse = decision.model;
       } catch (error) {
         debugLogger.warn(`Error during model routing: ${error}`);
-        modelToUse = DEFAULT_GEMINI_MODEL;
+        modelToUse = DEFAULT_CODEFLY_MODEL;
       }
     } else {
       modelToUse = requestedModel;
@@ -700,11 +700,11 @@ export class LocalAgentExecutor<TOutput extends z.ZodTypeAny> {
     return { functionCalls, textResponse };
   }
 
-  /** Initializes a `GeminiChat` instance for the agent run. */
+  /** Initializes a `CodeflyChat` instance for the agent run. */
   private async createChatObject(
     inputs: AgentInputs,
     tools: FunctionDeclaration[],
-  ): Promise<GeminiChat> {
+  ): Promise<CodeflyChat> {
     const { promptConfig } = this.definition;
 
     if (!promptConfig.systemPrompt && !promptConfig.initialMessages) {
@@ -724,7 +724,7 @@ export class LocalAgentExecutor<TOutput extends z.ZodTypeAny> {
       : undefined;
 
     try {
-      return new GeminiChat(
+      return new CodeflyChat(
         this.runtimeContext,
         systemInstruction,
         [{ functionDeclarations: tools }],

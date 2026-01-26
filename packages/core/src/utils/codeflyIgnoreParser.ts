@@ -8,14 +8,14 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import ignore from 'ignore';
 
-export interface GeminiIgnoreFilter {
+export interface CodeflyIgnoreFilter {
   isIgnored(filePath: string): boolean;
   getPatterns(): string[];
   getIgnoreFilePath(): string | null;
   hasPatterns(): boolean;
 }
 
-export class GeminiIgnoreParser implements GeminiIgnoreFilter {
+export class CodeflyIgnoreParser implements CodeflyIgnoreFilter {
   private projectRoot: string;
   private patterns: string[] = [];
   private ig = ignore();
@@ -26,7 +26,7 @@ export class GeminiIgnoreParser implements GeminiIgnoreFilter {
   }
 
   private loadPatterns(): void {
-    const patternsFilePath = path.join(this.projectRoot, '.geminiignore');
+    const patternsFilePath = path.join(this.projectRoot, '.codeflyignore');
     let content: string;
     try {
       content = fs.readFileSync(patternsFilePath, 'utf-8');
@@ -82,24 +82,24 @@ export class GeminiIgnoreParser implements GeminiIgnoreFilter {
   }
 
   /**
-   * Returns the path to .geminiignore file if it exists and has patterns.
+   * Returns the path to .codeflyignore file if it exists and has patterns.
    * Useful for tools like ripgrep that support --ignore-file flag.
    */
   getIgnoreFilePath(): string | null {
     if (!this.hasPatterns()) {
       return null;
     }
-    return path.join(this.projectRoot, '.geminiignore');
+    return path.join(this.projectRoot, '.codeflyignore');
   }
 
   /**
-   * Returns true if .geminiignore exists and has patterns.
+   * Returns true if .codeflyignore exists and has patterns.
    */
   hasPatterns(): boolean {
     if (this.patterns.length === 0) {
       return false;
     }
-    const ignoreFilePath = path.join(this.projectRoot, '.geminiignore');
+    const ignoreFilePath = path.join(this.projectRoot, '.codeflyignore');
     return fs.existsSync(ignoreFilePath);
   }
 }

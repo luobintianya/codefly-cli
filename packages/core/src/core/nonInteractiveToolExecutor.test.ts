@@ -19,7 +19,7 @@ import {
   ToolErrorType,
   ApprovalMode,
   HookSystem,
-  PREVIEW_GEMINI_MODEL,
+  PREVIEW_CODEFLY_MODEL,
   PolicyDecision,
 } from '../index.js';
 import type { Part } from '@google/genai';
@@ -63,8 +63,8 @@ describe('executeToolCall', () => {
       getTruncateToolOutputThreshold: () =>
         DEFAULT_TRUNCATE_TOOL_OUTPUT_THRESHOLD,
       getTruncateToolOutputLines: () => DEFAULT_TRUNCATE_TOOL_OUTPUT_LINES,
-      getActiveModel: () => PREVIEW_GEMINI_MODEL,
-      getGeminiClient: () => null, // No client needed for these tests
+      getActiveModel: () => PREVIEW_CODEFLY_MODEL,
+      getCodeflyClient: () => null, // No client needed for these tests
       getMessageBus: () => null,
       getPolicyEngine: () => ({
         check: async () => ({ decision: PolicyDecision.ALLOW }),

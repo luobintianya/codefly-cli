@@ -15,7 +15,7 @@ interface UseSessionResumeParams {
   config: Config;
   historyManager: UseHistoryManagerReturn;
   refreshStatic: () => void;
-  isGeminiClientInitialized: boolean;
+  isCodeflyClientInitialized: boolean;
   setQuittingMessages: (messages: null) => void;
   resumedSessionData?: ResumedSessionData;
   isAuthenticating: boolean;
@@ -30,7 +30,7 @@ export function useSessionResume({
   config,
   historyManager,
   refreshStatic,
-  isGeminiClientInitialized,
+  isCodeflyClientInitialized,
   setQuittingMessages,
   resumedSessionData,
   isAuthenticating,
@@ -51,7 +51,7 @@ export function useSessionResume({
       resumedData: ResumedSessionData,
     ) => {
       // Wait for the client.
-      if (!isGeminiClientInitialized) {
+      if (!isCodeflyClientInitialized) {
         return;
       }
 
@@ -65,9 +65,9 @@ export function useSessionResume({
 
       // Give the history to the Gemini client.
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      config.getGeminiClient()?.resumeChat(clientHistory, resumedData);
+      config.getCodeflyClient()?.resumeChat(clientHistory, resumedData);
     },
-    [config, isGeminiClientInitialized, setQuittingMessages],
+    [config, isCodeflyClientInitialized, setQuittingMessages],
   );
 
   // Handle interactive resume from the command line (-r/--resume without -p/--prompt-interactive).
@@ -77,7 +77,7 @@ export function useSessionResume({
     if (
       resumedSessionData &&
       !isAuthenticating &&
-      isGeminiClientInitialized &&
+      isCodeflyClientInitialized &&
       !hasLoadedResumedSession.current
     ) {
       hasLoadedResumedSession.current = true;
@@ -93,7 +93,7 @@ export function useSessionResume({
   }, [
     resumedSessionData,
     isAuthenticating,
-    isGeminiClientInitialized,
+    isCodeflyClientInitialized,
     loadHistoryForResume,
   ]);
 

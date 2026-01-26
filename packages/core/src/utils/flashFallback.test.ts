@@ -13,7 +13,7 @@ import {
   shouldSimulate429,
   resetRequestCounter,
 } from './testUtils.js';
-import { DEFAULT_GEMINI_FLASH_MODEL } from '../config/models.js';
+import { DEFAULT_CODEFLY_FLASH_MODEL } from '../config/models.js';
 import { retryWithBackoff } from './retry.js';
 import { AuthType } from '../core/contentGenerator.js';
 // Import the new types (Assuming this test file is in packages/core/src/utils/)
@@ -62,7 +62,7 @@ describe('Retry Utility Fallback Integration', () => {
     // Call the handler directly via the config property
     const result = await config.fallbackModelHandler!(
       'gemini-2.5-pro',
-      DEFAULT_GEMINI_FLASH_MODEL,
+      DEFAULT_CODEFLY_FLASH_MODEL,
       new Error('test'),
     );
 

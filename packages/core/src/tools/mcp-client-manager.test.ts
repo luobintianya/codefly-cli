@@ -51,7 +51,7 @@ describe('McpClientManager', () => {
       getBlockedMcpServers: vi.fn().mockReturnValue([]),
       getMcpServerCommand: vi.fn().mockReturnValue(''),
       getMcpEnablementCallbacks: vi.fn().mockReturnValue(undefined),
-      getGeminiClient: vi.fn().mockReturnValue({
+      getCodeflyClient: vi.fn().mockReturnValue({
         isInitialized: vi.fn(),
       }),
       refreshMcpContext: vi.fn(),

@@ -43,7 +43,7 @@ import {
   type ExtensionEvents,
   type MCPServerConfig,
   type ExtensionInstallMetadata,
-  type GeminiCLIExtension,
+  type CodeflyCLIExtension,
   type HookDefinition,
   type HookEventName,
   type ResolvedExtensionSetting,
@@ -93,7 +93,7 @@ export class ExtensionManager extends ExtensionLoader {
     | undefined;
   private telemetryConfig: Config;
   private workspaceDir: string;
-  private loadedExtensions: GeminiCLIExtension[] | undefined;
+  private loadedExtensions: CodeflyCLIExtension[] | undefined;
 
   constructor(options: ExtensionManagerParams) {
     super(options.eventEmitter);
@@ -128,7 +128,7 @@ export class ExtensionManager extends ExtensionLoader {
     this.requestSetting = requestSetting;
   }
 
-  getExtensions(): GeminiCLIExtension[] {
+  getExtensions(): CodeflyCLIExtension[] {
     if (!this.loadedExtensions) {
       throw new Error(
         'Extensions not yet loaded, must call `loadExtensions` first',
@@ -140,7 +140,7 @@ export class ExtensionManager extends ExtensionLoader {
   async installOrUpdateExtension(
     installMetadata: ExtensionInstallMetadata,
     previousExtensionConfig?: ExtensionConfig,
-  ): Promise<GeminiCLIExtension> {
+  ): Promise<CodeflyCLIExtension> {
     if (
       (installMetadata.type === 'git' ||
         installMetadata.type === 'github-release') &&
@@ -153,7 +153,7 @@ export class ExtensionManager extends ExtensionLoader {
     const isUpdate = !!previousExtensionConfig;
     let newExtensionConfig: ExtensionConfig | null = null;
     let localSourcePath: string | undefined;
-    let extension: GeminiCLIExtension | null;
+    let extension: CodeflyCLIExtension | null;
     try {
       if (!isWorkspaceTrusted(this.settings).isTrusted) {
         if (
@@ -470,7 +470,7 @@ Would you like to attempt to install via "git clone" instead?`,
   /**
    * Loads all installed extensions, should only be called once.
    */
-  async loadExtensions(): Promise<GeminiCLIExtension[]> {
+  async loadExtensions(): Promise<CodeflyCLIExtension[]> {
     if (this.loadedExtensions) {
       throw new Error('Extensions already loaded, only load extensions once.');
     }
@@ -497,7 +497,7 @@ Would you like to attempt to install via "git clone" instead?`,
    */
   private async loadExtension(
     extensionDir: string,
-  ): Promise<GeminiCLIExtension | null> {
+  ): Promise<CodeflyCLIExtension | null> {
     this.loadedExtensions ??= [];
     if (!fs.statSync(extensionDir).isDirectory()) {
       return null;
@@ -638,7 +638,7 @@ Would you like to attempt to install via "git clone" instead?`,
         );
       }
 
-      const extension: GeminiCLIExtension = {
+      const extension: CodeflyCLIExtension = {
         name: config.name,
         version: config.version,
         path: effectiveExtensionPath,
@@ -676,7 +676,7 @@ Would you like to attempt to install via "git clone" instead?`,
    * appropriate.
    */
   private unloadExtension(
-    extension: GeminiCLIExtension,
+    extension: CodeflyCLIExtension,
   ): Promise<void> | undefined {
     this.loadedExtensions = this.getExtensions().filter(
       (entry) => extension !== entry,
@@ -765,7 +765,7 @@ Would you like to attempt to install via "git clone" instead?`,
     }
   }
 
-  toOutputString(extension: GeminiCLIExtension): string {
+  toOutputString(extension: CodeflyCLIExtension): string {
     const userEnabled = this.extensionEnablementManager.isEnabled(
       extension.name,
       homedir(),

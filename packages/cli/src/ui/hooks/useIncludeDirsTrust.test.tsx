@@ -73,7 +73,7 @@ describe('useIncludeDirsTrust', () => {
       clearPendingIncludeDirectories: vi.fn(),
       getFolderTrust: vi.fn().mockReturnValue(true),
       getWorkspaceContext: () => mockWorkspaceContext,
-      getGeminiClient: vi
+      getCodeflyClient: vi
         .fn()
         .mockReturnValue({ addDirectoryContext: vi.fn() }),
     } as unknown as Config;

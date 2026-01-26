@@ -58,7 +58,7 @@ vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
     await importOriginal<typeof import('@codeflyai/codefly-core')>();
   return {
     ...actual,
-    CODEFLY_DIR: '.gemini',
+    CODEFLY_DIR: '.codefly',
     homedir: () => '/mock/home',
     Storage: {
       ...actual.Storage,

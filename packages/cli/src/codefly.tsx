@@ -293,12 +293,19 @@ export async function main() {
   const adminControlsListner = setupAdminControlsListener();
   registerCleanup(adminControlsListner.cleanup);
 
-  const cleanupStdio = patchStdio();
-  registerSyncCleanup(() => {
-    // This is needed to ensure we don't lose any buffered output.
-    initializeOutputListenersAndFlush();
-    cleanupStdio();
-  });
+  // Check if we are running the 'openspec' command to avoid patching stdio
+  // which can interfere with openspec's own output handling.
+  const args = process.argv.slice(2);
+  const isOpenspec = args.length > 0 && args[0] === 'openspec';
+
+  const cleanupStdio = isOpenspec ? () => {} : patchStdio();
+  if (!isOpenspec) {
+    registerSyncCleanup(() => {
+      // This is needed to ensure we don't lose any buffered output.
+      initializeOutputListenersAndFlush();
+      cleanupStdio();
+    });
+  }
 
   setupUnhandledRejectionHandler();
   const loadSettingsHandle = startupProfiler.start('load_settings');

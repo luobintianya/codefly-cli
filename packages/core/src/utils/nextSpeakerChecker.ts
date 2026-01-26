@@ -6,7 +6,7 @@
 
 import type { Content } from '@google/genai';
 import type { BaseLlmClient } from '../core/baseLlmClient.js';
-import type { GeminiChat } from '../core/geminiChat.js';
+import type { CodeflyChat } from '../core/codeflyChat.js';
 import { isFunctionResponse } from './messageInspectors.js';
 import { debugLogger } from './debugLogger.js';
 
@@ -40,7 +40,7 @@ export interface NextSpeakerResponse {
 }
 
 export async function checkNextSpeaker(
-  chat: GeminiChat,
+  chat: CodeflyChat,
   baseLlmClient: BaseLlmClient,
   abortSignal: AbortSignal,
   promptId: string,

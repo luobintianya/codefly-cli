@@ -41,7 +41,7 @@ import {
   IdeClient,
   ideContextStore,
   getErrorMessage,
-  getAllGeminiMdFilenames,
+  getAllCodeflyMdFilenames,
   AuthType,
   clearCachedCredentialFile,
   type ResumedSessionData,
@@ -178,7 +178,7 @@ const SHELL_HEIGHT_PADDING = 10;
 export const AppContainer = (props: AppContainerProps) => {
   const { config, initializationResult, resumedSessionData } = props;
   const historyManager = useHistory({
-    chatRecordingService: config.getGeminiClient()?.getChatRecordingService(),
+    chatRecordingService: config.getCodeflyClient()?.getChatRecordingService(),
   });
   useMemoryMonitor(historyManager);
   const settings = useSettings();
@@ -354,7 +354,7 @@ export const AppContainer = (props: AppContainerProps) => {
         }
 
         const additionalContext = result.getAdditionalContext();
-        const geminiClient = config.getGeminiClient();
+        const geminiClient = config.getCodeflyClient();
         if (additionalContext && geminiClient) {
           await geminiClient.addHistory({
             role: 'user',
@@ -556,13 +556,13 @@ export const AppContainer = (props: AppContainerProps) => {
   const isAuthenticating = authState === AuthState.Unauthenticated;
 
   // Session browser and resume functionality
-  const isGeminiClientInitialized = config.getGeminiClient()?.isInitialized();
+  const isCodeflyClientInitialized = config.getCodeflyClient()?.isInitialized();
 
   const { loadHistoryForResume } = useSessionResume({
     config,
     historyManager,
     refreshStatic,
-    isGeminiClientInitialized,
+    isCodeflyClientInitialized,
     setQuittingMessages,
     resumedSessionData,
     isAuthenticating,
@@ -915,7 +915,7 @@ Logging in with Google... Restarting Gemini CLI to continue.
     lastOutputTime,
     retryStatus,
   } = useGeminiStream(
-    config.getGeminiClient(),
+    config.getCodeflyClient(),
     historyManager.history,
     historyManager.addItem,
     config,
@@ -1106,12 +1106,12 @@ Logging in with Google... Restarting Gemini CLI to continue.
       ? Array.isArray(fromSettings)
         ? fromSettings
         : [fromSettings]
-      : getAllGeminiMdFilenames();
+      : getAllCodeflyMdFilenames();
   }, [settings.merged.context.fileName]);
   // Initial prompt handling
   const initialPrompt = useMemo(() => config.getQuestion(), [config]);
   const initialPromptSubmitted = useRef(false);
-  const geminiClient = config.getGeminiClient();
+  const geminiClient = config.getCodeflyClient();
 
   useEffect(() => {
     if (activePtyId) {
@@ -1624,12 +1624,12 @@ Logging in with Google... Restarting Gemini CLI to continue.
     [pendingHistoryItems],
   );
 
-  const [geminiMdFileCount, setGeminiMdFileCount] = useState<number>(
-    config.getGeminiMdFileCount(),
+  const [codeflyMdFileCount, setCodeflyMdFileCount] = useState<number>(
+    config.getCodeflyMdFileCount(),
   );
   useEffect(() => {
     const handleMemoryChanged = (result: MemoryChangedPayload) => {
-      setGeminiMdFileCount(result.fileCount);
+      setCodeflyMdFileCount(result.fileCount);
     };
     coreEvents.on(CoreEvent.MemoryChanged, handleMemoryChanged);
     return () => {
@@ -1702,7 +1702,7 @@ Logging in with Google... Restarting Gemini CLI to continue.
       confirmationRequest,
       confirmUpdateExtensionRequests,
       loopDetectionConfirmationRequest,
-      geminiMdFileCount,
+      codeflyMdFileCount,
       streamingState,
       initError,
       pendingGeminiHistoryItems,
@@ -1799,7 +1799,7 @@ Logging in with Google... Restarting Gemini CLI to continue.
       confirmationRequest,
       confirmUpdateExtensionRequests,
       loopDetectionConfirmationRequest,
-      geminiMdFileCount,
+      codeflyMdFileCount,
       streamingState,
       initError,
       pendingGeminiHistoryItems,

@@ -74,7 +74,7 @@ vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
         this.name = 'FatalSandboxError';
       }
     },
-    CODEFLY_DIR: '.gemini',
+    CODEFLY_DIR: '.codefly',
     homedir: mockedHomedir,
   };
 });
@@ -164,7 +164,7 @@ describe('sandbox', () => {
     it('should handle Docker execution', async () => {
       const config: SandboxConfig = {
         command: 'docker',
-        image: 'gemini-cli-sandbox',
+        image: 'codefly-cli-sandbox',
       };
 
       // Mock image check to return true (image exists)
@@ -320,7 +320,7 @@ describe('sandbox', () => {
     it('should mount volumes correctly', async () => {
       const config: SandboxConfig = {
         command: 'docker',
-        image: 'gemini-cli-sandbox',
+        image: 'codefly-cli-sandbox',
       };
       process.env['SANDBOX_MOUNTS'] = '/host/path:/container/path:ro';
       vi.mocked(fs.existsSync).mockReturnValue(true); // For mount path check
@@ -368,7 +368,7 @@ describe('sandbox', () => {
           '--volume',
           '/host/path:/container/path:ro',
           '--volume',
-          expect.stringMatching(/[\\/]home[\\/]user[\\/]\.gemini/),
+          expect.stringMatching(/[\\/]home[\\/]user[\\/]\.codefly/),
         ]),
         expect.any(Object),
       );
@@ -377,7 +377,7 @@ describe('sandbox', () => {
     it('should handle user creation on Linux if needed', async () => {
       const config: SandboxConfig = {
         command: 'docker',
-        image: 'gemini-cli-sandbox',
+        image: 'codefly-cli-sandbox',
       };
       process.env['SANDBOX_SET_UID_GID'] = 'true';
       vi.mocked(os.platform).mockReturnValue('linux');
@@ -424,7 +424,7 @@ describe('sandbox', () => {
       const entrypointCmd = args[args.length - 1];
       expect(entrypointCmd).toContain('groupadd');
       expect(entrypointCmd).toContain('useradd');
-      expect(entrypointCmd).toContain('su -p gemini');
+      expect(entrypointCmd).toContain('su -p codefly');
     });
   });
 });

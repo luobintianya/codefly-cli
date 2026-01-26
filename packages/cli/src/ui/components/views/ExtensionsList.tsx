@@ -8,10 +8,10 @@ import type React from 'react';
 import { Box, Text } from 'ink';
 import { useUIState } from '../../contexts/UIStateContext.js';
 import { ExtensionUpdateState } from '../../state/extensions.js';
-import { debugLogger, type GeminiCLIExtension } from '@codeflyai/codefly-core';
+import { debugLogger, type CodeflyCLIExtension } from '@codeflyai/codefly-core';
 
 interface ExtensionsList {
-  extensions: readonly GeminiCLIExtension[];
+  extensions: readonly CodeflyCLIExtension[];
 }
 
 export const ExtensionsList: React.FC<ExtensionsList> = ({ extensions }) => {

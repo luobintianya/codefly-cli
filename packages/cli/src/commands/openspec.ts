@@ -22,5 +22,6 @@ export const openspecCommand: CommandModule = {
         : process.argv.slice(2);
 
     await runOpenspec(args);
+    process.exit(process.exitCode ?? 0);
   },
 };

@@ -30,10 +30,10 @@ vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
     homedir: () => '/mock/home/user',
     Storage: class extends actual.Storage {
       static override getGlobalSettingsPath = () =>
-        '/mock/home/user/.gemini/settings.json';
+        '/mock/home/user/.codefly/settings.json';
       override getWorkspaceSettingsPath = () =>
-        '/mock/workspace/.gemini/settings.json';
-      static override getGlobalGeminiDir = () => '/mock/home/user/.gemini';
+        '/mock/workspace/.codefly/settings.json';
+      static override getGlobalCodeflyDir = () => '/mock/home/user/.codefly';
     },
   };
 });

@@ -14,7 +14,7 @@ vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
     ...actual,
     Storage: {
       ...actual.Storage,
-      getGlobalGeminiDir: () => '/virtual-home/.gemini',
+      getGlobalCodeflyDir: () => '/virtual-home/.codefly',
     },
   };
 });

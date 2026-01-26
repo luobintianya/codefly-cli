@@ -65,31 +65,31 @@ export const DEFAULT_CONTEXT_FILENAME = 'CODEFLY.md';
 export const MEMORY_SECTION_HEADER = '## Codefly Added Memories';
 
 // This variable will hold the currently configured filename for CODEFLY.md context files.
-// It defaults to DEFAULT_CONTEXT_FILENAME but can be overridden by setGeminiMdFilename.
-let currentGeminiMdFilename: string | string[] = DEFAULT_CONTEXT_FILENAME;
+// It defaults to DEFAULT_CONTEXT_FILENAME but can be overridden by setCodeflyMdFilename.
+let currentCodeflyMdFilename: string | string[] = DEFAULT_CONTEXT_FILENAME;
 
-export function setGeminiMdFilename(newFilename: string | string[]): void {
+export function setCodeflyMdFilename(newFilename: string | string[]): void {
   if (Array.isArray(newFilename)) {
     if (newFilename.length > 0) {
-      currentGeminiMdFilename = newFilename.map((name) => name.trim());
+      currentCodeflyMdFilename = newFilename.map((name) => name.trim());
     }
   } else if (newFilename && newFilename.trim() !== '') {
-    currentGeminiMdFilename = newFilename.trim();
+    currentCodeflyMdFilename = newFilename.trim();
   }
 }
 
-export function getCurrentGeminiMdFilename(): string {
-  if (Array.isArray(currentGeminiMdFilename)) {
-    return currentGeminiMdFilename[0];
+export function getCurrentCodeflyMdFilename(): string {
+  if (Array.isArray(currentCodeflyMdFilename)) {
+    return currentCodeflyMdFilename[0];
   }
-  return currentGeminiMdFilename;
+  return currentCodeflyMdFilename;
 }
 
-export function getAllGeminiMdFilenames(): string[] {
-  if (Array.isArray(currentGeminiMdFilename)) {
-    return currentGeminiMdFilename;
+export function getAllCodeflyMdFilenames(): string[] {
+  if (Array.isArray(currentCodeflyMdFilename)) {
+    return currentCodeflyMdFilename;
   }
-  return [currentGeminiMdFilename];
+  return [currentCodeflyMdFilename];
 }
 
 interface SaveMemoryParams {
@@ -99,7 +99,10 @@ interface SaveMemoryParams {
 }
 
 export function getGlobalMemoryFilePath(): string {
-  return path.join(Storage.getGlobalGeminiDir(), getCurrentGeminiMdFilename());
+  return path.join(
+    Storage.getGlobalCodeflyDir(),
+    getCurrentCodeflyMdFilename(),
+  );
 }
 
 /**

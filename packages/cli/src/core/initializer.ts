@@ -22,7 +22,7 @@ export interface InitializationResult {
   authError: string | null;
   themeError: string | null;
   shouldOpenAuthDialog: boolean;
-  geminiMdFileCount: number;
+  codeflyMdFileCount: number;
 }
 
 /**
@@ -62,6 +62,6 @@ export async function initializeApp(
     authError,
     themeError,
     shouldOpenAuthDialog,
-    geminiMdFileCount: config.getGeminiMdFileCount(),
+    codeflyMdFileCount: config.getCodeflyMdFileCount(),
   };
 }

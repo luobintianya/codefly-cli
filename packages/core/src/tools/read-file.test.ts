@@ -40,7 +40,7 @@ describe('ReadFileTool', () => {
       getWorkspaceContext: () => createMockWorkspaceContext(tempRootDir),
       getFileFilteringOptions: () => ({
         respectGitIgnore: true,
-        respectGeminiIgnore: true,
+        respectCodeflyIgnore: true,
       }),
       storage: {
         getProjectTempDir: () => path.join(tempRootDir, '.temp'),
@@ -420,10 +420,10 @@ describe('ReadFileTool', () => {
       expect(result.returnDisplay).toBe('');
     });
 
-    describe('with .geminiignore', () => {
+    describe('with .codeflyignore', () => {
       beforeEach(async () => {
         await fsp.writeFile(
-          path.join(tempRootDir, '.geminiignore'),
+          path.join(tempRootDir, '.codeflyignore'),
           ['foo.*', 'ignored/'].join('\n'),
         );
         const mockConfigInstance = {
@@ -433,7 +433,7 @@ describe('ReadFileTool', () => {
           getWorkspaceContext: () => new WorkspaceContext(tempRootDir),
           getFileFilteringOptions: () => ({
             respectGitIgnore: true,
-            respectGeminiIgnore: true,
+            respectCodeflyIgnore: true,
           }),
           storage: {
             getProjectTempDir: () => path.join(tempRootDir, '.temp'),
@@ -442,7 +442,7 @@ describe('ReadFileTool', () => {
         tool = new ReadFileTool(mockConfigInstance, createMockMessageBus());
       });
 
-      it('should throw error if path is ignored by a .geminiignore pattern', async () => {
+      it('should throw error if path is ignored by a .codeflyignore pattern', async () => {
         const ignoredFilePath = path.join(tempRootDir, 'foo.bar');
         await fsp.writeFile(ignoredFilePath, 'content', 'utf-8');
         const params: ReadFileToolParams = {

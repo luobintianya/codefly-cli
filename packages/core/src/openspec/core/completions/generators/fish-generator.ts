@@ -144,7 +144,7 @@ ${commandCompletions}`;
     condition: string,
   ): string[] {
     const lines: string[] = [];
-    const longFlag = `--${flag.name}`;
+    const _longFlag = `--${flag.name}`;
     const shortFlag = flag.short ? `-${flag.short}` : undefined;
 
     if (flag.takesValue && flag.values) {

@@ -136,7 +136,7 @@ const authCommand: SlashCommand = {
         await mcpClientManager.restartServer(serverName);
       }
       // Update the client with the new tools
-      const geminiClient = config.getGeminiClient();
+      const geminiClient = config.getCodeflyClient();
       if (geminiClient?.isInitialized()) {
         await geminiClient.setTools();
       }
@@ -345,7 +345,7 @@ const refreshCommand: SlashCommand = {
     await mcpClientManager.restart();
 
     // Update the client with the new tools
-    const geminiClient = config.getGeminiClient();
+    const geminiClient = config.getCodeflyClient();
     if (geminiClient?.isInitialized()) {
       await geminiClient.setTools();
     }
@@ -461,8 +461,8 @@ async function handleEnableDisable(
     );
     await mcpClientManager.restart();
   }
-  if (config.getGeminiClient()?.isInitialized())
-    await config.getGeminiClient().setTools();
+  if (config.getCodeflyClient()?.isInitialized())
+    await config.getCodeflyClient().setTools();
   context.ui.reloadCommands();
 
   return { type: 'message', messageType: 'info', content: msg };

@@ -6,7 +6,7 @@
 
 import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import {
-  GeminiEventType as ServerGeminiEventType,
+  CodeflyEventType as ServerCodeflyEventType,
   getErrorMessage,
   isNodeError,
   MessageSenderType,
@@ -14,7 +14,7 @@ import {
   GitService,
   UnauthorizedError,
   UserPromptEvent,
-  DEFAULT_GEMINI_FLASH_MODEL,
+  DEFAULT_CODEFLY_FLASH_MODEL,
   logConversationFinishedEvent,
   ConversationFinishedEvent,
   ApprovalMode,
@@ -35,8 +35,8 @@ import {
 import type {
   Config,
   EditorType,
-  GeminiClient,
-  ServerGeminiChatCompressedEvent,
+  CodeflyClient,
+  ServerCodeflyChatCompressedEvent,
   ServerGeminiContentEvent as ContentEvent,
   ServerGeminiFinishedEvent,
   ServerGeminiStreamEvent as GeminiEvent,
@@ -96,7 +96,7 @@ function showCitations(settings: LoadedSettings): boolean {
  * API interaction, and tool call lifecycle.
  */
 export const useGeminiStream = (
-  geminiClient: GeminiClient,
+  geminiClient: CodeflyClient,
   history: HistoryItem[],
   addItem: UseHistoryManagerReturn['addItem'],
   config: Config,
@@ -175,10 +175,10 @@ export const useGeminiStream = (
         // Record tool calls with full metadata before sending responses.
         try {
           const currentModel =
-            config.getGeminiClient().getCurrentSequenceModel() ??
+            config.getCodeflyClient().getCurrentSequenceModel() ??
             config.getModel();
           config
-            .getGeminiClient()
+            .getCodeflyClient()
             .getChat()
             .recordCompletedToolCalls(
               currentModel,
@@ -652,7 +652,7 @@ export const useGeminiStream = (
             eventValue.error,
             config.getContentGeneratorConfig()?.authType,
             config.getModel(),
-            DEFAULT_GEMINI_FLASH_MODEL,
+            DEFAULT_CODEFLY_FLASH_MODEL,
           ),
         },
         userMessageTimestamp,
@@ -726,7 +726,7 @@ export const useGeminiStream = (
 
   const handleChatCompressionEvent = useCallback(
     (
-      eventValue: ServerGeminiChatCompressedEvent['value'],
+      eventValue: ServerCodeflyChatCompressedEvent['value'],
       userMessageTimestamp: number,
     ) => {
       if (pendingHistoryItemRef.current) {
@@ -873,11 +873,11 @@ export const useGeminiStream = (
       const toolCallRequests: ToolCallRequestInfo[] = [];
       for await (const event of stream) {
         switch (event.type) {
-          case ServerGeminiEventType.Thought:
+          case ServerCodeflyEventType.Thought:
             setLastGeminiActivityTime(Date.now());
             setThought(event.value);
             break;
-          case ServerGeminiEventType.Content:
+          case ServerCodeflyEventType.Content:
             setLastGeminiActivityTime(Date.now());
             geminiMessageBuffer = handleContentEvent(
               event.value,
@@ -885,16 +885,16 @@ export const useGeminiStream = (
               userMessageTimestamp,
             );
             break;
-          case ServerGeminiEventType.ToolCallRequest:
+          case ServerCodeflyEventType.ToolCallRequest:
             toolCallRequests.push(event.value);
             break;
-          case ServerGeminiEventType.UserCancelled:
+          case ServerCodeflyEventType.UserCancelled:
             handleUserCancelledEvent(userMessageTimestamp);
             break;
-          case ServerGeminiEventType.Error:
+          case ServerCodeflyEventType.Error:
             handleErrorEvent(event.value, userMessageTimestamp);
             break;
-          case ServerGeminiEventType.AgentExecutionStopped:
+          case ServerCodeflyEventType.AgentExecutionStopped:
             handleAgentExecutionStoppedEvent(
               event.value.reason,
               userMessageTimestamp,
@@ -902,7 +902,7 @@ export const useGeminiStream = (
               event.value.contextCleared,
             );
             break;
-          case ServerGeminiEventType.AgentExecutionBlocked:
+          case ServerCodeflyEventType.AgentExecutionBlocked:
             handleAgentExecutionBlockedEvent(
               event.value.reason,
               userMessageTimestamp,
@@ -910,38 +910,38 @@ export const useGeminiStream = (
               event.value.contextCleared,
             );
             break;
-          case ServerGeminiEventType.ChatCompressed:
+          case ServerCodeflyEventType.ChatCompressed:
             handleChatCompressionEvent(event.value, userMessageTimestamp);
             break;
-          case ServerGeminiEventType.ToolCallConfirmation:
-          case ServerGeminiEventType.ToolCallResponse:
+          case ServerCodeflyEventType.ToolCallConfirmation:
+          case ServerCodeflyEventType.ToolCallResponse:
             // do nothing
             break;
-          case ServerGeminiEventType.MaxSessionTurns:
+          case ServerCodeflyEventType.MaxSessionTurns:
             handleMaxSessionTurnsEvent();
             break;
-          case ServerGeminiEventType.ContextWindowWillOverflow:
+          case ServerCodeflyEventType.ContextWindowWillOverflow:
             handleContextWindowWillOverflowEvent(
               event.value.estimatedRequestTokenCount,
               event.value.remainingTokenCount,
             );
             break;
-          case ServerGeminiEventType.Finished:
+          case ServerCodeflyEventType.Finished:
             handleFinishedEvent(event, userMessageTimestamp);
             break;
-          case ServerGeminiEventType.Citation:
+          case ServerCodeflyEventType.Citation:
             handleCitationEvent(event.value, userMessageTimestamp);
             break;
-          case ServerGeminiEventType.ModelInfo:
+          case ServerCodeflyEventType.ModelInfo:
             handleChatModelEvent(event.value, userMessageTimestamp);
             break;
-          case ServerGeminiEventType.LoopDetected:
+          case ServerCodeflyEventType.LoopDetected:
             // handle later because we want to move pending history to history
             // before we add loop detected message to history
             loopDetectedRef.current = true;
             break;
-          case ServerGeminiEventType.Retry:
-          case ServerGeminiEventType.InvalidStream:
+          case ServerCodeflyEventType.Retry:
+          case ServerCodeflyEventType.InvalidStream:
             // Will add the missing logic later
             break;
           default: {
@@ -1081,7 +1081,7 @@ export const useGeminiStream = (
 
                     if (result.userSelection === 'disable') {
                       config
-                        .getGeminiClient()
+                        .getCodeflyClient()
                         .getLoopDetectionService()
                         .disableForSession();
                       addItem({
@@ -1124,7 +1124,7 @@ export const useGeminiStream = (
                       getErrorMessage(error) || 'Unknown error',
                       config.getContentGeneratorConfig()?.authType,
                       config.getModel(),
-                      DEFAULT_GEMINI_FLASH_MODEL,
+                      DEFAULT_CODEFLY_FLASH_MODEL,
                     ),
                   },
                   userMessageTimestamp,

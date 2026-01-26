@@ -11,10 +11,10 @@ import type {
 } from '@a2a-js/sdk';
 import {
   ApprovalMode,
-  DEFAULT_GEMINI_MODEL,
+  DEFAULT_CODEFLY_MODEL,
   DEFAULT_TRUNCATE_TOOL_OUTPUT_LINES,
   DEFAULT_TRUNCATE_TOOL_OUTPUT_THRESHOLD,
-  GeminiClient,
+  CodeflyClient,
   HookSystem,
   PolicyDecision,
 } from '@codeflyai/codefly-core';
@@ -48,7 +48,7 @@ export function createMockConfig(
     getTruncateToolOutputThreshold: () =>
       DEFAULT_TRUNCATE_TOOL_OUTPUT_THRESHOLD,
     getTruncateToolOutputLines: () => DEFAULT_TRUNCATE_TOOL_OUTPUT_LINES,
-    getActiveModel: vi.fn().mockReturnValue(DEFAULT_GEMINI_MODEL),
+    getActiveModel: vi.fn().mockReturnValue(DEFAULT_CODEFLY_MODEL),
     getDebugMode: vi.fn().mockReturnValue(false),
     getContentGeneratorConfig: vi.fn().mockReturnValue({ model: 'gemini-pro' }),
     getModel: vi.fn().mockReturnValue('gemini-pro'),
@@ -75,9 +75,9 @@ export function createMockConfig(
     .fn()
     .mockReturnValue(new HookSystem(mockConfig));
 
-  mockConfig.getGeminiClient = vi
+  mockConfig.getCodeflyClient = vi
     .fn()
-    .mockReturnValue(new GeminiClient(mockConfig));
+    .mockReturnValue(new CodeflyClient(mockConfig));
 
   mockConfig.getPolicyEngine = vi.fn().mockReturnValue({
     check: async () => {
