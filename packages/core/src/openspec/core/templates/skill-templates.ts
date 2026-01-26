@@ -527,6 +527,9 @@ export function getApplyChangeSkillTemplate(): SkillTemplate {
 
 **Input**: Optionally specify a change name. If omitted, check if it can be inferred from conversation context. If vague or ambiguous you MUST prompt for available changes.
 
+**Implementation Rules**
+- **Swagger/OpenAPI Annotations**: If the project uses a front-end and back-end separation architecture, you MUST include Swagger/OpenAPI annotations for all request and response fields when implementing API endpoints. Ensure every field has a description and type information.
+
 **Steps**
 
 1. **Select the change**
