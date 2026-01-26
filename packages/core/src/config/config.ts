@@ -821,6 +821,7 @@ export class Config {
     await this.agentRegistry.initialize();
 
     coreEvents.on(CoreEvent.AgentsRefreshed, this.onAgentsRefreshed);
+    coreEvents.on(CoreEvent.CommandsRefreshed, this.onCommandsRefreshed);
 
     this.toolRegistry = await this.createToolRegistry();
     discoverToolsHandle?.end();
@@ -2135,12 +2136,19 @@ export class Config {
     }
   };
 
+  private onCommandsRefreshed = async () => {
+    await this.refreshMcpContext();
+    await this.reloadSkills();
+    await this.agentRegistry.reload();
+  };
+
   /**
    * Disposes of resources and removes event listeners.
    */
   async dispose(): Promise<void> {
     this.logCurrentModeDuration(this.getApprovalMode());
     coreEvents.off(CoreEvent.AgentsRefreshed, this.onAgentsRefreshed);
+    coreEvents.off(CoreEvent.CommandsRefreshed, this.onCommandsRefreshed);
     this.agentRegistry?.dispose();
     this.codeflyClient?.dispose();
     if (this.mcpClientManager) {

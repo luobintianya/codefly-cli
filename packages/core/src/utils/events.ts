@@ -125,6 +125,7 @@ export enum CoreEvent {
   AgentsRefreshed = 'agents-refreshed',
   AdminSettingsChanged = 'admin-settings-changed',
   RetryAttempt = 'retry-attempt',
+  CommandsRefreshed = 'commands-refreshed',
 }
 
 export interface CoreEvents extends ExtensionEvents {
@@ -142,6 +143,7 @@ export interface CoreEvents extends ExtensionEvents {
   [CoreEvent.AgentsRefreshed]: never[];
   [CoreEvent.AdminSettingsChanged]: never[];
   [CoreEvent.RetryAttempt]: [RetryAttemptPayload];
+  [CoreEvent.CommandsRefreshed]: never[];
 }
 
 type EventBacklogItem = {
@@ -248,6 +250,13 @@ export class CoreEventEmitter extends EventEmitter<CoreEvents> {
    */
   emitAgentsRefreshed(): void {
     this.emit(CoreEvent.AgentsRefreshed);
+  }
+
+  /**
+   * Notifies subscribers that commands should be reloaded.
+   */
+  emitCommandsRefreshed(): void {
+    this.emit(CoreEvent.CommandsRefreshed);
   }
 
   /**

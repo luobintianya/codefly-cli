@@ -31,6 +31,7 @@ import {
   Storage,
   IdeClient,
   coreEvents,
+  CoreEvent,
   addMCPStatusChangeListener,
   removeMCPStatusChangeListener,
   MCPDiscoveryState,
@@ -297,6 +298,7 @@ export const useSlashCommandProcessor = (
     };
     coreEvents.on('extensionsStarting', extensionEventListener);
     coreEvents.on('extensionsStopping', extensionEventListener);
+    coreEvents.on(CoreEvent.CommandsRefreshed, listener);
 
     return () => {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -307,6 +309,7 @@ export const useSlashCommandProcessor = (
       removeMCPStatusChangeListener(listener);
       coreEvents.off('extensionsStarting', extensionEventListener);
       coreEvents.off('extensionsStopping', extensionEventListener);
+      coreEvents.off(CoreEvent.CommandsRefreshed, listener);
     };
   }, [config, reloadCommands]);
 

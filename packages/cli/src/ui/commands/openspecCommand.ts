@@ -10,6 +10,8 @@ import type { SlashCommand, CommandContext } from './types.js';
 import { CommandKind } from './types.js';
 import { MessageType } from '../types.js';
 
+import { coreEvents } from '@codeflyai/codefly-core';
+
 const executeOpenspec = async (context: CommandContext, args: string[]) => {
   const { ui } = context;
 
@@ -104,6 +106,9 @@ const executeOpenspec = async (context: CommandContext, args: string[]) => {
           },
           Date.now(),
         );
+      } else {
+        // Trigger command reload as openspec might have generated new commands
+        coreEvents.emitCommandsRefreshed();
       }
       resolve();
     });
