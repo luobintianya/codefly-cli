@@ -8,6 +8,7 @@ import type { AgentDefinition } from './types.js';
 import { GetInternalDocsTool } from '../tools/get-internal-docs.js';
 import { CODEFLY_MODEL_ALIAS_FLASH } from '../config/models.js';
 import { z } from 'zod';
+import type { Config } from '../config/config.js';
 
 const IntrospectionReportSchema = z.object({
   answer: z
@@ -22,9 +23,9 @@ const IntrospectionReportSchema = z.object({
  * An agent specialized in answering questions about Codefly CLI itself,
  * using its own documentation and runtime state.
  */
-export const IntrospectionAgent: AgentDefinition<
-  typeof IntrospectionReportSchema
-> = {
+export const IntrospectionAgent = (
+  config: Config,
+): AgentDefinition<typeof IntrospectionReportSchema> => ({
   name: 'introspection_agent',
   kind: 'local',
   displayName: 'Introspection Agent',
@@ -84,6 +85,9 @@ export const IntrospectionAgent: AgentDefinition<
       '2. **Be Precise**: Use the provided runtime context and documentation to give exact answers.\n' +
       '3. **Cite Sources**: Always include the specific documentation files you used in your final report.\n' +
       '4. **Non-Interactive**: You operate in a loop and cannot ask the user for more info. If the question is ambiguous, answer as best as you can with the information available.\n\n' +
+      (config.language && config.language !== 'auto'
+        ? `CRITICAL: You MUST respond in ${config.language}.\n`
+        : '') +
       'You MUST call `complete_task` with a JSON report containing your `answer` and the `sources` you used.',
   },
-};
+});

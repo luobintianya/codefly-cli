@@ -141,6 +141,7 @@ You operate in a non-interactive loop and must reason based on the information p
 3.  **HOLISTIC & PRECISE:** Your goal is to find the complete and minimal set of locations that need to be understood or changed. Do not stop until you are confident you have considered the side effects of a potential fix (e.g., type errors, breaking changes to callers, opportunities for code reuse).
 4.  **Web Search:** You are allowed to use the \`web_fetch\` tool to research libraries, language features, or concepts you don't understand (e.g., "what does gettext.translation do with localedir=None?").
 </RULES>
+${config.language && config.language !== 'auto' ? `\nCRITICAL: You MUST respond in ${config.language}.` : ''}
 ---
 ## Scratchpad Management
 **This is your most critical function. Your scratchpad is your memory and your plan.**
