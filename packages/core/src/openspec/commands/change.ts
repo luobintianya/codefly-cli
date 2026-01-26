@@ -53,13 +53,13 @@ export class ChangeCommand {
         changeName = selected;
       } else {
         if (changes.length === 0) {
-          console.error('No change specified. No active changes found.');
+          console.log('No change specified. No active changes found.');
         } else {
-          console.error(
+          console.log(
             `No change specified. Available IDs: ${changes.join(', ')}`,
           );
         }
-        console.error(
+        console.log(
           'Hint: use "openspec change list" to view available changes.',
         );
         process.exitCode = 1;
@@ -79,7 +79,7 @@ export class ChangeCommand {
       const jsonOutput = await this.converter.convertChangeToJson(proposalPath);
 
       if (options.requirementsOnly) {
-        console.error(
+        console.log(
           'Flag --requirements-only is deprecated; use --deltas-only instead.',
         );
       }
@@ -234,13 +234,13 @@ export class ChangeCommand {
         changeName = selected;
       } else {
         if (changes.length === 0) {
-          console.error('No change specified. No active changes found.');
+          console.log('No change specified. No active changes found.');
         } else {
-          console.error(
+          console.log(
             `No change specified. Available IDs: ${changes.join(', ')}`,
           );
         }
-        console.error(
+        console.log(
           'Hint: use "openspec change list" to view available changes.',
         );
         process.exitCode = 1;
@@ -265,11 +265,11 @@ export class ChangeCommand {
       if (report.valid) {
         console.log(`Change "${changeName}" is valid`);
       } else {
-        console.error(`Change "${changeName}" has issues`);
+        console.log(`Change "${changeName}" has issues`);
         report.issues.forEach((issue) => {
           const label = issue.level === 'ERROR' ? 'ERROR' : 'WARNING';
           const prefix = issue.level === 'ERROR' ? '✗' : '⚠';
-          console.error(`${prefix} [${label}] ${issue.path}: ${issue.message}`);
+          console.log(`${prefix} [${label}] ${issue.path}: ${issue.message}`);
         });
         // Next steps footer to guide fixing issues
         this.printNextSteps();
@@ -338,7 +338,7 @@ export class ChangeCommand {
     bullets.push(
       '- Debug parsed deltas: openspec change show <id> --json --deltas-only',
     );
-    console.error('Next steps:');
-    bullets.forEach((b) => console.error(`  ${b}`));
+    console.log('Next steps:');
+    bullets.forEach((b) => console.log(`  ${b}`));
   }
 }

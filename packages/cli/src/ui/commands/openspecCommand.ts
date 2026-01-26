@@ -33,18 +33,69 @@ const executeOpenspec = async (context: CommandContext, args: string[]) => {
       },
     );
 
+    let stdoutBuffer = '';
     child.stdout.on('data', (data) => {
-      // Console logs are captured by the UI and displayed in the log area
-      // eslint-disable-next-line no-console
-      console.log(data.toString().trimEnd());
+      stdoutBuffer += data.toString();
+      const lines = stdoutBuffer.split('\n');
+      // The last part might be incomplete
+      stdoutBuffer = lines.pop() || '';
+
+      lines.forEach((line) => {
+        // Also log to console for debugging purposes, but this goes to Debug Console
+        // eslint-disable-next-line no-console
+        console.log(line);
+
+        // Display in UI
+        if (line.trim()) {
+          ui.addItem(
+            {
+              type: MessageType.INFO,
+              text: line,
+            },
+            Date.now(),
+          );
+        }
+      });
     });
 
+    let stderrBuffer = '';
     child.stderr.on('data', (data) => {
-      // eslint-disable-next-line no-console
-      console.error(data.toString().trimEnd());
+      stderrBuffer += data.toString();
+      const lines = stderrBuffer.split('\n');
+      stderrBuffer = lines.pop() || '';
+
+      lines.forEach((line) => {
+        // eslint-disable-next-line no-console
+        console.error(line);
+
+        if (line.trim()) {
+          ui.addItem(
+            {
+              // Some tools print non-errors to stderr, but we'll treat as info or error?
+              // Let's use INFO for stderr unless it's clearly an error, but openspec usually uses stderr for logging too.
+              // However, usually stderr is warnings/errors.
+              type: MessageType.INFO, // keeping as info to avoid alarming red text for mundane logs if any
+              text: line,
+            },
+            Date.now(),
+          );
+        }
+      });
     });
 
     child.on('close', (code) => {
+      // Flush remaining buffers
+      if (stdoutBuffer.trim()) {
+        // eslint-disable-next-line no-console
+        console.log(stdoutBuffer);
+        ui.addItem({ type: MessageType.INFO, text: stdoutBuffer }, Date.now());
+      }
+      if (stderrBuffer.trim()) {
+        // eslint-disable-next-line no-console
+        console.error(stderrBuffer);
+        ui.addItem({ type: MessageType.INFO, text: stderrBuffer }, Date.now());
+      }
+
       if (code !== 0) {
         ui.addItem(
           {
@@ -204,6 +255,20 @@ export const openspecCommand: SlashCommand = {
       kind: CommandKind.BUILT_IN,
       autoExecute: true,
       action: createSubCommandAction('help'),
+    },
+    {
+      name: 'view',
+      description: 'Display an interactive dashboard of specs and changes',
+      kind: CommandKind.BUILT_IN,
+      autoExecute: true,
+      action: createSubCommandAction('view'),
+    },
+    {
+      name: 'feedback',
+      description: 'Submit feedback about OpenSpec',
+      kind: CommandKind.BUILT_IN,
+      autoExecute: true,
+      action: createSubCommandAction('feedback'),
     },
   ],
   action: async (context, argsString) => {

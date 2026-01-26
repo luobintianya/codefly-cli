@@ -122,19 +122,19 @@ export class ShowCommand {
       (isChange ? 'change' : isSpec ? 'spec' : undefined);
 
     if (!resolvedType) {
-      console.error(`Unknown item '${itemName}'`);
+      console.log(`Unknown item '${itemName}'`);
       const suggestions = nearestMatches(itemName, [...changes, ...specs]);
       if (suggestions.length)
-        console.error(`Did you mean: ${suggestions.join(', ')}?`);
+        console.log(`Did you mean: ${suggestions.join(', ')}?`);
       process.exitCode = 1;
       return;
     }
 
     if (!params.typeOverride && isChange && isSpec) {
-      console.error(
+      console.log(
         `Ambiguous item '${itemName}' matches both a change and a spec.`,
       );
-      console.error(
+      console.log(
         'Pass --type change|spec, or use: openspec change show / openspec spec show',
       );
       process.exitCode = 1;
@@ -152,11 +152,11 @@ export class ShowCommand {
   }
 
   private printNonInteractiveHint(): void {
-    console.error('Nothing to show. Try one of:');
-    console.error('  openspec show <item>');
-    console.error('  openspec change show');
-    console.error('  openspec spec show');
-    console.error('Or run in an interactive terminal.');
+    console.log('Nothing to show. Try one of:');
+    console.log('  openspec show <item>');
+    console.log('  openspec change show');
+    console.log('  openspec spec show');
+    console.log('Or run in an interactive terminal.');
   }
 
   private warnIrrelevantFlags(
@@ -170,7 +170,7 @@ export class ShowCommand {
       for (const k of CHANGE_FLAG_KEYS) if (k in options) irrelevant.push(k);
     }
     if (irrelevant.length > 0) {
-      console.error(
+      console.log(
         `Warning: Ignoring flags not applicable to ${type}: ${irrelevant.join(', ')}`,
       );
       return true;

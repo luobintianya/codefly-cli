@@ -12,12 +12,14 @@ import { AI_TOOLS } from '../core/config.js';
 import { UpdateCommand } from '../core/update.js';
 import { ListCommand } from '../core/list.js';
 import { ArchiveCommand } from '../core/archive.js';
+import { ViewCommand } from '../core/view.js';
 
 import { registerSpecCommand } from '../commands/spec.js';
 import { ChangeCommand } from '../commands/change.js';
 import { ValidateCommand } from '../commands/validate.js';
 import { ShowCommand } from '../commands/show.js';
 import { CompletionCommand } from '../commands/completion.js';
+import { FeedbackCommand } from '../commands/feedback.js';
 
 import { registerConfigCommand } from '../commands/config.js';
 import { registerSchemaCommand } from '../commands/schema.js';
@@ -384,6 +386,37 @@ program
       }
     },
   );
+
+// Alias 'view' -> 'show'
+program
+  .command('view')
+  .description('Display an interactive dashboard of specs and changes')
+  .action(async () => {
+    try {
+      const viewCommand = new ViewCommand();
+      await viewCommand.execute('.');
+    } catch (error) {
+      console.log(); // Empty line for spacing
+      ora().fail(`Error: ${(error as Error).message}`);
+      process.exit(1);
+    }
+  });
+
+// Feedback command
+program
+  .command('feedback <message>')
+  .description('Submit feedback about OpenSpec')
+  .option('--body <text>', 'Detailed description for the feedback')
+  .action(async (message: string, options?: { body?: string }) => {
+    try {
+      const feedbackCommand = new FeedbackCommand();
+      await feedbackCommand.execute(message, options);
+    } catch (error) {
+      console.log();
+      ora().fail(`Error: ${(error as Error).message}`);
+      process.exit(1);
+    }
+  });
 
 // Completion command with subcommands
 const completionCmd = program

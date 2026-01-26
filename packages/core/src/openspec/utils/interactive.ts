@@ -31,5 +31,7 @@ export function isInteractive(value?: boolean | InteractiveOptions): boolean {
   if (process.env.OPEN_SPEC_INTERACTIVE === '0') return false;
   // Respect the standard CI environment variable (set by GitHub Actions, GitLab CI, Travis, etc.)
   if ('CI' in process.env) return false;
+  if (process.env.TERM === 'dumb') return false;
+  if (process.env.TEST === 'true') return false;
   return !!process.stdin.isTTY;
 }

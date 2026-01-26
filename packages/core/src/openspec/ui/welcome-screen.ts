@@ -65,8 +65,9 @@ function canAnimate(): boolean {
   // Must be TTY
   if (!process.stdout.isTTY) return false;
 
-  // Respect NO_COLOR
   if (process.env.NO_COLOR) return false;
+  if (process.env.TERM === 'dumb') return false;
+  if (process.env.TEST === 'true') return false;
 
   // Check terminal width
   const columns = process.stdout.columns || 80;
@@ -123,9 +124,10 @@ export async function showWelcomeScreen(): Promise<void> {
   const textLines = getWelcomeText();
 
   if (!canAnimate()) {
-    // Fallback: show static welcome
-    const frame = WELCOME_ANIMATION.frames[3]; // Peak frame
-    process.stdout.write('\n' + renderFrame(frame, textLines) + '\n\n');
+    // Fallback: show static welcome text only
+    console.log();
+    textLines.forEach((line) => console.log(line));
+    console.log();
     return;
   }
 

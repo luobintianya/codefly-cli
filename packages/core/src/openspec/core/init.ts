@@ -204,7 +204,7 @@ export class InitCommand {
     projectPath: string,
     detection: LegacyDetectionResult,
   ): Promise<void> {
-    const spinner = ora('Cleaning up legacy files...').start();
+    const spinner = this.startSpinner('Cleaning up legacy files...');
 
     const result = await cleanupLegacyArtifacts(projectPath, detection);
 
@@ -467,7 +467,7 @@ export class InitCommand {
 
     // Process each tool
     for (const tool of tools) {
-      const spinner = ora(`Setting up ${tool.name}...`).start();
+      const spinner = this.startSpinner(`Setting up ${tool.name}...`);
 
       try {
         // Use tool-specific skillsDir
