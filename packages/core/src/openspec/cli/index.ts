@@ -39,6 +39,8 @@ import {
 const program = new Command();
 const version = process.env.CLI_VERSION || '0.0.0';
 
+// Note: _getCommandPath was unused and removed.
+
 program
   .name('openspec')
   .description('AI-native system for spec-driven development')
@@ -79,20 +81,18 @@ program
           if (!stats.isDirectory()) {
             throw new Error(`Path "${targetPath}" is not a directory`);
           }
-        } catch (error: any) {
-          if (error.code === 'ENOENT') {
+        } catch (error: unknown) {
+          const err = error as { code?: string; message?: string };
+          if (err.code === 'ENOENT') {
             // Directory doesn't exist, but we can create it
             console.log(
               `Directory "${targetPath}" doesn't exist, it will be created.`,
             );
-          } else if (
-            error.message &&
-            error.message.includes('not a directory')
-          ) {
-            throw error;
+          } else if (err.message && err.message.includes('not a directory')) {
+            throw err;
           } else {
             throw new Error(
-              `Cannot access path "${targetPath}": ${error.message}`,
+              `Cannot access path "${targetPath}": ${err.message}`,
             );
           }
         }
@@ -371,7 +371,7 @@ program
         json?: boolean;
         type?: string;
         noInteractive?: boolean;
-        [k: string]: any;
+        [k: string]: unknown;
       },
     ) => {
       try {
@@ -444,7 +444,7 @@ program
     try {
       const completionCommand = new CompletionCommand();
       await completionCommand.complete({ type });
-    } catch (_error) {
+    } catch {
       // Silently fail for graceful shell completion experience
       process.exitCode = 1;
     }

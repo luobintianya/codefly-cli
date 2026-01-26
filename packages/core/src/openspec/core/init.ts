@@ -8,6 +8,7 @@ import path from 'node:path';
 import chalk from 'chalk';
 import ora from 'ora';
 import * as fs from 'node:fs';
+// import { createRequire } from 'node:module';
 import { FileSystemUtils } from '../utils/file-system.js';
 import { AI_TOOLS, OPENSPEC_DIR_NAME } from './config.js';
 import { PALETTE } from './styles/palette.js';
@@ -81,7 +82,7 @@ export class InitCommand {
     const extendMode = await this.validate(projectPath, openspecPath);
 
     // Check for legacy artifacts and handle cleanup
-    await this.handleLegacyCleanup(projectPath, extendMode);
+    await this.handleLegacyCleanup(projectPath);
 
     // Show animated welcome screen (interactive mode only)
     const canPrompt = this.canPromptInteractively();
@@ -94,7 +95,7 @@ export class InitCommand {
     const toolStates = getToolStates(projectPath);
 
     // Get tool selection
-    const selectedToolIds = await this.getSelectedTools(toolStates, extendMode);
+    const selectedToolIds = await this.getSelectedTools(toolStates);
 
     // Validate selected tools
     const validatedTools = this.validateTools(selectedToolIds, toolStates);
@@ -109,7 +110,7 @@ export class InitCommand {
     );
 
     // Create config.yaml if needed
-    const configStatus = await this.createConfig(openspecPath, extendMode);
+    const configStatus = await this.createConfig(openspecPath);
 
     // Display success message
     this.displaySuccessMessage(
@@ -147,10 +148,7 @@ export class InitCommand {
   // LEGACY CLEANUP
   // ═══════════════════════════════════════════════════════════
 
-  private async handleLegacyCleanup(
-    projectPath: string,
-    _extendMode: boolean,
-  ): Promise<void> {
+  private async handleLegacyCleanup(projectPath: string): Promise<void> {
     // Detect legacy artifacts
     const detection = await detectLegacyArtifacts(projectPath);
 
@@ -227,7 +225,6 @@ export class InitCommand {
 
   private async getSelectedTools(
     toolStates: Map<string, ToolSkillStatus>,
-    _extendMode: boolean,
   ): Promise<string[]> {
     // Check for --tools flag first
     const nonInteractiveSelection = this.resolveToolsArg();
@@ -263,7 +260,7 @@ export class InitCommand {
           preSelected: configured, // Pre-select configured tools for easy refresh
         };
       })
-      .sort((a, b: any) => {
+      .sort((a, b) => {
         // Configured tools first
         if (a.configured && !b.configured) return -1;
         if (!a.configured && b.configured) return 1;
@@ -400,9 +397,9 @@ export class InitCommand {
 
   private async createDirectoryStructure(
     openspecPath: string,
-    _extendMode: boolean,
+    extendMode: boolean,
   ): Promise<void> {
-    if (_extendMode) {
+    if (extendMode) {
       // In extend mode, just ensure directories exist without spinner
       const directories = [
         openspecPath,
@@ -518,7 +515,6 @@ export class InitCommand {
 
   private async createConfig(
     openspecPath: string,
-    _extendMode: boolean,
   ): Promise<'created' | 'exists' | 'skipped'> {
     const configPath = path.join(openspecPath, 'config.yaml');
     const configYmlPath = path.join(openspecPath, 'config.yml');
@@ -549,15 +545,15 @@ export class InitCommand {
 
   private displaySuccessMessage(
     projectPath: string,
-    _tools: Array<{
+    tools: Array<{
       value: string;
       name: string;
       skillsDir: string;
       wasConfigured: boolean;
     }>,
     results: {
-      createdTools: typeof _tools;
-      refreshedTools: typeof _tools;
+      createdTools: typeof tools;
+      refreshedTools: typeof tools;
       failedTools: Array<{ name: string; error: Error }>;
       commandsSkipped: string[];
     },

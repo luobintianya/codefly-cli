@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+// import path from 'node:path';
 import { promises as fs } from 'node:fs';
 import chalk from 'chalk';
 import {
@@ -188,7 +189,7 @@ export async function detectLegacySlashCommands(projectPath: string): Promise<{
   const directories: string[] = [];
   const files: string[] = [];
 
-  for (const [_toolId, pattern] of Object.entries(LEGACY_SLASH_COMMAND_PATHS)) {
+  for (const [, pattern] of Object.entries(LEGACY_SLASH_COMMAND_PATHS)) {
     if (pattern.type === 'directory' && pattern.path) {
       const dirPath = FileSystemUtils.joinPath(projectPath, pattern.path);
       if (await FileSystemUtils.directoryExists(dirPath)) {
@@ -396,8 +397,9 @@ export async function cleanupLegacyArtifacts(
       // Always write the file, even if empty - never delete user config files
       await FileSystemUtils.writeFile(filePath, newContent);
       result.modifiedFiles.push(fileName);
-    } catch (error: any) {
-      result.errors.push(`Failed to modify ${fileName}: ${error.message}`);
+    } catch (error: unknown) {
+      const err = error as { message?: string };
+      result.errors.push(`Failed to modify ${fileName}: ${err.message}`);
     }
   }
 
@@ -407,9 +409,10 @@ export async function cleanupLegacyArtifacts(
     try {
       await fs.rm(fullPath, { recursive: true, force: true });
       result.deletedDirs.push(dirPath);
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
       result.errors.push(
-        `Failed to delete directory ${dirPath}: ${error.message}`,
+        `Failed to delete directory ${dirPath}: ${err.message}`,
       );
     }
   }
@@ -420,8 +423,9 @@ export async function cleanupLegacyArtifacts(
     try {
       await fs.unlink(fullPath);
       result.deletedFiles.push(filePath);
-    } catch (error: any) {
-      result.errors.push(`Failed to delete ${filePath}: ${error.message}`);
+    } catch (error: unknown) {
+      const err = error as { message?: string };
+      result.errors.push(`Failed to delete ${filePath}: ${err.message}`);
     }
   }
 
@@ -436,9 +440,10 @@ export async function cleanupLegacyArtifacts(
       try {
         await fs.unlink(agentsPath);
         result.deletedFiles.push('openspec/AGENTS.md');
-      } catch (error: any) {
+      } catch (error: unknown) {
+        const err = error as { message?: string };
         result.errors.push(
-          `Failed to delete openspec/AGENTS.md: ${error.message}`,
+          `Failed to delete openspec/AGENTS.md: ${err.message}`,
         );
       }
     }
@@ -508,7 +513,7 @@ export function formatCleanupSummary(result: CleanupResult): string {
  * @param detection - Detection result from detectLegacyArtifacts
  * @returns Array of objects with path and explanation
  */
-function _buildRemovalsList(
+function buildRemovalsList(
   detection: LegacyDetectionResult,
 ): Array<{ path: string; explanation: string }> {
   const removals: Array<{ path: string; explanation: string }> = [];
@@ -549,7 +554,7 @@ function _buildRemovalsList(
  * @param detection - Detection result from detectLegacyArtifacts
  * @returns Array of objects with path and explanation
  */
-function _buildUpdatesList(
+function buildUpdatesList(
   detection: LegacyDetectionResult,
 ): Array<{ path: string; explanation: string }> {
   const updates: Array<{ path: string; explanation: string }> = [];
@@ -574,8 +579,8 @@ export function formatDetectionSummary(
 ): string {
   const lines: string[] = [];
 
-  const removals = _buildRemovalsList(detection);
-  const updates = _buildUpdatesList(detection);
+  const removals = buildRemovalsList(detection);
+  const updates = buildUpdatesList(detection);
 
   // If nothing to show, return empty
   if (
@@ -642,11 +647,11 @@ export function getToolsFromLegacyArtifacts(
 
   // Match directories to tool IDs
   for (const dir of detection.slashCommandDirs) {
-    for (const [_toolId, pattern] of Object.entries(
+    for (const [toolId, pattern] of Object.entries(
       LEGACY_SLASH_COMMAND_PATHS,
     )) {
       if (pattern.type === 'directory' && pattern.path === dir) {
-        tools.add(_toolId);
+        tools.add(toolId);
         break;
       }
     }
