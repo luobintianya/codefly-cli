@@ -439,7 +439,7 @@ const SETTINGS_SCHEMA = {
         requiresRestart: false,
         default: false,
         description:
-          'Hide the context summary (GEMINI.md, MCP servers) above the input.',
+          'Hide the context summary (CODEFLY.md, MCP servers) above the input.',
         showInDialog: true,
       },
       footer: {
@@ -880,7 +880,7 @@ const SETTINGS_SCHEMA = {
         requiresRestart: false,
         default: false,
         description: oneLine`
-          Controls how /memory refresh loads GEMINI.md files.
+          Controls how /memory refresh loads CODEFLY.md files.
           When true, include directories are scanned; when false, only the current directory is used.
         `,
         showInDialog: true,
