@@ -62,6 +62,8 @@ export interface UIState {
   isAuthDialogOpen: boolean;
   isAwaitingApiKeyInput: boolean;
   apiKeyDefaultValue?: string;
+  baseUrlDefaultValue?: string;
+  modelsDefaultValue?: string;
   editorError: string | null;
   isEditorDialogOpen: boolean;
   showPrivacyNotice: boolean;

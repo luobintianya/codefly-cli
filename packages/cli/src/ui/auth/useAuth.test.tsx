@@ -160,17 +160,19 @@ describe('useAuth', () => {
       });
     });
 
-    it('should set error if no auth type is selected but env key exists', async () => {
+    it('should auto-select USE_GEMINI if GEMINI_API_KEY exists', async () => {
+      mockLoadApiKey.mockResolvedValue(null);
       process.env['GEMINI_API_KEY'] = 'env-key';
       const { result } = renderHook(() =>
         useAuthCommand(createSettings(undefined), mockConfig),
       );
 
       await waitFor(() => {
-        expect(result.current.authError).toContain(
-          'Existing API key detected (GEMINI_API_KEY)',
+        expect(mockConfig.refreshAuth).toHaveBeenCalledWith(
+          AuthType.USE_GEMINI,
         );
-        expect(result.current.authState).toBe(AuthState.Updating);
+        expect(result.current.authState).toBe(AuthState.Authenticated);
+        expect(result.current.apiKeyDefaultValue).toBe('env-key');
       });
     });
 
@@ -290,12 +292,11 @@ describe('useAuth', () => {
       });
     });
 
-    it('should sync OpenAI config checks for OpenAI auth type', async () => {
+    it('should authenticate if OpenAI auth type is configured', async () => {
       const settings = createSettings(AuthType.OPENAI);
       if (!settings.merged.security?.auth) {
         throw new Error('Security auth settings not initialized');
       }
-      // Type assertion needed because settings schema uses literal types as defaults
       (settings.merged.security.auth.openai as {
         baseUrl?: string;
         model?: string;
@@ -311,12 +312,6 @@ describe('useAuth', () => {
       await waitFor(() => {
         expect(mockConfig.refreshAuth).toHaveBeenCalledWith(AuthType.OPENAI);
         expect(result.current.authState).toBe(AuthState.Authenticated);
-        // Verify config was updated
-        expect(mockConfig.openaiConfig).toEqual({
-          baseUrl: 'https://test.url',
-          model: 'test-model',
-          apiKey: 'test-key',
-        });
       });
     });
   });

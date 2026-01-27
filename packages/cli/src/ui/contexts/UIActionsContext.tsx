@@ -63,7 +63,11 @@ export interface UIActions {
   handleDeleteSession: (session: SessionInfo) => Promise<void>;
   setQueueErrorMessage: (message: string | null) => void;
   popAllMessages: () => string | undefined;
-  handleApiKeySubmit: (apiKey: string) => Promise<void>;
+  handleApiKeySubmit: (
+    apiKey: string,
+    baseUrl?: string,
+    models?: string,
+  ) => Promise<void>;
   handleApiKeyCancel: () => void;
   setBannerVisible: (visible: boolean) => void;
   setEmbeddedShellFocused: (value: boolean) => void;

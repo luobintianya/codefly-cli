@@ -39,6 +39,20 @@ vi.mock('@codeflyai/codefly-core', async () => {
   };
 });
 
+vi.mock('../contexts/SettingsContext.js', () => ({
+  useSettings: () => ({
+    merged: {
+      security: {
+        auth: {
+          selectedType: 'login-with-google',
+          openai: { models: '' },
+          zhipu: { models: '' },
+        },
+      },
+    },
+  }),
+}));
+
 describe('<ModelDialog />', () => {
   const mockSetModel = vi.fn();
   const mockGetModel = vi.fn();
@@ -115,7 +129,8 @@ describe('<ModelDialog />', () => {
     stdin.write('\r');
     await waitForUpdate();
 
-    // Should now show manual options
+    // Should now show manual options and headers
+    expect(lastFrame()).toContain('Google / Gemini');
     expect(lastFrame()).toContain(DEFAULT_CODEFLY_MODEL);
     expect(lastFrame()).toContain(DEFAULT_CODEFLY_FLASH_MODEL);
     expect(lastFrame()).toContain(DEFAULT_GEMINI_FLASH_LITE_MODEL);

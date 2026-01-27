@@ -14,6 +14,7 @@ export interface SelectionListItem<T> {
   value: T;
   disabled?: boolean;
   hideNumber?: boolean;
+  isHeader?: boolean;
 }
 
 interface BaseSelectionItem {
@@ -265,7 +266,10 @@ function areBaseItemsEqual(
 function toBaseItems<T>(
   items: Array<SelectionListItem<T>>,
 ): BaseSelectionItem[] {
-  return items.map(({ key, disabled }) => ({ key, disabled }));
+  return items.map(({ key, disabled, isHeader }) => ({
+    key,
+    disabled: disabled || isHeader,
+  }));
 }
 
 /**
@@ -420,6 +424,7 @@ export function useSelectionList<T>({
         numberInputRef.current = newNumberInput;
 
         const targetIndex = Number.parseInt(newNumberInput, 10) - 1;
+        const targetItem = items[targetIndex];
 
         // Single '0' is invalid (1-indexed)
         if (newNumberInput === '0') {
@@ -429,7 +434,11 @@ export function useSelectionList<T>({
           return;
         }
 
-        if (targetIndex >= 0 && targetIndex < itemsLength) {
+        if (
+          targetIndex >= 0 &&
+          targetIndex < itemsLength &&
+          !targetItem?.isHeader
+        ) {
           dispatch({
             type: 'SET_ACTIVE_INDEX',
             payload: { index: targetIndex },
@@ -457,7 +466,7 @@ export function useSelectionList<T>({
         }
       }
     },
-    [dispatch, itemsLength, showNumbers],
+    [dispatch, items, itemsLength, showNumbers],
   );
 
   useKeypress(handleKeypress, { isActive: !!(isFocused && itemsLength > 0) });

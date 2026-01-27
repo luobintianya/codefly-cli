@@ -205,6 +205,8 @@ export const DialogManager = ({
           onCancel={uiActions.handleApiKeyCancel}
           error={uiState.authError}
           defaultValue={uiState.apiKeyDefaultValue}
+          defaultBaseUrl={uiState.baseUrlDefaultValue}
+          defaultModels={uiState.modelsDefaultValue}
         />
       </Box>
     );

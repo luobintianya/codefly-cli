@@ -141,12 +141,12 @@ export function BaseSelectionList<
                 color={isSelected ? theme.status.success : theme.text.primary}
                 aria-hidden
               >
-                {isSelected ? '●' : ' '}
+                {isSelected ? '●' : item.isHeader ? '' : ' '}
               </Text>
             </Box>
 
             {/* Item number */}
-            {showNumbers && !item.hideNumber && (
+            {showNumbers && !item.hideNumber && !item.isHeader && (
               <Box
                 marginRight={1}
                 flexShrink={0}

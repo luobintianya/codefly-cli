@@ -406,6 +406,13 @@ export interface ConfigParameters {
     baseUrl?: string;
     model?: string;
     apiKey?: string;
+    models?: string;
+  };
+  zhipuConfig?: {
+    baseUrl?: string;
+    model?: string;
+    apiKey?: string;
+    models?: string;
   };
 
   mcpEnabled?: boolean;
@@ -569,6 +576,13 @@ export class Config {
     baseUrl?: string;
     model?: string;
     apiKey?: string;
+    models?: string;
+  };
+  zhipuConfig?: {
+    baseUrl?: string;
+    model?: string;
+    apiKey?: string;
+    models?: string;
   };
   private readonly enableHooksUI: boolean;
   private hooks: { [K in HookEventName]?: HookDefinition[] } | undefined;
@@ -742,6 +756,7 @@ export class Config {
     this.onModelChange = params.onModelChange;
     this.onReload = params.onReload;
     this.openaiConfig = params.openaiConfig;
+    this.zhipuConfig = params.zhipuConfig;
 
     if (params.contextFileName) {
       setCodeflyMdFilename(params.contextFileName);

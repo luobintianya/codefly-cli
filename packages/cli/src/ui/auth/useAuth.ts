@@ -27,8 +27,12 @@ export function validateAuthMethodWithSettings(
   if (settings.merged.security.auth.useExternal) {
     return null;
   }
-  // If using Gemini API key, we don't validate it here as we might need to prompt for it.
-  if (authType === AuthType.USE_GEMINI) {
+  // If using API keys, we don't validate it here as we might need to prompt for it.
+  if (
+    authType === AuthType.USE_GEMINI ||
+    authType === AuthType.OPENAI ||
+    authType === AuthType.ZHIPU
+  ) {
     return null;
   }
   return validateAuthMethod(authType);
@@ -43,6 +47,12 @@ export const useAuthCommand = (settings: LoadedSettings, config: Config) => {
   const [apiKeyDefaultValue, setApiKeyDefaultValue] = useState<
     string | undefined
   >(undefined);
+  const [baseUrlDefaultValue, setBaseUrlDefaultValue] = useState<
+    string | undefined
+  >(undefined);
+  const [modelsDefaultValue, setModelsDefaultValue] = useState<
+    string | undefined
+  >(undefined);
 
   const onAuthError = useCallback(
     (error: string | null) => {
@@ -54,17 +64,44 @@ export const useAuthCommand = (settings: LoadedSettings, config: Config) => {
     [setAuthError, setAuthState],
   );
 
-  const reloadApiKey = useCallback(async () => {
-    const envKey = process.env['GEMINI_API_KEY'];
-    if (envKey !== undefined) {
-      setApiKeyDefaultValue(envKey);
-      return envKey;
-    }
+  const reloadApiKey = useCallback(
+    async (type?: AuthType) => {
+      const authType = type ?? settings.merged.security.auth.selectedType;
 
-    const storedKey = (await loadApiKey()) ?? '';
-    setApiKeyDefaultValue(storedKey);
-    return storedKey;
-  }, []);
+      if (authType === AuthType.USE_GEMINI) {
+        const envKey = process.env['GEMINI_API_KEY'];
+        if (envKey !== undefined) {
+          setApiKeyDefaultValue(envKey);
+          return envKey;
+        }
+
+        const storedKey = (await loadApiKey()) ?? '';
+        setApiKeyDefaultValue(storedKey);
+        return storedKey;
+      }
+
+      if (authType === AuthType.OPENAI) {
+        const envKey = process.env['OPENAI_API_KEY'];
+        const settingsKey = settings.merged.security.auth.openai?.apiKey;
+        setApiKeyDefaultValue(envKey || settingsKey);
+        setBaseUrlDefaultValue(settings.merged.security.auth.openai?.baseUrl);
+        setModelsDefaultValue(settings.merged.security.auth.openai?.models);
+        return envKey || settingsKey;
+      }
+
+      if (authType === AuthType.ZHIPU) {
+        const envKey = process.env['ZHIPU_API_KEY'];
+        const settingsKey = settings.merged.security.auth.zhipu?.apiKey;
+        setApiKeyDefaultValue(envKey || settingsKey);
+        setBaseUrlDefaultValue(settings.merged.security.auth.zhipu?.baseUrl);
+        setModelsDefaultValue(settings.merged.security.auth.zhipu?.models);
+        return envKey || settingsKey;
+      }
+
+      return undefined;
+    },
+    [settings],
+  );
 
   useEffect(() => {
     if (authState === AuthState.AwaitingApiKeyInput) {
@@ -80,20 +117,37 @@ export const useAuthCommand = (settings: LoadedSettings, config: Config) => {
         return;
       }
 
-      const authType = settings.merged.security.auth.selectedType;
+      let authType = settings.merged.security.auth.selectedType;
       if (!authType) {
+        // Auto-select based on environment variables if possible
         if (process.env['GEMINI_API_KEY']) {
-          onAuthError(
-            'Existing API key detected (GEMINI_API_KEY). Select "Gemini API Key" option to use it.',
-          );
-        } else {
-          onAuthError('No authentication method selected.');
+          authType = AuthType.USE_GEMINI;
+        } else if (process.env['OPENAI_API_KEY']) {
+          authType = AuthType.OPENAI;
+        } else if (process.env['ZHIPU_API_KEY']) {
+          authType = AuthType.ZHIPU;
+        } else if (
+          process.env['GOOGLE_CLOUD_PROJECT'] &&
+          process.env['GOOGLE_CLOUD_LOCATION']
+        ) {
+          authType = AuthType.USE_VERTEX_AI;
         }
-        return;
+
+        if (!authType) {
+          onAuthError('No authentication method selected.');
+          return;
+        }
+      }
+
+      if (authType === AuthType.OPENAI || authType === AuthType.ZHIPU) {
+        const key = await reloadApiKey(authType);
+        if (!key) {
+          return;
+        }
       }
 
       if (authType === AuthType.USE_GEMINI) {
-        const key = await reloadApiKey(); // Use the unified function
+        const key = await reloadApiKey(authType);
         if (!key) {
           setAuthState(AuthState.AwaitingApiKeyInput);
           return;
@@ -119,19 +173,6 @@ export const useAuthCommand = (settings: LoadedSettings, config: Config) => {
       }
 
       try {
-        if (
-          authType === AuthType.OPENAI &&
-          settings.merged.security?.auth?.openai
-        ) {
-          // Sync settings to config because config.refreshAuth uses config properties
-          // which might be stale if they were just set in the wizard.
-          config.openaiConfig = {
-            baseUrl: settings.merged.security.auth.openai.baseUrl,
-            model: settings.merged.security.auth.openai.model,
-            apiKey: settings.merged.security.auth.openai.apiKey,
-          };
-        }
-
         await config.refreshAuth(authType);
 
         debugLogger.log(`Authenticated via "${authType}".`);
@@ -157,6 +198,8 @@ export const useAuthCommand = (settings: LoadedSettings, config: Config) => {
     authError,
     onAuthError,
     apiKeyDefaultValue,
+    baseUrlDefaultValue,
+    modelsDefaultValue,
     reloadApiKey,
   };
 };

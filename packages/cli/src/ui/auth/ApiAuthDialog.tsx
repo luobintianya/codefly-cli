@@ -5,7 +5,7 @@
  */
 
 import type React from 'react';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { Box, Text } from 'ink';
 import { theme } from '../semantic-colors.js';
 import { TextInput } from '../components/shared/TextInput.js';
@@ -16,10 +16,18 @@ import { useKeypress } from '../hooks/useKeypress.js';
 import { keyMatchers, Command } from '../keyMatchers.js';
 
 interface ApiAuthDialogProps {
-  onSubmit: (apiKey: string) => void;
+  onSubmit: (apiKey: string, baseUrl?: string, models?: string) => void;
   onCancel: () => void;
   error?: string | null;
   defaultValue?: string;
+  defaultBaseUrl?: string;
+  defaultModels?: string;
+}
+
+enum FocusedField {
+  ApiKey = 'apiKey',
+  BaseUrl = 'baseUrl',
+  Models = 'models',
 }
 
 export function ApiAuthDialog({
@@ -27,6 +35,8 @@ export function ApiAuthDialog({
   onCancel,
   error,
   defaultValue = '',
+  defaultBaseUrl = '',
+  defaultModels = '',
 }: ApiAuthDialogProps): React.JSX.Element {
   const { mainAreaWidth, selectedAuthType } = useUIState();
   const viewportWidth = mainAreaWidth - 8;
@@ -40,6 +50,10 @@ export function ApiAuthDialog({
       ? 'https://platform.openai.com/api-keys'
       : 'https://aistudio.google.com/app/apikey';
 
+  const [focusedField, setFocusedField] = useState<FocusedField>(
+    FocusedField.ApiKey,
+  );
+
   const pendingPromise = useRef<{ cancel: () => void } | null>(null);
 
   useEffect(
@@ -49,23 +63,45 @@ export function ApiAuthDialog({
     [],
   );
 
-  const initialApiKey = defaultValue;
-
   const buffer = useTextBuffer({
-    initialText: initialApiKey || '',
-    initialCursorOffset: initialApiKey?.length || 0,
+    initialText: defaultValue || '',
+    initialCursorOffset: defaultValue?.length || 0,
     viewport: {
       width: viewportWidth,
       height: 4,
     },
-    isValidPath: () => false, // No path validation needed for API key
+    isValidPath: () => false,
     inputFilter: (text) =>
       text.replace(/[^a-zA-Z0-9_-]/g, '').replace(/[\r\n]/g, ''),
     singleLine: true,
   });
 
-  const handleSubmit = (value: string) => {
-    onSubmit(value);
+  const baseUrlBuffer = useTextBuffer({
+    initialText: defaultBaseUrl || '',
+    initialCursorOffset: defaultBaseUrl?.length || 0,
+    viewport: {
+      width: viewportWidth,
+      height: 4,
+    },
+    isValidPath: () => false,
+    inputFilter: (text) => text.replace(/[\r\n]/g, ''),
+    singleLine: true,
+  });
+
+  const modelsBuffer = useTextBuffer({
+    initialText: defaultModels || '',
+    initialCursorOffset: defaultModels?.length || 0,
+    viewport: {
+      width: viewportWidth,
+      height: 4,
+    },
+    isValidPath: () => false,
+    inputFilter: (text) => text.replace(/[\r\n]/g, ''),
+    singleLine: true,
+  });
+
+  const handleSubmit = () => {
+    onSubmit(buffer.text, baseUrlBuffer.text, modelsBuffer.text);
   };
 
   const handleClear = () => {
@@ -88,6 +124,8 @@ export function ApiAuthDialog({
     return wrappedPromise
       .then(() => {
         buffer.setText('');
+        baseUrlBuffer.setText('');
+        modelsBuffer.setText('');
       })
       .catch((err) => {
         debugLogger.debug('Failed to clear API key:', err);
@@ -98,6 +136,16 @@ export function ApiAuthDialog({
     async (key) => {
       if (keyMatchers[Command.CLEAR_INPUT](key)) {
         await handleClear();
+      }
+
+      if (key.name === 'tab' || key.name === 'down' || key.name === 'up') {
+        if (isOpenAI || isZhipu) {
+          setFocusedField((prev) => {
+            if (prev === FocusedField.ApiKey) return FocusedField.BaseUrl;
+            if (prev === FocusedField.BaseUrl) return FocusedField.Models;
+            return FocusedField.ApiKey;
+          });
+        }
       }
     },
     { isActive: true },
@@ -112,32 +160,111 @@ export function ApiAuthDialog({
       width="100%"
     >
       <Text bold color={theme.text.primary}>
-        Enter {providerName} API Key
+        Enter {providerName} Configuration
       </Text>
       <Box marginTop={1} flexDirection="column">
         <Text color={theme.text.primary}>
-          Please enter your {providerName} API key. It will be securely stored.
+          Please enter your {providerName} API key and Base URL (optional).
         </Text>
         <Text color={theme.text.secondary}>
           You can get an API key from{' '}
           <Text color={theme.text.link}>{keyLink}</Text>
         </Text>
       </Box>
-      <Box marginTop={1} flexDirection="row">
+
+      <Box marginTop={1} flexDirection="column">
+        <Text
+          color={theme.text.primary}
+          bold={focusedField === FocusedField.ApiKey}
+        >
+          API Key:
+        </Text>
         <Box
           borderStyle="round"
-          borderColor={theme.border.default}
+          borderColor={
+            focusedField === FocusedField.ApiKey
+              ? theme.border.focused
+              : theme.border.default
+          }
           paddingX={1}
-          flexGrow={1}
         >
           <TextInput
             buffer={buffer}
-            onSubmit={handleSubmit}
+            onSubmit={
+              isOpenAI || isZhipu
+                ? () => setFocusedField(FocusedField.BaseUrl)
+                : handleSubmit
+            }
             onCancel={onCancel}
             placeholder="Paste your API key here"
+            focus={focusedField === FocusedField.ApiKey}
+            mask={true}
           />
         </Box>
       </Box>
+
+      {(isOpenAI || isZhipu) && (
+        <>
+          <Box marginTop={0} flexDirection="column">
+            <Text
+              color={theme.text.primary}
+              bold={focusedField === FocusedField.BaseUrl}
+            >
+              Base URL (optional):
+            </Text>
+            <Box
+              borderStyle="round"
+              borderColor={
+                focusedField === FocusedField.BaseUrl
+                  ? theme.border.focused
+                  : theme.border.default
+              }
+              paddingX={1}
+            >
+              <TextInput
+                buffer={baseUrlBuffer}
+                onSubmit={() => setFocusedField(FocusedField.Models)}
+                onCancel={() => setFocusedField(FocusedField.ApiKey)}
+                placeholder={
+                  isZhipu
+                    ? 'https://open.bigmodel.cn/api/paas/v4'
+                    : 'https://api.openai.com/v1'
+                }
+                focus={focusedField === FocusedField.BaseUrl}
+              />
+            </Box>
+          </Box>
+
+          <Box marginTop={0} flexDirection="column">
+            <Text
+              color={theme.text.primary}
+              bold={focusedField === FocusedField.Models}
+            >
+              Model Names (optional, comma-separated):
+            </Text>
+            <Box
+              borderStyle="round"
+              borderColor={
+                focusedField === FocusedField.Models
+                  ? theme.border.focused
+                  : theme.border.default
+              }
+              paddingX={1}
+            >
+              <TextInput
+                buffer={modelsBuffer}
+                onSubmit={handleSubmit}
+                onCancel={() => setFocusedField(FocusedField.BaseUrl)}
+                placeholder={
+                  isZhipu ? 'glm-4,glm-4-flash' : 'gpt-4o,gpt-4o-mini'
+                }
+                focus={focusedField === FocusedField.Models}
+              />
+            </Box>
+          </Box>
+        </>
+      )}
+
       {error && (
         <Box marginTop={1}>
           <Text color={theme.status.error}>{error}</Text>
@@ -145,7 +272,8 @@ export function ApiAuthDialog({
       )}
       <Box marginTop={1}>
         <Text color={theme.text.secondary}>
-          (Press Enter to submit, Esc to cancel, Ctrl+C to clear stored key)
+          (Press Tab/Arrows to switch fields, Enter to submit, Esc to cancel,
+          Ctrl+C to clear)
         </Text>
       </Box>
     </Box>

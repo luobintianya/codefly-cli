@@ -526,6 +526,8 @@ export const AppContainer = (props: AppContainerProps) => {
     authError,
     onAuthError,
     apiKeyDefaultValue,
+    baseUrlDefaultValue,
+    modelsDefaultValue,
     reloadApiKey,
   } = useAuthCommand(settings, config);
   const [authContext, setAuthContext] = useState<{ requiresRestart?: boolean }>(
@@ -605,29 +607,13 @@ export const AppContainer = (props: AppContainerProps) => {
           // Actually, only Google login needs a browser.
         }
 
-        if (authType === AuthType.USE_GEMINI) {
-          const key = await reloadApiKey();
-          if (!key) {
-            setAuthState(AuthState.AwaitingApiKeyInput);
-            return;
-          }
-        }
-
-        if (authType === AuthType.OPENAI) {
-          if (
-            !process.env['OPENAI_API_KEY'] &&
-            !settings.merged.security.auth.openai?.apiKey
-          ) {
-            setAuthState(AuthState.AwaitingApiKeyInput);
-            return;
-          }
-        }
-
-        if (authType === AuthType.ZHIPU) {
-          if (!process.env['ZHIPU_API_KEY']) {
-            setAuthState(AuthState.AwaitingApiKeyInput);
-            return;
-          }
+        if (
+          authType === AuthType.USE_GEMINI ||
+          authType === AuthType.OPENAI ||
+          authType === AuthType.ZHIPU
+        ) {
+          setAuthState(AuthState.AwaitingApiKeyInput);
+          return;
         }
 
         try {
@@ -655,11 +641,11 @@ Logging in with Google... Restarting Gemini CLI to continue.
       }
       setAuthState(AuthState.Authenticated);
     },
-    [settings, config, setAuthState, onAuthError, setAuthContext, reloadApiKey],
+    [settings, config, setAuthState, onAuthError, setAuthContext],
   );
 
   const handleApiKeySubmit = useCallback(
-    async (apiKey: string) => {
+    async (apiKey: string, baseUrl?: string, models?: string) => {
       try {
         onAuthError(null);
         if (!apiKey.trim() && apiKey.length > 1) {
@@ -676,9 +662,40 @@ Logging in with Google... Restarting Gemini CLI to continue.
             'security.auth.openai.apiKey',
             apiKey,
           );
+          if (baseUrl) {
+            settings.setValue(
+              SettingScope.User,
+              'security.auth.openai.baseUrl',
+              baseUrl,
+            );
+          }
+          if (models) {
+            settings.setValue(
+              SettingScope.User,
+              'security.auth.openai.models',
+              models,
+            );
+          }
         } else if (currentAuthType === AuthType.ZHIPU) {
-          // Zhipu doesn't have a specific setting yet, but we can store it in env or similar.
-          // For now, saveApiKey only handles GEMINI_API_KEY usually.
+          settings.setValue(
+            SettingScope.User,
+            'security.auth.zhipu.apiKey',
+            apiKey,
+          );
+          if (baseUrl) {
+            settings.setValue(
+              SettingScope.User,
+              'security.auth.zhipu.baseUrl',
+              baseUrl,
+            );
+          }
+          if (models) {
+            settings.setValue(
+              SettingScope.User,
+              'security.auth.zhipu.models',
+              models,
+            );
+          }
         }
 
         await saveApiKey(apiKey);
@@ -725,7 +742,12 @@ Logging in with Google... Restarting Gemini CLI to continue.
       // We skip validation for Gemini API key here because it might be stored
       // in the keychain, which we can't check synchronously.
       // The useAuth hook handles validation for this case.
-      if (settings.merged.security.auth.selectedType === AuthType.USE_GEMINI) {
+      if (
+        settings.merged.security.auth.selectedType === AuthType.USE_GEMINI ||
+        settings.merged.security.auth.selectedType === AuthType.OPENAI ||
+        settings.merged.security.auth.selectedType === AuthType.ZHIPU ||
+        authState === AuthState.AwaitingApiKeyInput
+      ) {
         return;
       }
 
@@ -741,6 +763,7 @@ Logging in with Google... Restarting Gemini CLI to continue.
     settings.merged.security.auth.enforcedType,
     settings.merged.security.auth.useExternal,
     onAuthError,
+    authState,
   ]);
 
   const [editorError, setEditorError] = useState<string | null>(null);
@@ -1681,6 +1704,8 @@ Logging in with Google... Restarting Gemini CLI to continue.
       isAuthDialogOpen,
       isAwaitingApiKeyInput: authState === AuthState.AwaitingApiKeyInput,
       apiKeyDefaultValue,
+      baseUrlDefaultValue,
+      modelsDefaultValue,
       editorError,
       isEditorDialogOpen,
       showPrivacyNotice,
@@ -1861,6 +1886,8 @@ Logging in with Google... Restarting Gemini CLI to continue.
       showDebugProfiler,
       customDialog,
       apiKeyDefaultValue,
+      baseUrlDefaultValue,
+      modelsDefaultValue,
       authState,
       copyModeEnabled,
       warningMessage,

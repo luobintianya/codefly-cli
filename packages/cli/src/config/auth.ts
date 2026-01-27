@@ -61,11 +61,12 @@ export function validateAuthMethod(authMethod: string): string | null {
     if (process.env['ZHIPU_API_KEY']) return null;
 
     // Check Settings
-    // Zhipu currently doesn't have a specific settings field like OpenAI,
-    // so it must be set via environment variable for now.
+    const settings = loadSettings().merged;
+    if (settings.security?.auth?.zhipu?.apiKey) return null;
+
     return (
-      'When using Zhipu AI, you must specify the ZHIPU_API_KEY environment variable.\n' +
-      'Update your environment and try again (no reload needed if using .env)!'
+      'When using Zhipu AI, you must specify the API Key.\n' +
+      'Please use "ZHIPU_API_KEY" environment variable or set it in the settings.'
     );
   }
 

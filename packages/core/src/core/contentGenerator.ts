@@ -116,12 +116,12 @@ export async function createContentGeneratorConfig(
   }
 
   if (authType === AuthType.OPENAI) {
-    const apiKey = openaiApiKey || config.openaiConfig?.apiKey;
+    const apiKey = config.openaiConfig?.apiKey || openaiApiKey;
     if (apiKey) {
       contentGeneratorConfig.apiKey = apiKey;
       contentGeneratorConfig.baseUrl =
-        openaiBaseUrl ||
         config.openaiConfig?.baseUrl ||
+        openaiBaseUrl ||
         'https://api.openai.com/v1';
       contentGeneratorConfig.model =
         openaiModel || config.openaiConfig?.model || 'gpt-4o';
@@ -129,11 +129,15 @@ export async function createContentGeneratorConfig(
     }
   }
 
-  if (authType === AuthType.ZHIPU && zhipuApiKey) {
-    contentGeneratorConfig.apiKey = zhipuApiKey;
-    contentGeneratorConfig.baseUrl = 'https://open.bigmodel.cn/api/paas/v4';
-    contentGeneratorConfig.model = 'glm-4';
-    return contentGeneratorConfig;
+  if (authType === AuthType.ZHIPU) {
+    const apiKey = config.zhipuConfig?.apiKey || zhipuApiKey;
+    if (apiKey) {
+      contentGeneratorConfig.apiKey = apiKey;
+      contentGeneratorConfig.baseUrl =
+        config.zhipuConfig?.baseUrl || 'https://open.bigmodel.cn/api/paas/v4';
+      contentGeneratorConfig.model = config.zhipuConfig?.model || 'glm-4';
+      return contentGeneratorConfig;
+    }
   }
 
   return contentGeneratorConfig;

@@ -21,8 +21,12 @@ import {
 } from '@codeflyai/codefly-core';
 import { useKeypress } from '../hooks/useKeypress.js';
 import { theme } from '../semantic-colors.js';
-import { DescriptiveRadioButtonSelect } from './shared/DescriptiveRadioButtonSelect.js';
+import {
+  DescriptiveRadioButtonSelect,
+  type DescriptiveRadioSelectItem,
+} from './shared/DescriptiveRadioButtonSelect.js';
 import { ConfigContext } from '../contexts/ConfigContext.js';
+import { useSettings } from '../contexts/SettingsContext.js';
 import { ThemedGradient } from './ThemedGradient.js';
 
 interface ModelDialogProps {
@@ -33,6 +37,7 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
   const config = useContext(ConfigContext);
   const [view, setView] = useState<'main' | 'manual'>('main');
   const [persistMode, setPersistMode] = useState(false);
+  const settings = useSettings();
 
   // Determine the Preferred Model (read once when the dialog opens).
   const preferredModel = config?.getModel() || DEFAULT_CODEFLY_MODEL_AUTO;
@@ -117,7 +122,32 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
   }, [shouldShowPreviewModels, manualModelSelected]);
 
   const manualOptions = useMemo(() => {
-    const list = [
+    const list: Array<DescriptiveRadioSelectItem<string>> = [];
+
+    // --- Google / Gemini ---
+    list.push({
+      value: 'header-google',
+      title: 'Google / Gemini',
+      key: 'header-google',
+      isHeader: true,
+    });
+
+    if (shouldShowPreviewModels) {
+      list.push(
+        {
+          value: PREVIEW_CODEFLY_MODEL,
+          title: PREVIEW_CODEFLY_MODEL,
+          key: PREVIEW_CODEFLY_MODEL,
+        },
+        {
+          value: PREVIEW_CODEFLY_FLASH_MODEL,
+          title: PREVIEW_CODEFLY_FLASH_MODEL,
+          key: PREVIEW_CODEFLY_FLASH_MODEL,
+        },
+      );
+    }
+
+    list.push(
       {
         value: DEFAULT_CODEFLY_MODEL,
         title: DEFAULT_CODEFLY_MODEL,
@@ -133,24 +163,58 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
         title: DEFAULT_GEMINI_FLASH_LITE_MODEL,
         key: DEFAULT_GEMINI_FLASH_LITE_MODEL,
       },
-    ];
+    );
 
-    if (shouldShowPreviewModels) {
-      list.unshift(
-        {
-          value: PREVIEW_CODEFLY_MODEL,
-          title: PREVIEW_CODEFLY_MODEL,
-          key: PREVIEW_CODEFLY_MODEL,
-        },
-        {
-          value: PREVIEW_CODEFLY_FLASH_MODEL,
-          title: PREVIEW_CODEFLY_FLASH_MODEL,
-          key: PREVIEW_CODEFLY_FLASH_MODEL,
-        },
-      );
+    // --- OpenAI Compatible ---
+    const openaiModelsStr = settings.merged.security.auth.openai?.models;
+    if (openaiModelsStr) {
+      const openaiModels = openaiModelsStr
+        .split(',')
+        .map((m: string) => m.trim())
+        .filter((m: string) => m.length > 0);
+      if (openaiModels.length > 0) {
+        list.push({
+          value: 'header-openai',
+          title: 'OpenAI Compatible',
+          key: 'header-openai',
+          isHeader: true,
+        });
+        list.push(
+          ...openaiModels.map((m: string) => ({
+            value: m,
+            title: m,
+            key: `openai-${m}`,
+          })),
+        );
+      }
     }
+
+    // --- Zhipu AI ---
+    const zhipuModelsStr = settings.merged.security.auth.zhipu?.models;
+    if (zhipuModelsStr) {
+      const zhipuModels = zhipuModelsStr
+        .split(',')
+        .map((m: string) => m.trim())
+        .filter((m: string) => m.length > 0);
+      if (zhipuModels.length > 0) {
+        list.push({
+          value: 'header-zhipu',
+          title: 'Zhipu AI (BigModel)',
+          key: 'header-zhipu',
+          isHeader: true,
+        });
+        list.push(
+          ...zhipuModels.map((m: string) => ({
+            value: m,
+            title: m,
+            key: `zhipu-${m}`,
+          })),
+        );
+      }
+    }
+
     return list;
-  }, [shouldShowPreviewModels]);
+  }, [shouldShowPreviewModels, settings]);
 
   const options = view === 'main' ? mainOptions : manualOptions;
 

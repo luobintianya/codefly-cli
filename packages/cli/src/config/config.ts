@@ -811,6 +811,8 @@ export async function loadCliConfig(
         agents: refreshedSettings.merged.agents,
       };
     },
+    openaiConfig: settings.security?.auth?.openai,
+    zhipuConfig: settings.security?.auth?.zhipu,
   });
 }
 
