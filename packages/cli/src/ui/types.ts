@@ -30,8 +30,8 @@ export enum AuthState {
   AwaitingApiKeyInput = 'awaiting_api_key_input',
   // Successfully authenticated
   Authenticated = 'authenticated',
-  // Waiting for the user to restart after a Google login
-  AwaitingGoogleLoginRestart = 'awaiting_google_login_restart',
+  // Currently performing authentication (e.g. waiting for browser)
+  Authenticating = 'authenticating',
 }
 
 // Only defining the state enum needed by the UI

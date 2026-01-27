@@ -53,7 +53,6 @@ import {
   CoreEvent,
   refreshServerHierarchicalMemory,
   type MemoryChangedPayload,
-  writeToStdout,
   disableMouseEvents,
   enterAlternateScreen,
   enableMouseEvents,
@@ -131,7 +130,6 @@ import {
   WARNING_PROMPT_DURATION_MS,
   QUEUE_ERROR_DISPLAY_DURATION_MS,
 } from './constants.js';
-import { LoginWithGoogleRestartDialog } from './auth/LoginWithGoogleRestartDialog.js';
 import { isSlashCommand } from './utils/commandUtils.js';
 
 function isToolExecuting(pendingHistoryItems: HistoryItemWithoutId[]) {
@@ -530,16 +528,6 @@ export const AppContainer = (props: AppContainerProps) => {
     modelsDefaultValue,
     reloadApiKey,
   } = useAuthCommand(settings, config);
-  const [authContext, setAuthContext] = useState<{ requiresRestart?: boolean }>(
-    {},
-  );
-
-  useEffect(() => {
-    if (authState === AuthState.Authenticated && authContext.requiresRestart) {
-      setAuthState(AuthState.AwaitingGoogleLoginRestart);
-      setAuthContext({});
-    }
-  }, [authState, authContext, setAuthState]);
 
   const {
     proQuotaRequest,
@@ -588,11 +576,6 @@ export const AppContainer = (props: AppContainerProps) => {
   const handleAuthSelect = useCallback(
     async (authType: AuthType | undefined, scope: LoadableSettingScope) => {
       if (authType) {
-        if (authType === AuthType.LOGIN_WITH_GOOGLE) {
-          setAuthContext({ requiresRestart: true });
-        } else {
-          setAuthContext({});
-        }
         await clearCachedCredentialFile();
         settings.setValue(scope, 'security.auth.selectedType', authType);
 
@@ -625,23 +608,10 @@ export const AppContainer = (props: AppContainerProps) => {
           );
           return;
         }
-
-        if (
-          authType === AuthType.LOGIN_WITH_GOOGLE &&
-          config.isBrowserLaunchSuppressed()
-        ) {
-          await runExitCleanup();
-          writeToStdout(`
-----------------------------------------------------------------
-Logging in with Google... Restarting Gemini CLI to continue.
-----------------------------------------------------------------
-          `);
-          process.exit(RELAUNCH_EXIT_CODE);
-        }
       }
       setAuthState(AuthState.Authenticated);
     },
-    [settings, config, setAuthState, onAuthError, setAuthContext],
+    [settings, config, setAuthState, onAuthError],
   );
 
   const handleApiKeySubmit = useCallback(
@@ -1943,7 +1913,6 @@ Logging in with Google... Restarting Gemini CLI to continue.
       handleApiKeyCancel,
       setBannerVisible,
       setEmbeddedShellFocused,
-      setAuthContext,
       handleRestart: async () => {
         await runExitCleanup();
         process.exit(RELAUNCH_EXIT_CODE);
@@ -1986,20 +1955,8 @@ Logging in with Google... Restarting Gemini CLI to continue.
       handleApiKeyCancel,
       setBannerVisible,
       setEmbeddedShellFocused,
-      setAuthContext,
     ],
   );
-
-  if (authState === AuthState.AwaitingGoogleLoginRestart) {
-    return (
-      <LoginWithGoogleRestartDialog
-        onDismiss={() => {
-          setAuthContext({});
-          setAuthState(AuthState.Updating);
-        }}
-      />
-    );
-  }
 
   return (
     <UIStateContext.Provider value={uiState}>

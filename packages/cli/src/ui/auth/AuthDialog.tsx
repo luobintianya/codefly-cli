@@ -5,44 +5,29 @@
  */
 
 import type React from 'react';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { Box, Text } from 'ink';
 import { theme } from '../semantic-colors.js';
 import { RadioButtonSelect } from '../components/shared/RadioButtonSelect.js';
-import type {
-  LoadableSettingScope,
-  LoadedSettings,
-} from '../../config/settings.js';
-import { SettingScope } from '../../config/settings.js';
-import {
-  AuthType,
-  clearCachedCredentialFile,
-  type Config,
-} from '@codeflyai/codefly-core';
+import type { LoadedSettings } from '../../config/settings.js';
+import { AuthType } from '@codeflyai/codefly-core';
 import { useKeypress } from '../hooks/useKeypress.js';
 import { AuthState } from '../types.js';
-import { runExitCleanup } from '../../utils/cleanup.js';
 import { validateAuthMethodWithSettings } from './useAuth.js';
-import { RELAUNCH_EXIT_CODE } from '../../utils/processUtils.js';
 
 interface AuthDialogProps {
-  config: Config;
   settings: LoadedSettings;
   setAuthState: (state: AuthState) => void;
   authError: string | null;
   onAuthError: (error: string | null) => void;
-  setAuthContext: (context: { requiresRestart?: boolean }) => void;
 }
 
 export function AuthDialog({
-  config,
   settings,
   setAuthState,
   authError,
   onAuthError,
-  setAuthContext,
 }: AuthDialogProps): React.JSX.Element {
-  const [exiting, setExiting] = useState(false);
   let items = [
     {
       label: 'Login with Google',
@@ -123,28 +108,10 @@ export function AuthDialog({
   }
 
   const onSelect = useCallback(
-    async (authType: AuthType | undefined, scope: LoadableSettingScope) => {
-      if (exiting) {
-        return;
-      }
+    async (authType: AuthType | undefined) => {
       if (authType) {
         if (authType === AuthType.LOGIN_WITH_GOOGLE) {
-          setAuthContext({ requiresRestart: true });
-        } else {
-          setAuthContext({});
-        }
-        await clearCachedCredentialFile();
-
-        settings.setValue(scope, 'security.auth.selectedType', authType);
-        if (
-          authType === AuthType.LOGIN_WITH_GOOGLE &&
-          config.isBrowserLaunchSuppressed()
-        ) {
-          setExiting(true);
-          setTimeout(async () => {
-            await runExitCleanup();
-            process.exit(RELAUNCH_EXIT_CODE);
-          }, 100);
+          setAuthState(AuthState.Authenticating);
           return;
         }
 
@@ -159,7 +126,7 @@ export function AuthDialog({
       }
       setAuthState(AuthState.Unauthenticated);
     },
-    [settings, config, setAuthState, exiting, setAuthContext],
+    [setAuthState],
   );
 
   const handleAuthSelect = (authMethod: AuthType) => {
@@ -168,7 +135,7 @@ export function AuthDialog({
       onAuthError(error);
     } else {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      onSelect(authMethod, SettingScope.User);
+      onSelect(authMethod);
     }
   };
 
@@ -188,28 +155,11 @@ export function AuthDialog({
           return;
         }
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        onSelect(undefined, SettingScope.User);
+        onSelect(undefined);
       }
     },
     { isActive: true },
   );
-
-  if (exiting) {
-    return (
-      <Box
-        borderStyle="round"
-        borderColor={theme.border.focused}
-        flexDirection="row"
-        padding={1}
-        width="100%"
-        alignItems="flex-start"
-      >
-        <Text color={theme.text.primary}>
-          Logging in with Google... Restarting Gemini CLI to continue.
-        </Text>
-      </Box>
-    );
-  }
 
   return (
     <Box

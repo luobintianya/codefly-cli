@@ -113,7 +113,10 @@ export const useAuthCommand = (settings: LoadedSettings, config: Config) => {
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     (async () => {
-      if (authState !== AuthState.Unauthenticated) {
+      if (
+        authState !== AuthState.Unauthenticated &&
+        authState !== AuthState.Authenticating
+      ) {
         return;
       }
 

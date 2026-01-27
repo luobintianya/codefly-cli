@@ -15,15 +15,13 @@ import {
   type Mock,
 } from 'vitest';
 import { AuthDialog } from './AuthDialog.js';
-import { AuthType, type Config, debugLogger } from '@codeflyai/codefly-core';
+import { AuthType, type Config } from '@codeflyai/codefly-core';
 import type { LoadedSettings } from '../../config/settings.js';
 import { AuthState } from '../types.js';
 import { RadioButtonSelect } from '../components/shared/RadioButtonSelect.js';
 import { useKeypress } from '../hooks/useKeypress.js';
 import { validateAuthMethodWithSettings } from './useAuth.js';
-import { runExitCleanup } from '../../utils/cleanup.js';
 import { Text } from 'ink';
-import { RELAUNCH_EXIT_CODE } from '../../utils/processUtils.js';
 
 // Mocks
 vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
@@ -31,7 +29,6 @@ vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
     await importOriginal<typeof import('@codeflyai/codefly-core')>();
   return {
     ...actual,
-    clearCachedCredentialFile: vi.fn(),
   };
 });
 
@@ -63,7 +60,6 @@ vi.mock('../components/shared/RadioButtonSelect.js', () => ({
 const mockedUseKeypress = useKeypress as Mock;
 const mockedRadioButtonSelect = RadioButtonSelect as Mock;
 const mockedValidateAuthMethod = validateAuthMethodWithSettings as Mock;
-const mockedRunExitCleanup = runExitCleanup as Mock;
 
 describe('AuthDialog', () => {
   let props: {
@@ -72,7 +68,6 @@ describe('AuthDialog', () => {
     setAuthState: (state: AuthState) => void;
     authError: string | null;
     onAuthError: (error: string | null) => void;
-    setAuthContext: (context: { requiresRestart?: boolean }) => void;
   };
   beforeEach(() => {
     vi.resetAllMocks();
@@ -96,7 +91,6 @@ describe('AuthDialog', () => {
       setAuthState: vi.fn(),
       authError: null,
       onAuthError: vi.fn(),
-      setAuthContext: vi.fn(),
     };
   });
 
@@ -222,26 +216,14 @@ describe('AuthDialog', () => {
       expect(props.settings.setValue).not.toHaveBeenCalled();
     });
 
-    it('sets auth context with requiresRestart: true for LOGIN_WITH_GOOGLE', async () => {
+    it('sets state to Authenticating for LOGIN_WITH_GOOGLE', async () => {
       mockedValidateAuthMethod.mockReturnValue(null);
       renderWithProviders(<AuthDialog {...props} />);
       const { onSelect: handleAuthSelect } =
         mockedRadioButtonSelect.mock.calls[0][0];
       await handleAuthSelect(AuthType.LOGIN_WITH_GOOGLE);
 
-      expect(props.setAuthContext).toHaveBeenCalledWith({
-        requiresRestart: true,
-      });
-    });
-
-    it('sets auth context with empty object for other auth types', async () => {
-      mockedValidateAuthMethod.mockReturnValue(null);
-      renderWithProviders(<AuthDialog {...props} />);
-      const { onSelect: handleAuthSelect } =
-        mockedRadioButtonSelect.mock.calls[0][0];
-      await handleAuthSelect(AuthType.USE_GEMINI);
-
-      expect(props.setAuthContext).toHaveBeenCalledWith({});
+      expect(props.setAuthState).toHaveBeenCalledWith(AuthState.Authenticating);
     });
 
     it('shows API key dialog on initial setup even if env var is present', async () => {
@@ -304,30 +286,6 @@ describe('AuthDialog', () => {
       expect(props.setAuthState).toHaveBeenCalledWith(
         AuthState.AwaitingApiKeyInput,
       );
-    });
-
-    it('exits process for Login with Google when browser is suppressed', async () => {
-      vi.useFakeTimers();
-      const exitSpy = vi
-        .spyOn(process, 'exit')
-        .mockImplementation(() => undefined as never);
-      const logSpy = vi.spyOn(debugLogger, 'log').mockImplementation(() => {});
-      vi.mocked(props.config.isBrowserLaunchSuppressed).mockReturnValue(true);
-      mockedValidateAuthMethod.mockReturnValue(null);
-
-      renderWithProviders(<AuthDialog {...props} />);
-      const { onSelect: handleAuthSelect } =
-        mockedRadioButtonSelect.mock.calls[0][0];
-      await handleAuthSelect(AuthType.LOGIN_WITH_GOOGLE);
-
-      await vi.runAllTimersAsync();
-
-      expect(mockedRunExitCleanup).toHaveBeenCalled();
-      expect(exitSpy).toHaveBeenCalledWith(RELAUNCH_EXIT_CODE);
-
-      exitSpy.mockRestore();
-      logSpy.mockRestore();
-      vi.useRealTimers();
     });
   });
 

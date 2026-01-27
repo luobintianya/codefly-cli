@@ -1,0 +1,12 @@
+{
+  "agents": {
+    "overrides": {
+      "cli_help": {
+        "enabled": false
+      },
+      "introspection_agent": {
+        "enabled": true
+      }
+    }
+  }
+}
