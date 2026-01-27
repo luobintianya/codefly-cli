@@ -172,7 +172,6 @@ describe('clipboardUtils', () => {
 
   describe('saveClipboardImage (Linux)', () => {
     const mockTargetDir = '/tmp/target';
-    const mockTempDir = path.join('/tmp/global', 'images');
 
     beforeEach(() => {
       setPlatform('linux');
@@ -243,10 +242,12 @@ describe('clipboardUtils', () => {
 
       const result = await promise;
 
-      expect(result).toContain(mockTempDir);
+      // New behavior: saves to .codefly/images in project root
+      const expectedDir = path.join(mockTargetDir, '.codefly', 'images');
+      expect(result).toContain(expectedDir);
       expect(result).toMatch(/clipboard-\d+\.png$/);
       expect(spawn).toHaveBeenCalledWith('wl-paste', expect.any(Array));
-      expect(fs.mkdir).toHaveBeenCalledWith(mockTempDir, { recursive: true });
+      expect(fs.mkdir).toHaveBeenCalledWith(expectedDir, { recursive: true });
     });
 
     it('should return null if wl-paste fails', async () => {

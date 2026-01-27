@@ -13,7 +13,6 @@ import {
   spawnAsync,
   unescapePath,
   escapePath,
-  Storage,
 } from '@codeflyai/codefly-core';
 
 /**
@@ -248,37 +247,35 @@ const saveFileWithXclip = async (tempFilePath: string) => {
 /**
  * Gets the directory where clipboard images should be stored for a specific project.
  *
- * This uses the global temporary directory but creates a project-specific subdirectory
- * based on the hash of the project path (via `Storage.getProjectTempDir()`).
- * This prevents path conflicts between different projects while keeping the images
- * outside of the user's project directory.
+ * Images are stored in the project's .codefly/images directory to make them
+ * persistent and easily accessible.
  *
  * @param targetDir The root directory of the current project.
  * @returns The absolute path to the images directory.
  */
 function getProjectClipboardImagesDir(targetDir: string): string {
-  const storage = new Storage(targetDir);
-  const baseDir = storage.getProjectTempDir();
-  return path.join(baseDir, 'images');
+  // Use the project's .codefly directory instead of temp
+  // This makes images persistent and easier to find
+  return path.join(targetDir, '.codefly', 'images');
 }
 
 /**
- * Saves the image from clipboard to a temporary file (macOS, Windows, and Linux)
- * @param targetDir The target directory to create temp files within
+ * Saves the image from clipboard to a file (macOS, Windows, and Linux)
+ * @param targetDir The target directory to create files within
  * @returns The path to the saved image file, or null if no image or error
  */
 export async function saveClipboardImage(
   targetDir: string,
 ): Promise<string | null> {
   try {
-    const tempDir = getProjectClipboardImagesDir(targetDir);
-    await fs.mkdir(tempDir, { recursive: true });
+    const imagesDir = getProjectClipboardImagesDir(targetDir);
+    await fs.mkdir(imagesDir, { recursive: true });
 
     // Generate a unique filename with timestamp
     const timestamp = new Date().getTime();
 
     if (process.platform === 'linux') {
-      const tempFilePath = path.join(tempDir, `clipboard-${timestamp}.png`);
+      const tempFilePath = path.join(imagesDir, `clipboard-${timestamp}.png`);
       const tool = getUserLinuxClipboardTool();
 
       if (tool === 'wl-paste') {
@@ -293,7 +290,7 @@ export async function saveClipboardImage(
     }
 
     if (process.platform === 'win32') {
-      const tempFilePath = path.join(tempDir, `clipboard-${timestamp}.png`);
+      const tempFilePath = path.join(imagesDir, `clipboard-${timestamp}.png`);
       // The path is used directly in the PowerShell script.
       const psPath = tempFilePath.replace(/'/g, "''");
 
@@ -335,7 +332,7 @@ export async function saveClipboardImage(
 
     for (const format of formats) {
       const tempFilePath = path.join(
-        tempDir,
+        imagesDir,
         `clipboard-${timestamp}.${format.extension}`,
       );
 
@@ -388,32 +385,16 @@ export async function saveClipboardImage(
 }
 
 /**
- * Cleans up old temporary clipboard image files
- * Removes files older than 1 hour
- * @param targetDir The target directory where temp files are stored
+ * Cleanup is disabled for persistent images in .codefly/images
+ * @param targetDir The target directory where files are stored
  */
 export async function cleanupOldClipboardImages(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   targetDir: string,
 ): Promise<void> {
-  try {
-    const tempDir = getProjectClipboardImagesDir(targetDir);
-    const files = await fs.readdir(tempDir);
-    const oneHourAgo = Date.now() - 60 * 60 * 1000;
-
-    for (const file of files) {
-      const ext = path.extname(file).toLowerCase();
-      if (file.startsWith('clipboard-') && IMAGE_EXTENSIONS.includes(ext)) {
-        const filePath = path.join(tempDir, file);
-        const stats = await fs.stat(filePath);
-        if (stats.mtimeMs < oneHourAgo) {
-          await fs.unlink(filePath);
-        }
-      }
-    }
-  } catch (e) {
-    // Ignore errors in cleanup
-    debugLogger.debug('Failed to clean up old clipboard images:', e);
-  }
+  // No-op: We now save images to the project directory (.codefly/images)
+  // so we want them to persist rather than being cleaned up.
+  return Promise.resolve();
 }
 
 /**
