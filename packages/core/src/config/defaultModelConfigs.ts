@@ -191,7 +191,7 @@ export const DEFAULT_MODEL_CONFIGS: ModelConfigServiceConfig = {
     },
     'chat-compression-3-pro': {
       modelConfig: {
-        model: 'gemini-3-pro-preview',
+        model: 'gemini-3-flash-preview',
       },
     },
     'chat-compression-3-flash': {
@@ -201,7 +201,7 @@ export const DEFAULT_MODEL_CONFIGS: ModelConfigServiceConfig = {
     },
     'chat-compression-2.5-pro': {
       modelConfig: {
-        model: 'gemini-2.5-pro',
+        model: 'gemini-2.5-flash',
       },
     },
     'chat-compression-2.5-flash': {
@@ -216,7 +216,7 @@ export const DEFAULT_MODEL_CONFIGS: ModelConfigServiceConfig = {
     },
     'chat-compression-default': {
       modelConfig: {
-        model: 'gemini-2.5-pro',
+        model: 'gemini-2.5-flash',
       },
     },
   },
