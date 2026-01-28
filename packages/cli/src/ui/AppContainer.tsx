@@ -582,19 +582,14 @@ export const AppContainer = (props: AppContainerProps) => {
         if (
           (authType === AuthType.LOGIN_WITH_GOOGLE ||
             authType === AuthType.USE_GEMINI ||
-            authType === AuthType.OPENAI ||
-            authType === AuthType.ZHIPU) &&
+            authType === AuthType.OPENAI) &&
           config.isBrowserLaunchSuppressed()
         ) {
           // If we need to prompt for keys but can't launch browser or similar?
           // Actually, only Google login needs a browser.
         }
 
-        if (
-          authType === AuthType.USE_GEMINI ||
-          authType === AuthType.OPENAI ||
-          authType === AuthType.ZHIPU
-        ) {
+        if (authType === AuthType.OPENAI) {
           setAuthState(AuthState.AwaitingApiKeyInput);
           return;
         }
@@ -632,43 +627,45 @@ export const AppContainer = (props: AppContainerProps) => {
             'security.auth.openai.apiKey',
             apiKey,
           );
-          if (baseUrl) {
-            settings.setValue(
-              SettingScope.User,
-              'security.auth.openai.baseUrl',
-              baseUrl,
-            );
-          }
-          if (models) {
-            settings.setValue(
-              SettingScope.User,
-              'security.auth.openai.models',
-              models,
-            );
-          }
-        } else if (currentAuthType === AuthType.ZHIPU) {
           settings.setValue(
             SettingScope.User,
-            'security.auth.zhipu.apiKey',
-            apiKey,
+            'security.auth.openai.baseUrl',
+            baseUrl || '',
           );
-          if (baseUrl) {
-            settings.setValue(
-              SettingScope.User,
-              'security.auth.zhipu.baseUrl',
-              baseUrl,
-            );
+          settings.setValue(
+            SettingScope.User,
+            'security.auth.openai.models',
+            models || '',
+          );
+
+          // Auto-set model if not set
+          let updatedModel = settings.merged.security.auth.openai?.model;
+          if (!updatedModel && models) {
+            const firstModel = models.split(',')[0]?.trim();
+            if (firstModel) {
+              settings.setValue(
+                SettingScope.User,
+                'security.auth.openai.model',
+                firstModel,
+              );
+              updatedModel = firstModel;
+            }
           }
-          if (models) {
-            settings.setValue(
-              SettingScope.User,
-              'security.auth.zhipu.models',
-              models,
-            );
-          }
+
+          // Directly update config to avoid stale references during refreshAuth
+          config.openaiConfig = {
+            ...config.openaiConfig,
+            apiKey,
+            baseUrl: baseUrl || '',
+            models: models || '',
+            model: updatedModel,
+          };
         }
 
-        await saveApiKey(apiKey);
+        if (currentAuthType === AuthType.USE_GEMINI) {
+          await saveApiKey(apiKey);
+        }
+
         await reloadApiKey();
         await config.refreshAuth(currentAuthType || AuthType.USE_GEMINI);
         setAuthState(AuthState.Authenticated);
@@ -715,7 +712,6 @@ export const AppContainer = (props: AppContainerProps) => {
       if (
         settings.merged.security.auth.selectedType === AuthType.USE_GEMINI ||
         settings.merged.security.auth.selectedType === AuthType.OPENAI ||
-        settings.merged.security.auth.selectedType === AuthType.ZHIPU ||
         authState === AuthState.AwaitingApiKeyInput
       ) {
         return;

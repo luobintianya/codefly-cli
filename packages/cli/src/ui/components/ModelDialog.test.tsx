@@ -46,7 +46,6 @@ vi.mock('../contexts/SettingsContext.js', () => ({
         auth: {
           selectedType: 'login-with-google',
           openai: { models: '' },
-          zhipu: { models: '' },
         },
       },
     },
@@ -103,7 +102,7 @@ describe('<ModelDialog />', () => {
   it('renders the initial "main" view correctly', () => {
     const { lastFrame } = renderComponent();
     expect(lastFrame()).toContain('Select Model');
-    expect(lastFrame()).toContain('Remember model for future sessions: false');
+    expect(lastFrame()).toContain('Remember model for future sessions: true');
     expect(lastFrame()).toContain('Auto');
     expect(lastFrame()).toContain('Manual');
   });
@@ -164,7 +163,7 @@ describe('<ModelDialog />', () => {
 
     expect(mockSetModel).toHaveBeenCalledWith(
       DEFAULT_CODEFLY_MODEL_AUTO,
-      true, // Session only by default
+      false, // Session only by default (persistMode=true means NOT temporary, so isTemporary=false)
     );
     expect(mockOnClose).toHaveBeenCalled();
   });
@@ -184,20 +183,20 @@ describe('<ModelDialog />', () => {
     stdin.write('\r');
     await waitForUpdate();
 
-    expect(mockSetModel).toHaveBeenCalledWith(DEFAULT_CODEFLY_MODEL, true);
+    expect(mockSetModel).toHaveBeenCalledWith(DEFAULT_CODEFLY_MODEL, false);
     expect(mockOnClose).toHaveBeenCalled();
   });
 
   it('toggles persist mode with Tab key', async () => {
     const { lastFrame, stdin } = renderComponent();
 
-    expect(lastFrame()).toContain('Remember model for future sessions: false');
+    expect(lastFrame()).toContain('Remember model for future sessions: true');
 
     // Press Tab to toggle persist mode
     stdin.write('\t');
     await waitForUpdate();
 
-    expect(lastFrame()).toContain('Remember model for future sessions: true');
+    expect(lastFrame()).toContain('Remember model for future sessions: false');
 
     // Select "Auto" (index 0)
     stdin.write('\r');
@@ -205,7 +204,7 @@ describe('<ModelDialog />', () => {
 
     expect(mockSetModel).toHaveBeenCalledWith(
       DEFAULT_CODEFLY_MODEL_AUTO,
-      false, // Persist enabled
+      true, // Persist disable (isTemporary=true)
     );
     expect(mockOnClose).toHaveBeenCalled();
   });

@@ -366,15 +366,4 @@ describe('createContentGeneratorConfig', () => {
     expect(config.baseUrl).toBe('https://custom.openai.com');
     expect(config.model).toBe('custom-model');
   });
-
-  it('should configure for Zhipu AI using ZHIPU_API_KEY when set', async () => {
-    vi.stubEnv('ZHIPU_API_KEY', 'env-zhipu-key');
-    const config = await createContentGeneratorConfig(
-      mockConfig,
-      AuthType.ZHIPU,
-    );
-    expect(config.apiKey).toBe('env-zhipu-key');
-    expect(config.baseUrl).toBe('https://open.bigmodel.cn/api/paas/v4');
-    expect(config.model).toBe('glm-4');
-  });
 });

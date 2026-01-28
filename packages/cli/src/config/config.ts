@@ -812,7 +812,6 @@ export async function loadCliConfig(
       };
     },
     openaiConfig: settings.security?.auth?.openai,
-    zhipuConfig: settings.security?.auth?.zhipu,
   });
 }
 

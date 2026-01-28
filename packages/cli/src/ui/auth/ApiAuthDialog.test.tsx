@@ -94,7 +94,7 @@ describe('ApiAuthDialog', () => {
       keyName: 'return',
       sequence: '\r',
       expectedCall: onSubmit,
-      args: ['submitted-key'],
+      args: ['submitted-key', 'submitted-key', 'submitted-key'],
     },
     { keyName: 'escape', sequence: '\u001b', expectedCall: onCancel, args: [] },
   ])(

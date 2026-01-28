@@ -56,7 +56,6 @@ export enum AuthType {
   LEGACY_CLOUD_SHELL = 'cloud-shell',
   COMPUTE_ADC = 'compute-default-credentials',
   OPENAI = 'openai',
-  ZHIPU = 'zhipu',
 }
 
 export type ContentGeneratorConfig = {
@@ -83,7 +82,6 @@ export async function createContentGeneratorConfig(
   const openaiApiKey = process.env['OPENAI_API_KEY'] || undefined;
   const openaiBaseUrl = process.env['OPENAI_BASE_URL'] || undefined;
   const openaiModel = process.env['OPENAI_MODEL'] || undefined;
-  const zhipuApiKey = process.env['ZHIPU_API_KEY'] || undefined;
 
   const contentGeneratorConfig: ContentGeneratorConfig = {
     authType,
@@ -124,18 +122,10 @@ export async function createContentGeneratorConfig(
         openaiBaseUrl ||
         'https://api.openai.com/v1';
       contentGeneratorConfig.model =
-        openaiModel || config.openaiConfig?.model || 'gpt-4o';
-      return contentGeneratorConfig;
-    }
-  }
-
-  if (authType === AuthType.ZHIPU) {
-    const apiKey = config.zhipuConfig?.apiKey || zhipuApiKey;
-    if (apiKey) {
-      contentGeneratorConfig.apiKey = apiKey;
-      contentGeneratorConfig.baseUrl =
-        config.zhipuConfig?.baseUrl || 'https://open.bigmodel.cn/api/paas/v4';
-      contentGeneratorConfig.model = config.zhipuConfig?.model || 'glm-4';
+        openaiModel ||
+        config.openaiConfig?.model ||
+        config.getModel() ||
+        'gpt-4o';
       return contentGeneratorConfig;
     }
   }
@@ -218,10 +208,7 @@ export async function createContentGenerator(
       });
       return new LoggingContentGenerator(googleGenAI.models, gcConfig);
     }
-    if (
-      config.authType === AuthType.OPENAI ||
-      config.authType === AuthType.ZHIPU
-    ) {
+    if (config.authType === AuthType.OPENAI) {
       if (!config.apiKey) {
         throw new Error(
           `Error creating contentGenerator: Missing API key for ${config.authType}`,

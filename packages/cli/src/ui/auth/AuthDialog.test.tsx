@@ -17,7 +17,7 @@ import {
 import { AuthDialog } from './AuthDialog.js';
 import { AuthType, type Config } from '@codeflyai/codefly-core';
 import type { LoadedSettings } from '../../config/settings.js';
-import { AuthState } from '../types.js';
+
 import { RadioButtonSelect } from '../components/shared/RadioButtonSelect.js';
 import { useKeypress } from '../hooks/useKeypress.js';
 import { validateAuthMethodWithSettings } from './useAuth.js';
@@ -65,7 +65,7 @@ describe('AuthDialog', () => {
   let props: {
     config: Config;
     settings: LoadedSettings;
-    setAuthState: (state: AuthState) => void;
+    onSelect: (authType: AuthType | undefined) => Promise<void>;
     authError: string | null;
     onAuthError: (error: string | null) => void;
   };
@@ -88,7 +88,7 @@ describe('AuthDialog', () => {
         },
         setValue: vi.fn(),
       } as unknown as LoadedSettings,
-      setAuthState: vi.fn(),
+      onSelect: vi.fn(),
       authError: null,
       onAuthError: vi.fn(),
     };
@@ -213,79 +213,29 @@ describe('AuthDialog', () => {
         props.settings,
       );
       expect(props.onAuthError).toHaveBeenCalledWith('Invalid method');
-      expect(props.settings.setValue).not.toHaveBeenCalled();
+      expect(props.onSelect).not.toHaveBeenCalled();
     });
 
-    it('sets state to Authenticating for LOGIN_WITH_GOOGLE', async () => {
+    it('calls onSelect with correct type', async () => {
       mockedValidateAuthMethod.mockReturnValue(null);
       renderWithProviders(<AuthDialog {...props} />);
       const { onSelect: handleAuthSelect } =
         mockedRadioButtonSelect.mock.calls[0][0];
       await handleAuthSelect(AuthType.LOGIN_WITH_GOOGLE);
 
-      expect(props.setAuthState).toHaveBeenCalledWith(AuthState.Authenticating);
+      expect(props.onSelect).toHaveBeenCalledWith(AuthType.LOGIN_WITH_GOOGLE);
     });
 
-    it('shows API key dialog on initial setup even if env var is present', async () => {
+    it('calls onSelect for USE_GEMINI', async () => {
       mockedValidateAuthMethod.mockReturnValue(null);
       vi.stubEnv('GEMINI_API_KEY', 'test-key-from-env');
-      // props.settings.merged.security.auth.selectedType is undefined here, simulating initial setup
 
       renderWithProviders(<AuthDialog {...props} />);
       const { onSelect: handleAuthSelect } =
         mockedRadioButtonSelect.mock.calls[0][0];
       await handleAuthSelect(AuthType.USE_GEMINI);
 
-      expect(props.setAuthState).toHaveBeenCalledWith(
-        AuthState.AwaitingApiKeyInput,
-      );
-    });
-
-    it('shows API key dialog if env var is present but empty', async () => {
-      mockedValidateAuthMethod.mockReturnValue(null);
-      vi.stubEnv('GEMINI_API_KEY', ''); // Empty string
-      // props.settings.merged.security.auth.selectedType is undefined here
-
-      renderWithProviders(<AuthDialog {...props} />);
-      const { onSelect: handleAuthSelect } =
-        mockedRadioButtonSelect.mock.calls[0][0];
-      await handleAuthSelect(AuthType.USE_GEMINI);
-
-      expect(props.setAuthState).toHaveBeenCalledWith(
-        AuthState.AwaitingApiKeyInput,
-      );
-    });
-
-    it('shows API key dialog on initial setup if no env var is present', async () => {
-      mockedValidateAuthMethod.mockReturnValue(null);
-      // process.env['GEMINI_API_KEY'] is not set
-      // props.settings.merged.security.auth.selectedType is undefined here, simulating initial setup
-
-      renderWithProviders(<AuthDialog {...props} />);
-      const { onSelect: handleAuthSelect } =
-        mockedRadioButtonSelect.mock.calls[0][0];
-      await handleAuthSelect(AuthType.USE_GEMINI);
-
-      expect(props.setAuthState).toHaveBeenCalledWith(
-        AuthState.AwaitingApiKeyInput,
-      );
-    });
-
-    it('shows API key dialog on re-auth even if env var is present', async () => {
-      mockedValidateAuthMethod.mockReturnValue(null);
-      vi.stubEnv('GEMINI_API_KEY', 'test-key-from-env');
-      // Simulate that the user has already authenticated once
-      props.settings.merged.security.auth.selectedType =
-        AuthType.LOGIN_WITH_GOOGLE;
-
-      renderWithProviders(<AuthDialog {...props} />);
-      const { onSelect: handleAuthSelect } =
-        mockedRadioButtonSelect.mock.calls[0][0];
-      await handleAuthSelect(AuthType.USE_GEMINI);
-
-      expect(props.setAuthState).toHaveBeenCalledWith(
-        AuthState.AwaitingApiKeyInput,
-      );
+      expect(props.onSelect).toHaveBeenCalledWith(AuthType.USE_GEMINI);
     });
   });
 
@@ -304,7 +254,7 @@ describe('AuthDialog', () => {
         },
         expectations: (p: typeof props) => {
           expect(p.onAuthError).not.toHaveBeenCalled();
-          expect(p.setAuthState).not.toHaveBeenCalled();
+          expect(p.onSelect).not.toHaveBeenCalled();
         },
       },
       {
@@ -319,15 +269,13 @@ describe('AuthDialog', () => {
         },
       },
       {
-        desc: 'calls setAuthState(Unauthenticated) on escape if auth method is set',
+        desc: 'calls onSelect(undefined) on escape if auth method is set',
         setup: () => {
           props.settings.merged.security.auth.selectedType =
             AuthType.USE_GEMINI;
         },
         expectations: (p: typeof props) => {
-          expect(p.setAuthState).toHaveBeenCalledWith(
-            AuthState.Unauthenticated,
-          );
+          expect(p.onSelect).toHaveBeenCalledWith(undefined);
           expect(p.settings.setValue).not.toHaveBeenCalled();
         },
       },

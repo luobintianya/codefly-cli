@@ -57,18 +57,5 @@ export function validateAuthMethod(authMethod: string): string | null {
     );
   }
 
-  if (authMethod === AuthType.ZHIPU) {
-    if (process.env['ZHIPU_API_KEY']) return null;
-
-    // Check Settings
-    const settings = loadSettings().merged;
-    if (settings.security?.auth?.zhipu?.apiKey) return null;
-
-    return (
-      'When using Zhipu AI, you must specify the API Key.\n' +
-      'Please use "ZHIPU_API_KEY" environment variable or set it in the settings.'
-    );
-  }
-
   return 'Invalid auth method selected.';
 }

@@ -28,11 +28,7 @@ export function validateAuthMethodWithSettings(
     return null;
   }
   // If using API keys, we don't validate it here as we might need to prompt for it.
-  if (
-    authType === AuthType.USE_GEMINI ||
-    authType === AuthType.OPENAI ||
-    authType === AuthType.ZHIPU
-  ) {
+  if (authType === AuthType.USE_GEMINI || authType === AuthType.OPENAI) {
     return null;
   }
   return validateAuthMethod(authType);
@@ -89,15 +85,6 @@ export const useAuthCommand = (settings: LoadedSettings, config: Config) => {
         return envKey || settingsKey;
       }
 
-      if (authType === AuthType.ZHIPU) {
-        const envKey = process.env['ZHIPU_API_KEY'];
-        const settingsKey = settings.merged.security.auth.zhipu?.apiKey;
-        setApiKeyDefaultValue(envKey || settingsKey);
-        setBaseUrlDefaultValue(settings.merged.security.auth.zhipu?.baseUrl);
-        setModelsDefaultValue(settings.merged.security.auth.zhipu?.models);
-        return envKey || settingsKey;
-      }
-
       return undefined;
     },
     [settings],
@@ -127,8 +114,6 @@ export const useAuthCommand = (settings: LoadedSettings, config: Config) => {
           authType = AuthType.USE_GEMINI;
         } else if (process.env['OPENAI_API_KEY']) {
           authType = AuthType.OPENAI;
-        } else if (process.env['ZHIPU_API_KEY']) {
-          authType = AuthType.ZHIPU;
         } else if (
           process.env['GOOGLE_CLOUD_PROJECT'] &&
           process.env['GOOGLE_CLOUD_LOCATION']
@@ -142,7 +127,7 @@ export const useAuthCommand = (settings: LoadedSettings, config: Config) => {
         }
       }
 
-      if (authType === AuthType.OPENAI || authType === AuthType.ZHIPU) {
+      if (authType === AuthType.OPENAI) {
         const key = await reloadApiKey(authType);
         if (!key) {
           return;

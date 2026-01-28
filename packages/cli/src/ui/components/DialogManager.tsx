@@ -28,6 +28,7 @@ import { useUIState } from '../contexts/UIStateContext.js';
 import { useUIActions } from '../contexts/UIActionsContext.js';
 import { useConfig } from '../contexts/ConfigContext.js';
 import { useSettings } from '../contexts/SettingsContext.js';
+import { SettingScope } from '../../config/settings.js';
 import process from 'node:process';
 import { type UseHistoryManagerReturn } from '../hooks/useHistoryManager.js';
 import { AdminSettingsChangedDialog } from './AdminSettingsChangedDialog.js';
@@ -216,7 +217,9 @@ export const DialogManager = ({
       <Box flexDirection="column">
         <AuthDialog
           settings={settings}
-          setAuthState={uiActions.setAuthState}
+          onSelect={(type) =>
+            uiActions.handleAuthSelect(type, SettingScope.User)
+          }
           authError={uiState.authError}
           onAuthError={uiActions.onAuthError}
         />

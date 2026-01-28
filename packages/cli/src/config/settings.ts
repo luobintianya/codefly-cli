@@ -14,6 +14,7 @@ import {
   CODEFLY_DIR,
   getErrorMessage,
   Storage,
+  AuthType,
   coreEvents,
   homedir,
   type FetchAdminControlsResponse,
@@ -852,6 +853,18 @@ export function saveModelChange(
 ): void {
   try {
     loadedSettings.setValue(SettingScope.User, 'model.name', model);
+
+    // If using OpenAI auth, also update the openaiConfig.model to avoid stale persistence
+    if (
+      loadedSettings.merged.security.auth.selectedType === AuthType.OPENAI &&
+      loadedSettings.merged.security.auth.openai
+    ) {
+      loadedSettings.setValue(
+        SettingScope.User,
+        'security.auth.openai.model',
+        model,
+      );
+    }
   } catch (error) {
     coreEvents.emitFeedback(
       'error',

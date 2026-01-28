@@ -408,12 +408,6 @@ export interface ConfigParameters {
     apiKey?: string;
     models?: string;
   };
-  zhipuConfig?: {
-    baseUrl?: string;
-    model?: string;
-    apiKey?: string;
-    models?: string;
-  };
 
   mcpEnabled?: boolean;
   extensionsEnabled?: boolean;
@@ -573,12 +567,6 @@ export class Config {
     | undefined;
 
   openaiConfig?: {
-    baseUrl?: string;
-    model?: string;
-    apiKey?: string;
-    models?: string;
-  };
-  zhipuConfig?: {
     baseUrl?: string;
     model?: string;
     apiKey?: string;
@@ -756,7 +744,6 @@ export class Config {
     this.onModelChange = params.onModelChange;
     this.onReload = params.onReload;
     this.openaiConfig = params.openaiConfig;
-    this.zhipuConfig = params.zhipuConfig;
 
     if (params.contextFileName) {
       setCodeflyMdFilename(params.contextFileName);

@@ -239,7 +239,7 @@ describe('extension tests', () => {
       expect(extensions[0].name).toBe('test-extension');
     });
 
-    it('should load context file path when GEMINI.md is present', async () => {
+    it('should load context file path when CODEFLY.md is present', async () => {
       createExtension({
         extensionsDir: userExtensionsDir,
         name: 'ext1',

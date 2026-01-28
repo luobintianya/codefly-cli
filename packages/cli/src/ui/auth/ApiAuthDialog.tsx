@@ -41,14 +41,11 @@ export function ApiAuthDialog({
   const { mainAreaWidth, selectedAuthType } = useUIState();
   const viewportWidth = mainAreaWidth - 8;
 
-  const isZhipu = selectedAuthType === AuthType.ZHIPU;
   const isOpenAI = selectedAuthType === AuthType.OPENAI;
-  const providerName = isZhipu ? 'Zhipu AI' : isOpenAI ? 'OpenAI' : 'Gemini';
-  const keyLink = isZhipu
-    ? 'https://bigmodel.cn/usercenter/apikeys'
-    : isOpenAI
-      ? 'https://platform.openai.com/api-keys'
-      : 'https://aistudio.google.com/app/apikey';
+  const providerName = isOpenAI ? 'OpenAI Compatible' : 'Gemini';
+  const keyLink = isOpenAI
+    ? 'https://platform.openai.com/api-keys'
+    : 'https://aistudio.google.com/app/apikey';
 
   const [focusedField, setFocusedField] = useState<FocusedField>(
     FocusedField.ApiKey,
@@ -71,8 +68,7 @@ export function ApiAuthDialog({
       height: 4,
     },
     isValidPath: () => false,
-    inputFilter: (text) =>
-      text.replace(/[^a-zA-Z0-9_-]/g, '').replace(/[\r\n]/g, ''),
+    inputFilter: (text) => text.replace(/[\r\n]/g, ''),
     singleLine: true,
   });
 
@@ -139,7 +135,7 @@ export function ApiAuthDialog({
       }
 
       if (key.name === 'tab' || key.name === 'down' || key.name === 'up') {
-        if (isOpenAI || isZhipu) {
+        if (isOpenAI) {
           setFocusedField((prev) => {
             if (prev === FocusedField.ApiKey) return FocusedField.BaseUrl;
             if (prev === FocusedField.BaseUrl) return FocusedField.Models;
@@ -191,7 +187,7 @@ export function ApiAuthDialog({
           <TextInput
             buffer={buffer}
             onSubmit={
-              isOpenAI || isZhipu
+              isOpenAI
                 ? () => setFocusedField(FocusedField.BaseUrl)
                 : handleSubmit
             }
@@ -203,7 +199,7 @@ export function ApiAuthDialog({
         </Box>
       </Box>
 
-      {(isOpenAI || isZhipu) && (
+      {isOpenAI && (
         <>
           <Box marginTop={0} flexDirection="column">
             <Text
@@ -225,11 +221,7 @@ export function ApiAuthDialog({
                 buffer={baseUrlBuffer}
                 onSubmit={() => setFocusedField(FocusedField.Models)}
                 onCancel={() => setFocusedField(FocusedField.ApiKey)}
-                placeholder={
-                  isZhipu
-                    ? 'https://open.bigmodel.cn/api/paas/v4'
-                    : 'https://api.openai.com/v1'
-                }
+                placeholder="https://api.openai.com/v1"
                 focus={focusedField === FocusedField.BaseUrl}
               />
             </Box>
@@ -255,9 +247,7 @@ export function ApiAuthDialog({
                 buffer={modelsBuffer}
                 onSubmit={handleSubmit}
                 onCancel={() => setFocusedField(FocusedField.BaseUrl)}
-                placeholder={
-                  isZhipu ? 'glm-4,glm-4-flash' : 'gpt-4o,gpt-4o-mini'
-                }
+                placeholder="gpt-4o,gpt-4o-mini"
                 focus={focusedField === FocusedField.Models}
               />
             </Box>

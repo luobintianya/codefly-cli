@@ -7,8 +7,8 @@ exports[`AuthDialog > Snapshots > renders correctly with auth error 1`] = `
 │                                                                                                                      │
 │   How would you like to authenticate for this project?                                                               │
 │                                                                                                                      │
-│   (selected) Login with(not selected) Use Gemini(not selected)    (not selected) OpenAI   (not selected) Zhipu AI    │
-│   Google               API Key                  Vertex AI         Compatible              (BigModel)                 │
+│   (selected) Login with Googl(not selected) Use Gemini API Ke(not selected) Vertex A(not selected) OpenAI Compatible │
+│                                                                                                                      │
 │                                                                                                                      │
 │   Something went wrong                                                                                               │
 │                                                                                                                      │
@@ -28,8 +28,8 @@ exports[`AuthDialog > Snapshots > renders correctly with default props 1`] = `
 │                                                                                                                      │
 │   How would you like to authenticate for this project?                                                               │
 │                                                                                                                      │
-│   (selected) Login with(not selected) Use Gemini(not selected)    (not selected) OpenAI   (not selected) Zhipu AI    │
-│   Google               API Key                  Vertex AI         Compatible              (BigModel)                 │
+│   (selected) Login with Googl(not selected) Use Gemini API Ke(not selected) Vertex A(not selected) OpenAI Compatible │
+│                                                                                                                      │
 │                                                                                                                      │
 │   (Use Enter to select)                                                                                              │
 │                                                                                                                      │

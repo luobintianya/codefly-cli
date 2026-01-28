@@ -25,7 +25,7 @@ export interface UIActions {
   handleAuthSelect: (
     authType: AuthType | undefined,
     scope: LoadableSettingScope,
-  ) => void;
+  ) => Promise<void>;
   setAuthState: (state: AuthState) => void;
   onAuthError: (error: string | null) => void;
   handleEditorSelect: (

@@ -3,16 +3,17 @@
 exports[`ApiAuthDialog > renders correctly 1`] = `
 "╭──────────────────────────────────────────────────────────────────────────────────────────────────╮
 │                                                                                                  │
-│ Enter Gemini API Key                                                                             │
+│ Enter Gemini Configuration                                                                       │
 │                                                                                                  │
-│ Please enter your Gemini API key. It will be securely stored.                                    │
+│ Please enter your Gemini API key and Base URL (optional).                                        │
 │ You can get an API key from https://aistudio.google.com/app/apikey                               │
 │                                                                                                  │
+│ API Key:                                                                                         │
 │ ╭──────────────────────────────────────────────────────────────────────────────────────────────╮ │
 │ │ Paste your API key here                                                                      │ │
 │ ╰──────────────────────────────────────────────────────────────────────────────────────────────╯ │
 │                                                                                                  │
-│ (Press Enter to submit, Esc to cancel, Ctrl+C to clear stored key)                               │
+│ (Press Tab/Arrows to switch fields, Enter to submit, Esc to cancel, Ctrl+C to clear)             │
 │                                                                                                  │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────╯"
 `;

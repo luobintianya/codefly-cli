@@ -53,8 +53,26 @@ interface OpenAIStreamResponse {
   }>;
 }
 
+// ... (existing imports)
+
 export class OpenAICompatibleContentGenerator implements ContentGenerator {
-  constructor(private readonly config: OpenAIConfig) {}
+  private readonly baseUrl: string;
+
+  constructor(private readonly config: OpenAIConfig) {
+    let normalizedBaseUrl = this.config.baseUrl.replace(/\/+$/, '');
+    if (normalizedBaseUrl.endsWith('/chat/completions')) {
+      normalizedBaseUrl = normalizedBaseUrl.slice(
+        0,
+        -'/chat/completions'.length,
+      );
+    }
+    this.baseUrl = normalizedBaseUrl;
+  }
+
+  private getAuthToken(): string {
+    const apiKey = this.config.apiKey.trim();
+    return apiKey;
+  }
 
   private mapContentToOpenAIMessages(contents: Content[]): OpenAIMessage[] {
     return contents.map((content) => {
@@ -82,23 +100,27 @@ export class OpenAICompatibleContentGenerator implements ContentGenerator {
   ): Promise<GenerateContentResponse> {
     const contents = toContents(request.contents);
     const messages = this.mapContentToOpenAIMessages(contents);
+    const token = this.getAuthToken();
 
-    const response = await fetch(`${this.config.baseUrl}/chat/completions`, {
+    const requestBody = {
+      model: request.model || this.config.model,
+      messages,
+      // TODO: Map other parameters like temperature, topP, etc.
+    };
+
+    const response = await fetch(`${this.baseUrl}/chat/completions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${this.config.apiKey}`,
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({
-        model: request.model || this.config.model,
-        messages,
-        // TODO: Map other parameters like temperature, topP, etc.
-      }),
+      body: JSON.stringify(requestBody),
     });
 
     if (!response.ok) {
+      const errorText = await response.text();
       throw new Error(
-        `OpenAI API request failed with status ${response.status}: ${await response.text()}`,
+        `OpenAI API request failed with status ${response.status}: ${errorText}`,
       );
     }
 
@@ -136,23 +158,27 @@ export class OpenAICompatibleContentGenerator implements ContentGenerator {
   ): Promise<AsyncGenerator<GenerateContentResponse>> {
     const contents = toContents(request.contents);
     const messages = this.mapContentToOpenAIMessages(contents);
+    const token = this.getAuthToken();
 
-    const response = await fetch(`${this.config.baseUrl}/chat/completions`, {
+    const requestBody = {
+      model: request.model || this.config.model,
+      messages,
+      stream: true,
+    };
+
+    const response = await fetch(`${this.baseUrl}/chat/completions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${this.config.apiKey}`,
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({
-        model: request.model || this.config.model,
-        messages,
-        stream: true,
-      }),
+      body: JSON.stringify(requestBody),
     });
 
     if (!response.ok) {
+      const errorText = await response.text();
       throw new Error(
-        `OpenAI API request failed with status ${response.status}: ${await response.text()}`,
+        `OpenAI API request failed with ${token} status ${response.status}: ${errorText}`,
       );
     }
 
@@ -211,6 +237,7 @@ export class OpenAICompatibleContentGenerator implements ContentGenerator {
       }
     })();
   }
+  // ... (rest of the file)
 
   async countTokens(
     _request: CountTokensParameters,

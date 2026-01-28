@@ -5,26 +5,26 @@
  */
 
 import type React from 'react';
-import { useCallback } from 'react';
+
 import { Box, Text } from 'ink';
 import { theme } from '../semantic-colors.js';
 import { RadioButtonSelect } from '../components/shared/RadioButtonSelect.js';
 import type { LoadedSettings } from '../../config/settings.js';
 import { AuthType } from '@codeflyai/codefly-core';
 import { useKeypress } from '../hooks/useKeypress.js';
-import { AuthState } from '../types.js';
+
 import { validateAuthMethodWithSettings } from './useAuth.js';
 
 interface AuthDialogProps {
   settings: LoadedSettings;
-  setAuthState: (state: AuthState) => void;
+  onSelect: (authType: AuthType | undefined) => Promise<void>;
   authError: string | null;
   onAuthError: (error: string | null) => void;
 }
 
 export function AuthDialog({
   settings,
-  setAuthState,
+  onSelect,
   authError,
   onAuthError,
 }: AuthDialogProps): React.JSX.Element {
@@ -66,11 +66,6 @@ export function AuthDialog({
       value: AuthType.OPENAI,
       key: AuthType.OPENAI,
     },
-    {
-      label: 'Zhipu AI (BigModel)',
-      value: AuthType.ZHIPU,
-      key: AuthType.ZHIPU,
-    },
   ];
 
   if (settings.merged.security.auth.enforcedType) {
@@ -106,28 +101,6 @@ export function AuthDialog({
   if (settings.merged.security.auth.enforcedType) {
     initialAuthIndex = 0;
   }
-
-  const onSelect = useCallback(
-    async (authType: AuthType | undefined) => {
-      if (authType) {
-        if (authType === AuthType.LOGIN_WITH_GOOGLE) {
-          setAuthState(AuthState.Authenticating);
-          return;
-        }
-
-        if (
-          authType === AuthType.USE_GEMINI ||
-          authType === AuthType.OPENAI ||
-          authType === AuthType.ZHIPU
-        ) {
-          setAuthState(AuthState.AwaitingApiKeyInput);
-          return;
-        }
-      }
-      setAuthState(AuthState.Unauthenticated);
-    },
-    [setAuthState],
-  );
 
   const handleAuthSelect = (authMethod: AuthType) => {
     const error = validateAuthMethodWithSettings(authMethod, settings);
