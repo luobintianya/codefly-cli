@@ -57,6 +57,8 @@ import {
   isPreviewModel,
   PREVIEW_CODEFLY_MODEL_AUTO,
   PREVIEW_CODEFLY_MODEL,
+  isGeminiModel,
+  isAutoModel,
 } from './models.js';
 import { shouldAttemptBrowserLaunch } from '../utils/browser.js';
 import type { MCPOAuthConfig } from '../mcp/oauth-provider.js';
@@ -950,7 +952,7 @@ export class Config {
 
     // Update model if user no longer has access to the preview model
     if (!this.hasAccessToPreviewModel && isPreviewModel(this.model)) {
-      this.setModel(DEFAULT_CODEFLY_MODEL_AUTO);
+      await this.setModel(DEFAULT_CODEFLY_MODEL_AUTO);
     }
 
     // Fetch admin controls
@@ -1064,11 +1066,36 @@ export class Config {
     return this.model;
   }
 
-  setModel(newModel: string, isTemporary: boolean = true): void {
+  async setModel(newModel: string, isTemporary: boolean = true): Promise<void> {
     if (this.model !== newModel || this._activeModel !== newModel) {
-      this.model = newModel;
-      // When the user explicitly sets a model, that becomes the active model.
+      if (!isTemporary) {
+        this.model = newModel;
+      }
       this._activeModel = newModel;
+
+      // Check if we should switch to OpenAI auth
+      const currentAuthType = this.contentGeneratorConfig?.authType;
+      const isNewModelGemini = isGeminiModel(newModel) || isAutoModel(newModel);
+
+      if (
+        isNewModelGemini &&
+        currentAuthType === AuthType.OPENAI &&
+        !isGeminiModel(this.openaiConfig?.model || '')
+      ) {
+        // Switching from OpenAI to Gemini
+        await this.refreshAuth(AuthType.LOGIN_WITH_GOOGLE); // Fallback to default
+      } else if (
+        !isNewModelGemini &&
+        currentAuthType !== AuthType.OPENAI &&
+        this.openaiConfig?.models
+          ?.split(',')
+          .map((m) => m.trim())
+          .includes(newModel)
+      ) {
+        // Switching to OpenAI model
+        await this.refreshAuth(AuthType.OPENAI);
+      }
+
       coreEvents.emitModelChanged(newModel);
       if (this.onModelChange && !isTemporary) {
         this.onModelChange(newModel);
@@ -1078,7 +1105,7 @@ export class Config {
   }
 
   activateFallbackMode(model: string): void {
-    this.setModel(model, true);
+    void this.setModel(model, true);
     const authType = this.getContentGeneratorConfig()?.authType;
     if (authType) {
       logFlashFallback(this, new FlashFallbackEvent(authType));
@@ -1199,12 +1226,12 @@ export class Config {
 
     // Case 1: Disabling preview features while on a preview model
     if (!previewFeatures && isPreviewModel(currentModel)) {
-      this.setModel(DEFAULT_CODEFLY_MODEL_AUTO);
+      void this.setModel(DEFAULT_CODEFLY_MODEL_AUTO);
     }
 
     // Case 2: Enabling preview features while on the default auto model
     else if (previewFeatures && currentModel === DEFAULT_CODEFLY_MODEL_AUTO) {
-      this.setModel(PREVIEW_CODEFLY_MODEL_AUTO);
+      void this.setModel(PREVIEW_CODEFLY_MODEL_AUTO);
     }
   }
 

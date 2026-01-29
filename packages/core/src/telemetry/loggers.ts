@@ -13,6 +13,8 @@ import {
   EVENT_API_RESPONSE,
   EVENT_TOOL_CALL,
 } from './types.js';
+import { coreEvents } from '../utils/events.js';
+import { toInputMessages, toOutputMessages } from './semantic.js';
 import type {
   ApiErrorEvent,
   ApiRequestEvent,
@@ -189,6 +191,14 @@ export function logApiRequest(config: Config, event: ApiRequestEvent): void {
     logger.emit(event.toLogRecord(config));
     logger.emit(event.toSemanticLogRecord(config));
   });
+
+  const inputMessages = event.prompt.contents
+    ? toInputMessages(event.prompt.contents)
+    : [];
+  coreEvents.emitConsoleLog(
+    'debug',
+    `[API Request] Model: ${event.model}\nPrompt ID: ${event.prompt.prompt_id}\nMessages: ${JSON.stringify(inputMessages, null, 2)}`,
+  );
 }
 
 export function logFlashFallback(
@@ -250,6 +260,14 @@ export function logApiError(config: Config, event: ApiErrorEvent): void {
       },
     });
   });
+
+  const inputMessages = event.prompt.contents
+    ? toInputMessages(event.prompt.contents)
+    : [];
+  coreEvents.emitConsoleLog(
+    'error',
+    `[API Error] Model: ${event.model}\nError: ${event.error}\nDuration: ${event.duration_ms}ms\nMessages: ${JSON.stringify(inputMessages, null, 2)}`,
+  );
 }
 
 export function logApiResponse(config: Config, event: ApiResponseEvent): void {
@@ -264,6 +282,12 @@ export function logApiResponse(config: Config, event: ApiResponseEvent): void {
     const logger = logs.getLogger(SERVICE_NAME);
     logger.emit(event.toLogRecord(config));
     logger.emit(event.toSemanticLogRecord(config));
+
+    const outputMessages = toOutputMessages(event.response.candidates);
+    coreEvents.emitConsoleLog(
+      'debug',
+      `[API Response] Model: ${event.model}\nStatus: ${event.status_code}\nDuration: ${event.duration_ms}ms\nUsage: ${JSON.stringify(event.usage, null, 2)}\nMessages: ${JSON.stringify(outputMessages, null, 2)}`,
+    );
 
     const conventionAttributes = getConventionAttributes(event);
 

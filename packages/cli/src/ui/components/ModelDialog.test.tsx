@@ -60,7 +60,7 @@ describe('<ModelDialog />', () => {
   const mockGetHasAccessToPreviewModel = vi.fn();
 
   interface MockConfig extends Partial<Config> {
-    setModel: (model: string, isTemporary?: boolean) => void;
+    setModel: (model: string, isTemporary?: boolean) => Promise<void>;
     getModel: () => string;
     getPreviewFeatures: () => boolean;
     getHasAccessToPreviewModel: () => boolean;

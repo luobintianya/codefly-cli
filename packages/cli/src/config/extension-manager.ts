@@ -916,7 +916,7 @@ export async function copyExtension(
 
 function getContextFileNames(config: ExtensionConfig): string[] {
   if (!config.contextFileName) {
-    return ['CODEFLY.md', 'CODEFLY.md'];
+    return ['CODEFLY.md'];
   } else if (!Array.isArray(config.contextFileName)) {
     return [config.contextFileName];
   }

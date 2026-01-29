@@ -175,3 +175,16 @@ export function isAutoModel(model: string): boolean {
 export function supportsMultimodalFunctionResponse(model: string): boolean {
   return model.startsWith('gemini-3-');
 }
+/**
+ * Checks if the model is a Gemini model (including Vertex AI variants).
+ *
+ * @param model The model name to check.
+ * @returns True if the model is a Gemini model.
+ */
+export function isGeminiModel(model: string): boolean {
+  return (
+    model.startsWith('gemini-') ||
+    model.startsWith('google/') ||
+    /^gemini-\d/.test(model)
+  );
+}

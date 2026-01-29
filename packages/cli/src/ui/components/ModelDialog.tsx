@@ -81,7 +81,7 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
         value: DEFAULT_CODEFLY_MODEL_AUTO,
         title: getDisplayString(DEFAULT_CODEFLY_MODEL_AUTO),
         description:
-          'Let Gemini CLI decide the best model for the task: gemini-2.5-pro, gemini-2.5-flash',
+          'Let Codefly CLI decide the best model for the task: gemini-2.5-pro, gemini-2.5-flash',
         key: DEFAULT_CODEFLY_MODEL_AUTO,
       },
       {
@@ -114,7 +114,7 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
         value: PREVIEW_CODEFLY_MODEL_AUTO,
         title: getDisplayString(PREVIEW_CODEFLY_MODEL_AUTO),
         description:
-          'Let Gemini CLI decide the best model for the task: gemini-3-pro, gemini-3-flash',
+          'Let Codefly CLI decide the best model for the task: gemini-3-pro, gemini-3-flash',
         key: PREVIEW_CODEFLY_MODEL_AUTO,
       });
     }
@@ -216,7 +216,7 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
       }
 
       if (config) {
-        config.setModel(model, persistMode ? false : true);
+        void config.setModel(model, persistMode ? false : true);
         const event = new ModelSlashCommandEvent(model);
         logModelSlashCommand(config, event);
       }

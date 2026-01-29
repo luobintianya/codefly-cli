@@ -660,6 +660,10 @@ export const AppContainer = (props: AppContainerProps) => {
             models: models || '',
             model: updatedModel,
           };
+
+          if (updatedModel) {
+            await config.setModel(updatedModel);
+          }
         }
 
         if (currentAuthType === AuthType.USE_GEMINI) {
@@ -1495,7 +1499,7 @@ export const AppContainer = (props: AppContainerProps) => {
       lastTitleRef.current = paddedTitle;
       stdout.write(`\x1b]0;${paddedTitle}\x07`);
     }
-    // Note: We don't need to reset the window title on exit because Gemini CLI is already doing that elsewhere
+    // Note: We don't need to reset the window title on exit because Codefly CLI is already doing that elsewhere
   }, [
     streamingState,
     thought,

@@ -182,7 +182,6 @@ export function applyModelSelection(
     });
     generateContentConfig = fallbackResolved.generateContentConfig;
   }
-
   config.setActiveModel(finalModel);
 
   if (selection.attempts && options.consumeAttempt !== false) {

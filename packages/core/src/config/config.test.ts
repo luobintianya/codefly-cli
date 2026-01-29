@@ -1650,7 +1650,7 @@ describe('Config getHooks', () => {
       const spy = vi.spyOn(service, 'reset');
 
       const proModel = 'gemini-2.5-pro';
-      config.setModel(proModel);
+      await config.setModel(proModel);
 
       expect(config.getModel()).toBe(proModel);
       expect(mockCoreEvents.emitModelChanged).toHaveBeenCalledWith(proModel);
@@ -1662,7 +1662,7 @@ describe('Config getHooks', () => {
       const service = config.getModelAvailabilityService();
       const spy = vi.spyOn(service, 'reset');
 
-      config.setModel('auto');
+      await config.setModel('auto');
 
       expect(config.getModel()).toBe('auto');
       expect(mockCoreEvents.emitModelChanged).toHaveBeenCalledWith('auto');
@@ -1681,7 +1681,7 @@ describe('Config getHooks', () => {
       const service = config.getModelAvailabilityService();
       const spy = vi.spyOn(service, 'reset');
 
-      config.setModel('auto');
+      await config.setModel('auto');
 
       expect(config.getModel()).toBe('auto');
       expect(spy).toHaveBeenCalled();
@@ -1695,7 +1695,7 @@ describe('Config getHooks', () => {
       config.setActiveModel(fallbackModel);
       expect(config.getActiveModel()).toBe(fallbackModel);
 
-      config.setModel(originalModel);
+      await config.setModel(originalModel);
 
       expect(config.getModel()).toBe(originalModel);
       expect(config.getActiveModel()).toBe(originalModel);
@@ -1708,7 +1708,7 @@ describe('Config getHooks', () => {
         onModelChange,
       });
 
-      config.setModel(DEFAULT_CODEFLY_MODEL, false);
+      await config.setModel(DEFAULT_CODEFLY_MODEL, false);
 
       expect(onModelChange).toHaveBeenCalledWith(DEFAULT_CODEFLY_MODEL);
     });
@@ -1720,7 +1720,7 @@ describe('Config getHooks', () => {
         onModelChange,
       });
 
-      config.setModel(DEFAULT_CODEFLY_MODEL, true);
+      await config.setModel(DEFAULT_CODEFLY_MODEL, true);
 
       expect(onModelChange).not.toHaveBeenCalled();
     });
@@ -1983,7 +1983,7 @@ describe('Config Quota & Preview Model Access', () => {
   describe('setPreviewFeatures', () => {
     it('should reset model to default auto if disabling preview features while using a preview model', () => {
       config.setPreviewFeatures(true);
-      config.setModel(PREVIEW_CODEFLY_MODEL);
+      await config.setModel(PREVIEW_CODEFLY_MODEL);
 
       config.setPreviewFeatures(false);
 
@@ -1993,7 +1993,7 @@ describe('Config Quota & Preview Model Access', () => {
     it('should NOT reset model if disabling preview features while NOT using a preview model', () => {
       config.setPreviewFeatures(true);
       const nonPreviewModel = 'gemini-1.5-pro';
-      config.setModel(nonPreviewModel);
+      await config.setModel(nonPreviewModel);
 
       config.setPreviewFeatures(false);
 
@@ -2002,7 +2002,7 @@ describe('Config Quota & Preview Model Access', () => {
 
     it('should switch to preview auto model if enabling preview features while using default auto model', () => {
       config.setPreviewFeatures(false);
-      config.setModel(DEFAULT_CODEFLY_MODEL_AUTO);
+      await config.setModel(DEFAULT_CODEFLY_MODEL_AUTO);
 
       config.setPreviewFeatures(true);
 
@@ -2011,7 +2011,7 @@ describe('Config Quota & Preview Model Access', () => {
 
     it('should NOT reset model if enabling preview features', () => {
       config.setPreviewFeatures(false);
-      config.setModel(PREVIEW_CODEFLY_MODEL); // Just pretending it was set somehow
+      await config.setModel(PREVIEW_CODEFLY_MODEL); // Just pretending it was set somehow
 
       config.setPreviewFeatures(true);
 

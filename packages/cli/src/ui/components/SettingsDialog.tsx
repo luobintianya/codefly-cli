@@ -687,7 +687,7 @@ export function SettingsDialog({
   // Footer content for restart prompt
   const footerContent = showRestartPrompt ? (
     <Text color={theme.status.warning}>
-      To see changes, Gemini CLI must be restarted. Press r to exit and apply
+      To see changes, Codefly CLI must be restarted. Press r to exit and apply
       changes now.
     </Text>
   ) : null;

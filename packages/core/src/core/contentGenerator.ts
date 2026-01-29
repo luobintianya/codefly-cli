@@ -122,10 +122,7 @@ export async function createContentGeneratorConfig(
         openaiBaseUrl ||
         'https://api.openai.com/v1';
       contentGeneratorConfig.model =
-        openaiModel ||
-        config.openaiConfig?.model ||
-        config.getModel() ||
-        'gpt-4o';
+        openaiModel || config.openaiConfig?.model || 'gpt-4o';
       return contentGeneratorConfig;
     }
   }

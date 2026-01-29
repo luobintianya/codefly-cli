@@ -1076,7 +1076,7 @@ describe('AppContainer State Management', () => {
 
       expect(titleWrites).toHaveLength(1);
       expect(titleWrites[0][0]).toBe(
-        `\x1b]0;${'Gemini CLI (workspace)'.padEnd(80, ' ')}\x07`,
+        `\x1b]0;${'Codefly CLI (workspace)'.padEnd(80, ' ')}\x07`,
       );
       unmount();
     });
