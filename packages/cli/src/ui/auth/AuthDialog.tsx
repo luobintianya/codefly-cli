@@ -83,21 +83,23 @@ export function AuthDialog({
     defaultAuthType = defaultAuthTypeEnv as AuthType;
   }
 
-  let initialAuthIndex = items.findIndex((item) => {
-    if (settings.merged.security.auth.selectedType) {
-      return item.value === settings.merged.security.auth.selectedType;
-    }
+  const preferredAuthType =
+    settings.merged.security.auth.selectedType ||
+    defaultAuthType ||
+    (process.env['GEMINI_API_KEY'] ? AuthType.USE_GEMINI : null) ||
+    (process.env['OPENAI_API_KEY'] ? AuthType.OPENAI : null) ||
+    (process.env['GOOGLE_CLOUD_PROJECT'] && process.env['GOOGLE_CLOUD_LOCATION']
+      ? AuthType.USE_VERTEX_AI
+      : null) ||
+    AuthType.LOGIN_WITH_GOOGLE;
 
-    if (defaultAuthType) {
-      return item.value === defaultAuthType;
-    }
+  let initialAuthIndex = items.findIndex(
+    (item) => item.value === preferredAuthType,
+  );
 
-    if (process.env['GEMINI_API_KEY']) {
-      return item.value === AuthType.USE_GEMINI;
-    }
-
-    return item.value === AuthType.LOGIN_WITH_GOOGLE;
-  });
+  if (initialAuthIndex === -1) {
+    initialAuthIndex = 0;
+  }
   if (settings.merged.security.auth.enforcedType) {
     initialAuthIndex = 0;
   }
