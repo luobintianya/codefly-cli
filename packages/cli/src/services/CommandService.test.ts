@@ -37,6 +37,7 @@ class MockCommandLoader implements ICommandLoader {
 describe('CommandService', () => {
   beforeEach(() => {
     vi.spyOn(debugLogger, 'debug').mockImplementation(() => {});
+    vi.spyOn(debugLogger, 'error').mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -140,8 +141,8 @@ describe('CommandService', () => {
     const commands = service.getCommands();
     expect(commands).toHaveLength(1);
     expect(commands).toEqual([mockCommandA]);
-    expect(debugLogger.debug).toHaveBeenCalledWith(
-      'A command loader failed:',
+    expect(debugLogger.error).toHaveBeenCalledWith(
+      'Command loader MockCommandLoader failed:',
       error,
     );
   });

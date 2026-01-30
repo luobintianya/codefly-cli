@@ -1074,7 +1074,7 @@ export const InputPrompt: React.FC<InputPromptProps> = ({
         mode={
           completion.completionMode === CompletionMode.AT
             ? 'reverse'
-            : buffer.text.startsWith('/') &&
+            : isSlashCommand(buffer.text) &&
                 !reverseSearchActive &&
                 !commandSearchActive
               ? 'slash'

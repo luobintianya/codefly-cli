@@ -12,7 +12,11 @@ import {
   type CommandContext,
 } from '../ui/commands/types.js';
 import type { MessageActionReturn, Config } from '@codeflyai/codefly-core';
-import { isNightly, startupProfiler } from '@codeflyai/codefly-core';
+import {
+  isNightly,
+  startupProfiler,
+  debugLogger,
+} from '@codeflyai/codefly-core';
 import { aboutCommand } from '../ui/commands/aboutCommand.js';
 import { agentsCommand } from '../ui/commands/agentsCommand.js';
 import { authCommand } from '../ui/commands/authCommand.js';
@@ -68,87 +72,38 @@ export class BuiltinCommandLoader implements ICommandLoader {
   async loadCommands(_signal: AbortSignal): Promise<SlashCommand[]> {
     const handle = startupProfiler.start('load_builtin_commands');
 
-    const isNightlyBuild = await isNightly(process.cwd());
+    let allDefinitions: Array<SlashCommand | null> = [];
+    try {
+      let isNightlyBuild = false;
+      try {
+        isNightlyBuild = await isNightly(process.cwd());
+      } catch (e) {
+        debugLogger.debug('Failed to check for nightly build:', e);
+      }
 
-    const allDefinitions: Array<SlashCommand | null> = [
-      aboutCommand,
-      ...(this.config?.isAgentsEnabled() ? [agentsCommand] : []),
-      authCommand,
-      bugCommand,
-      {
-        ...chatCommand,
-        subCommands: isNightlyBuild
-          ? [...(chatCommand.subCommands || []), debugCommand]
-          : chatCommand.subCommands,
-      },
-      clearCommand,
-      compressCommand,
-      copyCommand,
-      corgiCommand,
-      docsCommand,
-      directoryCommand,
-      editorCommand,
-      ...(this.config?.getExtensionsEnabled() === false
-        ? [
-            {
-              name: 'extensions',
-              description: 'Manage extensions',
-              kind: CommandKind.BUILT_IN,
-              autoExecute: false,
-              subCommands: [],
-              action: async (
-                _context: CommandContext,
-              ): Promise<MessageActionReturn> => ({
-                type: 'message',
-                messageType: 'error',
-                content: 'Extensions are disabled by your admin.',
-              }),
-            },
-          ]
-        : [extensionsCommand(this.config?.getEnableExtensionReloading())]),
-      helpCommand,
-      ...(this.config?.getEnableHooksUI() ? [hooksCommand] : []),
-      rewindCommand,
-      await ideCommand(),
-      initCommand,
-      ...(this.config?.getMcpEnabled() === false
-        ? [
-            {
-              name: 'mcp',
-              description:
-                'Manage configured Model Context Protocol (MCP) servers',
-              kind: CommandKind.BUILT_IN,
-              autoExecute: false,
-              subCommands: [],
-              action: async (
-                _context: CommandContext,
-              ): Promise<MessageActionReturn> => ({
-                type: 'message',
-                messageType: 'error',
-                content: 'MCP is disabled by your admin.',
-              }),
-            },
-          ]
-        : [mcpCommand]),
-      memoryCommand,
-      modelCommand,
-      openspecCommand,
-      ...(this.config?.getFolderTrust() ? [permissionsCommand] : []),
-      privacyCommand,
-      policiesCommand,
-      ...(isDevelopment ? [profileCommand] : []),
-      quitCommand,
-      restoreCommand(this.config),
-      resumeCommand,
-      statsCommand,
-      themeCommand,
-      toolsCommand,
-      ...(this.config?.isSkillsSupportEnabled()
-        ? this.config?.getSkillManager()?.isAdminEnabled() === false
+      allDefinitions = [
+        aboutCommand,
+        ...(this.config?.isAgentsEnabled() ? [agentsCommand] : []),
+        authCommand,
+        bugCommand,
+        {
+          ...chatCommand,
+          subCommands: isNightlyBuild
+            ? [...(chatCommand.subCommands || []), debugCommand]
+            : chatCommand.subCommands,
+        },
+        clearCommand,
+        compressCommand,
+        copyCommand,
+        corgiCommand,
+        docsCommand,
+        directoryCommand,
+        editorCommand,
+        ...(this.config?.getExtensionsEnabled() === false
           ? [
               {
-                name: 'skills',
-                description: 'Manage agent skills',
+                name: 'extensions',
+                description: 'Manage extensions',
                 kind: CommandKind.BUILT_IN,
                 autoExecute: false,
                 subCommands: [],
@@ -157,19 +112,89 @@ export class BuiltinCommandLoader implements ICommandLoader {
                 ): Promise<MessageActionReturn> => ({
                   type: 'message',
                   messageType: 'error',
-                  content: 'Agent skills are disabled by your admin.',
+                  content: 'Extensions are disabled by your admin.',
                 }),
               },
             ]
-          : [skillsCommand]
-        : []),
-      settingsCommand,
-      vimCommand,
-      setupGithubCommand,
-      terminalSetupCommand,
-    ];
-    handle?.end();
-    handle?.end();
+          : [extensionsCommand(this.config?.getEnableExtensionReloading())]),
+        helpCommand,
+        ...(this.config?.getEnableHooksUI() ? [hooksCommand] : []),
+        rewindCommand,
+        ...(await (async () => {
+          try {
+            const timeoutPromise = new Promise<never>((_, reject) => {
+              setTimeout(() => reject(new Error('ideCommand timed out')), 2000);
+            });
+            return [await Promise.race([ideCommand(), timeoutPromise])];
+          } catch (e) {
+            debugLogger.debug('Failed to load ide command:', e);
+            return [];
+          }
+        })()),
+        initCommand,
+        ...(this.config?.getMcpEnabled() === false
+          ? [
+              {
+                name: 'mcp',
+                description:
+                  'Manage configured Model Context Protocol (MCP) servers',
+                kind: CommandKind.BUILT_IN,
+                autoExecute: false,
+                subCommands: [],
+                action: async (
+                  _context: CommandContext,
+                ): Promise<MessageActionReturn> => ({
+                  type: 'message',
+                  messageType: 'error',
+                  content: 'MCP is disabled by your admin.',
+                }),
+              },
+            ]
+          : [mcpCommand]),
+        memoryCommand,
+        modelCommand,
+        openspecCommand,
+        ...(this.config?.getFolderTrust() ? [permissionsCommand] : []),
+        privacyCommand,
+        policiesCommand,
+        ...(isDevelopment ? [profileCommand] : []),
+        quitCommand,
+        restoreCommand(this.config),
+        resumeCommand,
+        statsCommand,
+        themeCommand,
+        toolsCommand,
+        ...(this.config?.isSkillsSupportEnabled()
+          ? this.config?.getSkillManager()?.isAdminEnabled() === false
+            ? [
+                {
+                  name: 'skills',
+                  description: 'Manage agent skills',
+                  kind: CommandKind.BUILT_IN,
+                  autoExecute: false,
+                  subCommands: [],
+                  action: async (
+                    _context: CommandContext,
+                  ): Promise<MessageActionReturn> => ({
+                    type: 'message',
+                    messageType: 'error',
+                    content: 'Agent skills are disabled by your admin.',
+                  }),
+                },
+              ]
+            : [skillsCommand]
+          : []),
+        settingsCommand,
+        vimCommand,
+        setupGithubCommand,
+        terminalSetupCommand,
+      ];
+    } catch (e) {
+      debugLogger.error('Critical failure in BuiltinCommandLoader:', e);
+    } finally {
+      handle?.end();
+    }
+
     return allDefinitions.filter((cmd): cmd is SlashCommand => cmd !== null);
   }
 }

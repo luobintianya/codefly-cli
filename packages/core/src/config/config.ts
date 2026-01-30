@@ -409,6 +409,7 @@ export interface ConfigParameters {
     model?: string;
     apiKey?: string;
     models?: string;
+    contextWindowLimit?: number;
   };
 
   mcpEnabled?: boolean;
@@ -573,6 +574,7 @@ export class Config {
     model?: string;
     apiKey?: string;
     models?: string;
+    contextWindowLimit?: number;
   };
   private readonly enableHooksUI: boolean;
   private hooks: { [K in HookEventName]?: HookDefinition[] } | undefined;
@@ -1390,6 +1392,10 @@ export class Config {
 
   getContextManager(): ContextManager | undefined {
     return this.contextManager;
+  }
+
+  getOpenaiContextWindowLimit(): number | undefined {
+    return this.openaiConfig?.contextWindowLimit;
   }
 
   isJitContextEnabled(): boolean {

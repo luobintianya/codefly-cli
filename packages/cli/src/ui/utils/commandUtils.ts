@@ -30,17 +30,18 @@ export const isAtCommand = (query: string): boolean =>
  * @returns True if the query looks like an '/' command, false otherwise.
  */
 export const isSlashCommand = (query: string): boolean => {
-  if (!query.startsWith('/')) {
+  const trimmedQuery = query.trimStart();
+  if (!trimmedQuery.startsWith('/')) {
     return false;
   }
 
   // Exclude line comments that start with '//'
-  if (query.startsWith('//')) {
+  if (trimmedQuery.startsWith('//')) {
     return false;
   }
 
   // Exclude block comments that start with '/*'
-  if (query.startsWith('/*')) {
+  if (trimmedQuery.startsWith('/*')) {
     return false;
   }
 

@@ -75,7 +75,8 @@ function useCommandParser(
       };
     }
 
-    const fullPath = query.substring(1) || '';
+    const trimmedQuery = query.trimStart();
+    const fullPath = trimmedQuery.substring(1) || '';
     const hasTrailingSpace = !!query.endsWith(' ');
     const rawParts = fullPath.split(/\s+/).filter((p) => p);
     let commandPathParts = rawParts;

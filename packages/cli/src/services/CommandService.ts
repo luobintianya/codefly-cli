@@ -54,13 +54,16 @@ export class CommandService {
     );
 
     const allCommands: SlashCommand[] = [];
-    for (const result of results) {
+    results.forEach((result, index) => {
       if (result.status === 'fulfilled') {
         allCommands.push(...result.value);
       } else {
-        debugLogger.debug('A command loader failed:', result.reason);
+        debugLogger.error(
+          `Command loader ${loaders[index].constructor.name} failed:`,
+          result.reason,
+        );
       }
-    }
+    });
 
     const commandMap = new Map<string, SlashCommand>();
     for (const cmd of allCommands) {

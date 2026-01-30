@@ -760,16 +760,20 @@ export const useGeminiStream = (
     (estimatedRequestTokenCount: number, remainingTokenCount: number) => {
       onCancelSubmit(true);
 
-      const limit = tokenLimit(config.getModel());
-
-      const isLessThan75Percent =
-        limit > 0 && remainingTokenCount < limit * 0.75;
+      const limit = tokenLimit(config.getModel(), config);
 
       let text = `Sending this message (${estimatedRequestTokenCount} tokens) might exceed the remaining context window limit (${remainingTokenCount} tokens).`;
 
-      if (isLessThan75Percent) {
-        text +=
-          ' Please try reducing the size of your message or use the `/compress` command to compress the chat history.';
+      if (estimatedRequestTokenCount > limit) {
+        text = `This message is too large (${estimatedRequestTokenCount} tokens) and exceeds the total context window limit (${limit} tokens). Please try reducing the size of your message by removing large file attachments or @ commands.`;
+      } else {
+        const isLessThan75Percent =
+          limit > 0 && remainingTokenCount < limit * 0.75;
+
+        if (isLessThan75Percent) {
+          text +=
+            ' Please try reducing the size of your message or use the `/compress` command to compress the chat history.';
+        }
       }
 
       addItem({

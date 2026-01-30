@@ -1375,6 +1375,16 @@ const SETTINGS_SCHEMA = {
                 description: 'OpenAI Compatible model names (comma-separated).',
                 showInDialog: true,
               },
+              contextWindowLimit: {
+                type: 'number',
+                label: 'Context Window Limit',
+                category: 'Security',
+                requiresRestart: true,
+                default: undefined as number | undefined,
+                description:
+                  'The maximum number of tokens allowed in the context window for OpenAI-compatible models.',
+                showInDialog: true,
+              },
             },
           },
           selectedType: {

@@ -288,6 +288,29 @@ describe('Core System Prompt (prompts.ts)', () => {
     });
   });
 
+  describe('Language in System Prompt', () => {
+    it('should include language instruction when language is set to a specific value', () => {
+      (mockConfig as { language: string }).language = 'Chinese';
+      const prompt = getCoreSystemPrompt(mockConfig);
+      expect(prompt).toContain('You must respond in Chinese.');
+      expect(prompt).toContain(
+        'CRITICAL: You MUST explicitly adhere to the users language preference.',
+      );
+    });
+
+    it('should NOT include language instruction when language is set to "auto"', () => {
+      (mockConfig as { language: string }).language = 'auto';
+      const prompt = getCoreSystemPrompt(mockConfig);
+      expect(prompt).not.toContain('You must respond in');
+    });
+
+    it('should include language instruction when language is set to "en"', () => {
+      (mockConfig as { language: string }).language = 'en';
+      const prompt = getCoreSystemPrompt(mockConfig);
+      expect(prompt).toContain('You must respond in en.');
+    });
+  });
+
   describe('GEMINI_SYSTEM_MD environment variable', () => {
     it.each(['false', '0'])(
       'should use default prompt when GEMINI_SYSTEM_MD is "%s"',

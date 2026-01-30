@@ -85,7 +85,19 @@ async function getProcessInfo(pid: number): Promise<{
 }> {
   try {
     const command = `ps -o ppid=,command= -p ${pid}`;
-    const { stdout } = await execAsync(command);
+
+    const timeoutPromise = new Promise<never>((_, reject) => {
+      setTimeout(
+        () => reject(new Error('Process info lookup timed out')),
+        2000,
+      );
+    });
+
+    const { stdout } = (await Promise.race([
+      execAsync(command),
+      timeoutPromise,
+    ])) as { stdout: string };
+
     const trimmedStdout = stdout.trim();
     if (!trimmedStdout) {
       return { parentPid: 0, name: '', command: '' };

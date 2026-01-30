@@ -198,7 +198,7 @@ describe('commandUtils', () => {
       expect(isSlashCommand('memory show')).toBe(false);
       expect(isSlashCommand('')).toBe(false);
       expect(isSlashCommand('path/to/file')).toBe(false);
-      expect(isSlashCommand(' /help')).toBe(false);
+      expect(isSlashCommand(' /help')).toBe(true);
     });
 
     it('should return false for line comments starting with //', () => {

@@ -659,6 +659,8 @@ export const AppContainer = (props: AppContainerProps) => {
             baseUrl: baseUrl || '',
             models: models || '',
             model: updatedModel,
+            contextWindowLimit:
+              settings.merged.security.auth.openai?.contextWindowLimit,
           };
 
           if (updatedModel) {

@@ -559,7 +559,8 @@ export class CodeflyClient {
     }
 
     const remainingTokenCount =
-      tokenLimit(modelForLimitCheck) - this.getChat().getLastPromptTokenCount();
+      tokenLimit(modelForLimitCheck, this.config) -
+      this.getChat().getLastPromptTokenCount();
 
     // Estimate tokens. For text-only requests, we estimate based on character length.
     // For requests with non-text parts (like images, tools), we use the countTokens API.
