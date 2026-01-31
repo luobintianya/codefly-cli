@@ -345,6 +345,25 @@ describe('retryWithBackoff', () => {
       expect(mockFn).toHaveBeenCalledTimes(2);
     });
 
+    it('should retry on ERR_STREAM_PREMATURE_CLOSE', async () => {
+      const mockFn = vi.fn();
+      const error = new Error('Premature close');
+      (error as any).code = 'ERR_STREAM_PREMATURE_CLOSE';
+      mockFn.mockRejectedValueOnce(error);
+      mockFn.mockResolvedValueOnce('success');
+
+      const promise = retryWithBackoff(mockFn, {
+        retryFetchErrors: true,
+        initialDelayMs: 10,
+      });
+
+      await vi.runAllTimersAsync();
+
+      const result = await promise;
+      expect(result).toBe('success');
+      expect(mockFn).toHaveBeenCalledTimes(2);
+    });
+
     it('should retry on common network error codes in cause (ETIMEDOUT)', async () => {
       const mockFn = vi.fn();
       const cause = new Error('Connect Timeout');

@@ -53,6 +53,7 @@ const RETRYABLE_NETWORK_CODES = [
   'ENOTFOUND',
   'EAI_AGAIN',
   'ECONNREFUSED',
+  'ERR_STREAM_PREMATURE_CLOSE',
 ];
 
 function getNetworkErrorCode(error: unknown): string | undefined {
