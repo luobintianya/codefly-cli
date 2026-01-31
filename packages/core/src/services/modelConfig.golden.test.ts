@@ -10,18 +10,18 @@ import * as path from 'node:path';
 import { ModelConfigService } from './modelConfigService.js';
 import { DEFAULT_MODEL_CONFIGS } from '../config/defaultModelConfigs.js';
 
+import { fileURLToPath } from 'node:url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
 const GOLDEN_FILE_PATH = path.resolve(
-  process.cwd(),
-  'src',
-  'services',
+  __dirname,
   'test-data',
   'resolved-aliases.golden.json',
 );
 
 const RETRY_GOLDEN_FILE_PATH = path.resolve(
-  process.cwd(),
-  'src',
-  'services',
+  __dirname,
   'test-data',
   'resolved-aliases-retry.golden.json',
 );
