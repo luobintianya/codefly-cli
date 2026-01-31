@@ -1065,7 +1065,7 @@ export class Config {
   }
 
   getModel(): string {
-    return this.model;
+    return this._activeModel;
   }
 
   async setModel(newModel: string, isTemporary: boolean = true): Promise<void> {

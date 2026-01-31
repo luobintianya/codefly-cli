@@ -73,16 +73,23 @@ export function parseInputForHighlighting(
         tokens.push({ text: text.slice(last, matchIndex), type: 'default' });
       }
 
-      const type = fullMatch.startsWith('/')
-        ? 'command'
-        : fullMatch.startsWith('@')
-          ? 'file'
-          : 'paste';
-      if (type === 'command' && index !== 0) {
-        tokens.push({ text: fullMatch, type: 'default' });
-      } else {
-        tokens.push({ text: fullMatch, type });
+      const trimmed = fullMatch.trimStart();
+      let type: 'default' | 'command' | 'file' | 'paste' = 'paste';
+
+      if (trimmed.startsWith('/')) {
+        type = 'command';
+      } else if (trimmed.startsWith('@')) {
+        type = 'file';
       }
+
+      if (type === 'command') {
+        const prefix = text.slice(0, match.index);
+        if (index !== 0 || prefix.trim().length > 0) {
+          type = 'default';
+        }
+      }
+
+      tokens.push({ text: fullMatch, type });
 
       last = matchIndex + fullMatch.length;
     }
@@ -126,7 +133,18 @@ export function parseInputForHighlighting(
 
   highlightCache.set(cacheKey, tokens);
 
-  return tokens;
+  // Merge adjacent tokens of the same type
+  const mergedTokens: HighlightToken[] = [];
+  for (const token of tokens) {
+    const last = mergedTokens[mergedTokens.length - 1];
+    if (last && last.type === token.type) {
+      last.text += token.text;
+    } else {
+      mergedTokens.push(token);
+    }
+  }
+
+  return mergedTokens;
 }
 
 export function parseSegmentsFromTokens(

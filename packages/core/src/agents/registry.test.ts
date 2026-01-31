@@ -257,6 +257,7 @@ describe('AgentRegistry', () => {
           overrides: {
             codebase_investigator: { enabled: false },
             cli_help: { enabled: false },
+            introspection_agent: { enabled: false },
           },
         },
       });

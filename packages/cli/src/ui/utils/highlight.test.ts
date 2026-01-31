@@ -33,8 +33,7 @@ describe('parseInputForHighlighting', () => {
   it('should NOT highlight a command at the beginning when index is not 0', () => {
     const text = '/help me';
     expect(parseInputForHighlighting(text, 1)).toEqual([
-      { text: '/help', type: 'default' },
-      { text: ' me', type: 'default' },
+      { text: '/help me', type: 'default' },
     ]);
   });
 
@@ -121,8 +120,7 @@ describe('parseInputForHighlighting', () => {
   it('should not highlight command but highlight file on a non-zero line', () => {
     const text = '/cmd @file.txt';
     expect(parseInputForHighlighting(text, 2)).toEqual([
-      { text: '/cmd', type: 'default' },
-      { text: ' ', type: 'default' },
+      { text: '/cmd ', type: 'default' },
       { text: '@file.txt', type: 'file' },
     ]);
   });
