@@ -1379,7 +1379,7 @@ const SETTINGS_SCHEMA = {
                 type: 'number',
                 label: 'Context Window Limit',
                 category: 'Security',
-                requiresRestart: true,
+                requiresRestart: false,
                 default: undefined as number | undefined,
                 description:
                   'The maximum number of tokens allowed in the context window for OpenAI-compatible models.',

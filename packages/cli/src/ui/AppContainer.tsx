@@ -422,6 +422,16 @@ export const AppContainer = (props: AppContainerProps) => {
     };
   }, []);
 
+  // Sync OpenAI config from settings to support hot-reloading of context window limit
+  useEffect(() => {
+    if (settings.merged.security.auth.openai) {
+      config.openaiConfig = {
+        ...config.openaiConfig,
+        ...settings.merged.security.auth.openai,
+      };
+    }
+  }, [settings.merged.security.auth.openai, config]);
+
   const { consoleMessages, clearConsoleMessages: clearConsoleMessagesState } =
     useConsoleMessages();
 
