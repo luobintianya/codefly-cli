@@ -130,6 +130,7 @@ export const useAuthCommand = (settings: LoadedSettings, config: Config) => {
       if (authType === AuthType.OPENAI) {
         const key = await reloadApiKey(authType);
         if (!key) {
+          setAuthState(AuthState.AwaitingApiKeyInput);
           return;
         }
       }

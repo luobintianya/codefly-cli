@@ -189,8 +189,8 @@ describe('AuthDialog', () => {
       },
       {
         setup: () => {},
-        expected: AuthType.LOGIN_WITH_GOOGLE,
-        desc: 'defaults to Login with Google',
+        expected: AuthType.OPENAI,
+        desc: 'defaults to OpenAI Compatible',
       },
     ])('selects initial auth type $desc', ({ setup, expected }) => {
       setup();

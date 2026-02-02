@@ -30,9 +30,24 @@ export function AuthDialog({
 }: AuthDialogProps): React.JSX.Element {
   let items = [
     {
+      label: 'OpenAI Compatible',
+      value: AuthType.OPENAI,
+      key: AuthType.OPENAI,
+    },
+    {
+      label: 'Use Gemini API Key',
+      value: AuthType.USE_GEMINI,
+      key: AuthType.USE_GEMINI,
+    },
+    {
       label: 'Login with Google',
       value: AuthType.LOGIN_WITH_GOOGLE,
       key: AuthType.LOGIN_WITH_GOOGLE,
+    },
+    {
+      label: 'Vertex AI',
+      value: AuthType.USE_VERTEX_AI,
+      key: AuthType.USE_VERTEX_AI,
     },
     ...(process.env['CLOUD_SHELL'] === 'true'
       ? [
@@ -51,21 +66,6 @@ export function AuthDialog({
             },
           ]
         : []),
-    {
-      label: 'Use Gemini API Key',
-      value: AuthType.USE_GEMINI,
-      key: AuthType.USE_GEMINI,
-    },
-    {
-      label: 'Vertex AI',
-      value: AuthType.USE_VERTEX_AI,
-      key: AuthType.USE_VERTEX_AI,
-    },
-    {
-      label: 'OpenAI Compatible',
-      value: AuthType.OPENAI,
-      key: AuthType.OPENAI,
-    },
   ];
 
   if (settings.merged.security.auth.enforcedType) {
@@ -90,8 +90,7 @@ export function AuthDialog({
     (process.env['OPENAI_API_KEY'] ? AuthType.OPENAI : null) ||
     (process.env['GOOGLE_CLOUD_PROJECT'] && process.env['GOOGLE_CLOUD_LOCATION']
       ? AuthType.USE_VERTEX_AI
-      : null) ||
-    AuthType.LOGIN_WITH_GOOGLE;
+      : null);
 
   let initialAuthIndex = items.findIndex(
     (item) => item.value === preferredAuthType,
