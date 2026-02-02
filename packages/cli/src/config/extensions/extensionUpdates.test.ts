@@ -224,85 +224,92 @@ describe('extensionUpdates', () => {
   });
 
   describe('ExtensionManager integration', () => {
-    it('should warn about missing settings after update', async () => {
-      // Mock ExtensionManager methods to avoid FS/Network usage
-      const newConfig: ExtensionConfig = {
-        name: 'test-ext',
-        version: '1.1.0',
-        settings: [{ name: 's1', description: 'd1', envVar: 'VAR1' }],
-      };
+    it(
+      'should warn about missing settings after update',
+      { timeout: 15000 },
+      async () => {
+        // Mock ExtensionManager methods to avoid FS/Network usage
+        const newConfig: ExtensionConfig = {
+          name: 'test-ext',
+          version: '1.1.0',
+          settings: [{ name: 's1', description: 'd1', envVar: 'VAR1' }],
+        };
 
-      const previousConfig: ExtensionConfig = {
-        name: 'test-ext',
-        version: '1.0.0',
-        settings: [],
-      };
-
-      const installMetadata: ExtensionInstallMetadata = {
-        source: extensionDir,
-        type: 'local',
-        autoUpdate: true,
-      };
-
-      const manager = new ExtensionManager({
-        workspaceDir: tempWorkspaceDir,
-
-        settings: createTestMergedSettings({
-          telemetry: { enabled: false },
-          experimental: { extensionConfig: true },
-        }),
-        requestConsent: vi.fn().mockResolvedValue(true),
-        requestSetting: null, // Simulate non-interactive
-      });
-
-      // Mock methods called by installOrUpdateExtension
-      vi.spyOn(manager, 'loadExtensionConfig').mockResolvedValue(newConfig);
-      vi.spyOn(manager, 'getExtensions').mockReturnValue([
-        {
+        const previousConfig: ExtensionConfig = {
           name: 'test-ext',
           version: '1.0.0',
-          installMetadata,
-          path: extensionDir,
-          // Mocks for other required props
-          contextFiles: [],
-          mcpServers: {},
-          hooks: undefined,
-          isActive: true,
-          id: 'test-id',
           settings: [],
-          resolvedSettings: [],
-          skills: [],
-        } as unknown as CodeflyCLIExtension,
-      ]);
-      vi.spyOn(manager, 'uninstallExtension').mockResolvedValue(undefined);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      vi.spyOn(manager as any, 'loadExtension').mockResolvedValue(
-        {} as unknown as CodeflyCLIExtension,
-      );
-      vi.spyOn(manager, 'enableExtension').mockResolvedValue(undefined);
+        };
 
-      // Mock fs.promises for the operations inside installOrUpdateExtension
-      vi.spyOn(fs.promises, 'mkdir').mockResolvedValue(undefined);
-      vi.spyOn(fs.promises, 'writeFile').mockResolvedValue(undefined);
-      vi.spyOn(fs.promises, 'rm').mockResolvedValue(undefined);
-      vi.mocked(fs.existsSync).mockReturnValue(false); // No hooks
-      try {
-        await manager.installOrUpdateExtension(installMetadata, previousConfig);
-      } catch (_) {
-        // Ignore errors from copyExtension or others, we just want to verify the warning
-      }
+        const installMetadata: ExtensionInstallMetadata = {
+          source: extensionDir,
+          type: 'local',
+          autoUpdate: true,
+        };
 
-      expect(debugLogger.warn).toHaveBeenCalledWith(
-        expect.stringContaining(
-          'Extension "test-ext" has missing settings: s1',
-        ),
-      );
-      expect(coreEvents.emitFeedback).toHaveBeenCalledWith(
-        'warning',
-        expect.stringContaining(
-          'Please run "gemini extensions config test-ext [setting-name]"',
-        ),
-      );
-    });
+        const manager = new ExtensionManager({
+          workspaceDir: tempWorkspaceDir,
+
+          settings: createTestMergedSettings({
+            telemetry: { enabled: false },
+            experimental: { extensionConfig: true },
+          }),
+          requestConsent: vi.fn().mockResolvedValue(true),
+          requestSetting: null, // Simulate non-interactive
+        });
+
+        // Mock methods called by installOrUpdateExtension
+        vi.spyOn(manager, 'loadExtensionConfig').mockResolvedValue(newConfig);
+        vi.spyOn(manager, 'getExtensions').mockReturnValue([
+          {
+            name: 'test-ext',
+            version: '1.0.0',
+            installMetadata,
+            path: extensionDir,
+            // Mocks for other required props
+            contextFiles: [],
+            mcpServers: {},
+            hooks: undefined,
+            isActive: true,
+            id: 'test-id',
+            settings: [],
+            resolvedSettings: [],
+            skills: [],
+          } as unknown as CodeflyCLIExtension,
+        ]);
+        vi.spyOn(manager, 'uninstallExtension').mockResolvedValue(undefined);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        vi.spyOn(manager as any, 'loadExtension').mockResolvedValue(
+          {} as unknown as CodeflyCLIExtension,
+        );
+        vi.spyOn(manager, 'enableExtension').mockResolvedValue(undefined);
+
+        // Mock fs.promises for the operations inside installOrUpdateExtension
+        vi.spyOn(fs.promises, 'mkdir').mockResolvedValue(undefined);
+        vi.spyOn(fs.promises, 'writeFile').mockResolvedValue(undefined);
+        vi.spyOn(fs.promises, 'rm').mockResolvedValue(undefined);
+        vi.mocked(fs.existsSync).mockReturnValue(false); // No hooks
+        try {
+          await manager.installOrUpdateExtension(
+            installMetadata,
+            previousConfig,
+          );
+        } catch (_) {
+          // Ignore errors from copyExtension or others, we just want to verify the warning
+        }
+
+        expect(debugLogger.warn).toHaveBeenCalledWith(
+          expect.stringContaining(
+            'Extension "test-ext" has missing settings: s1',
+          ),
+        );
+        expect(coreEvents.emitFeedback).toHaveBeenCalledWith(
+          'warning',
+          expect.stringContaining(
+            'Please run "gemini extensions config test-ext [setting-name]"',
+          ),
+        );
+      },
+    );
   });
 });

@@ -314,5 +314,20 @@ describe('useAuth', () => {
         expect(result.current.authState).toBe(AuthState.Authenticated);
       });
     });
+
+    it('should transition to AwaitingApiKeyInput if OPENAI via settings and no key found', async () => {
+      const settings = createSettings(AuthType.OPENAI);
+      // Ensure merged.security.auth.openai is empty/undefined so reloadApiKey returns null
+      if (settings.merged.security?.auth) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        settings.merged.security.auth.openai = {} as any;
+      }
+
+      const { result } = renderHook(() => useAuthCommand(settings, mockConfig));
+
+      await waitFor(() => {
+        expect(result.current.authState).toBe(AuthState.AwaitingApiKeyInput);
+      });
+    });
   });
 });

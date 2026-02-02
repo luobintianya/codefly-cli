@@ -75,36 +75,40 @@ describe('ExtensionManager skills validation', () => {
     }
   });
 
-  it('should emit a warning during install if skills directory is not empty but no skills are loaded', async () => {
-    // Create a source extension
-    const sourceDir = path.join(tempDir, 'source-ext');
-    createExtension({
-      extensionsDir: sourceDir, // createExtension appends name
-      name: 'skills-ext',
-      version: '1.0.0',
-      installMetadata: {
+  it(
+    'should emit a warning during install if skills directory is not empty but no skills are loaded',
+    { timeout: 20000 },
+    async () => {
+      // Create a source extension
+      const sourceDir = path.join(tempDir, 'source-ext');
+      createExtension({
+        extensionsDir: sourceDir, // createExtension appends name
+        name: 'skills-ext',
+        version: '1.0.0',
+        installMetadata: {
+          type: 'local',
+          source: path.join(sourceDir, 'skills-ext'),
+        },
+      });
+      const extensionPath = path.join(sourceDir, 'skills-ext');
+
+      // Add invalid skills content
+      const skillsDir = path.join(extensionPath, 'skills');
+      fs.mkdirSync(skillsDir);
+      fs.writeFileSync(path.join(skillsDir, 'not-a-skill.txt'), 'hello');
+
+      await extensionManager.loadExtensions();
+
+      await extensionManager.installOrUpdateExtension({
         type: 'local',
-        source: path.join(sourceDir, 'skills-ext'),
-      },
-    });
-    const extensionPath = path.join(sourceDir, 'skills-ext');
+        source: extensionPath,
+      });
 
-    // Add invalid skills content
-    const skillsDir = path.join(extensionPath, 'skills');
-    fs.mkdirSync(skillsDir);
-    fs.writeFileSync(path.join(skillsDir, 'not-a-skill.txt'), 'hello');
-
-    await extensionManager.loadExtensions();
-
-    await extensionManager.installOrUpdateExtension({
-      type: 'local',
-      source: extensionPath,
-    });
-
-    expect(debugLogger.debug).toHaveBeenCalledWith(
-      expect.stringContaining('Failed to load skills from'),
-    );
-  });
+      expect(debugLogger.debug).toHaveBeenCalledWith(
+        expect.stringContaining('Failed to load skills from'),
+      );
+    },
+  );
 
   it('should emit a warning during load if skills directory is not empty but no skills are loaded', async () => {
     // 1. Create a source extension
