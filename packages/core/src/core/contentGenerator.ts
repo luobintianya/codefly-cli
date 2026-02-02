@@ -216,6 +216,7 @@ export async function createContentGenerator(
           apiKey: config.apiKey,
           baseUrl: config.baseUrl || '',
           model: config.model || '',
+          enableThink: gcConfig.getEnableThink(),
         }),
         gcConfig,
       );

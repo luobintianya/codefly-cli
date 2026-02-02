@@ -25,6 +25,7 @@ interface OpenAIConfig {
   baseUrl: string;
   apiKey: string;
   model: string;
+  enableThink?: boolean;
 }
 
 interface OpenAIToolCall {
@@ -76,8 +77,6 @@ interface OpenAIStreamResponse {
     total_tokens: number;
   };
 }
-
-// ... (existing imports)
 
 export class OpenAICompatibleContentGenerator implements ContentGenerator {
   private readonly baseUrl: string;
@@ -263,7 +262,7 @@ export class OpenAICompatibleContentGenerator implements ContentGenerator {
     const choice = data.choices[0];
 
     const parts: Content['parts'] = [];
-    if (choice.message.reasoning_content) {
+    if (this.config.enableThink && choice.message.reasoning_content) {
       parts.push({
         text: choice.message.reasoning_content,
         thought: true,
@@ -380,6 +379,8 @@ export class OpenAICompatibleContentGenerator implements ContentGenerator {
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
 
+    const config = this.config;
+
     return (async function* () {
       let buffer = '';
       let isThinking = false;
@@ -431,7 +432,7 @@ export class OpenAICompatibleContentGenerator implements ContentGenerator {
               const finishReason = choice.finish_reason;
 
               // Handle reasoning_content deltas
-              if (delta.reasoning_content) {
+              if (config.enableThink && delta.reasoning_content) {
                 const parts: Content['parts'] = [];
                 if (!isThinking) {
                   isThinking = true;
@@ -616,7 +617,6 @@ export class OpenAICompatibleContentGenerator implements ContentGenerator {
       }
     })();
   }
-  // ... (rest of the file)
 
   async countTokens(
     _request: CountTokensParameters,

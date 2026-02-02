@@ -43,12 +43,12 @@ they appear in the UI.
 | UI Label                       | Setting                                 | Description                                                                                                                                                       | Default |
 | ------------------------------ | --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
 | Hide Window Title              | `ui.hideWindowTitle`                    | Hide the window title bar                                                                                                                                         | `false` |
-| Show Thoughts in Title         | `ui.showStatusInTitle`                  | Show Gemini CLI model thoughts in the terminal window title during the working phase                                                                              | `false` |
+| Show Thoughts in Title         | `ui.showStatusInTitle`                  | Show Codefly CLI model thoughts in the terminal window title during the working phase                                                                             | `false` |
 | Dynamic Window Title           | `ui.dynamicWindowTitle`                 | Update the terminal window title with current status icons (Ready: ◇, Action Required: ✋, Working: ✦)                                                            | `true`  |
-| Show Home Directory Warning    | `ui.showHomeDirectoryWarning`           | Show a warning when running Gemini CLI in the home directory.                                                                                                     | `true`  |
+| Show Home Directory Warning    | `ui.showHomeDirectoryWarning`           | Show a warning when running Codefly CLI in the home directory.                                                                                                    | `true`  |
 | Hide Tips                      | `ui.hideTips`                           | Hide helpful tips in the UI                                                                                                                                       | `false` |
 | Hide Banner                    | `ui.hideBanner`                         | Hide the application banner                                                                                                                                       | `false` |
-| Hide Context Summary           | `ui.hideContextSummary`                 | Hide the context summary (GEMINI.md, MCP servers) above the input.                                                                                                | `false` |
+| Hide Context Summary           | `ui.hideContextSummary`                 | Hide the context summary (CODEFLY.md, MCP servers) above the input.                                                                                               | `false` |
 | Hide CWD                       | `ui.footer.hideCWD`                     | Hide the current working directory path in the footer.                                                                                                            | `false` |
 | Hide Sandbox Status            | `ui.footer.hideSandboxStatus`           | Hide the sandbox status indicator in the footer.                                                                                                                  | `false` |
 | Hide Model Info                | `ui.footer.hideModelInfo`               | Hide the model name and context usage in the footer.                                                                                                              | `false` |
@@ -77,17 +77,18 @@ they appear in the UI.
 | Max Session Turns       | `model.maxSessionTurns`      | Maximum number of user/model/tool turns to keep in a session. -1 means unlimited.      | `-1`    |
 | Compression Threshold   | `model.compressionThreshold` | The fraction of context usage at which to trigger context compression (e.g. 0.2, 0.3). | `0.5`   |
 | Skip Next Speaker Check | `model.skipNextSpeakerCheck` | Skip the next speaker check.                                                           | `true`  |
+| Enable Think Mode       | `model.enableThink`          | Enable think mode for models that support it.                                          | `false` |
 
 ### Context
 
-| UI Label                             | Setting                                           | Description                                                                                                                                     | Default |
-| ------------------------------------ | ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
-| Memory Discovery Max Dirs            | `context.discoveryMaxDirs`                        | Maximum number of directories to search for memory.                                                                                             | `200`   |
-| Load Memory From Include Directories | `context.loadMemoryFromIncludeDirectories`        | Controls how /memory refresh loads GEMINI.md files. When true, include directories are scanned; when false, only the current directory is used. | `false` |
-| Respect .gitignore                   | `context.fileFiltering.respectGitIgnore`          | Respect .gitignore files when searching.                                                                                                        | `true`  |
-| Respect .codeflyignore               | `context.fileFiltering.respectCodeflyIgnore`      | Respect .codeflyignore files when searching.                                                                                                    | `true`  |
-| Enable Recursive File Search         | `context.fileFiltering.enableRecursiveFileSearch` | Enable recursive file search functionality when completing @ references in the prompt.                                                          | `true`  |
-| Enable Fuzzy Search                  | `context.fileFiltering.enableFuzzySearch`         | Enable fuzzy search when searching for files.                                                                                                   | `true`  |
+| UI Label                             | Setting                                           | Description                                                                                                                                      | Default |
+| ------------------------------------ | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ------- |
+| Memory Discovery Max Dirs            | `context.discoveryMaxDirs`                        | Maximum number of directories to search for memory.                                                                                              | `200`   |
+| Load Memory From Include Directories | `context.loadMemoryFromIncludeDirectories`        | Controls how /memory refresh loads CODEFLY.md files. When true, include directories are scanned; when false, only the current directory is used. | `false` |
+| Respect .gitignore                   | `context.fileFiltering.respectGitIgnore`          | Respect .gitignore files when searching.                                                                                                         | `true`  |
+| Respect .codeflyignore               | `context.fileFiltering.respectCodeflyIgnore`      | Respect .codeflyignore files when searching.                                                                                                     | `true`  |
+| Enable Recursive File Search         | `context.fileFiltering.enableRecursiveFileSearch` | Enable recursive file search functionality when completing @ references in the prompt.                                                           | `true`  |
+| Enable Fuzzy Search                  | `context.fileFiltering.enableFuzzySearch`         | Enable fuzzy search when searching for files.                                                                                                    | `true`  |
 
 ### Tools
 
@@ -105,16 +106,18 @@ they appear in the UI.
 
 ### Security
 
-| UI Label                              | Setting                                         | Description                                                                     | Default     |
-| ------------------------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------- | ----------- |
-| Disable YOLO Mode                     | `security.disableYoloMode`                      | Disable YOLO mode, even if enabled by a flag.                                   | `false`     |
-| Allow Permanent Tool Approval         | `security.enablePermanentToolApproval`          | Enable the "Allow for all future sessions" option in tool confirmation dialogs. | `false`     |
-| Blocks extensions from Git            | `security.blockGitExtensions`                   | Blocks installing and loading extensions from Git.                              | `false`     |
-| Folder Trust                          | `security.folderTrust.enabled`                  | Setting to track whether Folder trust is enabled.                               | `false`     |
-| Enable Environment Variable Redaction | `security.environmentVariableRedaction.enabled` | Enable redaction of environment variables that may contain secrets.             | `false`     |
-| API Key                               | `security.auth.openai.apiKey`                   | OpenAI API key.                                                                 | `undefined` |
-| Model                                 | `security.auth.openai.model`                    | OpenAI model (e.g., gpt-4o).                                                    | `undefined` |
-| Base URL                              | `security.auth.openai.baseUrl`                  | OpenAI Base URL.                                                                | `undefined` |
+| UI Label                              | Setting                                         | Description                                                                              | Default     |
+| ------------------------------------- | ----------------------------------------------- | ---------------------------------------------------------------------------------------- | ----------- |
+| Disable YOLO Mode                     | `security.disableYoloMode`                      | Disable YOLO mode, even if enabled by a flag.                                            | `false`     |
+| Allow Permanent Tool Approval         | `security.enablePermanentToolApproval`          | Enable the "Allow for all future sessions" option in tool confirmation dialogs.          | `false`     |
+| Blocks extensions from Git            | `security.blockGitExtensions`                   | Blocks installing and loading extensions from Git.                                       | `false`     |
+| Folder Trust                          | `security.folderTrust.enabled`                  | Setting to track whether Folder trust is enabled.                                        | `false`     |
+| Enable Environment Variable Redaction | `security.environmentVariableRedaction.enabled` | Enable redaction of environment variables that may contain secrets.                      | `false`     |
+| API Key                               | `security.auth.openai.apiKey`                   | OpenAI Compatible API key.                                                               | `undefined` |
+| Model                                 | `security.auth.openai.model`                    | OpenAI Compatible model (e.g., gpt-4o).                                                  | `undefined` |
+| Base URL                              | `security.auth.openai.baseUrl`                  | OpenAI Compatible Base URL.                                                              | `undefined` |
+| Model Names                           | `security.auth.openai.models`                   | OpenAI Compatible model names (comma-separated).                                         | `undefined` |
+| Context Window Limit                  | `security.auth.openai.contextWindowLimit`       | The maximum number of tokens allowed in the context window for OpenAI-compatible models. | `undefined` |
 
 ### Experimental
 

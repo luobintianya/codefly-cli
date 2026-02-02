@@ -185,8 +185,8 @@ their corresponding top-level category object in your `settings.json` file.
   - **Requires restart:** Yes
 
 - **`ui.showStatusInTitle`** (boolean):
-  - **Description:** Show Gemini CLI model thoughts in the terminal window title
-    during the working phase
+  - **Description:** Show Codefly CLI model thoughts in the terminal window
+    title during the working phase
   - **Default:** `false`
 
 - **`ui.dynamicWindowTitle`** (boolean):
@@ -195,7 +195,7 @@ their corresponding top-level category object in your `settings.json` file.
   - **Default:** `true`
 
 - **`ui.showHomeDirectoryWarning`** (boolean):
-  - **Description:** Show a warning when running Gemini CLI in the home
+  - **Description:** Show a warning when running Codefly CLI in the home
     directory.
   - **Default:** `true`
   - **Requires restart:** Yes
@@ -209,8 +209,8 @@ their corresponding top-level category object in your `settings.json` file.
   - **Default:** `false`
 
 - **`ui.hideContextSummary`** (boolean):
-  - **Description:** Hide the context summary (GEMINI.md, MCP servers) above the
-    input.
+  - **Description:** Hide the context summary (CODEFLY.md, MCP servers) above
+    the input.
   - **Default:** `false`
 
 - **`ui.footer.hideCWD`** (boolean):
@@ -326,6 +326,10 @@ their corresponding top-level category object in your `settings.json` file.
 - **`model.skipNextSpeakerCheck`** (boolean):
   - **Description:** Skip the next speaker check.
   - **Default:** `true`
+
+- **`model.enableThink`** (boolean):
+  - **Description:** Enable think mode for models that support it.
+  - **Default:** `false`
 
 #### `modelConfigs`
 
@@ -515,7 +519,7 @@ their corresponding top-level category object in your `settings.json` file.
       },
       "chat-compression-3-pro": {
         "modelConfig": {
-          "model": "gemini-3-pro-preview"
+          "model": "gemini-3-flash-preview"
         }
       },
       "chat-compression-3-flash": {
@@ -525,7 +529,7 @@ their corresponding top-level category object in your `settings.json` file.
       },
       "chat-compression-2.5-pro": {
         "modelConfig": {
-          "model": "gemini-2.5-pro"
+          "model": "gemini-2.5-flash"
         }
       },
       "chat-compression-2.5-flash": {
@@ -540,7 +544,7 @@ their corresponding top-level category object in your `settings.json` file.
       },
       "chat-compression-default": {
         "modelConfig": {
-          "model": "gemini-2.5-pro"
+          "model": "gemini-2.5-flash"
         }
       }
     }
@@ -591,7 +595,7 @@ their corresponding top-level category object in your `settings.json` file.
   - **Default:** `[]`
 
 - **`context.loadMemoryFromIncludeDirectories`** (boolean):
-  - **Description:** Controls how /memory refresh loads GEMINI.md files. When
+  - **Description:** Controls how /memory refresh loads CODEFLY.md files. When
     true, include directories are scanned; when false, only the current
     directory is used.
   - **Default:** `false`
@@ -790,19 +794,29 @@ their corresponding top-level category object in your `settings.json` file.
   - **Requires restart:** Yes
 
 - **`security.auth.openai.apiKey`** (string):
-  - **Description:** OpenAI API key.
+  - **Description:** OpenAI Compatible API key.
   - **Default:** `undefined`
   - **Requires restart:** Yes
 
 - **`security.auth.openai.model`** (string):
-  - **Description:** OpenAI model (e.g., gpt-4o).
+  - **Description:** OpenAI Compatible model (e.g., gpt-4o).
   - **Default:** `undefined`
   - **Requires restart:** Yes
 
 - **`security.auth.openai.baseUrl`** (string):
-  - **Description:** OpenAI Base URL.
+  - **Description:** OpenAI Compatible Base URL.
   - **Default:** `undefined`
   - **Requires restart:** Yes
+
+- **`security.auth.openai.models`** (string):
+  - **Description:** OpenAI Compatible model names (comma-separated).
+  - **Default:** `undefined`
+  - **Requires restart:** Yes
+
+- **`security.auth.openai.contextWindowLimit`** (number):
+  - **Description:** The maximum number of tokens allowed in the context window
+    for OpenAI-compatible models.
+  - **Default:** `undefined`
 
 - **`security.auth.selectedType`** (string):
   - **Description:** The currently selected authentication type.

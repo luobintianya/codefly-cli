@@ -364,6 +364,7 @@ export interface ConfigParameters {
   useRipgrep?: boolean;
   enableInteractiveShell?: boolean;
   skipNextSpeakerCheck?: boolean;
+  enableThink?: boolean;
   shellExecutionConfig?: ShellExecutionConfig;
   extensionManagement?: boolean;
   enablePromptCompletion?: boolean;
@@ -515,6 +516,7 @@ export class Config {
   private readonly useRipgrep: boolean;
   private readonly enableInteractiveShell: boolean;
   private readonly skipNextSpeakerCheck: boolean;
+  private readonly enableThink: boolean;
   private shellExecutionConfig: ShellExecutionConfig;
   private readonly extensionManagement: boolean = true;
   private readonly enablePromptCompletion: boolean = false;
@@ -740,6 +742,7 @@ export class Config {
     this.disableYoloMode = params.disableYoloMode ?? false;
     this.rawOutput = params.rawOutput ?? false;
     this.acceptRawOutputRisk = params.acceptRawOutputRisk ?? false;
+    this.enableThink = params.enableThink ?? false;
 
     this.hooks = params.hooks;
     this.projectHooks = params.projectHooks;
@@ -1490,6 +1493,10 @@ export class Config {
 
   getTelemetryEnabled(): boolean {
     return this.telemetrySettings.enabled ?? false;
+  }
+
+  getEnableThink(): boolean {
+    return this.enableThink;
   }
 
   getTelemetryLogPromptsEnabled(): boolean {

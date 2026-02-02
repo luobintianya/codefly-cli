@@ -740,6 +740,15 @@ const SETTINGS_SCHEMA = {
         description: 'Skip the next speaker check.',
         showInDialog: true,
       },
+      enableThink: {
+        type: 'boolean',
+        label: 'Enable Think Mode',
+        category: 'Model',
+        requiresRestart: false,
+        default: true,
+        description: 'Enable think mode for models that support it.',
+        showInDialog: true,
+      },
     },
   },
 
