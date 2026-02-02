@@ -389,20 +389,34 @@ export async function main() {
   let initialAuthFailed = false;
   if (!settings.merged.security.auth.useExternal) {
     try {
-      if (
-        partialConfig.isInteractive() &&
-        settings.merged.security.auth.selectedType
-      ) {
-        const err = validateAuthMethod(
-          settings.merged.security.auth.selectedType,
-        );
-        if (err) {
-          throw new Error(err);
+      if (partialConfig.isInteractive()) {
+        // Prioritize command-line/environment authentication
+        if (process.env['GEMINI_API_KEY']) {
+          settings.setValue(
+            SettingScope.User,
+            'security.auth.selectedType',
+            AuthType.USE_GEMINI,
+          );
+        } else if (process.env['OPENAI_API_KEY']) {
+          settings.setValue(
+            SettingScope.User,
+            'security.auth.selectedType',
+            AuthType.OPENAI,
+          );
         }
 
-        await partialConfig.refreshAuth(
-          settings.merged.security.auth.selectedType,
-        );
+        if (settings.merged.security.auth.selectedType) {
+          const err = validateAuthMethod(
+            settings.merged.security.auth.selectedType,
+          );
+          if (err) {
+            throw new Error(err);
+          }
+
+          await partialConfig.refreshAuth(
+            settings.merged.security.auth.selectedType,
+          );
+        }
       } else if (!partialConfig.isInteractive()) {
         const authType = await validateNonInteractiveAuth(
           settings.merged.security.auth.selectedType,
