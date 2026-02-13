@@ -1644,7 +1644,7 @@ describe('Config getHooks', () => {
   });
 
   describe('setModel', () => {
-    it('should allow setting a pro (any) model and reset availability', () => {
+    it('should allow setting a pro (any) model and reset availability', async () => {
       const config = new Config(baseParams);
       const service = config.getModelAvailabilityService();
       const spy = vi.spyOn(service, 'reset');
@@ -1657,7 +1657,7 @@ describe('Config getHooks', () => {
       expect(spy).toHaveBeenCalled();
     });
 
-    it('should allow setting auto model from non-auto model and reset availability', () => {
+    it('should allow setting auto model from non-auto model and reset availability', async () => {
       const config = new Config(baseParams);
       const service = config.getModelAvailabilityService();
       const spy = vi.spyOn(service, 'reset');
@@ -1669,7 +1669,7 @@ describe('Config getHooks', () => {
       expect(spy).toHaveBeenCalled();
     });
 
-    it('should allow setting auto model from auto model and reset availability', () => {
+    it('should allow setting auto model from auto model and reset availability', async () => {
       const config = new Config({
         cwd: '/tmp',
         targetDir: '/path/to/target',
@@ -1687,7 +1687,7 @@ describe('Config getHooks', () => {
       expect(spy).toHaveBeenCalled();
     });
 
-    it('should reset active model when setModel is called with the current model after a fallback', () => {
+    it('should reset active model when setModel is called with the current model after a fallback', async () => {
       const config = new Config(baseParams);
       const originalModel = config.getModel();
       const fallbackModel = 'fallback-model';
@@ -1701,7 +1701,7 @@ describe('Config getHooks', () => {
       expect(config.getActiveModel()).toBe(originalModel);
     });
 
-    it('should call onModelChange when a new model is set and should persist', () => {
+    it('should call onModelChange when a new model is set and should persist', async () => {
       const onModelChange = vi.fn();
       const config = new Config({
         ...baseParams,
@@ -1713,7 +1713,7 @@ describe('Config getHooks', () => {
       expect(onModelChange).toHaveBeenCalledWith(DEFAULT_CODEFLY_MODEL);
     });
 
-    it('should NOT call onModelChange when a new model is temporary', () => {
+    it('should NOT call onModelChange when a new model is temporary', async () => {
       const onModelChange = vi.fn();
       const config = new Config({
         ...baseParams,
@@ -1981,7 +1981,7 @@ describe('Config Quota & Preview Model Access', () => {
   });
 
   describe('setPreviewFeatures', () => {
-    it('should reset model to default auto if disabling preview features while using a preview model', () => {
+    it('should reset model to default auto if disabling preview features while using a preview model', async () => {
       config.setPreviewFeatures(true);
       await config.setModel(PREVIEW_CODEFLY_MODEL);
 
@@ -1990,7 +1990,7 @@ describe('Config Quota & Preview Model Access', () => {
       expect(config.getModel()).toBe(DEFAULT_CODEFLY_MODEL_AUTO);
     });
 
-    it('should NOT reset model if disabling preview features while NOT using a preview model', () => {
+    it('should NOT reset model if disabling preview features while NOT using a preview model', async () => {
       config.setPreviewFeatures(true);
       const nonPreviewModel = 'gemini-1.5-pro';
       await config.setModel(nonPreviewModel);
@@ -2000,7 +2000,7 @@ describe('Config Quota & Preview Model Access', () => {
       expect(config.getModel()).toBe(nonPreviewModel);
     });
 
-    it('should switch to preview auto model if enabling preview features while using default auto model', () => {
+    it('should switch to preview auto model if enabling preview features while using default auto model', async () => {
       config.setPreviewFeatures(false);
       await config.setModel(DEFAULT_CODEFLY_MODEL_AUTO);
 
@@ -2009,7 +2009,7 @@ describe('Config Quota & Preview Model Access', () => {
       expect(config.getModel()).toBe(PREVIEW_CODEFLY_MODEL_AUTO);
     });
 
-    it('should NOT reset model if enabling preview features', () => {
+    it('should NOT reset model if enabling preview features', async () => {
       config.setPreviewFeatures(false);
       await config.setModel(PREVIEW_CODEFLY_MODEL); // Just pretending it was set somehow
 

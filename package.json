@@ -1,6 +1,6 @@
 {
   "name": "@codeflyai/codefly",
-  "version": "0.24.6",
+  "version": "0.24.7",
   "engines": {
     "node": ">=20.0.0"
   },

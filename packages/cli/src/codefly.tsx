@@ -391,18 +391,21 @@ export async function main() {
     try {
       if (partialConfig.isInteractive()) {
         // Prioritize command-line/environment authentication
-        if (process.env['GEMINI_API_KEY']) {
-          settings.setValue(
-            SettingScope.User,
-            'security.auth.selectedType',
-            AuthType.USE_GEMINI,
-          );
-        } else if (process.env['OPENAI_API_KEY']) {
-          settings.setValue(
-            SettingScope.User,
-            'security.auth.selectedType',
-            AuthType.OPENAI,
-          );
+        // Only auto-configure if no auth type is explicitly selected
+        if (!settings.merged.security.auth.selectedType) {
+          if (process.env['GEMINI_API_KEY']) {
+            settings.setValue(
+              SettingScope.User,
+              'security.auth.selectedType',
+              AuthType.USE_GEMINI,
+            );
+          } else if (process.env['OPENAI_API_KEY']) {
+            settings.setValue(
+              SettingScope.User,
+              'security.auth.selectedType',
+              AuthType.OPENAI,
+            );
+          }
         }
 
         if (settings.merged.security.auth.selectedType) {
