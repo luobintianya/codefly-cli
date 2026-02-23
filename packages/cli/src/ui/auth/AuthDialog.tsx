@@ -83,14 +83,11 @@ export function AuthDialog({
     defaultAuthType = defaultAuthTypeEnv as AuthType;
   }
 
+  // Only use the explicitly saved selectedType or admin-configured default.
+  // Do NOT fall back to env vars (GEMINI_API_KEY, OPENAI_API_KEY, etc.) so
+  // that the dialog always reflects the user's last explicit choice.
   const preferredAuthType =
-    settings.merged.security.auth.selectedType ||
-    defaultAuthType ||
-    (process.env['GEMINI_API_KEY'] ? AuthType.USE_GEMINI : null) ||
-    (process.env['OPENAI_API_KEY'] ? AuthType.OPENAI : null) ||
-    (process.env['GOOGLE_CLOUD_PROJECT'] && process.env['GOOGLE_CLOUD_LOCATION']
-      ? AuthType.USE_VERTEX_AI
-      : null);
+    settings.merged.security.auth.selectedType || defaultAuthType;
 
   let initialAuthIndex = items.findIndex(
     (item) => item.value === preferredAuthType,
