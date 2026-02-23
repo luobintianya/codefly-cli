@@ -390,35 +390,29 @@ export async function main() {
   if (!settings.merged.security.auth.useExternal) {
     try {
       if (partialConfig.isInteractive()) {
-        // Prioritize command-line/environment authentication
-        // Only auto-configure if no auth type is explicitly selected
-        if (!settings.merged.security.auth.selectedType) {
+        // Determine the effective auth type for this session.
+        // If the user has explicitly saved a selectedType (via /auth login),
+        // use that. Otherwise, auto-detect from env vars for this session only —
+        // do NOT persist the auto-detected type to settings.json so that
+        // /auth login always reflects the user's last explicit choice.
+        const explicitAuthType = settings.merged.security.auth.selectedType;
+        let sessionAuthType = explicitAuthType;
+
+        if (!explicitAuthType) {
           if (process.env['GEMINI_API_KEY']) {
-            settings.setValue(
-              SettingScope.User,
-              'security.auth.selectedType',
-              AuthType.USE_GEMINI,
-            );
+            sessionAuthType = AuthType.USE_GEMINI;
           } else if (process.env['OPENAI_API_KEY']) {
-            settings.setValue(
-              SettingScope.User,
-              'security.auth.selectedType',
-              AuthType.OPENAI,
-            );
+            sessionAuthType = AuthType.OPENAI;
           }
         }
 
-        if (settings.merged.security.auth.selectedType) {
-          const err = validateAuthMethod(
-            settings.merged.security.auth.selectedType,
-          );
+        if (sessionAuthType) {
+          const err = validateAuthMethod(sessionAuthType);
           if (err) {
             throw new Error(err);
           }
 
-          await partialConfig.refreshAuth(
-            settings.merged.security.auth.selectedType,
-          );
+          await partialConfig.refreshAuth(sessionAuthType);
         }
       } else if (!partialConfig.isInteractive()) {
         const authType = await validateNonInteractiveAuth(
