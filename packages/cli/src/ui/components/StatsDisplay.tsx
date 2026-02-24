@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2025 Google LLC
+ * Copyright 2026 Google LLC
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -8,7 +8,7 @@ import type React from 'react';
 import { Box, Text } from 'ink';
 import { ThemedGradient } from './ThemedGradient.js';
 import { theme } from '../semantic-colors.js';
-import { formatDuration } from '../utils/formatters.js';
+import { formatDuration, formatResetTime } from '../utils/formatters.js';
 import type { ModelMetrics } from '../contexts/SessionContext.js';
 import { useSessionStats } from '../contexts/SessionContext.js';
 import {
@@ -81,7 +81,7 @@ const buildModelRows = (models: Record<string, ModelMetrics>) => {
     const inputTokens = metrics.tokens.input;
     return {
       key: name,
-      modelName,
+      modelName: getDisplayString(modelName),
       requests: metrics.api.totalRequests,
       cachedTokens: cachedTokens.toLocaleString(),
       inputTokens: inputTokens.toLocaleString(),
@@ -114,13 +114,43 @@ const ModelUsageTable: React.FC<{
   const totalWidth =
     nameWidth + requestsWidth + uncachedWidth + cachedWidth + outputTokensWidth;
 
+  const isAuto = currentModel && isAutoModel(currentModel);
+  const modelUsageTitle = isAuto
+    ? `${getDisplayString(currentModel)} Usage`
+    : `Model Usage`;
+
   return (
-    <Box flexDirection="column" marginTop={1}>
+    <Box flexDirection="column" marginBottom={1}>
       {/* Header */}
       <Box alignItems="flex-end">
         <Box width={nameWidth}>
           <Text bold color={theme.text.primary} wrap="truncate-end">
-            Model Usage
+            {modelUsageTitle}
+          </Text>
+        </Box>
+      </Box>
+
+      {isAuto &&
+        showQuotaColumn &&
+        pooledRemaining !== undefined &&
+        pooledLimit !== undefined &&
+        pooledLimit > 0 && (
+          <Box flexDirection="column" marginTop={0} marginBottom={1}>
+            <QuotaStatsInfo
+              remaining={pooledRemaining}
+              limit={pooledLimit}
+              resetTime={pooledResetTime}
+            />
+            <Text color={theme.text.primary}>
+              For a full token breakdown, run `/stats model`.
+            </Text>
+          </Box>
+        )}
+
+      <Box alignItems="flex-end">
+        <Box width={nameWidth}>
+          <Text bold color={theme.text.primary}>
+            Model
           </Text>
         </Box>
         <Box
@@ -179,7 +209,10 @@ const ModelUsageTable: React.FC<{
       {rows.map((row) => (
         <Box key={row.key}>
           <Box width={nameWidth}>
-            <Text color={theme.text.primary} wrap="truncate-end">
+            <Text
+              color={row.isActive ? theme.text.primary : theme.text.secondary}
+              wrap="truncate-end"
+            >
               {row.modelName}
             </Text>
           </Box>
@@ -261,6 +294,17 @@ export const StatsDisplay: React.FC<StatsDisplayProps> = ({
   const { metrics } = stats;
   const { models, tools, files } = metrics;
   const computed = computeSessionStats(metrics);
+  const settings = useSettings();
+  const config = useConfig();
+  const useGemini3_1 = config.getGemini31LaunchedSync?.() ?? false;
+  const useCustomToolModel =
+    useGemini3_1 &&
+    config.getContentGeneratorConfig().authType === AuthType.USE_GEMINI;
+  const pooledRemaining = quotaStats?.remaining;
+  const pooledLimit = quotaStats?.limit;
+  const pooledResetTime = quotaStats?.resetTime;
+
+  const showUserIdentity = settings.merged.ui.showUserIdentity;
 
   const successThresholds = {
     green: TOOL_SUCCESS_RATE_HIGH,
@@ -287,12 +331,19 @@ export const StatsDisplay: React.FC<StatsDisplayProps> = ({
     );
   };
 
+  const renderFooter = () => {
+    if (!footer) {
+      return null;
+    }
+    return <ThemedGradient bold>{footer}</ThemedGradient>;
+  };
+
   return (
     <Box
       borderStyle="round"
       borderColor={theme.border.default}
       flexDirection="column"
-      paddingY={1}
+      paddingTop={1}
       paddingX={2}
       overflow="hidden"
     >
@@ -303,6 +354,22 @@ export const StatsDisplay: React.FC<StatsDisplayProps> = ({
         <StatRow title="Session ID:">
           <Text color={theme.text.primary}>{stats.sessionId}</Text>
         </StatRow>
+        {showUserIdentity && selectedAuthType && (
+          <StatRow title="Auth Method:">
+            <Text color={theme.text.primary}>
+              {selectedAuthType.startsWith('oauth')
+                ? userEmail
+                  ? `Logged in with Google (${userEmail})`
+                  : 'Logged in with Google'
+                : selectedAuthType}
+            </Text>
+          </StatRow>
+        )}
+        {showUserIdentity && tier && (
+          <StatRow title="Tier:">
+            <Text color={theme.text.primary}>{tier}</Text>
+          </StatRow>
+        )}
         <StatRow title="Tool Calls:">
           <Text color={theme.text.primary}>
             {tools.totalCalls} ({' '}
@@ -368,7 +435,14 @@ export const StatsDisplay: React.FC<StatsDisplayProps> = ({
         models={models}
         cacheEfficiency={computed.cacheEfficiency}
         totalCachedTokens={computed.totalCachedTokens}
+        currentModel={currentModel}
+        pooledRemaining={pooledRemaining}
+        pooledLimit={pooledLimit}
+        pooledResetTime={pooledResetTime}
+        useGemini3_1={useGemini3_1}
+        useCustomToolModel={useCustomToolModel}
       />
+      {renderFooter()}
     </Box>
   );
 };

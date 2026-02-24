@@ -41,13 +41,16 @@ export class RecordingContentGenerator implements ContentGenerator {
   async generateContent(
     request: GenerateContentParameters,
     userPromptId: string,
+    role: LlmRole,
   ): Promise<GenerateContentResponse> {
     const response = await this.realGenerator.generateContent(
       request,
       userPromptId,
+      role,
     );
     const recordedResponse: FakeResponse = {
       method: 'generateContent',
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       response: {
         candidates: response.candidates,
         usageMetadata: response.usageMetadata,
@@ -60,6 +63,7 @@ export class RecordingContentGenerator implements ContentGenerator {
   async generateContentStream(
     request: GenerateContentParameters,
     userPromptId: string,
+    role: LlmRole,
   ): Promise<AsyncGenerator<GenerateContentResponse>> {
     const recordedResponse: FakeResponse = {
       method: 'generateContentStream',
@@ -69,10 +73,12 @@ export class RecordingContentGenerator implements ContentGenerator {
     const realResponses = await this.realGenerator.generateContentStream(
       request,
       userPromptId,
+      role,
     );
 
     async function* stream(filePath: string) {
       for await (const response of realResponses) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
         (recordedResponse.response as GenerateContentResponse[]).push({
           candidates: response.candidates,
           usageMetadata: response.usageMetadata,

@@ -18,6 +18,7 @@ import { getErrorStatus, ModelNotFoundError } from './httpErrors.js';
 import type { RetryAvailabilityContext } from '../availability/modelPolicy.js';
 
 export type { RetryAvailabilityContext };
+export const DEFAULT_MAX_ATTEMPTS = 3;
 
 export interface RetryOptions {
   maxAttempts: number;
@@ -40,7 +41,7 @@ export interface RetryOptions {
 }
 
 const DEFAULT_RETRY_OPTIONS: RetryOptions = {
-  maxAttempts: 10,
+  maxAttempts: DEFAULT_MAX_ATTEMPTS,
   initialDelayMs: 5000,
   maxDelayMs: 30000, // 30 seconds
   shouldRetryOnError: isRetryableError,
@@ -62,6 +63,7 @@ function getNetworkErrorCode(error: unknown): string | undefined {
       return undefined;
     }
     if ('code' in obj && typeof (obj as { code: unknown }).code === 'string') {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       return (obj as { code: string }).code;
     }
     return undefined;
@@ -72,8 +74,22 @@ function getNetworkErrorCode(error: unknown): string | undefined {
     return directCode;
   }
 
-  if (typeof error === 'object' && error !== null && 'cause' in error) {
-    return getCode((error as { cause: unknown }).cause);
+  // Traverse the cause chain to find error codes (SSL errors are often nested)
+  let current: unknown = error;
+  const maxDepth = 5; // Prevent infinite loops in case of circular references
+  for (let depth = 0; depth < maxDepth; depth++) {
+    if (
+      typeof current !== 'object' ||
+      current === null ||
+      !('cause' in current)
+    ) {
+      break;
+    }
+    current = (current as { cause: unknown }).cause;
+    const code = getCode(current);
+    if (code) {
+      return code;
+    }
   }
 
   return undefined;
@@ -176,6 +192,7 @@ export async function retryWithBackoff<T>(
 
       if (
         shouldRetryOnContent &&
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
         shouldRetryOnContent(result as GenerateContentResponse)
       ) {
         const jitter = currentDelay * 0.3 * (Math.random() * 2 - 1);
@@ -307,6 +324,7 @@ export async function retryWithBackoff<T>(
       // Generic retry logic for other errors
       if (
         attempt >= maxAttempts ||
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
         !shouldRetryOnError(error as Error, retryFetchErrors)
       ) {
         throw error;

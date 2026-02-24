@@ -18,6 +18,7 @@ import { promptIdContext } from '../../utils/promptIdContext.js';
 import type { Content } from '@google/genai';
 import type { ResolvedModelConfig } from '../../services/modelConfigService.js';
 import { debugLogger } from '../../utils/debugLogger.js';
+import { AuthType } from '../../core/contentGenerator.js';
 
 vi.mock('../../core/baseLlmClient.js');
 
@@ -51,6 +52,10 @@ describe('NumericalClassifierStrategy', () => {
       getSessionId: vi.fn().mockReturnValue('control-group-id'), // Default to Control Group (Hash 71 >= 50)
       getNumericalRoutingEnabled: vi.fn().mockResolvedValue(true),
       getClassifierThreshold: vi.fn().mockResolvedValue(undefined),
+      getGemini31Launched: vi.fn().mockResolvedValue(false),
+      getContentGeneratorConfig: vi.fn().mockReturnValue({
+        authType: AuthType.LOGIN_WITH_GOOGLE,
+      }),
     } as unknown as Config;
     mockBaseLlmClient = {
       generateJson: vi.fn(),
@@ -65,6 +70,32 @@ describe('NumericalClassifierStrategy', () => {
 
   it('should return null if numerical routing is disabled', async () => {
     vi.mocked(mockConfig.getNumericalRoutingEnabled).mockResolvedValue(false);
+
+    const decision = await strategy.route(
+      mockContext,
+      mockConfig,
+      mockBaseLlmClient,
+    );
+
+    expect(decision).toBeNull();
+    expect(mockBaseLlmClient.generateJson).not.toHaveBeenCalled();
+  });
+
+  it('should return null if the model is not a Gemini 3 model', async () => {
+    vi.mocked(mockConfig.getModel).mockReturnValue(DEFAULT_GEMINI_MODEL_AUTO);
+
+    const decision = await strategy.route(
+      mockContext,
+      mockConfig,
+      mockBaseLlmClient,
+    );
+
+    expect(decision).toBeNull();
+    expect(mockBaseLlmClient.generateJson).not.toHaveBeenCalled();
+  });
+
+  it('should return null if the model is explicitly a Gemini 2 model', async () => {
+    vi.mocked(mockConfig.getModel).mockReturnValue(DEFAULT_GEMINI_MODEL);
 
     const decision = await strategy.route(
       mockContext,
@@ -122,7 +153,7 @@ describe('NumericalClassifierStrategy', () => {
       expect(decision).toEqual({
         model: DEFAULT_CODEFLY_FLASH_MODEL,
         metadata: {
-          source: 'Classifier (Control)',
+          source: 'NumericalClassifier (Control)',
           latencyMs: expect.any(Number),
           reasoning: expect.stringContaining('Score: 40 / Threshold: 50'),
         },
@@ -148,7 +179,7 @@ describe('NumericalClassifierStrategy', () => {
       expect(decision).toEqual({
         model: DEFAULT_CODEFLY_MODEL,
         metadata: {
-          source: 'Classifier (Control)',
+          source: 'NumericalClassifier (Control)',
           latencyMs: expect.any(Number),
           reasoning: expect.stringContaining('Score: 60 / Threshold: 50'),
         },
@@ -174,7 +205,7 @@ describe('NumericalClassifierStrategy', () => {
       expect(decision).toEqual({
         model: DEFAULT_CODEFLY_FLASH_MODEL, // Routed to Flash because 60 < 80
         metadata: {
-          source: 'Classifier (Strict)',
+          source: 'NumericalClassifier (Strict)',
           latencyMs: expect.any(Number),
           reasoning: expect.stringContaining('Score: 60 / Threshold: 80'),
         },
@@ -200,7 +231,7 @@ describe('NumericalClassifierStrategy', () => {
       expect(decision).toEqual({
         model: DEFAULT_CODEFLY_MODEL,
         metadata: {
-          source: 'Classifier (Strict)',
+          source: 'NumericalClassifier (Strict)',
           latencyMs: expect.any(Number),
           reasoning: expect.stringContaining('Score: 90 / Threshold: 80'),
         },
@@ -228,7 +259,7 @@ describe('NumericalClassifierStrategy', () => {
       expect(decision).toEqual({
         model: DEFAULT_CODEFLY_FLASH_MODEL, // Score 60 < Threshold 70
         metadata: {
-          source: 'Classifier (Remote)',
+          source: 'NumericalClassifier (Remote)',
           latencyMs: expect.any(Number),
           reasoning: expect.stringContaining('Score: 60 / Threshold: 70'),
         },
@@ -254,7 +285,7 @@ describe('NumericalClassifierStrategy', () => {
       expect(decision).toEqual({
         model: DEFAULT_CODEFLY_FLASH_MODEL, // Score 40 < Threshold 45.5
         metadata: {
-          source: 'Classifier (Remote)',
+          source: 'NumericalClassifier (Remote)',
           latencyMs: expect.any(Number),
           reasoning: expect.stringContaining('Score: 40 / Threshold: 45.5'),
         },
@@ -280,7 +311,7 @@ describe('NumericalClassifierStrategy', () => {
       expect(decision).toEqual({
         model: DEFAULT_CODEFLY_MODEL, // Score 35 >= Threshold 30
         metadata: {
-          source: 'Classifier (Remote)',
+          source: 'NumericalClassifier (Remote)',
           latencyMs: expect.any(Number),
           reasoning: expect.stringContaining('Score: 35 / Threshold: 30'),
         },
@@ -308,7 +339,7 @@ describe('NumericalClassifierStrategy', () => {
       expect(decision).toEqual({
         model: DEFAULT_CODEFLY_FLASH_MODEL, // Score 40 < Default A/B Threshold 50
         metadata: {
-          source: 'Classifier (Control)',
+          source: 'NumericalClassifier (Control)',
           latencyMs: expect.any(Number),
           reasoning: expect.stringContaining('Score: 40 / Threshold: 50'),
         },
@@ -335,7 +366,7 @@ describe('NumericalClassifierStrategy', () => {
       expect(decision).toEqual({
         model: DEFAULT_CODEFLY_FLASH_MODEL,
         metadata: {
-          source: 'Classifier (Control)',
+          source: 'NumericalClassifier (Control)',
           latencyMs: expect.any(Number),
           reasoning: expect.stringContaining('Score: 40 / Threshold: 50'),
         },
@@ -362,7 +393,7 @@ describe('NumericalClassifierStrategy', () => {
       expect(decision).toEqual({
         model: DEFAULT_CODEFLY_MODEL,
         metadata: {
-          source: 'Classifier (Control)',
+          source: 'NumericalClassifier (Control)',
           latencyMs: expect.any(Number),
           reasoning: expect.stringContaining('Score: 60 / Threshold: 50'),
         },
@@ -507,5 +538,69 @@ describe('NumericalClassifierStrategy', () => {
         'Could not find promptId in context for classifier-router. This is unexpected. Using a fallback ID:',
       ),
     );
+  });
+
+  describe('Gemini 3.1 and Custom Tools Routing', () => {
+    it('should route to PREVIEW_GEMINI_3_1_MODEL when Gemini 3.1 is launched', async () => {
+      vi.mocked(mockConfig.getGemini31Launched).mockResolvedValue(true);
+      const mockApiResponse = {
+        complexity_reasoning: 'Complex task',
+        complexity_score: 80,
+      };
+      vi.mocked(mockBaseLlmClient.generateJson).mockResolvedValue(
+        mockApiResponse,
+      );
+
+      const decision = await strategy.route(
+        mockContext,
+        mockConfig,
+        mockBaseLlmClient,
+      );
+
+      expect(decision?.model).toBe(PREVIEW_GEMINI_3_1_MODEL);
+    });
+    it('should route to PREVIEW_GEMINI_3_1_CUSTOM_TOOLS_MODEL when Gemini 3.1 is launched and auth is USE_GEMINI', async () => {
+      vi.mocked(mockConfig.getGemini31Launched).mockResolvedValue(true);
+      vi.mocked(mockConfig.getContentGeneratorConfig).mockReturnValue({
+        authType: AuthType.USE_GEMINI,
+      });
+      const mockApiResponse = {
+        complexity_reasoning: 'Complex task',
+        complexity_score: 80,
+      };
+      vi.mocked(mockBaseLlmClient.generateJson).mockResolvedValue(
+        mockApiResponse,
+      );
+
+      const decision = await strategy.route(
+        mockContext,
+        mockConfig,
+        mockBaseLlmClient,
+      );
+
+      expect(decision?.model).toBe(PREVIEW_GEMINI_3_1_CUSTOM_TOOLS_MODEL);
+    });
+
+    it('should NOT route to custom tools model when auth is USE_VERTEX_AI', async () => {
+      vi.mocked(mockConfig.getGemini31Launched).mockResolvedValue(true);
+      vi.mocked(mockConfig.getContentGeneratorConfig).mockReturnValue({
+        authType: AuthType.USE_VERTEX_AI,
+      });
+      const mockApiResponse = {
+        complexity_reasoning: 'Complex task',
+        complexity_score: 80,
+      };
+      vi.mocked(mockBaseLlmClient.generateJson).mockResolvedValue(
+        mockApiResponse,
+      );
+
+      const decision = await strategy.route(
+        mockContext,
+        mockConfig,
+        mockBaseLlmClient,
+      );
+
+      expect(decision?.model).toBe(PREVIEW_GEMINI_3_1_MODEL);
+    });
   });
 });

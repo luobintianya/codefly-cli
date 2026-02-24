@@ -24,6 +24,7 @@ import {
   DEFAULT_CODEFLY_MODEL,
   PREVIEW_CODEFLY_MODEL_AUTO,
   isAutoModel,
+  isGemini3Model,
   resolveModel,
 } from '../config/models.js';
 import type { ModelSelectionResult } from './modelAvailabilityService.js';
@@ -43,9 +44,13 @@ export function resolvePolicyChain(
   const configuredModel = config.getModel();
 
   let chain;
-  const resolvedModel = resolveModel(modelFromConfig);
+  const resolvedModel = resolveModel(
+    modelFromConfig,
+    config.getGemini31LaunchedSync?.() ?? false,
+  );
   const isAutoPreferred = preferredModel ? isAutoModel(preferredModel) : false;
   const isAutoConfigured = isAutoModel(configuredModel);
+  const hasAccessToPreview = config.getHasAccessToPreviewModel?.() ?? true;
 
   if (resolvedModel === DEFAULT_GEMINI_FLASH_LITE_MODEL) {
     chain = getFlashLitePolicyChain();

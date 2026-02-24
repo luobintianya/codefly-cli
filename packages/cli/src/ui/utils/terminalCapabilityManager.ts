@@ -15,6 +15,23 @@ import {
 
 export type TerminalBackgroundColor = string | undefined;
 
+const TERMINAL_CLEANUP_SEQUENCE = '\x1b[<u\x1b[>4;0m\x1b[?2004l';
+
+export function cleanupTerminalOnExit() {
+  try {
+    if (process.stdout?.fd !== undefined) {
+      fs.writeSync(process.stdout.fd, TERMINAL_CLEANUP_SEQUENCE);
+      return;
+    }
+  } catch (e) {
+    debugLogger.warn('Failed to synchronously cleanup terminal modes:', e);
+  }
+
+  disableKittyKeyboardProtocol();
+  disableModifyOtherKeys();
+  disableBracketedPasteMode();
+}
+
 export class TerminalCapabilityManager {
   private static instance: TerminalCapabilityManager | undefined;
 
@@ -33,7 +50,7 @@ export class TerminalCapabilityManager {
   // eslint-disable-next-line no-control-regex
   private static readonly DEVICE_ATTRIBUTES_REGEX = /\x1b\[\?(\d+)(;\d+)*c/;
   // OSC 11 response: OSC 11 ; rgb:rrrr/gggg/bbbb ST (or BEL)
-  private static readonly OSC_11_REGEX =
+  static readonly OSC_11_REGEX =
     // eslint-disable-next-line no-control-regex
     /\x1b\]11;rgb:([0-9a-fA-F]{1,4})\/([0-9a-fA-F]{1,4})\/([0-9a-fA-F]{1,4})(\x1b\\|\x07)?/;
 
@@ -122,7 +139,7 @@ export class TerminalCapabilityManager {
           const match = buffer.match(TerminalCapabilityManager.OSC_11_REGEX);
           if (match) {
             bgReceived = true;
-            this.terminalBackgroundColor = this.parseColor(
+            this.terminalBackgroundColor = parseColor(
               match[1],
               match[2],
               match[3],
@@ -173,7 +190,13 @@ export class TerminalCapabilityManager {
       try {
         fs.writeSync(
           process.stdout.fd,
-          TerminalCapabilityManager.KITTY_QUERY +
+          // Use hidden mode to prevent potential "m" character from being printed
+          // to the terminal during startup when querying for modifyOtherKeys.
+          // This can happen on some terminals that might echo the query or
+          // malform the response. We hide the output, send queries, then
+          // immediately clear the line and reset attributes.
+          TerminalCapabilityManager.HIDDEN_MODE +
+            TerminalCapabilityManager.KITTY_QUERY +
             TerminalCapabilityManager.OSC_11_QUERY +
             TerminalCapabilityManager.TERMINAL_NAME_QUERY +
             TerminalCapabilityManager.DEVICE_ATTRIBUTES_QUERY,
@@ -210,22 +233,30 @@ export class TerminalCapabilityManager {
     return this.kittyEnabled;
   }
 
-  private parseColor(rHex: string, gHex: string, bHex: string): string {
-    const parseComponent = (hex: string) => {
-      const val = parseInt(hex, 16);
-      if (hex.length === 1) return (val / 15) * 255;
-      if (hex.length === 2) return val;
-      if (hex.length === 3) return (val / 4095) * 255;
-      if (hex.length === 4) return (val / 65535) * 255;
-      return val;
-    };
+  supportsOsc9Notifications(env: NodeJS.ProcessEnv = process.env): boolean {
+    if (env['WT_SESSION']) {
+      return false;
+    }
 
-    const r = parseComponent(rHex);
-    const g = parseComponent(gHex);
-    const b = parseComponent(bHex);
+    return (
+      this.hasOsc9TerminalSignature(this.getTerminalName()) ||
+      this.hasOsc9TerminalSignature(env['TERM_PROGRAM']) ||
+      this.hasOsc9TerminalSignature(env['TERM'])
+    );
+  }
 
-    const toHex = (c: number) => Math.round(c).toString(16).padStart(2, '0');
-    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+  private hasOsc9TerminalSignature(value: string | undefined): boolean {
+    if (!value) {
+      return false;
+    }
+
+    const normalized = value.toLowerCase();
+    return (
+      normalized.includes('wezterm') ||
+      normalized.includes('ghostty') ||
+      normalized.includes('iterm') ||
+      normalized.includes('kitty')
+    );
   }
 }
 

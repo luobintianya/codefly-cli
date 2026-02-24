@@ -73,7 +73,6 @@ const createMockConfig = (overrides: Partial<Config> = {}): Config =>
     ),
     getActiveModel: vi.fn(() => MOCK_PRO_MODEL),
     getModel: vi.fn(() => MOCK_PRO_MODEL),
-    getPreviewFeatures: vi.fn(() => false),
     getUserTier: vi.fn(() => undefined),
     isInteractive: vi.fn(() => false),
     ...overrides,
@@ -129,7 +128,6 @@ describe('handleFallback', () => {
 
     it('uses availability selection with correct candidates when enabled', async () => {
       // Direct mock manipulation since it's already a vi.fn()
-      vi.mocked(policyConfig.getPreviewFeatures).mockReturnValue(true);
       vi.mocked(policyConfig.getModel).mockReturnValue(
         DEFAULT_CODEFLY_MODEL_AUTO,
       );
@@ -198,7 +196,6 @@ describe('handleFallback', () => {
 
     it('does not wrap around to upgrade candidates if the current model was selected at the end (e.g. by router)', async () => {
       // Last-resort failure (Flash) in [Preview, Pro, Flash] checks Preview then Pro (all upstream).
-      vi.mocked(policyConfig.getPreviewFeatures).mockReturnValue(true);
       vi.mocked(policyConfig.getModel).mockReturnValue(
         DEFAULT_CODEFLY_MODEL_AUTO,
       );
@@ -229,7 +226,6 @@ describe('handleFallback', () => {
         skipped: [],
       });
       policyHandler.mockResolvedValue('retry_once');
-      vi.mocked(policyConfig.getPreviewFeatures).mockReturnValue(true);
       vi.mocked(policyConfig.getActiveModel).mockReturnValue(
         PREVIEW_CODEFLY_MODEL,
       );

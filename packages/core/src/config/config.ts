@@ -1,9 +1,10 @@
 /**
  * @license
- * Copyright 2025 Google LLC
+ * Copyright 2026 Google LLC
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import * as fs from 'node:fs';
 import * as path from 'node:path';
 import process from 'node:process';
 import type {
@@ -66,7 +67,12 @@ import { ideContextStore } from '../ide/ideContext.js';
 import { WriteTodosTool } from '../tools/write-todos.js';
 import type { FileSystemService } from '../services/fileSystemService.js';
 import { StandardFileSystemService } from '../services/fileSystemService.js';
-import { logRipgrepFallback, logFlashFallback } from '../telemetry/loggers.js';
+import {
+  logRipgrepFallback,
+  logFlashFallback,
+  logApprovalModeSwitch,
+  logApprovalModeDuration,
+} from '../telemetry/loggers.js';
 import {
   RipgrepFallbackEvent,
   FlashFallbackEvent,
@@ -90,18 +96,19 @@ import { ContextManager } from '../services/contextManager.js';
 import type { GenerateContentParameters } from '@google/genai';
 
 // Re-export OAuth config type
-export type { MCPOAuthConfig, AnyToolInvocation };
-import type { AnyToolInvocation } from '../tools/tools.js';
+export type { MCPOAuthConfig, AnyToolInvocation, AnyDeclarativeTool };
+import type { AnyToolInvocation, AnyDeclarativeTool } from '../tools/tools.js';
 import { WorkspaceContext } from '../utils/workspaceContext.js';
 import { Storage } from './storage.js';
 import type { ShellExecutionConfig } from '../services/shellExecutionService.js';
 import { FileExclusions } from '../utils/ignorePatterns.js';
-import type { EventEmitter } from 'node:events';
 import { MessageBus } from '../confirmation-bus/message-bus.js';
+import type { EventEmitter } from 'node:events';
 import { PolicyEngine } from '../policy/policy-engine.js';
 import { ApprovalMode, type PolicyEngineConfig } from '../policy/types.js';
 import { HookSystem } from '../hooks/index.js';
 import { AgentRegistry } from '../agents/registry.js';
+import { AcknowledgedAgentsService } from '../agents/acknowledgedAgents.js';
 import { setGlobalProxy } from '../utils/fetch.js';
 
 import { SkillManager, type SkillDefinition } from '../skills/skillManager.js';
@@ -114,13 +121,14 @@ import { getExperiments } from '../code_assist/experiments/experiments.js';
 import { ExperimentFlags } from '../code_assist/experiments/flagNames.js';
 import { debugLogger } from '../utils/debugLogger.js';
 import type { AgentDefinition } from '../agents/types.js';
-import {
-  logApprovalModeSwitch,
-  logApprovalModeDuration,
-} from '../telemetry/loggers.js';
 import { fetchAdminControls } from '../code_assist/admin/admin_controls.js';
+import { isSubpath } from '../utils/paths.js';
+import { UserHintService } from './userHintService.js';
+import { WORKSPACE_POLICY_TIER } from '../policy/config.js';
+import { loadPoliciesFromToml } from '../policy/toml-loader.js';
 
 export interface AccessibilitySettings {
+  /** @deprecated Use ui.loadingPhrases instead. */
   enableLoadingPhrases?: boolean;
   screenReader?: boolean;
 }
@@ -131,6 +139,10 @@ export interface BugCommandSettings {
 
 export interface SummarizeToolOutputSettings {
   tokenBudget?: number;
+}
+
+export interface PlanSettings {
+  directory?: string;
 }
 
 export interface TelemetrySettings {
@@ -148,6 +160,13 @@ export interface OutputSettings {
   format?: OutputFormat;
 }
 
+export interface ToolOutputMaskingConfig {
+  enabled: boolean;
+  toolProtectionThreshold: number;
+  minPrunableTokensThreshold: number;
+  protectLatestTurn: boolean;
+}
+
 export interface ExtensionSetting {
   name: string;
   description: string;
@@ -158,7 +177,7 @@ export interface ExtensionSetting {
 export interface ResolvedExtensionSetting {
   name: string;
   envVar: string;
-  value: string;
+  value?: string;
   sensitive: boolean;
   scope?: 'user' | 'workspace';
   source?: string;
@@ -177,6 +196,57 @@ export interface AgentOverride {
 
 export interface AgentSettings {
   overrides?: Record<string, AgentOverride>;
+}
+
+export interface CustomTheme {
+  type: 'custom';
+  name: string;
+
+  text?: {
+    primary?: string;
+    secondary?: string;
+    link?: string;
+    accent?: string;
+    response?: string;
+  };
+  background?: {
+    primary?: string;
+    diff?: {
+      added?: string;
+      removed?: string;
+    };
+  };
+  border?: {
+    default?: string;
+    focused?: string;
+  };
+  ui?: {
+    comment?: string;
+    symbol?: string;
+    gradient?: string[];
+  };
+  status?: {
+    error?: string;
+    success?: string;
+    warning?: string;
+  };
+
+  // Legacy properties (all optional)
+  Background?: string;
+  Foreground?: string;
+  LightBlue?: string;
+  AccentBlue?: string;
+  AccentPurple?: string;
+  AccentCyan?: string;
+  AccentGreen?: string;
+  AccentYellow?: string;
+  AccentRed?: string;
+  DiffAdded?: string;
+  DiffRemoved?: string;
+  Comment?: string;
+  Gray?: string;
+  DarkGray?: string;
+  GradientColors?: string[];
 }
 
 /**
@@ -200,6 +270,11 @@ export interface CodeflyCLIExtension {
   resolvedSettings?: ResolvedExtensionSetting[];
   skills?: SkillDefinition[];
   agents?: AgentDefinition[];
+  /**
+   * Custom themes contributed by this extension.
+   * These themes will be registered when the extension is activated.
+   */
+  themes?: CustomTheme[];
 }
 
 export interface ExtensionInstallMetadata {
@@ -216,6 +291,11 @@ import {
   DEFAULT_FILE_FILTERING_OPTIONS,
   DEFAULT_MEMORY_FILE_FILTERING_OPTIONS,
 } from './constants.js';
+import {
+  DEFAULT_TOOL_PROTECTION_THRESHOLD,
+  DEFAULT_MIN_PRUNABLE_TOKENS_THRESHOLD,
+  DEFAULT_PROTECT_LATEST_TURN,
+} from '../services/toolOutputMaskingService.js';
 
 import {
   type ExtensionLoader,
@@ -224,6 +304,10 @@ import {
 import { McpClientManager } from '../tools/mcp-client-manager.js';
 import type { EnvironmentSanitizationConfig } from '../services/environmentSanitization.js';
 import { getErrorMessage } from '../utils/errors.js';
+import {
+  ENTER_PLAN_MODE_TOOL_NAME,
+  EXIT_PLAN_MODE_TOOL_NAME,
+} from '../tools/tool-names.js';
 
 export type { FileFilteringOptions };
 export {
@@ -231,8 +315,7 @@ export {
   DEFAULT_MEMORY_FILE_FILTERING_OPTIONS,
 };
 
-export const DEFAULT_TRUNCATE_TOOL_OUTPUT_THRESHOLD = 4_000_000;
-export const DEFAULT_TRUNCATE_TOOL_OUTPUT_LINES = 1000;
+export const DEFAULT_TRUNCATE_TOOL_OUTPUT_THRESHOLD = 40_000;
 
 export class MCPServerConfig {
   constructor(
@@ -296,6 +379,13 @@ export interface McpEnablementCallbacks {
   isFileEnabled: (serverId: string) => Promise<boolean>;
 }
 
+export interface PolicyUpdateConfirmationRequest {
+  scope: string;
+  identifier: string;
+  policyDir: string;
+  newHash: string;
+}
+
 export interface ConfigParameters {
   sessionId: string;
   clientVersion?: string;
@@ -308,7 +398,9 @@ export interface ConfigParameters {
   language?: string;
 
   coreTools?: string[];
+  /** @deprecated Use Policy Engine instead */
   allowedTools?: string[];
+  /** @deprecated Use Policy Engine instead */
   excludeTools?: string[];
   toolDiscoveryCommand?: string;
   toolCallCommand?: string;
@@ -330,6 +422,7 @@ export interface ConfigParameters {
     enableFuzzySearch?: boolean;
     maxFileCount?: number;
     searchTimeout?: number;
+    customIgnoreFilePaths?: string[];
   };
   checkpointing?: boolean;
   proxy?: string;
@@ -338,6 +431,7 @@ export interface ConfigParameters {
   includeDirectories?: string[];
   bugCommand?: BugCommandSettings;
   model: string;
+  disableLoopDetection?: boolean;
   maxSessionTurns?: number;
   experimentalZedIntegration?: boolean;
   listSessions?: boolean;
@@ -356,24 +450,24 @@ export interface ConfigParameters {
   folderTrust?: boolean;
   ideMode?: boolean;
   loadMemoryFromIncludeDirectories?: boolean;
+  includeDirectoryTree?: boolean;
   importFormat?: 'tree' | 'flat';
   discoveryMaxDirs?: number;
   compressionThreshold?: number;
   interactive?: boolean;
   trustedFolder?: boolean;
+  useBackgroundColor?: boolean;
   useRipgrep?: boolean;
   enableInteractiveShell?: boolean;
   skipNextSpeakerCheck?: boolean;
   enableThink?: boolean;
   shellExecutionConfig?: ShellExecutionConfig;
   extensionManagement?: boolean;
-  enablePromptCompletion?: boolean;
   truncateToolOutputThreshold?: number;
-  truncateToolOutputLines?: number;
-  enableToolOutputTruncation?: boolean;
   eventEmitter?: EventEmitter;
   useWriteTodos?: boolean;
   policyEngineConfig?: PolicyEngineConfig;
+  policyUpdateConfirmationRequest?: PolicyUpdateConfirmationRequest;
   output?: OutputSettings;
   disableModelRouterForAuth?: AuthType[];
   continueOnFailedApiCall?: boolean;
@@ -402,8 +496,11 @@ export interface ConfigParameters {
   disabledSkills?: string[];
   adminSkillsEnabled?: boolean;
   experimentalJitContext?: boolean;
+  toolOutputMasking?: Partial<ToolOutputMaskingConfig>;
   disableLLMCorrection?: boolean;
   plan?: boolean;
+  planSettings?: PlanSettings;
+  modelSteering?: boolean;
   onModelChange?: (model: string) => void;
   openaiConfig?: {
     baseUrl?: string;
@@ -434,6 +531,7 @@ export class Config {
   private promptRegistry!: PromptRegistry;
   private resourceRegistry!: ResourceRegistry;
   private agentRegistry!: AgentRegistry;
+  private readonly acknowledgedAgentsService: AcknowledgedAgentsService;
   private skillManager!: SkillManager;
   private sessionId: string;
   private clientVersion: string;
@@ -450,7 +548,9 @@ export class Config {
   readonly language: string;
 
   private readonly coreTools: string[] | undefined;
+  /** @deprecated Use Policy Engine instead */
   private readonly allowedTools: string[] | undefined;
+  /** @deprecated Use Policy Engine instead */
   private readonly excludeTools: string[] | undefined;
   private readonly toolDiscoveryCommand: string | undefined;
   private readonly toolCallCommand: string | undefined;
@@ -477,6 +577,7 @@ export class Config {
     enableFuzzySearch: boolean;
     maxFileCount: number;
     searchTimeout: number;
+    customIgnoreFilePaths: string[];
   };
   private fileDiscoveryService: FileDiscoveryService | null = null;
   private gitService: GitService | undefined = undefined;
@@ -485,8 +586,9 @@ export class Config {
   private readonly cwd: string;
   private readonly bugCommand: BugCommandSettings | undefined;
   private model: string;
-  private previewFeatures: boolean | undefined;
-  private hasAccessToPreviewModel: boolean = false;
+  private readonly disableLoopDetection: boolean;
+  // null = unknown (quota not fetched); true = has access; false = definitively no access
+  private hasAccessToPreviewModel: boolean | null = null;
   private readonly noBrowser: boolean;
   private readonly folderTrust: boolean;
   private ideMode: boolean;
@@ -502,15 +604,42 @@ export class Config {
   fallbackModelHandler?: FallbackModelHandler;
   validationHandler?: ValidationHandler;
   private quotaErrorOccurred: boolean = false;
+  private modelQuotas: Map<
+    string,
+    { remaining: number; limit: number; resetTime?: string }
+  > = new Map();
+  private lastRetrievedQuota?: RetrieveUserQuotaResponse;
+  private lastQuotaFetchTime = 0;
+  private lastEmittedQuotaRemaining: number | undefined;
+  private lastEmittedQuotaLimit: number | undefined;
+
+  private emitQuotaChangedEvent(): void {
+    const pooled = this.getPooledQuota();
+    if (
+      this.lastEmittedQuotaRemaining !== pooled.remaining ||
+      this.lastEmittedQuotaLimit !== pooled.limit
+    ) {
+      this.lastEmittedQuotaRemaining = pooled.remaining;
+      this.lastEmittedQuotaLimit = pooled.limit;
+      coreEvents.emitQuotaChanged(
+        pooled.remaining,
+        pooled.limit,
+        pooled.resetTime,
+      );
+    }
+  }
+
   private readonly summarizeToolOutput:
     | Record<string, SummarizeToolOutputSettings>
     | undefined;
   private readonly experimentalZedIntegration: boolean = false;
   private readonly loadMemoryFromIncludeDirectories: boolean = false;
+  private readonly includeDirectoryTree: boolean = true;
   private readonly importFormat: 'tree' | 'flat';
   private readonly discoveryMaxDirs: number;
   private readonly compressionThreshold: number | undefined;
-  private readonly interactive: boolean;
+  /** Public for testing only */
+  readonly interactive: boolean;
   private readonly ptyInfo: string;
   private readonly trustedFolder: boolean | undefined;
   private readonly useRipgrep: boolean;
@@ -519,18 +648,19 @@ export class Config {
   private readonly enableThink: boolean;
   private shellExecutionConfig: ShellExecutionConfig;
   private readonly extensionManagement: boolean = true;
-  private readonly enablePromptCompletion: boolean = false;
   private readonly truncateToolOutputThreshold: number;
-  private readonly truncateToolOutputLines: number;
   private compressionTruncationCounter = 0;
-  private readonly enableToolOutputTruncation: boolean;
-  private initialized: boolean = false;
+  private initialized = false;
+  private initPromise: Promise<void> | undefined;
   readonly storage: Storage;
   private readonly fileExclusions: FileExclusions;
   private readonly eventEmitter?: EventEmitter;
   private readonly useWriteTodos: boolean;
   private readonly messageBus: MessageBus;
   private readonly policyEngine: PolicyEngine;
+  private policyUpdateConfirmationRequest:
+    | PolicyUpdateConfirmationRequest
+    | undefined;
   private readonly outputSettings: OutputSettings;
   private readonly continueOnFailedApiCall: boolean;
   private readonly retryFetchErrors: boolean;
@@ -588,6 +718,7 @@ export class Config {
   constructor(params: ConfigParameters) {
     this.sessionId = params.sessionId;
     this.clientVersion = params.clientVersion ?? 'unknown';
+    this.approvedPlanPath = undefined;
     this.embeddingModel =
       params.embeddingModel ?? DEFAULT_CODEFLY_EMBEDDING_MODEL;
     this.fileSystemService = new StandardFileSystemService();
@@ -651,6 +782,7 @@ export class Config {
         params.fileFiltering?.searchTimeout ??
         DEFAULT_FILE_FILTERING_OPTIONS.searchTimeout ??
         5000,
+      customIgnoreFilePaths: params.fileFiltering?.customIgnoreFilePaths ?? [],
     };
     this.checkpointing = params.checkpointing ?? false;
     this.proxy = params.proxy;
@@ -658,18 +790,34 @@ export class Config {
     this.fileDiscoveryService = params.fileDiscoveryService ?? null;
     this.bugCommand = params.bugCommand;
     this.model = params.model;
+    this.disableLoopDetection = params.disableLoopDetection ?? false;
     this._activeModel = params.model;
     this.enableAgents = params.enableAgents ?? false;
     this.agents = params.agents ?? {};
     this.disableLLMCorrection = params.disableLLMCorrection ?? true;
     this.planEnabled = params.plan ?? false;
     this.enableEventDrivenScheduler = params.enableEventDrivenScheduler ?? true;
-    this.skillsSupport = params.skillsSupport ?? false;
+    this.skillsSupport = params.skillsSupport ?? true;
     this.disabledSkills = params.disabledSkills ?? [];
     this.adminSkillsEnabled = params.adminSkillsEnabled ?? true;
     this.modelAvailabilityService = new ModelAvailabilityService();
-    this.previewFeatures = params.previewFeatures ?? undefined;
     this.experimentalJitContext = params.experimentalJitContext ?? false;
+    this.modelSteering = params.modelSteering ?? false;
+    this.userHintService = new UserHintService(() =>
+      this.isModelSteeringEnabled(),
+    );
+    this.toolOutputMasking = {
+      enabled: params.toolOutputMasking?.enabled ?? true,
+      toolProtectionThreshold:
+        params.toolOutputMasking?.toolProtectionThreshold ??
+        DEFAULT_TOOL_PROTECTION_THRESHOLD,
+      minPrunableTokensThreshold:
+        params.toolOutputMasking?.minPrunableTokensThreshold ??
+        DEFAULT_MIN_PRUNABLE_TOKENS_THRESHOLD,
+      protectLatestTurn:
+        params.toolOutputMasking?.protectLatestTurn ??
+        DEFAULT_PROTECT_LATEST_TURN,
+    };
     this.maxSessionTurns = params.maxSessionTurns ?? -1;
     this.experimentalZedIntegration =
       params.experimentalZedIntegration ?? false;
@@ -683,6 +831,7 @@ export class Config {
     this.summarizeToolOutput = params.summarizeToolOutput;
     this.folderTrust = params.folderTrust ?? false;
     this.ideMode = params.ideMode ?? false;
+    this.includeDirectoryTree = params.includeDirectoryTree ?? true;
     this.loadMemoryFromIncludeDirectories =
       params.loadMemoryFromIncludeDirectories ?? false;
     this.importFormat = params.importFormat ?? 'tree';
@@ -692,6 +841,7 @@ export class Config {
     this.ptyInfo = params.ptyInfo ?? 'child_process';
     this.trustedFolder = params.trustedFolder;
     this.useRipgrep = params.useRipgrep ?? true;
+    this.useBackgroundColor = params.useBackgroundColor ?? true;
     this.enableInteractiveShell = params.enableInteractiveShell ?? false;
     this.skipNextSpeakerCheck = params.skipNextSpeakerCheck ?? true;
     this.shellExecutionConfig = {
@@ -704,9 +854,6 @@ export class Config {
     this.truncateToolOutputThreshold =
       params.truncateToolOutputThreshold ??
       DEFAULT_TRUNCATE_TOOL_OUTPUT_THRESHOLD;
-    this.truncateToolOutputLines =
-      params.truncateToolOutputLines ?? DEFAULT_TRUNCATE_TOOL_OUTPUT_LINES;
-    this.enableToolOutputTruncation = params.enableToolOutputTruncation ?? true;
     // // TODO(joshualitt): Re-evaluate the todo tool for 3 family.
     this.useWriteTodos = isPreviewModel(this.model)
       ? false
@@ -722,10 +869,11 @@ export class Config {
       (params.shellToolInactivityTimeout ?? 300) * 1000; // 5 minutes
     this.extensionManagement = params.extensionManagement ?? true;
     this.enableExtensionReloading = params.enableExtensionReloading ?? false;
-    this.storage = new Storage(this.targetDir);
+    this.storage = new Storage(this.targetDir, this.sessionId);
+    this.storage.setCustomPlansDir(params.planSettings?.directory);
+
     this.fakeResponses = params.fakeResponses;
     this.recordResponses = params.recordResponses;
-    this.enablePromptCompletion = params.enablePromptCompletion ?? false;
     this.fileExclusions = new FileExclusions(this);
     this.eventEmitter = params.eventEmitter;
     this.policyEngine = new PolicyEngine({
@@ -733,7 +881,10 @@ export class Config {
       approvalMode:
         params.approvalMode ?? params.policyEngineConfig?.approvalMode,
     });
+    this.policyUpdateConfirmationRequest =
+      params.policyUpdateConfirmationRequest;
     this.messageBus = new MessageBus(this.policyEngine, this.debugMode);
+    this.acknowledgedAgentsService = new AcknowledgedAgentsService();
     this.skillManager = new SkillManager();
     this.outputSettings = {
       format: params.output?.format ?? OutputFormat.TEXT,
@@ -803,18 +954,37 @@ export class Config {
     );
   }
 
+  isInitialized(): boolean {
+    return this.initialized;
+  }
+
   /**
-   * Must only be called once, throws if called again.
+   * Dedups initialization requests using a shared promise that is only resolved
+   * once.
    */
   async initialize(): Promise<void> {
-    if (this.initialized) {
-      throw Error('Config was already initialized');
+    if (this.initPromise) {
+      return this.initPromise;
     }
-    this.initialized = true;
+
+    this.initPromise = this._initialize();
+
+    return this.initPromise;
+  }
+
+  private async _initialize(): Promise<void> {
+    await this.storage.initialize();
 
     // Add pending directories to workspace context
     for (const dir of this.pendingIncludeDirectories) {
       this.workspaceContext.addDirectory(dir);
+    }
+
+    // Add plans directory to workspace context for plan file storage
+    if (this.planEnabled) {
+      const plansDir = this.storage.getPlansDir();
+      await fs.promises.mkdir(plansDir, { recursive: true });
+      this.workspaceContext.addDirectory(plansDir);
     }
 
     // Initialize centralized FileDiscoveryService
@@ -853,7 +1023,7 @@ export class Config {
       }
     });
 
-    if (!this.interactive) {
+    if (!this.interactive || this.experimentalZedIntegration) {
       await mcpInitialization;
     }
 
@@ -863,6 +1033,7 @@ export class Config {
         await this.getSkillManager().discoverSkills(
           this.storage,
           this.getExtensions(),
+          this.isTrustedFolder(),
         );
         this.getSkillManager().setDisabledSkills(this.disabledSkills);
 
@@ -911,6 +1082,12 @@ export class Config {
     // Reset availability status when switching auth (e.g. from limited key to OAuth)
     this.modelAvailabilityService.reset();
 
+    // Clear stale authType to ensure getGemini31LaunchedSync doesn't return stale results
+    // during the transition.
+    if (this.contentGeneratorConfig) {
+      this.contentGeneratorConfig.authType = undefined;
+    }
+
     const newContentGeneratorConfig = await createContentGeneratorConfig(
       this,
       authMethod,
@@ -934,15 +1111,6 @@ export class Config {
     this.experimentsPromise = getExperiments(codeAssistServer)
       .then((experiments) => {
         this.setExperiments(experiments);
-
-        // If preview features have not been set and the user authenticated through Google, we enable preview based on remote config only if it's true
-        if (this.getPreviewFeatures() === undefined) {
-          const remotePreviewFeatures =
-            experiments.flags[ExperimentFlags.ENABLE_PREVIEW]?.boolValue;
-          if (remotePreviewFeatures === true) {
-            this.setPreviewFeatures(remotePreviewFeatures);
-          }
-        }
       })
       .catch((e) => {
         debugLogger.error('Failed to fetch experiments', e);
@@ -969,7 +1137,7 @@ export class Config {
       codeAssistServer,
       this.getRemoteAdminSettings(),
       adminControlsEnabled,
-      (newSettings: FetchAdminControlsResponse) => {
+      (newSettings: AdminControlsSettings) => {
         this.setRemoteAdminSettings(newSettings);
         coreEvents.emitAdminSettingsChanged();
       },
@@ -996,8 +1164,7 @@ export class Config {
   }
 
   getUserTierName(): string | undefined {
-    // TODO(#1275): Re-enable user tier display when ready.
-    return undefined;
+    return this.contentGenerator?.userTierName;
   }
   /**
    * Provides access to the BaseLlmClient for stateless LLM operations.
@@ -1043,16 +1210,20 @@ export class Config {
     this.latestApiRequest = req;
   }
 
-  getRemoteAdminSettings(): FetchAdminControlsResponse | undefined {
+  getRemoteAdminSettings(): AdminControlsSettings | undefined {
     return this.remoteAdminSettings;
   }
 
-  setRemoteAdminSettings(settings: FetchAdminControlsResponse): void {
+  setRemoteAdminSettings(settings: AdminControlsSettings | undefined): void {
     this.remoteAdminSettings = settings;
   }
 
   shouldLoadMemoryFromIncludeDirectories(): boolean {
     return this.loadMemoryFromIncludeDirectories;
+  }
+
+  getIncludeDirectoryTree(): boolean {
+    return this.includeDirectoryTree;
   }
 
   getImportFormat(): 'tree' | 'flat' {
@@ -1159,6 +1330,99 @@ export class Config {
     return this.quotaErrorOccurred;
   }
 
+  setQuota(
+    remaining: number | undefined,
+    limit: number | undefined,
+    modelId?: string,
+  ): void {
+    const activeModel = modelId ?? this.getActiveModel();
+    if (remaining !== undefined && limit !== undefined) {
+      const current = this.modelQuotas.get(activeModel);
+      if (
+        !current ||
+        current.remaining !== remaining ||
+        current.limit !== limit
+      ) {
+        this.modelQuotas.set(activeModel, { remaining, limit });
+        this.emitQuotaChangedEvent();
+      }
+    }
+  }
+
+  private getPooledQuota(): {
+    remaining?: number;
+    limit?: number;
+    resetTime?: string;
+  } {
+    const model = this.getModel();
+    if (!isAutoModel(model)) {
+      return {};
+    }
+
+    const isPreview =
+      model === PREVIEW_GEMINI_MODEL_AUTO ||
+      isPreviewModel(this.getActiveModel());
+    const proModel = isPreview ? PREVIEW_GEMINI_MODEL : DEFAULT_GEMINI_MODEL;
+    const flashModel = isPreview
+      ? PREVIEW_GEMINI_FLASH_MODEL
+      : DEFAULT_GEMINI_FLASH_MODEL;
+
+    const proQuota = this.modelQuotas.get(proModel);
+    const flashQuota = this.modelQuotas.get(flashModel);
+
+    if (proQuota || flashQuota) {
+      // For reset time, take the one that is furthest in the future (most conservative)
+      const resetTime = [proQuota?.resetTime, flashQuota?.resetTime]
+        .filter((t): t is string => !!t)
+        .sort()
+        .reverse()[0];
+
+      return {
+        remaining: (proQuota?.remaining ?? 0) + (flashQuota?.remaining ?? 0),
+        limit: (proQuota?.limit ?? 0) + (flashQuota?.limit ?? 0),
+        resetTime,
+      };
+    }
+
+    return {};
+  }
+
+  getQuotaRemaining(): number | undefined {
+    const pooled = this.getPooledQuota();
+    if (pooled.remaining !== undefined) {
+      return pooled.remaining;
+    }
+    const primaryModel = resolveModel(
+      this.getModel(),
+      this.getGemini31LaunchedSync(),
+    );
+    return this.modelQuotas.get(primaryModel)?.remaining;
+  }
+
+  getQuotaLimit(): number | undefined {
+    const pooled = this.getPooledQuota();
+    if (pooled.limit !== undefined) {
+      return pooled.limit;
+    }
+    const primaryModel = resolveModel(
+      this.getModel(),
+      this.getGemini31LaunchedSync(),
+    );
+    return this.modelQuotas.get(primaryModel)?.limit;
+  }
+
+  getQuotaResetTime(): string | undefined {
+    const pooled = this.getPooledQuota();
+    if (pooled.resetTime !== undefined) {
+      return pooled.resetTime;
+    }
+    const primaryModel = resolveModel(
+      this.getModel(),
+      this.getGemini31LaunchedSync(),
+    );
+    return this.modelQuotas.get(primaryModel)?.resetTime;
+  }
+
   getEmbeddingModel(): string {
     return this.embeddingModel;
   }
@@ -1174,7 +1438,8 @@ export class Config {
       !!sandboxConfig &&
       sandboxConfig.command === 'sandbox-exec' &&
       !!seatbeltProfile &&
-      seatbeltProfile.startsWith('restrictive-')
+      (seatbeltProfile.startsWith('restrictive-') ||
+        seatbeltProfile.startsWith('strict-'))
     );
   }
 
@@ -1192,6 +1457,10 @@ export class Config {
 
   getAgentRegistry(): AgentRegistry {
     return this.agentRegistry;
+  }
+
+  getAcknowledgedAgentsService(): AcknowledgedAgentsService {
+    return this.acknowledgedAgentsService;
   }
 
   getToolRegistry(): ToolRegistry {
@@ -1241,10 +1510,10 @@ export class Config {
   }
 
   getHasAccessToPreviewModel(): boolean {
-    return this.hasAccessToPreviewModel;
+    return this.hasAccessToPreviewModel !== false;
   }
 
-  setHasAccessToPreviewModel(hasAccess: boolean): void {
+  setHasAccessToPreviewModel(hasAccess: boolean | null): void {
     this.hasAccessToPreviewModel = hasAccess;
   }
 
@@ -1266,6 +1535,41 @@ export class Config {
     }
   }
 
+  async refreshUserQuotaIfStale(
+    staleMs = 30_000,
+  ): Promise<RetrieveUserQuotaResponse | undefined> {
+    const now = Date.now();
+    if (now - this.lastQuotaFetchTime > staleMs) {
+      return this.refreshUserQuota();
+    }
+    return this.lastRetrievedQuota;
+  }
+
+  getLastRetrievedQuota(): RetrieveUserQuotaResponse | undefined {
+    return this.lastRetrievedQuota;
+  }
+
+  getRemainingQuotaForModel(modelId: string):
+    | {
+        remainingAmount?: number;
+        remainingFraction?: number;
+        resetTime?: string;
+      }
+    | undefined {
+    const bucket = this.lastRetrievedQuota?.buckets?.find(
+      (b) => b.modelId === modelId,
+    );
+    if (!bucket) return undefined;
+
+    return {
+      remainingAmount: bucket.remainingAmount
+        ? parseInt(bucket.remainingAmount, 10)
+        : undefined,
+      remainingFraction: bucket.remainingFraction,
+      resetTime: bucket.resetTime,
+    };
+  }
+
   getCoreTools(): string[] | undefined {
     return this.coreTools;
   }
@@ -1276,11 +1580,12 @@ export class Config {
 
   /**
    * All the excluded tools from static configuration, loaded extensions, or
-   * other sources.
+   * other sources (like the Policy Engine).
    *
    * May change over time.
    */
   getExcludeTools(): Set<string> | undefined {
+    // Right now this is present for backward compatibility with settings.json exclude
     const excludeToolsSet = new Set([...(this.excludeTools ?? [])]);
     for (const extension of this.getExtensionLoader().getExtensions()) {
       if (!extension.isActive) {
@@ -1290,6 +1595,12 @@ export class Config {
         excludeToolsSet.add(tool);
       }
     }
+
+    const policyExclusions = this.policyEngine.getExcludedTools();
+    for (const tool of policyExclusions) {
+      excludeToolsSet.add(tool);
+    }
+
     return excludeToolsSet;
   }
 
@@ -1351,14 +1662,13 @@ export class Config {
     this.mcpServers = mcpServers;
   }
 
-  getUserMemory(): string {
+  getUserMemory(): string | HierarchicalMemory {
     if (this.experimentalJitContext && this.contextManager) {
-      return [
-        this.contextManager.getGlobalMemory(),
-        this.contextManager.getEnvironmentMemory(),
-      ]
-        .filter(Boolean)
-        .join('\n\n');
+      return {
+        global: this.contextManager.getGlobalMemory(),
+        extension: this.contextManager.getExtensionMemory(),
+        project: this.contextManager.getEnvironmentMemory(),
+      };
     }
     return this.userMemory;
   }
@@ -1381,7 +1691,7 @@ export class Config {
     }
   }
 
-  setUserMemory(newUserMemory: string): void {
+  setUserMemory(newUserMemory: string | HierarchicalMemory): void {
     this.userMemory = newUserMemory;
   }
 
@@ -1431,6 +1741,41 @@ export class Config {
     return this.policyEngine.getApprovalMode();
   }
 
+  getPolicyUpdateConfirmationRequest():
+    | PolicyUpdateConfirmationRequest
+    | undefined {
+    return this.policyUpdateConfirmationRequest;
+  }
+
+  /**
+   * Hot-loads workspace policies from the specified directory into the active policy engine.
+   * This allows applying newly accepted policies without requiring an application restart.
+   *
+   * @param policyDir The directory containing the workspace policy TOML files.
+   */
+  async loadWorkspacePolicies(policyDir: string): Promise<void> {
+    const { rules, checkers } = await loadPoliciesFromToml(
+      [policyDir],
+      () => WORKSPACE_POLICY_TIER,
+    );
+
+    // Clear existing workspace policies to prevent duplicates/stale rules
+    this.policyEngine.removeRulesByTier(WORKSPACE_POLICY_TIER);
+    this.policyEngine.removeCheckersByTier(WORKSPACE_POLICY_TIER);
+
+    for (const rule of rules) {
+      this.policyEngine.addRule(rule);
+    }
+
+    for (const checker of checkers) {
+      this.policyEngine.addChecker(checker);
+    }
+
+    this.policyUpdateConfirmationRequest = undefined;
+
+    debugLogger.debug(`Workspace policies loaded from: ${policyDir}`);
+  }
+
   setApprovalMode(mode: ApprovalMode): void {
     if (!this.isTrustedFolder() && mode !== ApprovalMode.DEFAULT) {
       throw new Error(
@@ -1440,27 +1785,82 @@ export class Config {
 
     const currentMode = this.getApprovalMode();
     if (currentMode !== mode) {
-      this.logCurrentModeDuration(this.getApprovalMode());
+      this.logCurrentModeDuration(currentMode);
       logApprovalModeSwitch(
         this,
         new ApprovalModeSwitchEvent(currentMode, mode),
       );
-      this.lastModeSwitchTime = Date.now();
     }
 
     this.policyEngine.setApprovalMode(mode);
+
+    const isPlanModeTransition =
+      currentMode !== mode &&
+      (currentMode === ApprovalMode.PLAN || mode === ApprovalMode.PLAN);
+    const isYoloModeTransition =
+      currentMode !== mode &&
+      (currentMode === ApprovalMode.YOLO || mode === ApprovalMode.YOLO);
+
+    if (isPlanModeTransition || isYoloModeTransition) {
+      this.syncPlanModeTools();
+      this.updateSystemInstructionIfInitialized();
+    }
+  }
+
+  /**
+   * Synchronizes enter/exit plan mode tools based on current mode.
+   */
+  syncPlanModeTools(): void {
+    const registry = this.getToolRegistry();
+    if (!registry) {
+      return;
+    }
+    const approvalMode = this.getApprovalMode();
+    const isPlanMode = approvalMode === ApprovalMode.PLAN;
+    const isYoloMode = approvalMode === ApprovalMode.YOLO;
+
+    if (isPlanMode) {
+      if (registry.getTool(ENTER_PLAN_MODE_TOOL_NAME)) {
+        registry.unregisterTool(ENTER_PLAN_MODE_TOOL_NAME);
+      }
+      if (!registry.getTool(EXIT_PLAN_MODE_TOOL_NAME)) {
+        registry.registerTool(new ExitPlanModeTool(this, this.messageBus));
+      }
+    } else {
+      if (registry.getTool(EXIT_PLAN_MODE_TOOL_NAME)) {
+        registry.unregisterTool(EXIT_PLAN_MODE_TOOL_NAME);
+      }
+      if (this.planEnabled && !isYoloMode) {
+        if (!registry.getTool(ENTER_PLAN_MODE_TOOL_NAME)) {
+          registry.registerTool(new EnterPlanModeTool(this, this.messageBus));
+        }
+      } else {
+        if (registry.getTool(ENTER_PLAN_MODE_TOOL_NAME)) {
+          registry.unregisterTool(ENTER_PLAN_MODE_TOOL_NAME);
+        }
+      }
+    }
+
+    if (this.geminiClient?.isInitialized()) {
+      this.geminiClient.setTools().catch((err) => {
+        debugLogger.error('Failed to update tools', err);
+      });
+    }
   }
 
   /**
    * Logs the duration of the current approval mode.
    */
   logCurrentModeDuration(mode: ApprovalMode): void {
-    const now = Date.now();
+    const now = performance.now();
     const duration = now - this.lastModeSwitchTime;
-    logApprovalModeDuration(
-      this,
-      new ApprovalModeDurationEvent(mode, duration),
-    );
+    if (duration > 0) {
+      logApprovalModeDuration(
+        this,
+        new ApprovalModeDurationEvent(mode, duration),
+      );
+    }
+    this.lastModeSwitchTime = now;
   }
 
   isYoloModeDisabled(): boolean {
@@ -1538,7 +1938,7 @@ export class Config {
   async updateSystemInstructionIfInitialized(): Promise<void> {
     const geminiClient = this.getCodeflyClient();
     if (geminiClient?.isInitialized()) {
-      await geminiClient.updateSystemInstruction();
+      geminiClient.updateSystemInstruction();
     }
   }
 
@@ -1573,12 +1973,17 @@ export class Config {
     this.fileFiltering.respectCodeflyIgnore = value;
   }
 
+  getCustomIgnoreFilePaths(): string[] {
+    return this.fileFiltering.customIgnoreFilePaths;
+  }
+
   getFileFilteringOptions(): FileFilteringOptions {
     return {
       respectGitIgnore: this.fileFiltering.respectGitIgnore,
       respectCodeflyIgnore: this.fileFiltering.respectCodeflyIgnore,
       maxFileCount: this.fileFiltering.maxFileCount,
       searchTimeout: this.fileFiltering.searchTimeout,
+      customIgnoreFilePaths: this.fileFiltering.customIgnoreFilePaths,
     };
   }
 
@@ -1615,7 +2020,11 @@ export class Config {
 
   getFileService(): FileDiscoveryService {
     if (!this.fileDiscoveryService) {
-      this.fileDiscoveryService = new FileDiscoveryService(this.targetDir);
+      this.fileDiscoveryService = new FileDiscoveryService(this.targetDir, {
+        respectGitIgnore: this.fileFiltering.respectGitIgnore,
+        respectGeminiIgnore: this.fileFiltering.respectGeminiIgnore,
+        customIgnoreFilePaths: this.fileFiltering.customIgnoreFilePaths,
+      });
     }
     return this.fileDiscoveryService;
   }
@@ -1736,6 +2145,66 @@ export class Config {
   }
 
   /**
+   * Checks if a given absolute path is allowed for file system operations.
+   * A path is allowed if it's within the workspace context or the project's temporary directory.
+   *
+   * @param absolutePath The absolute path to check.
+   * @returns true if the path is allowed, false otherwise.
+   */
+  isPathAllowed(absolutePath: string): boolean {
+    const realpath = (p: string) => {
+      let resolved: string;
+      try {
+        resolved = fs.realpathSync(p);
+      } catch {
+        resolved = path.resolve(p);
+      }
+      return os.platform() === 'win32' ? resolved.toLowerCase() : resolved;
+    };
+
+    const resolvedPath = realpath(absolutePath);
+
+    const workspaceContext = this.getWorkspaceContext();
+    if (workspaceContext.isPathWithinWorkspace(resolvedPath)) {
+      return true;
+    }
+
+    const projectTempDir = this.storage.getProjectTempDir();
+    const resolvedTempDir = realpath(projectTempDir);
+
+    return isSubpath(resolvedTempDir, resolvedPath);
+  }
+
+  /**
+   * Validates if a path is allowed and returns a detailed error message if not.
+   *
+   * @param absolutePath The absolute path to validate.
+   * @param checkType The type of access to check ('read' or 'write'). Defaults to 'write' for safety.
+   * @returns An error message string if the path is disallowed, null otherwise.
+   */
+  validatePathAccess(
+    absolutePath: string,
+    checkType: 'read' | 'write' = 'write',
+  ): string | null {
+    // For read operations, check read-only paths first
+    if (checkType === 'read') {
+      if (this.getWorkspaceContext().isPathReadable(absolutePath)) {
+        return null;
+      }
+    }
+
+    // Then check standard allowed paths (Workspace + Temp)
+    // This covers 'write' checks and acts as a fallback/temp-dir check for 'read'
+    if (this.isPathAllowed(absolutePath)) {
+      return null;
+    }
+
+    const workspaceDirs = this.getWorkspaceContext().getDirectories();
+    const projectTempDir = this.storage.getProjectTempDir();
+    return `Path not in workspace: Attempted path "${absolutePath}" resolves outside the allowed workspace directories: ${workspaceDirs.join(', ')} or the project temp directory: ${projectTempDir}`;
+  }
+
+  /**
    * Set a custom FileSystemService
    */
   setFileSystemService(fileSystemService: FileSystemService): void {
@@ -1815,6 +2284,7 @@ export class Config {
       await this.getSkillManager().discoverSkills(
         this.storage,
         this.getExtensions(),
+        this.isTrustedFolder(),
       );
       this.getSkillManager().setDisabledSkills(this.disabledSkills);
 
@@ -1833,7 +2303,7 @@ export class Config {
     }
 
     // Notify the client that system instructions might need updating
-    await this.updateSystemInstructionIfInitialized();
+    this.updateSystemInstructionIfInitialized();
   }
 
   /**
@@ -1854,6 +2324,10 @@ export class Config {
 
   getUseRipgrep(): boolean {
     return this.useRipgrep;
+  }
+
+  getUseBackgroundColor(): boolean {
+    return this.useBackgroundColor;
   }
 
   getEnableInteractiveShell(): boolean {
@@ -1901,14 +2375,6 @@ export class Config {
     return this.accessibility.screenReader ?? false;
   }
 
-  getEnablePromptCompletion(): boolean {
-    return this.enablePromptCompletion;
-  }
-
-  getEnableToolOutputTruncation(): boolean {
-    return this.enableToolOutputTruncation;
-  }
-
   getTruncateToolOutputThreshold(): number {
     return Math.min(
       // Estimate remaining context window in characters (1 token ~= 4 chars).
@@ -1916,10 +2382,6 @@ export class Config {
         (tokenLimit(this.model) - uiTelemetryService.getLastPromptTokenCount()),
       this.truncateToolOutputThreshold,
     );
-  }
-
-  getTruncateToolOutputLines(): number {
-    return this.truncateToolOutputLines;
   }
 
   getNextCompressionTruncationId(): number {
@@ -1968,10 +2430,12 @@ export class Config {
     const registry = new ToolRegistry(this, this.messageBus);
 
     // helper to create & register core tools that are enabled
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const registerCoreTool = (ToolClass: any, ...args: unknown[]) => {
-      const className = ToolClass.name;
-      const toolName = ToolClass.Name || className;
+    const maybeRegister = (
+      toolClass: { name: string; Name?: string },
+      registerFn: () => void,
+    ) => {
+      const className = toolClass.name;
+      const toolName = toolClass.Name || className;
       const coreTools = this.getCoreTools();
       // On some platforms, the className can be minified to _ClassName.
       const normalizedClassName = className.replace(/^_+/, '');
@@ -1988,15 +2452,16 @@ export class Config {
       }
 
       if (isEnabled) {
-        // Pass message bus to tools (required for policy engine integration)
-        const toolArgs = [...args, this.getMessageBus()];
-
-        registry.registerTool(new ToolClass(...toolArgs));
+        registerFn();
       }
     };
 
-    registerCoreTool(LSTool, this);
-    registerCoreTool(ReadFileTool, this);
+    maybeRegister(LSTool, () =>
+      registry.registerTool(new LSTool(this, this.messageBus)),
+    );
+    maybeRegister(ReadFileTool, () =>
+      registry.registerTool(new ReadFileTool(this, this.messageBus)),
+    );
 
     if (this.getUseRipgrep()) {
       let useRipgrep = false;
@@ -2007,13 +2472,19 @@ export class Config {
         errorString = String(error);
       }
       if (useRipgrep) {
-        registerCoreTool(RipGrepTool, this);
+        maybeRegister(RipGrepTool, () =>
+          registry.registerTool(new RipGrepTool(this, this.messageBus)),
+        );
       } else {
         logRipgrepFallback(this, new RipgrepFallbackEvent(errorString));
-        registerCoreTool(GrepTool, this);
+        maybeRegister(GrepTool, () =>
+          registry.registerTool(new GrepTool(this, this.messageBus)),
+        );
       }
     } else {
-      registerCoreTool(GrepTool, this);
+      maybeRegister(GrepTool, () =>
+        registry.registerTool(new GrepTool(this, this.messageBus)),
+      );
     }
 
     registerCoreTool(GlobTool, this);
@@ -2028,7 +2499,17 @@ export class Config {
     registerCoreTool(DrawioToSqlTool, this);
     registerCoreTool(SwaggerSchemaTool, this);
     if (this.getUseWriteTodos()) {
-      registerCoreTool(WriteTodosTool);
+      maybeRegister(WriteTodosTool, () =>
+        registry.registerTool(new WriteTodosTool(this.messageBus)),
+      );
+    }
+    if (this.isPlanEnabled()) {
+      maybeRegister(ExitPlanModeTool, () =>
+        registry.registerTool(new ExitPlanModeTool(this, this.messageBus)),
+      );
+      maybeRegister(EnterPlanModeTool, () =>
+        registry.registerTool(new EnterPlanModeTool(this, this.messageBus)),
+      );
     }
 
     // Register Subagents as Tools
@@ -2049,26 +2530,16 @@ export class Config {
       agentsOverrides['codebase_investigator']?.enabled !== false ||
       agentsOverrides['cli_help']?.enabled !== false
     ) {
-      const allowedTools = this.getAllowedTools();
       const definitions = this.agentRegistry.getAllDefinitions();
 
       for (const definition of definitions) {
-        const isAllowed =
-          !allowedTools || allowedTools.includes(definition.name);
-
-        if (isAllowed) {
-          try {
-            const tool = new SubagentTool(
-              definition,
-              this,
-              this.getMessageBus(),
-            );
-            registry.registerTool(tool);
-          } catch (e: unknown) {
-            debugLogger.warn(
-              `Failed to register tool for agent ${definition.name}: ${getErrorMessage(e)}`,
-            );
-          }
+        try {
+          const tool = new SubagentTool(definition, this, this.getMessageBus());
+          registry.registerTool(tool);
+        } catch (e: unknown) {
+          debugLogger.warn(
+            `Failed to register tool for agent ${definition.name}: ${getErrorMessage(e)}`,
+          );
         }
       }
     }
@@ -2170,7 +2641,7 @@ export class Config {
     const client = this.getCodeflyClient();
     if (client?.isInitialized()) {
       await client.setTools();
-      await client.updateSystemInstruction();
+      client.updateSystemInstruction();
     } else {
       debugLogger.debug(
         '[Config] CodeflyClient not initialized; skipping live prompt/tool refresh.',

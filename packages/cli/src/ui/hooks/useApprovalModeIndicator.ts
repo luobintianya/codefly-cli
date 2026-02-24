@@ -16,6 +16,7 @@ export interface UseApprovalModeIndicatorArgs {
   addItem?: (item: HistoryItemWithoutId, timestamp: number) => void;
   onApprovalModeChange?: (mode: ApprovalMode) => void;
   isActive?: boolean;
+  allowPlanMode?: boolean;
 }
 
 export function useApprovalModeIndicator({
@@ -23,6 +24,7 @@ export function useApprovalModeIndicator({
   addItem,
   onApprovalModeChange,
   isActive = true,
+  allowPlanMode = false,
 }: UseApprovalModeIndicatorArgs): ApprovalMode {
   const currentConfigValue = config.getApprovalMode();
   const [showApprovalMode, setApprovalMode] = useState(currentConfigValue);
@@ -41,10 +43,19 @@ export function useApprovalModeIndicator({
           config.getApprovalMode() !== ApprovalMode.YOLO
         ) {
           if (addItem) {
+            let text =
+              'You cannot enter YOLO mode since it is disabled in your settings.';
+            const adminSettings = config.getRemoteAdminSettings();
+            const hasSettings =
+              adminSettings && Object.keys(adminSettings).length > 0;
+            if (hasSettings && !adminSettings.strictModeDisabled) {
+              text = getAdminErrorMessage('YOLO mode', config);
+            }
+
             addItem(
               {
                 type: MessageType.WARNING,
-                text: 'You cannot enter YOLO mode since it is disabled in your settings.',
+                text,
               },
               Date.now(),
             );
@@ -59,14 +70,14 @@ export function useApprovalModeIndicator({
         const currentMode = config.getApprovalMode();
         switch (currentMode) {
           case ApprovalMode.DEFAULT:
-            nextApprovalMode = config.isPlanEnabled()
-              ? ApprovalMode.PLAN
-              : ApprovalMode.AUTO_EDIT;
-            break;
-          case ApprovalMode.PLAN:
             nextApprovalMode = ApprovalMode.AUTO_EDIT;
             break;
           case ApprovalMode.AUTO_EDIT:
+            nextApprovalMode = allowPlanMode
+              ? ApprovalMode.PLAN
+              : ApprovalMode.DEFAULT;
+            break;
+          case ApprovalMode.PLAN:
             nextApprovalMode = ApprovalMode.DEFAULT;
             break;
           case ApprovalMode.YOLO:
@@ -89,6 +100,7 @@ export function useApprovalModeIndicator({
             addItem(
               {
                 type: MessageType.INFO,
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
                 text: (e as Error).message,
               },
               Date.now(),

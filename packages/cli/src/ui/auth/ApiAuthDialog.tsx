@@ -129,9 +129,10 @@ export function ApiAuthDialog({
   };
 
   useKeypress(
-    async (key) => {
+    (key) => {
       if (keyMatchers[Command.CLEAR_INPUT](key)) {
-        await handleClear();
+        void handleClear();
+        return true;
       }
 
       if (key.name === 'tab' || key.name === 'down' || key.name === 'up') {

@@ -6,7 +6,6 @@
 
 import type { Config } from '@codeflyai/codefly-core';
 import {
-  AuthType,
   debugLogger,
   OutputFormat,
   ExitCodes,
@@ -16,19 +15,6 @@ import { validateAuthMethod } from './config/auth.js';
 import { type LoadedSettings } from './config/settings.js';
 import { handleError } from './utils/errors.js';
 import { runExitCleanup } from './utils/cleanup.js';
-
-function getAuthTypeFromEnv(): AuthType | undefined {
-  if (process.env['GOOGLE_GENAI_USE_GCA'] === 'true') {
-    return AuthType.LOGIN_WITH_GOOGLE;
-  }
-  if (process.env['GOOGLE_GENAI_USE_VERTEXAI'] === 'true') {
-    return AuthType.USE_VERTEX_AI;
-  }
-  if (process.env['GEMINI_API_KEY']) {
-    return AuthType.USE_GEMINI;
-  }
-  return undefined;
-}
 
 export async function validateNonInteractiveAuth(
   configuredAuthType: AuthType | undefined,

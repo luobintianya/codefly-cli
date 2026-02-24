@@ -63,7 +63,7 @@ export class ValidationRequiredError extends Error {
 
   constructor(
     message: string,
-    override readonly cause: GoogleApiError,
+    override readonly cause?: GoogleApiError,
     validationLink?: string,
     validationDescription?: string,
     learnMoreUrl?: string,
@@ -200,6 +200,21 @@ export function classifyGoogleError(error: unknown): unknown {
     if (validationError) {
       return validationError;
     }
+  }
+
+  // Check for 503 Service Unavailable errors
+  if (status === 503) {
+    const errorMessage =
+      googleApiError?.message ||
+      (error instanceof Error ? error.message : String(error));
+    return new RetryableQuotaError(
+      errorMessage,
+      googleApiError ?? {
+        code: 503,
+        message: errorMessage,
+        details: [],
+      },
+    );
   }
 
   if (

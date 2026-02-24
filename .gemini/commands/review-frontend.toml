@@ -132,7 +132,7 @@ Follow these steps:
 14. Discuss with me before making any comments on the issue. I will clarify
     which possible issues you identified are problems, which ones you need to
     investigate further, and which ones I do not care about.
-15. If I request you to add comments to the issue, use
+11. If I request you to add comments to the issue, use
     `gh pr comment {{args}} --body {{review}}` to post the review to the PR.
 
 Remember to use the GitHub CLI (`gh`) with the Shell tool for all

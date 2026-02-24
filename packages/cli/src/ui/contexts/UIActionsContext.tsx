@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2025 Google LLC
+ * Copyright 2026 Google LLC
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -17,9 +17,13 @@ import { type LoadableSettingScope } from '../../config/settings.js';
 import type { AuthState } from '../types.js';
 import { type PermissionsDialogProps } from '../components/PermissionsModifyTrustDialog.js';
 import type { SessionInfo } from '../../utils/sessionUtils.js';
+import { type NewAgentsChoice } from '../components/NewAgentsNotification.js';
 
 export interface UIActions {
-  handleThemeSelect: (themeName: string, scope: LoadableSettingScope) => void;
+  handleThemeSelect: (
+    themeName: string,
+    scope: LoadableSettingScope,
+  ) => Promise<void>;
   closeThemeDialog: () => void;
   handleThemeHighlight: (themeName: string | undefined) => void;
   handleAuthSelect: (
@@ -48,10 +52,11 @@ export interface UIActions {
   vimHandleInput: (key: Key) => boolean;
   handleIdePromptComplete: (result: IdeIntegrationNudgeResult) => void;
   handleFolderTrustSelect: (choice: FolderTrustChoice) => void;
+  setIsPolicyUpdateDialogOpen: (value: boolean) => void;
   setConstrainHeight: (value: boolean) => void;
   onEscapePromptChange: (show: boolean) => void;
   refreshStatic: () => void;
-  handleFinalSubmit: (value: string) => void;
+  handleFinalSubmit: (value: string) => Promise<void>;
   handleClearScreen: () => void;
   handleProQuotaChoice: (
     choice: 'retry_later' | 'retry_once' | 'retry_always' | 'upgrade',
@@ -70,8 +75,14 @@ export interface UIActions {
   ) => Promise<void>;
   handleApiKeyCancel: () => void;
   setBannerVisible: (visible: boolean) => void;
+  setShortcutsHelpVisible: (visible: boolean) => void;
+  setCleanUiDetailsVisible: (visible: boolean) => void;
+  toggleCleanUiDetailsVisible: () => void;
+  revealCleanUiDetailsTemporarily: (durationMs?: number) => void;
+  handleWarning: (message: string) => void;
   setEmbeddedShellFocused: (value: boolean) => void;
   handleRestart: () => void;
+  handleNewAgentsSelect: (choice: NewAgentsChoice) => Promise<void>;
 }
 
 export const UIActionsContext = createContext<UIActions | null>(null);

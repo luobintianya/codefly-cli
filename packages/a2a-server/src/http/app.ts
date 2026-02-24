@@ -7,8 +7,8 @@
 import express from 'express';
 
 import type { AgentCard, Message } from '@a2a-js/sdk';
-import type { TaskStore } from '@a2a-js/sdk/server';
 import {
+  type TaskStore,
   DefaultRequestHandler,
   InMemoryTaskStore,
   DefaultExecutionEventBus,
@@ -88,6 +88,7 @@ async function handleExecuteCommand(
   },
 ) {
   logger.info('[CoreAgent] Received /executeCommand request: ', req.body);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { command, args } = req.body;
   try {
     if (typeof command !== 'string') {
@@ -118,6 +119,7 @@ async function handleExecuteCommand(
       const eventHandler = (event: AgentExecutionEvent) => {
         const jsonRpcResponse = {
           jsonrpc: '2.0',
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
           id: 'taskId' in event ? event.taskId : (event as Message).messageId,
           result: event,
         };
@@ -206,9 +208,11 @@ export async function createApp() {
     expressApp.post('/tasks', async (req, res) => {
       try {
         const taskId = uuidv4();
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
         const agentSettings = req.body.agentSettings as
           | AgentSettings
           | undefined;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const contextId = req.body.contextId || uuidv4();
         const wrapper = await agentExecutor.createTask(
           taskId,

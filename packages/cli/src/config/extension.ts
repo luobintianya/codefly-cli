@@ -27,6 +27,11 @@ export interface ExtensionConfig {
   contextFileName?: string | string[];
   excludeTools?: string[];
   settings?: ExtensionSetting[];
+  /**
+   * Custom themes contributed by this extension.
+   * These themes will be registered when the extension is activated.
+   */
+  themes?: CustomTheme[];
 }
 
 export interface ExtensionUpdateInfo {
@@ -41,6 +46,7 @@ export function loadInstallMetadata(
   const metadataFilePath = path.join(extensionDir, INSTALL_METADATA_FILENAME);
   try {
     const configContent = fs.readFileSync(metadataFilePath, 'utf-8');
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
     const metadata = JSON.parse(configContent) as ExtensionInstallMetadata;
     return metadata;
   } catch (_e) {

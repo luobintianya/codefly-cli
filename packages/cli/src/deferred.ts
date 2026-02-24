@@ -30,7 +30,10 @@ export async function runDeferredCommand(settings: MergedSettings) {
   const commandName = deferredCommand.commandName;
 
   if (commandName === 'mcp' && adminSettings?.mcp?.enabled === false) {
-    debugLogger.error('Error: MCP is disabled by your admin.');
+    coreEvents.emitFeedback(
+      'error',
+      getAdminErrorMessage('MCP', undefined /* config */),
+    );
     await runExitCleanup();
     process.exit(ExitCodes.FATAL_CONFIG_ERROR);
   }
@@ -39,18 +42,30 @@ export async function runDeferredCommand(settings: MergedSettings) {
     commandName === 'extensions' &&
     adminSettings?.extensions?.enabled === false
   ) {
-    debugLogger.error('Error: Extensions are disabled by your admin.');
+    coreEvents.emitFeedback(
+      'error',
+      getAdminErrorMessage('Extensions', undefined /* config */),
+    );
     await runExitCleanup();
     process.exit(ExitCodes.FATAL_CONFIG_ERROR);
   }
 
   if (commandName === 'skills' && adminSettings?.skills?.enabled === false) {
-    debugLogger.error('Error: Agent skills are disabled by your admin.');
+    coreEvents.emitFeedback(
+      'error',
+      getAdminErrorMessage('Agent skills', undefined /* config */),
+    );
     await runExitCleanup();
     process.exit(ExitCodes.FATAL_CONFIG_ERROR);
   }
 
-  await deferredCommand.handler(deferredCommand.argv);
+  // Inject settings into argv
+  const argvWithSettings = {
+    ...deferredCommand.argv,
+    settings,
+  };
+
+  await deferredCommand.handler(argvWithSettings);
   await runExitCleanup();
   process.exit(ExitCodes.SUCCESS);
 }
@@ -67,9 +82,11 @@ export function defer<T = object, U = object>(
     ...commandModule,
     handler: (argv: ArgumentsCamelCase<U>) => {
       setDeferredCommand({
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
         handler: commandModule.handler as (
           argv: ArgumentsCamelCase,
         ) => void | Promise<void>,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
         argv: argv as unknown as ArgumentsCamelCase,
         commandName: parentCommandName || 'unknown',
       });

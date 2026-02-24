@@ -103,6 +103,7 @@ all tools with `*`, specify only the tools you need:
   "hooks": [
     {
       "name": "validate-writes",
+      "type": "command",
       "command": "./validate.sh"
     }
   ]
@@ -713,6 +714,7 @@ defaults to 60 seconds, but you should set stricter limits for fast hooks.
         "hooks": [
           {
             "name": "fast-validator",
+            "type": "command",
             "command": "./hooks/validate.sh",
             "timeout": 5000 // 5 seconds
           }

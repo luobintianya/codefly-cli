@@ -29,6 +29,11 @@ export async function performInitialAuth(
     // The console.log is intentionally left out here.
     // We can add a dedicated startup message later if needed.
   } catch (e) {
+    if (e instanceof ValidationRequiredError) {
+      // Don't treat validation required as a fatal auth error during startup.
+      // This allows the React UI to load and show the ValidationDialog.
+      return null;
+    }
     return `Failed to login. Message: ${getErrorMessage(e)}`;
   }
 

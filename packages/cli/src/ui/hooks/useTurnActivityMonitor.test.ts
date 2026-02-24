@@ -93,7 +93,7 @@ describe('useTurnActivityMonitor', () => {
             name: 'run_shell_command',
             args: { command: 'ls -la' },
           },
-          status: 'executing',
+          status: CoreToolCallStatus.Executing,
         } as unknown as TrackedToolCall,
       ],
     });
@@ -108,7 +108,7 @@ describe('useTurnActivityMonitor', () => {
             name: 'run_shell_command',
             args: { command: 'ls > tool_out.txt' },
           },
-          status: 'executing',
+          status: CoreToolCallStatus.Executing,
         } as unknown as TrackedToolCall,
       ],
     });

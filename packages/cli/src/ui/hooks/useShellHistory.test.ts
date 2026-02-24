@@ -55,6 +55,9 @@ vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
         'shell_history',
       );
     }
+    initialize(): Promise<undefined> {
+      return Promise.resolve(undefined);
+    }
   }
   return {
     ...actual,

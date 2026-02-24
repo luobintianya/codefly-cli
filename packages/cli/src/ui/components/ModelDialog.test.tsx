@@ -4,11 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { render } from 'ink-testing-library';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { act } from 'react';
 import { ModelDialog } from './ModelDialog.js';
-import { ConfigContext } from '../contexts/ConfigContext.js';
-import { KeypressProvider } from '../contexts/KeypressContext.js';
+import { renderWithProviders } from '../../test-utils/render.js';
+import { waitFor } from '../../test-utils/async.js';
+import { createMockSettings } from '../../test-utils/settings.js';
 import {
   DEFAULT_CODEFLY_MODEL,
   DEFAULT_CODEFLY_MODEL_AUTO,
@@ -55,22 +56,24 @@ vi.mock('../contexts/SettingsContext.js', () => ({
 describe('<ModelDialog />', () => {
   const mockSetModel = vi.fn();
   const mockGetModel = vi.fn();
-  const mockGetPreviewFeatures = vi.fn();
   const mockOnClose = vi.fn();
   const mockGetHasAccessToPreviewModel = vi.fn();
+  const mockGetGemini31LaunchedSync = vi.fn();
 
   interface MockConfig extends Partial<Config> {
     setModel: (model: string, isTemporary?: boolean) => Promise<void>;
     getModel: () => string;
-    getPreviewFeatures: () => boolean;
     getHasAccessToPreviewModel: () => boolean;
+    getIdeMode: () => boolean;
+    getGemini31LaunchedSync: () => boolean;
   }
 
   const mockConfig: MockConfig = {
     setModel: mockSetModel,
     getModel: mockGetModel,
-    getPreviewFeatures: mockGetPreviewFeatures,
     getHasAccessToPreviewModel: mockGetHasAccessToPreviewModel,
+    getIdeMode: () => false,
+    getGemini31LaunchedSync: mockGetGemini31LaunchedSync,
   };
 
   beforeEach(() => {
@@ -78,6 +81,7 @@ describe('<ModelDialog />', () => {
     mockGetModel.mockReturnValue(DEFAULT_CODEFLY_MODEL_AUTO);
     mockGetPreviewFeatures.mockReturnValue(false);
     mockGetHasAccessToPreviewModel.mockReturnValue(false);
+    mockGetGemini31LaunchedSync.mockReturnValue(false);
 
     // Default implementation for getDisplayString
     mockGetDisplayString.mockImplementation((val: string) => {
@@ -87,24 +91,33 @@ describe('<ModelDialog />', () => {
     });
   });
 
-  const renderComponent = (contextValue = mockConfig as Config) =>
-    render(
-      <KeypressProvider>
-        <ConfigContext.Provider value={contextValue}>
-          <ModelDialog onClose={mockOnClose} />
-        </ConfigContext.Provider>
-      </KeypressProvider>,
-    );
+  const renderComponent = async (
+    configValue = mockConfig as Config,
+    authType = AuthType.LOGIN_WITH_GOOGLE,
+  ) => {
+    const settings = createMockSettings({
+      security: {
+        auth: {
+          selectedType: authType,
+        },
+      },
+    });
 
-  const waitForUpdate = () =>
-    new Promise((resolve) => setTimeout(resolve, 150));
+    const result = renderWithProviders(<ModelDialog onClose={mockOnClose} />, {
+      config: configValue,
+      settings,
+    });
+    await result.waitUntilReady();
+    return result;
+  };
 
-  it('renders the initial "main" view correctly', () => {
-    const { lastFrame } = renderComponent();
+  it('renders the initial "main" view correctly', async () => {
+    const { lastFrame, unmount } = await renderComponent();
     expect(lastFrame()).toContain('Select Model');
     expect(lastFrame()).toContain('Remember model for future sessions: true');
     expect(lastFrame()).toContain('Auto');
     expect(lastFrame()).toContain('Manual');
+    unmount();
   });
 
   it('renders "main" view with preview options when preview features are enabled', () => {
@@ -114,8 +127,8 @@ describe('<ModelDialog />', () => {
     expect(lastFrame()).toContain('Auto (Gemini 3)');
   });
 
-  it('switches to "manual" view when "Manual" is selected', async () => {
-    const { lastFrame, stdin } = renderComponent();
+    const { lastFrame, stdin, waitUntilReady, unmount } =
+      await renderComponent();
 
     // Select "Manual" (index 1)
     // Press down arrow to move to "Manual"
@@ -125,8 +138,10 @@ describe('<ModelDialog />', () => {
     await waitForUpdate();
 
     // Press enter to select
-    stdin.write('\r');
-    await waitForUpdate();
+    await act(async () => {
+      stdin.write('\r');
+    });
+    await waitUntilReady();
 
     // Should now show manual options and headers
     expect(lastFrame()).toContain('Google / Gemini');
@@ -155,11 +170,13 @@ describe('<ModelDialog />', () => {
   });
 
   it('sets model and closes when a model is selected in "main" view', async () => {
-    const { stdin } = renderComponent();
+    const { stdin, waitUntilReady, unmount } = await renderComponent();
 
     // Select "Auto" (index 0)
-    stdin.write('\r');
-    await waitForUpdate();
+    await act(async () => {
+      stdin.write('\r');
+    });
+    await waitUntilReady();
 
     expect(mockSetModel).toHaveBeenCalledWith(
       DEFAULT_CODEFLY_MODEL_AUTO,
@@ -169,7 +186,7 @@ describe('<ModelDialog />', () => {
   });
 
   it('sets model and closes when a model is selected in "manual" view', async () => {
-    const { stdin } = renderComponent();
+    const { stdin, waitUntilReady, unmount } = await renderComponent();
 
     // Navigate to Manual (index 1) and select
     stdin.write('\u001B[B');
@@ -188,19 +205,24 @@ describe('<ModelDialog />', () => {
   });
 
   it('toggles persist mode with Tab key', async () => {
-    const { lastFrame, stdin } = renderComponent();
+    const { lastFrame, stdin, waitUntilReady, unmount } =
+      await renderComponent();
 
     expect(lastFrame()).toContain('Remember model for future sessions: true');
 
     // Press Tab to toggle persist mode
-    stdin.write('\t');
-    await waitForUpdate();
+    await act(async () => {
+      stdin.write('\t');
+    });
+    await waitUntilReady();
 
     expect(lastFrame()).toContain('Remember model for future sessions: false');
 
     // Select "Auto" (index 0)
-    stdin.write('\r');
-    await waitForUpdate();
+    await act(async () => {
+      stdin.write('\r');
+    });
+    await waitUntilReady();
 
     expect(mockSetModel).toHaveBeenCalledWith(
       DEFAULT_CODEFLY_MODEL_AUTO,
@@ -210,16 +232,25 @@ describe('<ModelDialog />', () => {
   });
 
   it('closes dialog on escape in "main" view', async () => {
-    const { stdin } = renderComponent();
+    const { stdin, waitUntilReady, unmount } = await renderComponent();
 
-    stdin.write('\u001B'); // Escape
-    await waitForUpdate();
+    await act(async () => {
+      stdin.write('\u001B'); // Escape
+    });
+    // Escape key has a 50ms timeout in KeypressContext, so we need to wrap waitUntilReady in act
+    await act(async () => {
+      await waitUntilReady();
+    });
 
-    expect(mockOnClose).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(mockOnClose).toHaveBeenCalled();
+    });
+    unmount();
   });
 
   it('goes back to "main" view on escape in "manual" view', async () => {
-    const { lastFrame, stdin } = renderComponent();
+    const { lastFrame, stdin, waitUntilReady, unmount } =
+      await renderComponent();
 
     // Go to manual view
     stdin.write('\u001B[B');
@@ -232,20 +263,37 @@ describe('<ModelDialog />', () => {
     expect(lastFrame()).toContain(DEFAULT_CODEFLY_MODEL);
 
     // Press Escape
-    stdin.write('\u001B');
-    await waitForUpdate();
+    await act(async () => {
+      stdin.write('\u001B');
+    });
+    await act(async () => {
+      await waitUntilReady();
+    });
 
-    expect(mockOnClose).not.toHaveBeenCalled();
-    // Should be back to main view (Manual option visible)
-    expect(lastFrame()).toContain('Manual');
+    await waitFor(() => {
+      expect(mockOnClose).not.toHaveBeenCalled();
+      // Should be back to main view (Manual option visible)
+      expect(lastFrame()).toContain('Manual');
+    });
+    unmount();
   });
 
-  describe('Preview Logic', () => {
-    it('should NOT show preview options if user has no access', () => {
-      mockGetHasAccessToPreviewModel.mockReturnValue(false);
-      mockGetPreviewFeatures.mockReturnValue(true); // Even if enabled
-      const { lastFrame } = renderComponent();
-      expect(lastFrame()).not.toContain('Auto (Preview)');
+  it('shows the preferred manual model in the main view option using getDisplayString', async () => {
+    mockGetModel.mockReturnValue(DEFAULT_GEMINI_MODEL);
+    mockGetDisplayString.mockImplementation((val: string) => {
+      if (val === DEFAULT_GEMINI_MODEL) return 'My Custom Model Display';
+      if (val === 'auto-gemini-2.5') return 'Auto (Gemini 2.5)';
+      return val;
+    });
+    const { lastFrame, unmount } = await renderComponent();
+
+    expect(lastFrame()).toContain('Manual (My Custom Model Display)');
+    unmount();
+  });
+
+  describe('Preview Models', () => {
+    beforeEach(() => {
+      mockGetHasAccessToPreviewModel.mockReturnValue(true);
     });
 
     it('should NOT show preview options if user has access but preview features are disabled', () => {
@@ -262,27 +310,78 @@ describe('<ModelDialog />', () => {
       expect(lastFrame()).toContain('Auto (Gemini 3)');
     });
 
-    it('should show "Gemini 3 is now available" header if user has access but preview features disabled', () => {
-      mockGetHasAccessToPreviewModel.mockReturnValue(true);
-      mockGetPreviewFeatures.mockReturnValue(false);
-      const { lastFrame } = renderComponent();
-      expect(lastFrame()).toContain('Gemini 3 is now available.');
-      expect(lastFrame()).toContain('Enable "Preview features" in /settings');
+    it('shows Gemini 3 models in manual view when Gemini 3.1 is NOT launched', async () => {
+      mockGetGemini31LaunchedSync.mockReturnValue(false);
+      const { lastFrame, stdin, waitUntilReady, unmount } =
+        await renderComponent();
+
+      // Go to manual view
+      await act(async () => {
+        stdin.write('\u001B[B'); // Manual
+      });
+      await waitUntilReady();
+      await act(async () => {
+        stdin.write('\r');
+      });
+      await waitUntilReady();
+
+      const output = lastFrame();
+      expect(output).toContain(PREVIEW_GEMINI_MODEL);
+      expect(output).toContain(PREVIEW_GEMINI_FLASH_MODEL);
+      unmount();
     });
 
-    it('should show "Gemini 3 is coming soon" header if user has no access', () => {
-      mockGetHasAccessToPreviewModel.mockReturnValue(false);
-      mockGetPreviewFeatures.mockReturnValue(false);
-      const { lastFrame } = renderComponent();
-      expect(lastFrame()).toContain('Gemini 3 is coming soon.');
+    it('shows Gemini 3.1 models in manual view when Gemini 3.1 IS launched', async () => {
+      mockGetGemini31LaunchedSync.mockReturnValue(true);
+      const { lastFrame, stdin, waitUntilReady, unmount } =
+        await renderComponent(mockConfig as Config, AuthType.USE_VERTEX_AI);
+
+      // Go to manual view
+      await act(async () => {
+        stdin.write('\u001B[B'); // Manual
+      });
+      await waitUntilReady();
+      await act(async () => {
+        stdin.write('\r');
+      });
+      await waitUntilReady();
+
+      const output = lastFrame();
+      expect(output).toContain(PREVIEW_GEMINI_3_1_MODEL);
+      expect(output).toContain(PREVIEW_GEMINI_FLASH_MODEL);
+      unmount();
     });
 
-    it('should NOT show header/subheader if preview options are shown', () => {
-      mockGetHasAccessToPreviewModel.mockReturnValue(true);
-      mockGetPreviewFeatures.mockReturnValue(true);
-      const { lastFrame } = renderComponent();
-      expect(lastFrame()).not.toContain('Gemini 3 is now available.');
-      expect(lastFrame()).not.toContain('Gemini 3 is coming soon.');
+    it('uses custom tools model when Gemini 3.1 IS launched and auth is Gemini API Key', async () => {
+      mockGetGemini31LaunchedSync.mockReturnValue(true);
+      const { stdin, waitUntilReady, unmount } = await renderComponent(
+        mockConfig as Config,
+        AuthType.USE_GEMINI,
+      );
+
+      // Go to manual view
+      await act(async () => {
+        stdin.write('\u001B[B'); // Manual
+      });
+      await waitUntilReady();
+      await act(async () => {
+        stdin.write('\r');
+      });
+      await waitUntilReady();
+
+      // Select Gemini 3.1 (first item in preview section)
+      await act(async () => {
+        stdin.write('\r');
+      });
+      await waitUntilReady();
+
+      await waitFor(() => {
+        expect(mockSetModel).toHaveBeenCalledWith(
+          PREVIEW_GEMINI_3_1_CUSTOM_TOOLS_MODEL,
+          true,
+        );
+      });
+      unmount();
     });
   });
 });

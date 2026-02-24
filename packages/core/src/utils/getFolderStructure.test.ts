@@ -6,7 +6,6 @@
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import fsPromises from 'node:fs/promises';
-import * as nodePath from 'node:path';
 import * as os from 'node:os';
 import { getFolderStructure } from './getFolderStructure.js';
 import { FileDiscoveryService } from '../services/fileDiscoveryService.js';
@@ -274,7 +273,7 @@ ${testRootDir}${path.sep}
 
     it('should not ignore files if respectGitIgnore is false', async () => {
       await fsPromises.writeFile(
-        nodePath.join(testRootDir, '.gitignore'),
+        path.join(testRootDir, '.gitignore'),
         'ignored.txt',
       );
       await createTestFile('file1.txt');
@@ -286,6 +285,7 @@ ${testRootDir}${path.sep}
         fileFilteringOptions: {
           respectCodeflyIgnore: false,
           respectGitIgnore: false,
+          customIgnoreFilePaths: [],
         },
       });
 
@@ -332,6 +332,7 @@ ${testRootDir}${path.sep}
         fileFilteringOptions: {
           respectCodeflyIgnore: false,
           respectGitIgnore: true, // Explicitly disable gemini ignore only
+          customIgnoreFilePaths: [],
         },
       });
       expect(structure).toContain('ignored.txt');

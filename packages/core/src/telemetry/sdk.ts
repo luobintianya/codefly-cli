@@ -84,6 +84,12 @@ let telemetryInitialized = false;
 let callbackRegistered = false;
 let authListener: ((newCredentials: JWTInput) => Promise<void>) | undefined =
   undefined;
+let keychainAvailabilityListener:
+  | ((event: KeychainAvailabilityEvent) => void)
+  | undefined = undefined;
+let tokenStorageTypeListener:
+  | ((event: TokenStorageInitializationEvent) => void)
+  | undefined = undefined;
 const telemetryBuffer: Array<() => void | Promise<void>> = [];
 let activeTelemetryEmail: string | undefined;
 
@@ -196,6 +202,26 @@ export async function initializeTelemetry(
     [SemanticResourceAttributes.SERVICE_VERSION]: process.version,
     'session.id': config.getSessionId(),
   });
+
+  if (!keychainAvailabilityListener) {
+    keychainAvailabilityListener = (event: KeychainAvailabilityEvent) => {
+      logKeychainAvailability(config, event);
+    };
+    coreEvents.on(
+      CoreEvent.TelemetryKeychainAvailability,
+      keychainAvailabilityListener,
+    );
+  }
+
+  if (!tokenStorageTypeListener) {
+    tokenStorageTypeListener = (event: TokenStorageInitializationEvent) => {
+      logTokenStorageInitialization(config, event);
+    };
+    coreEvents.on(
+      CoreEvent.TelemetryTokenStorageType,
+      tokenStorageTypeListener,
+    );
+  }
 
   const otlpEndpoint = config.getTelemetryOtlpEndpoint();
   const otlpProtocol = config.getTelemetryOtlpProtocol();
@@ -363,6 +389,20 @@ export async function shutdownTelemetry(
     if (authListener) {
       // authEvents.off('post_auth', authListener);
       authListener = undefined;
+    }
+    if (keychainAvailabilityListener) {
+      coreEvents.off(
+        CoreEvent.TelemetryKeychainAvailability,
+        keychainAvailabilityListener,
+      );
+      keychainAvailabilityListener = undefined;
+    }
+    if (tokenStorageTypeListener) {
+      coreEvents.off(
+        CoreEvent.TelemetryTokenStorageType,
+        tokenStorageTypeListener,
+      );
+      tokenStorageTypeListener = undefined;
     }
     callbackRegistered = false;
     activeTelemetryEmail = undefined;

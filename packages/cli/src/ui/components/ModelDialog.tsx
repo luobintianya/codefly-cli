@@ -35,6 +35,7 @@ interface ModelDialogProps {
 
 export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
   const config = useContext(ConfigContext);
+  const settings = useSettings();
   const [view, setView] = useState<'main' | 'manual'>('main');
   const [persistMode, setPersistMode] = useState(true);
   const settings = useSettings();
@@ -42,8 +43,11 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
   // Determine the Preferred Model (read once when the dialog opens).
   const preferredModel = config?.getModel() || DEFAULT_CODEFLY_MODEL_AUTO;
 
-  const shouldShowPreviewModels =
-    config?.getPreviewFeatures() && config.getHasAccessToPreviewModel();
+  const shouldShowPreviewModels = config?.getHasAccessToPreviewModel();
+  const useGemini31 = config?.getGemini31LaunchedSync?.() ?? false;
+  const selectedAuthType = settings.merged.security.auth.selectedType;
+  const useCustomToolModel =
+    useGemini31 && selectedAuthType === AuthType.USE_GEMINI;
 
   const manualModelSelected = useMemo(() => {
     const manualModels = [
@@ -67,10 +71,13 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
         } else {
           onClose();
         }
+        return true;
       }
       if (key.name === 'tab') {
         setPersistMode((prev) => !prev);
+        return true;
       }
+      return false;
     },
     { isActive: true },
   );
@@ -99,7 +106,7 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
       {
         value: 'Manual',
         title: manualModelSelected
-          ? `Manual (${manualModelSelected})`
+          ? `Manual (${getDisplayString(manualModelSelected)})`
           : 'Manual',
         description: 'Manually select a model',
         key: 'Manual',
@@ -119,7 +126,7 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
       });
     }
     return list;
-  }, [shouldShowPreviewModels, manualModelSelected]);
+  }, [shouldShowPreviewModels, manualModelSelected, useGemini31]);
 
   const manualOptions = useMemo(() => {
     const list: Array<DescriptiveRadioSelectItem<string>> = [];
@@ -160,7 +167,7 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
       },
       {
         value: DEFAULT_GEMINI_FLASH_LITE_MODEL,
-        title: DEFAULT_GEMINI_FLASH_LITE_MODEL,
+        title: getDisplayString(DEFAULT_GEMINI_FLASH_LITE_MODEL),
         key: DEFAULT_GEMINI_FLASH_LITE_MODEL,
       },
     );
@@ -225,24 +232,6 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
     [config, onClose, persistMode],
   );
 
-  let header;
-  let subheader;
-
-  // Do not show any header or subheader since it's already showing preview model
-  // options
-  if (shouldShowPreviewModels) {
-    header = undefined;
-    subheader = undefined;
-    // When a user has the access but has not enabled the preview features.
-  } else if (config?.getHasAccessToPreviewModel()) {
-    header = 'Gemini 3 is now available.';
-    subheader =
-      'Enable "Preview features" in /settings.\nLearn more at https://goo.gle/enable-preview-features';
-  } else {
-    header = 'Gemini 3 is coming soon.';
-    subheader = undefined;
-  }
-
   return (
     <Box
       borderStyle="round"
@@ -253,16 +242,6 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
     >
       <Text bold>Select Model</Text>
 
-      <Box flexDirection="column">
-        {header && (
-          <Box marginTop={1}>
-            <ThemedGradient>
-              <Text>{header}</Text>
-            </ThemedGradient>
-          </Box>
-        )}
-        {subheader && <Text>{subheader}</Text>}
-      </Box>
       <Box marginTop={1}>
         <DescriptiveRadioButtonSelect
           items={options}

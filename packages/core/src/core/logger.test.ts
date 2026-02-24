@@ -25,12 +25,11 @@ import { Storage } from '../config/storage.js';
 import { promises as fs, existsSync } from 'node:fs';
 import path from 'node:path';
 import type { Content } from '@google/genai';
-
-import crypto from 'node:crypto';
 import os from 'node:os';
 import { CODEFLY_DIR } from '../utils/paths.js';
 import { debugLogger } from '../utils/debugLogger.js';
 
+const PROJECT_SLUG = 'project-slug';
 const TMP_DIR_NAME = 'tmp';
 const LOG_FILE_NAME = 'logs.json';
 const CHECKPOINT_FILE_NAME = 'checkpoint.json';

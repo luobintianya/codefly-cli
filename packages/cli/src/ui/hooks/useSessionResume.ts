@@ -35,6 +35,8 @@ export function useSessionResume({
   resumedSessionData,
   isAuthenticating,
 }: UseSessionResumeParams) {
+  const [isResuming, setIsResuming] = useState(false);
+
   // Use refs to avoid dependency chain that causes infinite loop
   const historyManagerRef = useRef(historyManager);
   const refreshStaticRef = useRef(refreshStatic);
@@ -45,7 +47,7 @@ export function useSessionResume({
   });
 
   const loadHistoryForResume = useCallback(
-    (
+    async (
       uiHistory: HistoryItemWithoutId[],
       clientHistory: Array<{ role: 'user' | 'model'; parts: Part[] }>,
       resumedData: ResumedSessionData,
@@ -55,13 +57,15 @@ export function useSessionResume({
         return;
       }
 
-      // Now that we have the client, load the history into the UI and the client.
-      setQuittingMessages(null);
-      historyManagerRef.current.clearItems();
-      uiHistory.forEach((item, index) => {
-        historyManagerRef.current.addItem(item, index, true);
-      });
-      refreshStaticRef.current(); // Force Static component to re-render with the updated history.
+      setIsResuming(true);
+      try {
+        // Now that we have the client, load the history into the UI and the client.
+        setQuittingMessages(null);
+        historyManagerRef.current.clearItems();
+        uiHistory.forEach((item, index) => {
+          historyManagerRef.current.addItem(item, index, true);
+        });
+        refreshStaticRef.current(); // Force Static component to re-render with the updated history.
 
       // Give the history to the Gemini client.
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -84,9 +88,9 @@ export function useSessionResume({
       const historyData = convertSessionToHistoryFormats(
         resumedSessionData.conversation.messages,
       );
-      loadHistoryForResume(
+      void loadHistoryForResume(
         historyData.uiHistory,
-        historyData.clientHistory,
+        convertSessionToClientHistory(resumedSessionData.conversation.messages),
         resumedSessionData,
       );
     }
@@ -97,5 +101,5 @@ export function useSessionResume({
     loadHistoryForResume,
   ]);
 
-  return { loadHistoryForResume };
+  return { loadHistoryForResume, isResuming };
 }

@@ -9,6 +9,8 @@ import type { CodeflyIgnoreFilter } from '../utils/codeflyIgnoreParser.js';
 import { GitIgnoreParser } from '../utils/gitIgnoreParser.js';
 import { CodeflyIgnoreParser } from '../utils/codeflyIgnoreParser.js';
 import { isGitRepository } from '../utils/gitUtils.js';
+import { GEMINI_IGNORE_FILE_NAME } from '../config/constants.js';
+import fs from 'node:fs';
 import * as path from 'node:path';
 
 export interface FilterFilesOptions {
@@ -27,8 +29,9 @@ export class FileDiscoveryService {
   private combinedIgnoreFilter: GitIgnoreFilter | null = null;
   private projectRoot: string;
 
-  constructor(projectRoot: string) {
+  constructor(projectRoot: string, options?: FilterFilesOptions) {
     this.projectRoot = path.resolve(projectRoot);
+    this.applyFilterFilesOptions(options);
     if (isGitRepository(this.projectRoot)) {
       this.gitIgnoreFilter = new GitIgnoreParser(this.projectRoot);
     }
@@ -39,13 +42,41 @@ export class FileDiscoveryService {
       // Create combined parser: .gitignore + .codeflyignore
       this.combinedIgnoreFilter = new GitIgnoreParser(
         this.projectRoot,
-        geminiPatterns,
+        // customPatterns should go the last to ensure overwriting of geminiPatterns
+        [...geminiPatterns, ...customPatterns],
+      );
+    } else {
+      // Create combined parser when not git repo
+      const geminiPatterns = this.geminiIgnoreFilter.getPatterns();
+      const customPatterns = this.customIgnoreFilter
+        ? this.customIgnoreFilter.getPatterns()
+        : [];
+      this.combinedIgnoreFilter = new IgnoreFileParser(
+        this.projectRoot,
+        [...geminiPatterns, ...customPatterns],
+        true,
       );
     }
   }
 
+  private applyFilterFilesOptions(options?: FilterFilesOptions): void {
+    if (!options) return;
+
+    if (options.respectGitIgnore !== undefined) {
+      this.defaultFilterFileOptions.respectGitIgnore = options.respectGitIgnore;
+    }
+    if (options.respectGeminiIgnore !== undefined) {
+      this.defaultFilterFileOptions.respectGeminiIgnore =
+        options.respectGeminiIgnore;
+    }
+    if (options.customIgnoreFilePaths) {
+      this.defaultFilterFileOptions.customIgnoreFilePaths =
+        options.customIgnoreFilePaths;
+    }
+  }
+
   /**
-   * Filters a list of file paths based on git ignore rules
+   * Filters a list of file paths based on ignore rules
    */
   filterFiles(filePaths: string[], options: FilterFilesOptions = {}): string[] {
     const { respectGitIgnore = true, respectCodeflyIgnore = true } = options;
@@ -56,6 +87,11 @@ export class FileDiscoveryService {
         this.combinedIgnoreFilter
       ) {
         return !this.combinedIgnoreFilter.isIgnored(filePath);
+      }
+
+      // Always respect custom ignore filter if provided
+      if (this.customIgnoreFilter?.isIgnored(filePath)) {
+        return false;
       }
 
       if (respectGitIgnore && this.gitIgnoreFilter?.isIgnored(filePath)) {
@@ -99,5 +135,39 @@ export class FileDiscoveryService {
     options: FilterFilesOptions = {},
   ): boolean {
     return this.filterFiles([filePath], options).length === 0;
+  }
+
+  /**
+   * Returns the list of ignore files being used (e.g. .geminiignore) excluding .gitignore.
+   */
+  getIgnoreFilePaths(): string[] {
+    const paths: string[] = [];
+    if (
+      this.geminiIgnoreFilter &&
+      this.defaultFilterFileOptions.respectGeminiIgnore
+    ) {
+      paths.push(...this.geminiIgnoreFilter.getIgnoreFilePaths());
+    }
+    if (this.customIgnoreFilter) {
+      paths.push(...this.customIgnoreFilter.getIgnoreFilePaths());
+    }
+    return paths;
+  }
+
+  /**
+   * Returns all ignore files including .gitignore if applicable.
+   */
+  getAllIgnoreFilePaths(): string[] {
+    const paths: string[] = [];
+    if (
+      this.gitIgnoreFilter &&
+      this.defaultFilterFileOptions.respectGitIgnore
+    ) {
+      const gitIgnorePath = path.join(this.projectRoot, '.gitignore');
+      if (fs.existsSync(gitIgnorePath)) {
+        paths.push(gitIgnorePath);
+      }
+    }
+    return paths.concat(this.getIgnoreFilePaths());
   }
 }

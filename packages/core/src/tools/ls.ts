@@ -15,6 +15,8 @@ import { DEFAULT_FILE_FILTERING_OPTIONS } from '../config/constants.js';
 import { ToolErrorType } from './tool-error.js';
 import { LS_TOOL_NAME } from './tool-names.js';
 import { debugLogger } from '../utils/debugLogger.js';
+import { LS_DEFINITION } from './definitions/coreTools.js';
+import { resolveToolDeclaration } from './definitions/resolver.js';
 
 /**
  * Parameters for the LS tool
@@ -142,6 +144,22 @@ class LSToolInvocation extends BaseToolInvocation<LSToolParams, ToolResult> {
       this.config.getTargetDir(),
       this.params.dir_path,
     );
+
+    const validationError = this.config.validatePathAccess(
+      resolvedDirPath,
+      'read',
+    );
+    if (validationError) {
+      return {
+        llmContent: validationError,
+        returnDisplay: 'Path not in workspace.',
+        error: {
+          message: validationError,
+          type: ToolErrorType.PATH_NOT_IN_WORKSPACE,
+        },
+      };
+    }
+
     try {
       const stats = await fs.stat(resolvedDirPath);
       if (!stats) {
@@ -223,7 +241,12 @@ class LSToolInvocation extends BaseToolInvocation<LSToolParams, ToolResult> {
 
       // Create formatted content for LLM
       const directoryContent = entries
-        .map((entry) => `${entry.isDirectory ? '[DIR] ' : ''}${entry.name}`)
+        .map((entry) => {
+          if (entry.isDirectory) {
+            return `[DIR] ${entry.name}`;
+          }
+          return `${entry.name} (${entry.size} bytes)`;
+        })
         .join('\n');
 
       let resultMessage = `Directory listing for ${resolvedDirPath}:\n${directoryContent}`;
@@ -264,7 +287,7 @@ export class LSTool extends BaseDeclarativeTool<LSToolParams, ToolResult> {
     super(
       LSTool.Name,
       'ReadFolder',
-      'Lists the names of files and subdirectories directly within a specified directory path. Can optionally ignore entries matching provided glob patterns.',
+      LS_DEFINITION.base.description!,
       Kind.Search,
       {
         properties: {
@@ -318,14 +341,7 @@ export class LSTool extends BaseDeclarativeTool<LSToolParams, ToolResult> {
       this.config.getTargetDir(),
       params.dir_path,
     );
-    const workspaceContext = this.config.getWorkspaceContext();
-    if (!workspaceContext.isPathWithinWorkspace(resolvedPath)) {
-      const directories = workspaceContext.getDirectories();
-      return `Path must be within one of the workspace directories: ${directories.join(
-        ', ',
-      )}`;
-    }
-    return null;
+    return this.config.validatePathAccess(resolvedPath, 'read');
   }
 
   protected createInvocation(
@@ -341,5 +357,9 @@ export class LSTool extends BaseDeclarativeTool<LSToolParams, ToolResult> {
       _toolName,
       _toolDisplayName,
     );
+  }
+
+  override getSchema(modelId?: string) {
+    return resolveToolDeclaration(LS_DEFINITION, modelId);
   }
 }

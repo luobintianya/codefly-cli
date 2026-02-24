@@ -8,7 +8,6 @@ import type {
   Config,
   ToolCallRequestInfo,
   ResumedSessionData,
-  CompletedToolCall,
   UserFeedbackPayload,
 } from '@codeflyai/codefly-core';
 import { isSlashCommand } from './ui/utils/commandUtils.js';
@@ -35,7 +34,6 @@ import type { Content, Part } from '@google/genai';
 import readline from 'node:readline';
 import stripAnsi from 'strip-ansi';
 
-import { convertSessionToHistoryFormats } from './ui/hooks/useSessionBrowser.js';
 import { handleSlashCommand } from './nonInteractiveCliCommands.js';
 import { ConsolePatcher } from './ui/utils/ConsolePatcher.js';
 import { handleAtCommand } from './ui/hooks/atCommandProcessor.js';
@@ -70,6 +68,14 @@ export async function runNonInteractive({
         coreEvents.emitConsoleLog(msg.type, msg.content);
       },
     });
+
+    if (process.env['GEMINI_CLI_ACTIVITY_LOG_TARGET']) {
+      const { setupInitialActivityLogger } = await import(
+        './utils/devtoolsService.js'
+      );
+      await setupInitialActivityLogger(config);
+    }
+
     const { stdout: workingStdout } = createWorkingStdio();
     const textOutput = new TextOutput(workingStdout);
 
@@ -206,9 +212,9 @@ export async function runNonInteractive({
       // Initialize chat.  Resume if resume data is passed.
       if (resumedSessionData) {
         await geminiClient.resumeChat(
-          convertSessionToHistoryFormats(
+          convertSessionToClientHistory(
             resumedSessionData.conversation.messages,
-          ).clientHistory,
+          ),
           resumedSessionData,
         );
       }
@@ -236,6 +242,7 @@ export async function runNonInteractive({
         // Otherwise, slashCommandResult falls through to the default prompt
         // handling.
         if (slashCommandResult) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
           query = slashCommandResult as Part[];
         }
       }
@@ -257,6 +264,7 @@ export async function runNonInteractive({
             error || 'Exiting due to an error processing the @ command.',
           );
         }
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
         query = processedQuery as Part[];
       }
 
@@ -287,6 +295,9 @@ export async function runNonInteractive({
           currentMessages[0]?.parts || [],
           abortController.signal,
           prompt_id,
+          undefined,
+          false,
+          turnCount === 1 ? input : undefined,
         );
 
         let responseText = '';
@@ -375,25 +386,23 @@ export async function runNonInteractive({
 
         if (toolCallRequests.length > 0) {
           textOutput.ensureTrailingNewline();
+          const completedToolCalls = await scheduler.schedule(
+            toolCallRequests,
+            abortController.signal,
+          );
           const toolResponseParts: Part[] = [];
-          const completedToolCalls: CompletedToolCall[] = [];
 
-          for (const requestInfo of toolCallRequests) {
-            const completedToolCall = await executeToolCall(
-              config,
-              requestInfo,
-              abortController.signal,
-            );
+          for (const completedToolCall of completedToolCalls) {
             const toolResponse = completedToolCall.response;
-
-            completedToolCalls.push(completedToolCall);
+            const requestInfo = completedToolCall.request;
 
             if (streamFormatter) {
               streamFormatter.emitEvent({
                 type: JsonStreamEventType.TOOL_RESULT,
                 timestamp: new Date().toISOString(),
                 tool_id: requestInfo.callId,
-                status: toolResponse.error ? 'error' : 'success',
+                status:
+                  completedToolCall.status === 'error' ? 'error' : 'success',
                 output:
                   typeof toolResponse.resultDisplay === 'string'
                     ? toolResponse.resultDisplay

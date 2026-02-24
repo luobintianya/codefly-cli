@@ -41,6 +41,8 @@ vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
       ...actual.coreEvents,
       emitFeedback: vi.fn(),
     },
+    logRewind: vi.fn(),
+    RewindEvent: class {},
   };
 });
 

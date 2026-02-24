@@ -14,6 +14,13 @@ import {
   type Mock,
 } from 'vitest';
 import { Task } from './task.js';
+import type {
+  ToolCall,
+  Config,
+  ToolCallRequestInfo,
+  GitService,
+  CompletedToolCall,
+} from '@google/gemini-cli-core';
 import {
   CodeflyEventType,
   type Config,

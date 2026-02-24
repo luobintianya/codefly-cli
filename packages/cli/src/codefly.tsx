@@ -11,6 +11,7 @@ import { loadCliConfig, parseArguments } from './config/config.js';
 import * as cliConfig from './config/config.js';
 import { readStdin } from './utils/readStdin.js';
 import { basename } from 'node:path';
+import { createHash } from 'node:crypto';
 import v8 from 'node:v8';
 import os from 'node:os';
 import dns from 'node:dns';
@@ -33,6 +34,12 @@ import {
   registerTelemetryConfig,
 } from './utils/cleanup.js';
 import {
+  cleanupToolOutputFiles,
+  cleanupExpiredSessions,
+} from './utils/sessionCleanup.js';
+import {
+  type StartupWarning,
+  WarningPriority,
   type Config,
   type ResumedSessionData,
   type OutputPayload,
@@ -53,8 +60,8 @@ import {
   writeToStderr,
   disableMouseEvents,
   enableMouseEvents,
-  enterAlternateScreen,
   disableLineWrapping,
+  enableLineWrapping,
   shouldEnterAlternateScreen,
   startupProfiler,
   ExitCodes,
@@ -69,7 +76,6 @@ import {
 } from './core/initializer.js';
 import { validateAuthMethod } from './config/auth.js';
 import { runZedIntegration } from './zed-integration/zedIntegration.js';
-import { cleanupExpiredSessions } from './utils/sessionCleanup.js';
 import { validateNonInteractiveAuth } from './validateNonInterActiveAuth.js';
 import { checkForUpdates } from './ui/utils/updateCheck.js';
 import { handleAutoUpdate } from './utils/handleAutoUpdate.js';
@@ -93,10 +99,13 @@ import { deleteSession, listSessions } from './utils/sessions.js';
 import { createPolicyUpdater } from './config/policy.js';
 import { ScrollProvider } from './ui/contexts/ScrollProvider.js';
 import { isAlternateBufferEnabled } from './ui/hooks/useAlternateBuffer.js';
+import { TerminalProvider } from './ui/contexts/TerminalContext.js';
+import { OverflowProvider } from './ui/contexts/OverflowContext.js';
 
 import { setupTerminalAndTheme } from './utils/terminalTheme.js';
 import { profiler } from './ui/components/DebugProfiler.js';
 import { runDeferredCommand } from './deferred.js';
+import { SlashCommandConflictHandler } from './services/SlashCommandConflictHandler.js';
 
 const SLOW_RENDER_MS = 200;
 
@@ -173,7 +182,7 @@ ${reason.stack}`
 export async function startInteractiveUI(
   config: Config,
   settings: LoadedSettings,
-  startupWarnings: string[],
+  startupWarnings: StartupWarning[],
   workspaceRoot: string = process.cwd(),
   resumedSessionData: ResumedSessionData | undefined,
   initializationResult: InitializationResult,
@@ -208,9 +217,12 @@ export async function startInteractiveUI(
 
   const { stdout: inkStdout, stderr: inkStderr } = createWorkingStdio();
 
+  const isShpool = !!process.env['SHPOOL_SESSION_NAME'];
+
   // Create wrapper component to use hooks inside render
   const AppWrapper = () => {
     useKittyKeyboardProtocol();
+
     return (
       <SettingsContext.Provider value={settings}>
         <KeypressProvider
@@ -223,24 +235,39 @@ export async function startInteractiveUI(
               settings.merged.general.debugKeystrokeLogging
             }
           >
-            <ScrollProvider>
-              <SessionStatsProvider>
-                <VimModeProvider settings={settings}>
-                  <AppContainer
-                    config={config}
-                    startupWarnings={startupWarnings}
-                    version={version}
-                    resumedSessionData={resumedSessionData}
-                    initializationResult={initializationResult}
-                  />
-                </VimModeProvider>
-              </SessionStatsProvider>
-            </ScrollProvider>
+            <TerminalProvider>
+              <ScrollProvider>
+                <OverflowProvider>
+                  <SessionStatsProvider>
+                    <VimModeProvider settings={settings}>
+                      <AppContainer
+                        config={config}
+                        startupWarnings={startupWarnings}
+                        version={version}
+                        resumedSessionData={resumedSessionData}
+                        initializationResult={initializationResult}
+                      />
+                    </VimModeProvider>
+                  </SessionStatsProvider>
+                </OverflowProvider>
+              </ScrollProvider>
+            </TerminalProvider>
           </MouseProvider>
         </KeypressProvider>
       </SettingsContext.Provider>
     );
   };
+
+  if (isShpool) {
+    // Wait a moment for shpool to stabilize terminal size and state.
+    // shpool is a persistence tool that restores terminal state by replaying it.
+    // This delay gives shpool time to finish its restoration replay and send
+    // the actual terminal size (often via an immediate SIGWINCH) before we
+    // render the first TUI frame. Without this, the first frame may be
+    // garbled or rendered at an incorrect size, which disabling incremental
+    // rendering alone cannot fix for the initial frame.
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
 
   const instance = render(
     process.env['DEBUG'] ? (
@@ -265,9 +292,18 @@ export async function startInteractiveUI(
       patchConsole: false,
       alternateBuffer: useAlternateBuffer,
       incrementalRendering:
-        settings.merged.ui.incrementalRendering !== false && useAlternateBuffer,
+        settings.merged.ui.incrementalRendering !== false &&
+        useAlternateBuffer &&
+        !isShpool,
     },
   );
+
+  if (useAlternateBuffer) {
+    disableLineWrapping();
+    registerCleanup(() => {
+      enableLineWrapping();
+    });
+  }
 
   checkForUpdates(settings)
     .then((info) => {
@@ -308,6 +344,11 @@ export async function main() {
   }
 
   setupUnhandledRejectionHandler();
+
+  const slashCommandConflictHandler = new SlashCommandConflictHandler();
+  slashCommandConflictHandler.start();
+  registerCleanup(() => slashCommandConflictHandler.stop());
+
   const loadSettingsHandle = startupProfiler.start('load_settings');
   const settings = loadSettings();
   loadSettingsHandle?.end();
@@ -325,11 +366,34 @@ export async function main() {
     );
   });
 
-  await cleanupCheckpoints();
+  await Promise.all([
+    cleanupCheckpoints(),
+    cleanupToolOutputFiles(settings.merged),
+  ]);
 
   const parseArgsHandle = startupProfiler.start('parse_arguments');
   const argv = await parseArguments(settings.merged);
   parseArgsHandle?.end();
+
+  if (
+    (argv.allowedTools && argv.allowedTools.length > 0) ||
+    (settings.merged.tools?.allowed && settings.merged.tools.allowed.length > 0)
+  ) {
+    coreEvents.emitFeedback(
+      'warning',
+      'Warning: --allowed-tools cli argument and tools.allowed in settings.json are deprecated and will be removed in 1.0: Migrate to Policy Engine: https://geminicli.com/docs/core/policy-engine/',
+    );
+  }
+
+  if (
+    settings.merged.tools?.exclude &&
+    settings.merged.tools.exclude.length > 0
+  ) {
+    coreEvents.emitFeedback(
+      'warning',
+      'Warning: tools.exclude in settings.json is deprecated and will be removed in 1.0. Migrate to Policy Engine: https://geminicli.com/docs/core/policy-engine/',
+    );
+  }
 
   if (argv.startupMessages) {
     argv.startupMessages.forEach((msg) => {
@@ -372,7 +436,7 @@ export async function main() {
     ) {
       settings.setValue(
         SettingScope.User,
-        'selectedAuthType',
+        'security.auth.selectedType',
         AuthType.COMPUTE_ADC,
       );
     }
@@ -424,8 +488,19 @@ export async function main() {
         await partialConfig.refreshAuth(authType);
       }
     } catch (err) {
-      debugLogger.error('Error authenticating:', err);
-      initialAuthFailed = true;
+      if (err instanceof ValidationCancelledError) {
+        // User cancelled verification, exit immediately.
+        await runExitCleanup();
+        process.exit(ExitCodes.SUCCESS);
+      }
+
+      // If validation is required, we don't treat it as a fatal failure.
+      // We allow the app to start, and the React-based ValidationDialog
+      // will handle it.
+      if (!(err instanceof ValidationRequiredError)) {
+        debugLogger.error('Error authenticating:', err);
+        initialAuthFailed = true;
+      }
     }
   }
 
@@ -506,13 +581,19 @@ export async function main() {
       projectHooks: settings.workspace.settings.hooks,
     });
     loadConfigHandle?.end();
+
+    // Initialize storage immediately after loading config to ensure that
+    // storage-related operations (like listing or resuming sessions) have
+    // access to the project identifier.
+    await config.storage.initialize();
+
     adminControlsListner.setConfig(config);
 
-    if (config.isInteractive() && config.storage && config.getDebugMode()) {
-      const { registerActivityLogger } = await import(
-        './utils/activityLogger.js'
+    if (config.isInteractive() && settings.merged.general.devtools) {
+      const { setupInitialActivityLogger } = await import(
+        './utils/devtoolsService.js'
       );
-      registerActivityLogger(config);
+      await setupInitialActivityLogger(config);
     }
 
     // Register config for telemetry shutdown
@@ -521,7 +602,7 @@ export async function main() {
 
     const policyEngine = config.getPolicyEngine();
     const messageBus = config.getMessageBus();
-    createPolicyUpdater(policyEngine, messageBus);
+    createPolicyUpdater(policyEngine, messageBus, config.storage);
 
     // Register SessionEnd hook to fire on graceful exit
     // This runs before telemetry shutdown in runExitCleanup()
@@ -580,18 +661,6 @@ export async function main() {
       // input showing up in the output.
       process.stdin.setRawMode(true);
 
-      if (
-        shouldEnterAlternateScreen(
-          isAlternateBufferEnabled(settings),
-          config.getScreenReader(),
-        )
-      ) {
-        enterAlternateScreen();
-        disableLineWrapping();
-
-        // Ink will cleanup so there is no need for us to manually cleanup.
-      }
-
       // This cleanup isn't strictly needed but may help in certain situations.
       process.on('SIGTERM', () => {
         process.stdin.setRawMode(wasRaw);
@@ -621,9 +690,20 @@ export async function main() {
     }
 
     let input = config.getQuestion();
-    const startupWarnings = [
-      ...(await getStartupWarnings()),
-      ...(await getUserStartupWarnings(settings.merged)),
+    const useAlternateBuffer = shouldEnterAlternateScreen(
+      isAlternateBufferEnabled(settings),
+      config.getScreenReader(),
+    );
+    const rawStartupWarnings = await getStartupWarnings();
+    const startupWarnings: StartupWarning[] = [
+      ...rawStartupWarnings.map((message) => ({
+        id: `startup-${createHash('sha256').update(message).digest('hex').substring(0, 16)}`,
+        message,
+        priority: WarningPriority.High,
+      })),
+      ...(await getUserStartupWarnings(settings.merged, undefined, {
+        isAlternateBuffer: useAlternateBuffer,
+      })),
     ];
 
     // Handle --resume flag
@@ -805,13 +885,14 @@ export function initializeOutputListenersAndFlush() {
 }
 
 function setupAdminControlsListener() {
-  let pendingSettings: FetchAdminControlsResponse | undefined;
+  let pendingSettings: AdminControlsSettings | undefined;
   let config: Config | undefined;
 
   const messageHandler = (msg: unknown) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
     const message = msg as {
       type?: string;
-      settings?: FetchAdminControlsResponse;
+      settings?: AdminControlsSettings;
     };
     if (message?.type === 'admin-settings' && message.settings) {
       if (config) {

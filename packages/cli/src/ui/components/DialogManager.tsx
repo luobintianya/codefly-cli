@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2025 Google LLC
+ * Copyright 2026 Google LLC
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -33,7 +33,12 @@ import process from 'node:process';
 import { type UseHistoryManagerReturn } from '../hooks/useHistoryManager.js';
 import { AdminSettingsChangedDialog } from './AdminSettingsChangedDialog.js';
 import { IdeTrustChangeDialog } from './IdeTrustChangeDialog.js';
+import { NewAgentsNotification } from './NewAgentsNotification.js';
 import { AgentConfigDialog } from './AgentConfigDialog.js';
+import { SessionRetentionWarningDialog } from './SessionRetentionWarningDialog.js';
+import { useCallback } from 'react';
+import { SettingScope } from '../../config/settings.js';
+import { PolicyUpdateDialog } from './PolicyUpdateDialog.js';
 
 interface DialogManagerProps {
   addItem: UseHistoryManagerReturn['addItem'];
@@ -50,8 +55,60 @@ export const DialogManager = ({
 
   const uiState = useUIState();
   const uiActions = useUIActions();
-  const { constrainHeight, terminalHeight, staticExtraHeight, mainAreaWidth } =
-    uiState;
+  const {
+    constrainHeight,
+    terminalHeight,
+    staticExtraHeight,
+    terminalWidth: uiTerminalWidth,
+    shouldShowRetentionWarning,
+    sessionsToDeleteCount,
+  } = uiState;
+
+  const handleKeep120Days = useCallback(() => {
+    settings.setValue(
+      SettingScope.User,
+      'general.sessionRetention.warningAcknowledged',
+      true,
+    );
+    settings.setValue(
+      SettingScope.User,
+      'general.sessionRetention.enabled',
+      true,
+    );
+    settings.setValue(
+      SettingScope.User,
+      'general.sessionRetention.maxAge',
+      '120d',
+    );
+  }, [settings]);
+
+  const handleKeep30Days = useCallback(() => {
+    settings.setValue(
+      SettingScope.User,
+      'general.sessionRetention.warningAcknowledged',
+      true,
+    );
+    settings.setValue(
+      SettingScope.User,
+      'general.sessionRetention.enabled',
+      true,
+    );
+    settings.setValue(
+      SettingScope.User,
+      'general.sessionRetention.maxAge',
+      '30d',
+    );
+  }, [settings]);
+
+  if (shouldShowRetentionWarning && sessionsToDeleteCount !== undefined) {
+    return (
+      <SessionRetentionWarningDialog
+        onKeep120Days={handleKeep120Days}
+        onKeep30Days={handleKeep30Days}
+        sessionsToDeleteCount={sessionsToDeleteCount ?? 0}
+      />
+    );
+  }
 
   if (uiState.adminSettingsChanged) {
     return <AdminSettingsChangedDialog />;
@@ -59,24 +116,38 @@ export const DialogManager = ({
   if (uiState.showIdeRestartPrompt) {
     return <IdeTrustChangeDialog reason={uiState.ideTrustRestartReason} />;
   }
-  if (uiState.proQuotaRequest) {
+  if (uiState.newAgents) {
+    return (
+      <NewAgentsNotification
+        agents={uiState.newAgents}
+        onSelect={uiActions.handleNewAgentsSelect}
+      />
+    );
+  }
+  if (uiState.quota.proQuotaRequest) {
     return (
       <ProQuotaDialog
-        failedModel={uiState.proQuotaRequest.failedModel}
-        fallbackModel={uiState.proQuotaRequest.fallbackModel}
-        message={uiState.proQuotaRequest.message}
-        isTerminalQuotaError={uiState.proQuotaRequest.isTerminalQuotaError}
-        isModelNotFoundError={!!uiState.proQuotaRequest.isModelNotFoundError}
+        failedModel={uiState.quota.proQuotaRequest.failedModel}
+        fallbackModel={uiState.quota.proQuotaRequest.fallbackModel}
+        message={uiState.quota.proQuotaRequest.message}
+        isTerminalQuotaError={
+          uiState.quota.proQuotaRequest.isTerminalQuotaError
+        }
+        isModelNotFoundError={
+          !!uiState.quota.proQuotaRequest.isModelNotFoundError
+        }
         onChoice={uiActions.handleProQuotaChoice}
       />
     );
   }
-  if (uiState.validationRequest) {
+  if (uiState.quota.validationRequest) {
     return (
       <ValidationDialog
-        validationLink={uiState.validationRequest.validationLink}
-        validationDescription={uiState.validationRequest.validationDescription}
-        learnMoreUrl={uiState.validationRequest.learnMoreUrl}
+        validationLink={uiState.quota.validationRequest.validationLink}
+        validationDescription={
+          uiState.quota.validationRequest.validationDescription
+        }
+        learnMoreUrl={uiState.quota.validationRequest.learnMoreUrl}
         onChoice={uiActions.handleValidationChoice}
       />
     );
@@ -94,6 +165,16 @@ export const DialogManager = ({
       <FolderTrustDialog
         onSelect={uiActions.handleFolderTrustSelect}
         isRestarting={uiState.isRestarting}
+        discoveryResults={uiState.folderDiscoveryResults}
+      />
+    );
+  }
+  if (uiState.isPolicyUpdateDialogOpen) {
+    return (
+      <PolicyUpdateDialog
+        config={config}
+        request={uiState.policyUpdateConfirmationRequest!}
+        onClose={() => uiActions.setIsPolicyUpdateDialogOpen(false)}
       />
     );
   }
@@ -104,11 +185,38 @@ export const DialogManager = ({
       />
     );
   }
-  if (uiState.confirmationRequest) {
+
+  if (uiState.permissionConfirmationRequest) {
+    const files = uiState.permissionConfirmationRequest.files;
+    const filesList = files.map((f) => `- ${f}`).join('\n');
     return (
       <ConsentPrompt
-        prompt={uiState.confirmationRequest.prompt}
-        onConfirm={uiState.confirmationRequest.onConfirm}
+        prompt={`The following files are outside your workspace:\n\n${filesList}\n\nDo you want to allow this read?`}
+        onConfirm={(allowed) => {
+          uiState.permissionConfirmationRequest?.onComplete({ allowed });
+        }}
+        terminalWidth={terminalWidth}
+      />
+    );
+  }
+
+  // commandConfirmationRequest and authConsentRequest are kept separate
+  // to avoid focus deadlocks and state race conditions between the
+  // synchronous command loop and the asynchronous auth flow.
+  if (uiState.commandConfirmationRequest) {
+    return (
+      <ConsentPrompt
+        prompt={uiState.commandConfirmationRequest.prompt}
+        onConfirm={uiState.commandConfirmationRequest.onConfirm}
+        terminalWidth={terminalWidth}
+      />
+    );
+  }
+  if (uiState.authConsentRequest) {
+    return (
+      <ConsentPrompt
+        prompt={uiState.authConsentRequest.prompt}
+        onConfirm={uiState.authConsentRequest.onConfirm}
         terminalWidth={terminalWidth}
       />
     );
@@ -139,7 +247,7 @@ export const DialogManager = ({
           availableTerminalHeight={
             constrainHeight ? terminalHeight - staticExtraHeight : undefined
           }
-          terminalWidth={mainAreaWidth}
+          terminalWidth={uiTerminalWidth}
         />
       </Box>
     );

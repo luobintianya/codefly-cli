@@ -18,6 +18,7 @@ vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
     spawnAsync: vi.fn(),
     Storage: class {
       getProjectTempDir = vi.fn(() => "C:\\User's Files");
+      initialize = vi.fn(() => Promise.resolve(undefined));
     },
   };
 });

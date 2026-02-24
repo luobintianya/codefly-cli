@@ -11,8 +11,6 @@ import { HookAggregator } from './hookAggregator.js';
 import { HookPlanner } from './hookPlanner.js';
 import { HookEventHandler } from './hookEventHandler.js';
 import type { HookRegistryEntry } from './hookRegistry.js';
-import { logs, type Logger } from '@opentelemetry/api-logs';
-import { SERVICE_NAME } from '../telemetry/constants.js';
 import { debugLogger } from '../utils/debugLogger.js';
 import type {
   SessionStartSource,
@@ -155,9 +153,6 @@ export class HookSystem {
   private readonly hookEventHandler: HookEventHandler;
 
   constructor(config: Config) {
-    const logger: Logger = logs.getLogger(SERVICE_NAME);
-    const messageBus = config.getMessageBus();
-
     // Initialize components
     this.hookRegistry = new HookRegistry(config);
     this.hookRunner = new HookRunner(config);
@@ -165,11 +160,9 @@ export class HookSystem {
     this.hookPlanner = new HookPlanner(this.hookRegistry);
     this.hookEventHandler = new HookEventHandler(
       config,
-      logger,
       this.hookPlanner,
       this.hookRunner,
       this.hookAggregator,
-      messageBus, // Pass MessageBus to enable mediated hook execution
     );
   }
 
@@ -269,6 +262,7 @@ export class HookSystem {
 
       const blockingError = hookOutput?.getBlockingError();
       if (blockingError?.blocked) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
         const beforeModelOutput = hookOutput as BeforeModelHookOutput;
         const syntheticResponse = beforeModelOutput.getSyntheticResponse();
         return {
@@ -280,6 +274,7 @@ export class HookSystem {
       }
 
       if (hookOutput) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
         const beforeModelOutput = hookOutput as BeforeModelHookOutput;
         const modifiedRequest =
           beforeModelOutput.applyLLMRequestModifications(llmRequest);
@@ -326,6 +321,7 @@ export class HookSystem {
       }
 
       if (hookOutput) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
         const afterModelOutput = hookOutput as AfterModelHookOutput;
         const modifiedResponse = afterModelOutput.getModifiedResponse();
         if (modifiedResponse) {

@@ -8,6 +8,7 @@ import {
   readPackageUp,
   type PackageJson as BasePackageJson,
 } from 'read-package-up';
+import { debugLogger } from './debugLogger.js';
 
 export type PackageJson = BasePackageJson & {
   config?: {

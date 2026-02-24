@@ -4,8 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import * as fs from 'node:fs';
-import { isSubpath } from '../utils/paths.js';
 import { detectIde, type IdeInfo } from '../ide/detect-ide.js';
 import { ideContextStore } from './ideContext.js';
 import {
@@ -18,13 +16,21 @@ import { getIdeProcessInfo } from './process-utils.js';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
-import { CallToolResultSchema } from '@modelcontextprotocol/sdk/types.js';
-import * as os from 'node:os';
-import * as path from 'node:path';
-import { EnvHttpProxyAgent } from 'undici';
-import { ListToolsResultSchema } from '@modelcontextprotocol/sdk/types.js';
+import {
+  CallToolResultSchema,
+  ListToolsResultSchema,
+} from '@modelcontextprotocol/sdk/types.js';
 import { IDE_REQUEST_TIMEOUT_MS } from './constants.js';
 import { debugLogger } from '../utils/debugLogger.js';
+import {
+  getConnectionConfigFromFile,
+  getIdeServerHost,
+  getPortFromEnv,
+  getStdioConfigFromEnv,
+  validateWorkspacePath,
+  createProxyAwareFetch,
+  type StdioConfig,
+} from './ide-connection-utils.js';
 
 const logger = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -54,27 +60,6 @@ export enum IDEConnectionStatus {
   Connecting = 'connecting',
 }
 
-type StdioConfig = {
-  command: string;
-  args: string[];
-};
-
-type ConnectionConfig = {
-  port?: string;
-  authToken?: string;
-  stdio?: StdioConfig;
-};
-
-function getRealPath(path: string): string {
-  try {
-    return fs.realpathSync(path);
-  } catch (_e) {
-    // If realpathSync fails, it might be because the path doesn't exist.
-    // In that case, we can fall back to the original path.
-    return path;
-  }
-}
-
 /**
  * Manages the connection to and interaction with the IDE server.
  */
@@ -88,10 +73,7 @@ export class IdeClient {
   };
   private currentIde: IdeInfo | undefined;
   private ideProcessInfo: { pid: number; command: string } | undefined;
-  private connectionConfig:
-    | (ConnectionConfig & { workspacePath?: string; ideInfo?: IdeInfo })
-    | undefined;
-  private authToken: string | undefined;
+
   private diffResponses = new Map<string, (result: DiffUpdateResult) => void>();
   private statusListeners = new Set<(state: IDEConnectionState) => void>();
   private trustChangeListeners = new Set<(isTrusted: boolean) => void>();
@@ -110,10 +92,12 @@ export class IdeClient {
       IdeClient.instancePromise = (async () => {
         const client = new IdeClient();
         client.ideProcessInfo = await getIdeProcessInfo();
-        client.connectionConfig = await client.getConnectionConfigFromFile();
+        const connectionConfig = client.ideProcessInfo
+          ? await getConnectionConfigFromFile(client.ideProcessInfo.pid)
+          : undefined;
         client.currentIde = detectIde(
           client.ideProcessInfo,
-          client.connectionConfig?.ideInfo,
+          connectionConfig?.ideInfo,
         );
         return client;
       })();
@@ -150,16 +134,17 @@ export class IdeClient {
 
     this.setState(IDEConnectionStatus.Connecting);
 
-    this.connectionConfig = await this.getConnectionConfigFromFile();
-    this.authToken =
-      this.connectionConfig?.authToken ??
-      process.env['GEMINI_CLI_IDE_AUTH_TOKEN'];
+    const connectionConfig = this.ideProcessInfo
+      ? await getConnectionConfigFromFile(this.ideProcessInfo.pid)
+      : undefined;
+    const authToken =
+      connectionConfig?.authToken ?? process.env['GEMINI_CLI_IDE_AUTH_TOKEN'];
 
     const workspacePath =
-      this.connectionConfig?.workspacePath ??
+      connectionConfig?.workspacePath ??
       process.env['GEMINI_CLI_IDE_WORKSPACE_PATH'];
 
-    const { isValid, error } = IdeClient.validateWorkspacePath(
+    const { isValid, error } = validateWorkspacePath(
       workspacePath,
       process.cwd(),
     );
@@ -169,18 +154,19 @@ export class IdeClient {
       return;
     }
 
-    if (this.connectionConfig) {
-      if (this.connectionConfig.port) {
+    if (connectionConfig) {
+      if (connectionConfig.port) {
         const connected = await this.establishHttpConnection(
-          this.connectionConfig.port,
+          connectionConfig.port,
+          authToken,
         );
         if (connected) {
           return;
         }
       }
-      if (this.connectionConfig.stdio) {
+      if (connectionConfig.stdio) {
         const connected = await this.establishStdioConnection(
-          this.connectionConfig.stdio,
+          connectionConfig.stdio,
         );
         if (connected) {
           return;
@@ -188,15 +174,18 @@ export class IdeClient {
       }
     }
 
-    const portFromEnv = this.getPortFromEnv();
+    const portFromEnv = getPortFromEnv();
     if (portFromEnv) {
-      const connected = await this.establishHttpConnection(portFromEnv);
+      const connected = await this.establishHttpConnection(
+        portFromEnv,
+        authToken,
+      );
       if (connected) {
         return;
       }
     }
 
-    const stdioConfigFromEnv = this.getStdioConfigFromEnv();
+    const stdioConfigFromEnv = getStdioConfigFromEnv();
     if (stdioConfigFromEnv) {
       const connected = await this.establishStdioConnection(stdioConfigFromEnv);
       if (connected) {
@@ -356,8 +345,10 @@ export class IdeClient {
 
       if (textPart?.text) {
         try {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           const parsedJson = JSON.parse(textPart.text);
           if (parsedJson && typeof parsedJson.content === 'string') {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
             return parsedJson.content;
           }
           if (parsedJson && parsedJson.content === null) {
@@ -776,7 +767,10 @@ export class IdeClient {
     );
   }
 
-  private async establishHttpConnection(port: string): Promise<boolean> {
+  private async establishHttpConnection(
+    port: string,
+    authToken: string | undefined,
+  ): Promise<boolean> {
     let transport: StreamableHTTPClientTransport | undefined;
     try {
       const ideServerHost = getIdeServerHost();
@@ -794,11 +788,9 @@ export class IdeClient {
         version: '1.0.0',
       });
       transport = new StreamableHTTPClientTransport(new URL(serverUrl), {
-        fetch: await this.createProxyAwareFetch(ideServerHost),
+        fetch: await createProxyAwareFetch(ideServerHost),
         requestInit: {
-          headers: this.authToken
-            ? { Authorization: `Bearer ${this.authToken}` }
-            : {},
+          headers: authToken ? { Authorization: `Bearer ${authToken}` } : {},
         },
       });
       await this.client.connect(transport);
@@ -851,33 +843,4 @@ export class IdeClient {
       return false;
     }
   }
-}
-
-export function getIdeServerHost() {
-  let host: string;
-  host = '127.0.0.1';
-  if (isInContainer()) {
-    // when ssh-connection (e.g. remote-ssh) or devcontainer setup:
-    // --> host must be '127.0.0.1' to have cli companion working
-    if (!isSshConnected() && !isDevContainer()) {
-      host = 'host.docker.internal';
-    }
-  }
-  logger.debug(`[getIdeServerHost] Mapping IdeServerHost to '${host}'`);
-  return host;
-}
-
-function isInContainer() {
-  return fs.existsSync('/.dockerenv') || fs.existsSync('/run/.containerenv');
-}
-
-function isSshConnected() {
-  return !!process.env['SSH_CONNECTION'];
-}
-
-function isDevContainer() {
-  return !!(
-    process.env['VSCODE_REMOTE_CONTAINERS_SESSION'] ||
-    process.env['REMOTE_CONTAINERS']
-  );
 }

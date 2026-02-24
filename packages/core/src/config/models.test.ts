@@ -25,6 +25,102 @@ import {
   DEFAULT_CODEFLY_MODEL_AUTO,
 } from './models.js';
 
+describe('isPreviewModel', () => {
+  it('should return true for preview models', () => {
+    expect(isPreviewModel(PREVIEW_GEMINI_MODEL)).toBe(true);
+    expect(isPreviewModel(PREVIEW_GEMINI_3_1_MODEL)).toBe(true);
+    expect(isPreviewModel(PREVIEW_GEMINI_3_1_CUSTOM_TOOLS_MODEL)).toBe(true);
+    expect(isPreviewModel(PREVIEW_GEMINI_FLASH_MODEL)).toBe(true);
+    expect(isPreviewModel(PREVIEW_GEMINI_MODEL_AUTO)).toBe(true);
+  });
+
+  it('should return false for non-preview models', () => {
+    expect(isPreviewModel(DEFAULT_GEMINI_MODEL)).toBe(false);
+    expect(isPreviewModel('gemini-1.5-pro')).toBe(false);
+  });
+});
+
+describe('isProModel', () => {
+  it('should return true for models containing "pro"', () => {
+    expect(isProModel('gemini-3-pro-preview')).toBe(true);
+    expect(isProModel('gemini-2.5-pro')).toBe(true);
+    expect(isProModel('pro')).toBe(true);
+  });
+
+  it('should return false for models without "pro"', () => {
+    expect(isProModel('gemini-3-flash-preview')).toBe(false);
+    expect(isProModel('gemini-2.5-flash')).toBe(false);
+    expect(isProModel('auto')).toBe(false);
+  });
+});
+
+describe('isCustomModel', () => {
+  it('should return true for models not starting with gemini-', () => {
+    expect(isCustomModel('testing')).toBe(true);
+    expect(isCustomModel('gpt-4')).toBe(true);
+    expect(isCustomModel('claude-3')).toBe(true);
+  });
+
+  it('should return false for Gemini models', () => {
+    expect(isCustomModel('gemini-1.5-pro')).toBe(false);
+    expect(isCustomModel('gemini-2.0-flash')).toBe(false);
+    expect(isCustomModel('gemini-3-pro-preview')).toBe(false);
+  });
+
+  it('should return false for aliases that resolve to Gemini models', () => {
+    expect(isCustomModel(GEMINI_MODEL_ALIAS_AUTO)).toBe(false);
+    expect(isCustomModel(GEMINI_MODEL_ALIAS_PRO)).toBe(false);
+  });
+});
+
+describe('supportsModernFeatures', () => {
+  it('should return true for Gemini 3 models', () => {
+    expect(supportsModernFeatures('gemini-3-pro-preview')).toBe(true);
+    expect(supportsModernFeatures('gemini-3-flash-preview')).toBe(true);
+  });
+
+  it('should return true for custom models', () => {
+    expect(supportsModernFeatures('testing')).toBe(true);
+    expect(supportsModernFeatures('some-custom-model')).toBe(true);
+  });
+
+  it('should return false for older Gemini models', () => {
+    expect(supportsModernFeatures('gemini-2.5-pro')).toBe(false);
+    expect(supportsModernFeatures('gemini-2.5-flash')).toBe(false);
+    expect(supportsModernFeatures('gemini-2.0-flash')).toBe(false);
+    expect(supportsModernFeatures('gemini-1.5-pro')).toBe(false);
+    expect(supportsModernFeatures('gemini-1.0-pro')).toBe(false);
+  });
+
+  it('should return true for modern aliases', () => {
+    expect(supportsModernFeatures(GEMINI_MODEL_ALIAS_PRO)).toBe(true);
+    expect(supportsModernFeatures(GEMINI_MODEL_ALIAS_AUTO)).toBe(true);
+  });
+});
+
+describe('isGemini3Model', () => {
+  it('should return true for gemini-3 models', () => {
+    expect(isGemini3Model('gemini-3-pro-preview')).toBe(true);
+    expect(isGemini3Model('gemini-3-flash-preview')).toBe(true);
+  });
+
+  it('should return true for aliases that resolve to Gemini 3', () => {
+    expect(isGemini3Model(GEMINI_MODEL_ALIAS_AUTO)).toBe(true);
+    expect(isGemini3Model(GEMINI_MODEL_ALIAS_PRO)).toBe(true);
+    expect(isGemini3Model(PREVIEW_GEMINI_MODEL_AUTO)).toBe(true);
+  });
+
+  it('should return false for Gemini 2 models', () => {
+    expect(isGemini3Model('gemini-2.5-pro')).toBe(false);
+    expect(isGemini3Model('gemini-2.5-flash')).toBe(false);
+    expect(isGemini3Model(DEFAULT_GEMINI_MODEL_AUTO)).toBe(false);
+  });
+
+  it('should return false for arbitrary strings', () => {
+    expect(isGemini3Model('gpt-4')).toBe(false);
+  });
+});
+
 describe('getDisplayString', () => {
   it('should return Auto (Gemini 3) for preview auto model', () => {
     expect(getDisplayString(PREVIEW_CODEFLY_MODEL_AUTO)).toBe(
@@ -53,6 +149,12 @@ describe('getDisplayString', () => {
     );
     expect(getDisplayString(CODEFLY_MODEL_ALIAS_FLASH, true)).toBe(
       PREVIEW_CODEFLY_FLASH_MODEL,
+    );
+  });
+
+  it('should return PREVIEW_GEMINI_3_1_MODEL for PREVIEW_GEMINI_3_1_CUSTOM_TOOLS_MODEL', () => {
+    expect(getDisplayString(PREVIEW_GEMINI_3_1_CUSTOM_TOOLS_MODEL)).toBe(
+      PREVIEW_GEMINI_3_1_MODEL,
     );
   });
 
@@ -99,14 +201,14 @@ describe('resolveModel', () => {
       expect(resolveModel(DEFAULT_CODEFLY_FLASH_MODEL, false)).toBe(
         DEFAULT_CODEFLY_FLASH_MODEL,
       );
-      expect(resolveModel(DEFAULT_GEMINI_FLASH_LITE_MODEL, false)).toBe(
+      expect(resolveModel(DEFAULT_GEMINI_FLASH_LITE_MODEL)).toBe(
         DEFAULT_GEMINI_FLASH_LITE_MODEL,
       );
     });
 
     it('should return a custom model name when requested', () => {
       const customModel = 'custom-model-v1';
-      const model = resolveModel(customModel, false);
+      const model = resolveModel(customModel);
       expect(model).toBe(customModel);
     });
 

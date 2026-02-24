@@ -69,7 +69,10 @@ export function getInstallationInfo(
         updateMessage: 'Running via npx, update not applicable.',
       };
     }
-    if (realPath.includes('/.pnpm/_pnpx')) {
+    if (
+      realPath.includes('/.pnpm/_pnpx') ||
+      realPath.includes('/.cache/pnpm/dlx')
+    ) {
       return {
         packageManager: PackageManager.PNPX,
         isGlobal: false,

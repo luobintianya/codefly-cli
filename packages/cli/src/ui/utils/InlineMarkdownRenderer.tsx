@@ -24,9 +24,10 @@ interface RenderInlineProps {
 }
 
 const RenderInlineInternal: React.FC<RenderInlineProps> = ({
-  text,
+  text: rawText,
   defaultColor,
 }) => {
+  const text = stripUnsafeCharacters(rawText);
   const baseColor = defaultColor ?? theme.text.primary;
   // Early return for plain text without markdown or URLs
   if (!/[*_~`<[https?:]/.test(text)) {
@@ -171,19 +172,3 @@ const RenderInlineInternal: React.FC<RenderInlineProps> = ({
 };
 
 export const RenderInline = React.memo(RenderInlineInternal);
-
-/**
- * Utility function to get the plain text length of a string with markdown formatting
- * This is useful for calculating column widths in tables
- */
-export const getPlainTextLength = (text: string): number => {
-  const cleanText = text
-    .replace(/\*\*(.*?)\*\*/g, '$1')
-    .replace(/\*(.+?)\*/g, '$1')
-    .replace(/_(.*?)_/g, '$1')
-    .replace(/~~(.*?)~~/g, '$1')
-    .replace(/`(.*?)`/g, '$1')
-    .replace(/<u>(.*?)<\/u>/g, '$1')
-    .replace(/.*\[(.*?)\]\(.*\)/g, '$1');
-  return stringWidth(cleanText);
-};

@@ -17,6 +17,7 @@ import { CODEFLY_DIR, homedir } from './paths.js';
 import type { ExtensionLoader } from './extensionLoader.js';
 import { debugLogger } from './debugLogger.js';
 import type { Config } from '../config/config.js';
+import type { HierarchicalMemory } from '../config/memory.js';
 import { CoreEvent, coreEvents } from './events.js';
 
 // Simple console logger, similar to the one previously in CLI's config.ts
@@ -39,7 +40,7 @@ export interface CodeflyFileContent {
 }
 
 async function findProjectRoot(startDir: string): Promise<string | null> {
-  let currentDir = path.resolve(startDir);
+  let currentDir = normalizePath(startDir);
   while (true) {
     const gitPath = path.join(currentDir, '.git');
     try {
@@ -54,6 +55,7 @@ async function findProjectRoot(startDir: string): Promise<string | null> {
         typeof error === 'object' &&
         error !== null &&
         'code' in error &&
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
         (error as { code: string }).code === 'ENOENT';
 
       // Only log unexpected errors in non-test environments
@@ -63,6 +65,7 @@ async function findProjectRoot(startDir: string): Promise<string | null> {
 
       if (!isENOENT && !isTestEnv) {
         if (typeof error === 'object' && error !== null && 'code' in error) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
           const fsError = error as { code: string; message: string };
           logger.warn(
             `Error checking for .git directory at ${gitPath}: ${fsError.message}`,
@@ -74,7 +77,7 @@ async function findProjectRoot(startDir: string): Promise<string | null> {
         }
       }
     }
-    const parentDir = path.dirname(currentDir);
+    const parentDir = normalizePath(path.dirname(currentDir));
     if (parentDir === currentDir) {
       return null;
     }
@@ -91,7 +94,7 @@ async function getCodeflyMdFilePathsInternal(
   folderTrust: boolean,
   fileFilteringOptions: FileFilteringOptions,
   maxDirs: number,
-): Promise<string[]> {
+): Promise<{ global: string[]; project: string[] }> {
   const dirs = new Set<string>([
     ...includeDirectoriesToReadCodefly,
     currentWorkingDirectory,
@@ -100,7 +103,8 @@ async function getCodeflyMdFilePathsInternal(
   // Process directories in parallel with concurrency limit to prevent EMFILE errors
   const CONCURRENT_LIMIT = 10;
   const dirsArray = Array.from(dirs);
-  const pathsArrays: string[][] = [];
+  const globalPaths = new Set<string>();
+  const projectPaths = new Set<string>();
 
   for (let i = 0; i < dirsArray.length; i += CONCURRENT_LIMIT) {
     const batch = dirsArray.slice(i, i + CONCURRENT_LIMIT);
@@ -120,18 +124,21 @@ async function getCodeflyMdFilePathsInternal(
 
     for (const result of batchResults) {
       if (result.status === 'fulfilled') {
-        pathsArrays.push(result.value);
+        result.value.global.forEach((p) => globalPaths.add(p));
+        result.value.project.forEach((p) => projectPaths.add(p));
       } else {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const error = result.reason;
         const message = error instanceof Error ? error.message : String(error);
         logger.error(`Error discovering files in directory: ${message}`);
-        // Continue processing other directories
       }
     }
   }
 
-  const paths = pathsArrays.flat();
-  return Array.from(new Set<string>(paths));
+  return {
+    global: Array.from(globalPaths),
+    project: Array.from(projectPaths),
+  };
 }
 
 async function getCodeflyMdFilePathsInternalForEachDir(
@@ -157,7 +164,7 @@ async function getCodeflyMdFilePathsInternalForEachDir(
     // This part that finds the global file always runs.
     try {
       await fs.access(globalMemoryPath, fsSync.constants.R_OK);
-      allPaths.add(globalMemoryPath);
+      globalPaths.add(globalMemoryPath);
       if (debugMode)
         logger.debug(
           `Found readable global ${codeflyMdFilename}: ${globalMemoryPath}`,
@@ -169,7 +176,7 @@ async function getCodeflyMdFilePathsInternalForEachDir(
     // FIX: Only perform the workspace search (upward and downward scans)
     // if a valid currentWorkingDirectory is provided.
     if (dir && folderTrust) {
-      const resolvedCwd = path.resolve(dir);
+      const resolvedCwd = normalizePath(dir);
       if (debugMode)
         logger.debug(
           `Searching for ${codeflyMdFilename} starting from CWD: ${resolvedCwd}`,
@@ -182,8 +189,8 @@ async function getCodeflyMdFilePathsInternalForEachDir(
       const upwardPaths: string[] = [];
       let currentDir = resolvedCwd;
       const ultimateStopDir = projectRoot
-        ? path.dirname(projectRoot)
-        : path.dirname(resolvedHome);
+        ? normalizePath(path.dirname(projectRoot))
+        : normalizePath(path.dirname(resolvedHome));
 
       while (currentDir && currentDir !== path.dirname(currentDir)) {
         if (currentDir === path.join(resolvedHome, CODEFLY_DIR)) {
@@ -204,9 +211,9 @@ async function getCodeflyMdFilePathsInternalForEachDir(
           break;
         }
 
-        currentDir = path.dirname(currentDir);
+        currentDir = normalizePath(path.dirname(currentDir));
       }
-      upwardPaths.forEach((p) => allPaths.add(p));
+      upwardPaths.forEach((p) => projectPaths.add(p));
 
       const mergedOptions: FileFilteringOptions = {
         ...DEFAULT_MEMORY_FILE_FILTERING_OPTIONS,
@@ -222,7 +229,7 @@ async function getCodeflyMdFilePathsInternalForEachDir(
       });
       downwardPaths.sort();
       for (const dPath of downwardPaths) {
-        allPaths.add(dPath);
+        projectPaths.add(normalizePath(dPath));
       }
     }
   }
@@ -293,6 +300,7 @@ async function readCodeflyMdFiles(
       } else {
         // This case shouldn't happen since we catch all errors above,
         // but handle it for completeness
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const error = result.reason;
         const message = error instanceof Error ? error.message : String(error);
         logger.error(`Unexpected error processing file: ${message}`);
@@ -311,6 +319,7 @@ export function concatenateInstructions(
   return instructionContents
     .filter((item) => typeof item.content === 'string')
     .map((item) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       const trimmedContent = (item.content as string).trim();
       if (trimmedContent.length === 0) {
         return null;
@@ -328,9 +337,9 @@ export interface MemoryLoadResult {
   files: Array<{ path: string; content: string }>;
 }
 
-export async function loadGlobalMemory(
+export async function getGlobalMemoryPaths(
   debugMode: boolean = false,
-): Promise<MemoryLoadResult> {
+): Promise<string[]> {
   const userHome = homedir();
   const codeflyMdFilenames = getAllCodeflyMdFilenames();
 
@@ -343,24 +352,21 @@ export async function loadGlobalMemory(
       }
       return globalPath;
     } catch {
-      debugLogger.debug('A global memory file was not found.');
       return null;
     }
   });
 
-  const foundPaths = (await Promise.all(accessChecks)).filter(
+  return (await Promise.all(accessChecks)).filter(
     (p): p is string => p !== null,
   );
+}
 
   const contents = await readCodeflyMdFiles(foundPaths, debugMode, 'tree');
 
   return {
-    files: contents
-      .filter((item) => item.content !== null)
-      .map((item) => ({
-        path: item.filePath,
-        content: item.content as string,
-      })),
+    global: getConcatenated(paths.global),
+    extension: getConcatenated(paths.extension),
+    project: getConcatenated(paths.project),
   };
 }
 
@@ -409,13 +415,11 @@ async function findUpwardCodeflyFiles(
 
     upwardPaths.unshift(...foundPathsInDir);
 
-    if (
-      currentDir === resolvedStopDir ||
-      currentDir === path.dirname(currentDir)
-    ) {
+    const parentDir = normalizePath(path.dirname(currentDir));
+    if (currentDir === resolvedStopDir || currentDir === parentDir) {
       break;
     }
-    currentDir = path.dirname(currentDir);
+    currentDir = parentDir;
   }
   return upwardPaths;
 }
@@ -462,7 +466,7 @@ export async function loadEnvironmentMemory(
 }
 
 export interface LoadServerHierarchicalMemoryResponse {
-  memoryContent: string;
+  memoryContent: HierarchicalMemory;
   fileCount: number;
   filePaths: string[];
 }
@@ -483,8 +487,10 @@ export async function loadServerHierarchicalMemory(
   maxDirs: number = 200,
 ): Promise<LoadServerHierarchicalMemoryResponse> {
   // FIX: Use real, canonical paths for a reliable comparison to handle symlinks.
-  const realCwd = await fs.realpath(path.resolve(currentWorkingDirectory));
-  const realHome = await fs.realpath(path.resolve(homedir()));
+  const realCwd = normalizePath(
+    await fs.realpath(path.resolve(currentWorkingDirectory)),
+  );
+  const realHome = normalizePath(await fs.realpath(path.resolve(homedir())));
   const isHomeDirectory = realCwd === realHome;
 
   // If it is the home directory, pass an empty string to the core memory
@@ -510,15 +516,7 @@ export async function loadServerHierarchicalMemory(
     maxDirs,
   );
 
-  // Add extension file paths separately since they may be conditionally enabled.
-  filePaths.push(
-    ...extensionLoader
-      .getExtensions()
-      .filter((ext) => ext.isActive)
-      .flatMap((ext) => ext.contextFiles),
-  );
-
-  if (filePaths.length === 0) {
+  if (allFilePaths.length === 0) {
     if (debugMode)
       logger.debug('No CODEFLY.md files found in hierarchy of the workspace.');
     return { memoryContent: '', fileCount: 0, filePaths: [] };
@@ -528,23 +526,23 @@ export async function loadServerHierarchicalMemory(
     debugMode,
     importFormat,
   );
-  // Pass CWD for relative path display in concatenated content
-  const combinedInstructions = concatenateInstructions(
-    contentsWithPaths,
+  const contentsMap = new Map(allContents.map((c) => [c.filePath, c]));
+
+  // 3. CATEGORIZE: Back into Global, Project, Extension
+  const hierarchicalMemory = categorizeAndConcatenate(
+    {
+      global: discoveryResult.global,
+      extension: extensionPaths,
+      project: discoveryResult.project,
+    },
+    contentsMap,
     currentWorkingDirectory,
   );
-  if (debugMode)
-    logger.debug(
-      `Combined instructions length: ${combinedInstructions.length}`,
-    );
-  if (debugMode && combinedInstructions.length > 0)
-    logger.debug(
-      `Combined instructions (snippet): ${combinedInstructions.substring(0, 500)}...`,
-    );
+
   return {
-    memoryContent: combinedInstructions,
-    fileCount: contentsWithPaths.length,
-    filePaths,
+    memoryContent: hierarchicalMemory,
+    fileCount: allContents.filter((c) => c.content !== null).length,
+    filePaths: allFilePaths,
   };
 }
 
@@ -570,9 +568,12 @@ export async function refreshServerHierarchicalMemory(config: Config) {
   );
   const mcpInstructions =
     config.getMcpClientManager()?.getMcpInstructions() || '';
-  const finalMemory = [result.memoryContent, mcpInstructions.trimStart()]
-    .filter(Boolean)
-    .join('\n\n');
+  const finalMemory: HierarchicalMemory = {
+    ...result.memoryContent,
+    project: [result.memoryContent.project, mcpInstructions.trimStart()]
+      .filter(Boolean)
+      .join('\n\n'),
+  };
   config.setUserMemory(finalMemory);
   config.setCodeflyMdFileCount(result.fileCount);
   config.setCodeflyMdFilePaths(result.filePaths);
@@ -586,17 +587,23 @@ export async function loadJitSubdirectoryMemory(
   alreadyLoadedPaths: Set<string>,
   debugMode: boolean = false,
 ): Promise<MemoryLoadResult> {
-  const resolvedTarget = path.resolve(targetPath);
+  const resolvedTarget = normalizePath(targetPath);
   let bestRoot: string | null = null;
 
   // Find the deepest trusted root that contains the target path
   for (const root of trustedRoots) {
-    const resolvedRoot = path.resolve(root);
+    const resolvedRoot = normalizePath(root);
+    const resolvedRootWithTrailing = resolvedRoot.endsWith(path.sep)
+      ? resolvedRoot
+      : resolvedRoot + path.sep;
+
     if (
-      resolvedTarget.startsWith(resolvedRoot) &&
-      (!bestRoot || resolvedRoot.length > bestRoot.length)
+      resolvedTarget === resolvedRoot ||
+      resolvedTarget.startsWith(resolvedRootWithTrailing)
     ) {
-      bestRoot = resolvedRoot;
+      if (!bestRoot || resolvedRoot.length > bestRoot.length) {
+        bestRoot = resolvedRoot;
+      }
     }
   }
 
@@ -640,6 +647,7 @@ export async function loadJitSubdirectoryMemory(
       .filter((item) => item.content !== null)
       .map((item) => ({
         path: item.filePath,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
         content: item.content as string,
       })),
   };

@@ -5,6 +5,7 @@
  */
 
 import type { Config } from '../config/config.js';
+import { flattenMemory } from '../config/memory.js';
 import { refreshServerHierarchicalMemory } from '../utils/memoryDiscovery.js';
 import type { MessageActionReturn, ToolActionReturn } from './types.js';
 
@@ -55,11 +56,11 @@ export async function refreshMemory(
     fileCount = config.getCodeflyMdFileCount();
   } else {
     const result = await refreshServerHierarchicalMemory(config);
-    memoryContent = result.memoryContent;
+    memoryContent = flattenMemory(result.memoryContent);
     fileCount = result.fileCount;
   }
 
-  await config.updateSystemInstructionIfInitialized();
+  config.updateSystemInstructionIfInitialized();
   let content: string;
 
   if (memoryContent.length > 0) {

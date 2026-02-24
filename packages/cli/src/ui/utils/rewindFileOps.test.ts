@@ -41,7 +41,7 @@ vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
       debug: vi.fn(),
     },
     getFileDiffFromResultDisplay: vi.fn(),
-    computeAddedAndRemovedLines: vi.fn(),
+    computeModelAddedAndRemovedLines: vi.fn(),
   };
 });
 
@@ -88,7 +88,7 @@ describe('rewindFileOps', () => {
         },
         fileDiff: 'diff',
       });
-      vi.mocked(computeAddedAndRemovedLines).mockReturnValue({
+      vi.mocked(computeModelAddedAndRemovedLines).mockReturnValue({
         addedLines: 3,
         removedLines: 3,
       });
@@ -164,7 +164,7 @@ describe('rewindFileOps', () => {
           fileDiff: 'diff2',
         });
 
-      vi.mocked(computeAddedAndRemovedLines)
+      vi.mocked(computeModelAddedAndRemovedLines)
         .mockReturnValueOnce({ addedLines: 5, removedLines: 3 })
         .mockReturnValueOnce({ addedLines: 4, removedLines: 0 });
 

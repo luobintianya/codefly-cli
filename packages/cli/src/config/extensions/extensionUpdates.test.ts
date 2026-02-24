@@ -5,14 +5,10 @@
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import * as path from 'node:path';
-import * as os from 'node:os';
 import * as fs from 'node:fs';
 import { getMissingSettings } from './extensionSettings.js';
 import type { ExtensionConfig } from '../extension.js';
-import { ExtensionStorage } from './storage.js';
 import {
-  KeychainTokenStorage,
   debugLogger,
   type ExtensionInstallMetadata,
   type CodeflyCLIExtension,
@@ -22,6 +18,8 @@ import { EXTENSION_SETTINGS_FILENAME } from './variables.js';
 import { ExtensionManager } from '../extension-manager.js';
 import { createTestMergedSettings } from '../settings.js';
 
+// --- Mocks ---
+
 vi.mock('node:fs', async (importOriginal) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const actual = await importOriginal<any>();
@@ -29,11 +27,23 @@ vi.mock('node:fs', async (importOriginal) => {
     ...actual,
     default: {
       ...actual.default,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      existsSync: vi.fn((...args: any[]) => actual.existsSync(...args)),
+      existsSync: vi.fn(),
+      statSync: vi.fn(),
+      lstatSync: vi.fn(),
+      realpathSync: vi.fn((p) => p),
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    existsSync: vi.fn((...args: any[]) => actual.existsSync(...args)),
+    existsSync: vi.fn(),
+    statSync: vi.fn(),
+    lstatSync: vi.fn(),
+    realpathSync: vi.fn((p) => p),
+    promises: {
+      ...actual.promises,
+      mkdir: vi.fn(),
+      writeFile: vi.fn(),
+      rm: vi.fn(),
+      cp: vi.fn(),
+      readFile: vi.fn(),
+    },
   };
 });
 
@@ -49,60 +59,90 @@ vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
       log: vi.fn(),
     },
     coreEvents: {
-      emitFeedback: vi.fn(), // Mock emitFeedback
+      emitFeedback: vi.fn(),
       on: vi.fn(),
       off: vi.fn(),
+      emitConsoleLog: vi.fn(),
     },
+    loadSkillsFromDir: vi.fn().mockResolvedValue([]),
+    loadAgentsFromDirectory: vi
+      .fn()
+      .mockResolvedValue({ agents: [], errors: [] }),
+    logExtensionInstallEvent: vi.fn().mockResolvedValue(undefined),
+    logExtensionUpdateEvent: vi.fn().mockResolvedValue(undefined),
+    logExtensionUninstall: vi.fn().mockResolvedValue(undefined),
+    logExtensionEnable: vi.fn().mockResolvedValue(undefined),
+    logExtensionDisable: vi.fn().mockResolvedValue(undefined),
+    Config: vi.fn().mockImplementation(() => ({
+      getEnableExtensionReloading: vi.fn().mockReturnValue(true),
+    })),
   };
 });
 
-// Mock os.homedir because ExtensionStorage uses it
+vi.mock('./consent.js', () => ({
+  maybeRequestConsentOrFail: vi.fn().mockResolvedValue(undefined),
+}));
+
+vi.mock('./extensionSettings.js', async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import('./extensionSettings.js')>();
+  return {
+    ...actual,
+    getEnvContents: vi.fn().mockResolvedValue({}),
+    getMissingSettings: vi.fn(), // We will mock this implementation per test
+  };
+});
+
+vi.mock('../trustedFolders.js', () => ({
+  isWorkspaceTrusted: vi.fn().mockReturnValue({ isTrusted: true }), // Default to trusted to simplify flow
+  loadTrustedFolders: vi.fn().mockReturnValue({
+    setValue: vi.fn().mockResolvedValue(undefined),
+  }),
+  TrustLevel: { TRUST_FOLDER: 'TRUST_FOLDER' },
+}));
+
+// Mock ExtensionStorage to avoid real FS paths
+vi.mock('./storage.js', () => ({
+  ExtensionStorage: class {
+    constructor(public name: string) {}
+    getExtensionDir() {
+      return `/mock/extensions/${this.name}`;
+    }
+    static getUserExtensionsDir() {
+      return '/mock/extensions';
+    }
+    static createTmpDir() {
+      return Promise.resolve('/mock/tmp');
+    }
+  },
+}));
+
 vi.mock('os', async (importOriginal) => {
-  const mockedOs = await importOriginal<typeof os>();
+  const mockedOs = await importOriginal<typeof import('node:os')>();
   return {
     ...mockedOs,
-    homedir: vi.fn(),
+    homedir: vi.fn().mockReturnValue('/mock/home'),
   };
 });
 
 describe('extensionUpdates', () => {
-  let tempHomeDir: string;
   let tempWorkspaceDir: string;
-  let extensionDir: string;
-  let mockKeychainData: Record<string, Record<string, string>>;
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockKeychainData = {};
+    // Default fs mocks
+    vi.mocked(fs.promises.mkdir).mockResolvedValue(undefined);
+    vi.mocked(fs.promises.writeFile).mockResolvedValue(undefined);
+    vi.mocked(fs.promises.rm).mockResolvedValue(undefined);
+    vi.mocked(fs.promises.cp).mockResolvedValue(undefined);
 
-    // Mock Keychain
-    vi.mocked(KeychainTokenStorage).mockImplementation(
-      (serviceName: string) => {
-        if (!mockKeychainData[serviceName]) {
-          mockKeychainData[serviceName] = {};
-        }
-        const keychainData = mockKeychainData[serviceName];
-        return {
-          getSecret: vi
-            .fn()
-            .mockImplementation(
-              async (key: string) => keychainData[key] || null,
-            ),
-          setSecret: vi
-            .fn()
-            .mockImplementation(async (key: string, value: string) => {
-              keychainData[key] = value;
-            }),
-          deleteSecret: vi.fn().mockImplementation(async (key: string) => {
-            delete keychainData[key];
-          }),
-          listSecrets: vi
-            .fn()
-            .mockImplementation(async () => Object.keys(keychainData)),
-          isAvailable: vi.fn().mockResolvedValue(true),
-        } as unknown as KeychainTokenStorage;
-      },
-    );
+    // Allow directories to exist by default to satisfy Config/WorkspaceContext checks
+    vi.mocked(fs.existsSync).mockReturnValue(true);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    vi.mocked(fs.statSync).mockReturnValue({ isDirectory: () => true } as any);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    vi.mocked(fs.lstatSync).mockReturnValue({ isDirectory: () => true } as any);
+    vi.mocked(fs.realpathSync).mockImplementation((p) => p as string);
 
     // Setup Temp Dirs
     tempHomeDir = fs.mkdtempSync(
@@ -128,8 +168,6 @@ describe('extensionUpdates', () => {
   });
 
   afterEach(() => {
-    fs.rmSync(tempHomeDir, { recursive: true, force: true });
-    fs.rmSync(tempWorkspaceDir, { recursive: true, force: true });
     vi.restoreAllMocks();
   });
 

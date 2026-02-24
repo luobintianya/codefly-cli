@@ -18,8 +18,13 @@ describe('Tips', () => {
       getCodeflyMdFileCount: vi.fn().mockReturnValue(count),
     } as unknown as Config;
 
-    const { lastFrame } = render(<Tips config={config} />);
-    const output = lastFrame();
-    expect(output).toContain(expectedText);
-  });
+      const { lastFrame, waitUntilReady, unmount } = render(
+        <Tips config={config} />,
+      );
+      await waitUntilReady();
+      const output = lastFrame();
+      expect(output).toContain(expectedText);
+      unmount();
+    },
+  );
 });

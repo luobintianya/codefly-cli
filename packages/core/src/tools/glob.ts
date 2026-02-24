@@ -14,9 +14,11 @@ import { shortenPath, makeRelative } from '../utils/paths.js';
 import { type Config } from '../config/config.js';
 import { DEFAULT_FILE_FILTERING_OPTIONS } from '../config/constants.js';
 import { ToolErrorType } from './tool-error.js';
-import { GLOB_TOOL_NAME } from './tool-names.js';
+import { GLOB_TOOL_NAME, GLOB_DISPLAY_NAME } from './tool-names.js';
 import { getErrorMessage } from '../utils/errors.js';
 import { debugLogger } from '../utils/debugLogger.js';
+import { GLOB_DEFINITION } from './definitions/coreTools.js';
+import { resolveToolDeclaration } from './definitions/resolver.js';
 
 // Subset of 'Path' interface provided by 'glob' that we can implement for testing
 export interface GlobPath {
@@ -123,13 +125,16 @@ class GlobToolInvocation extends BaseToolInvocation<
           this.config.getTargetDir(),
           this.params.dir_path,
         );
-        if (!workspaceContext.isPathWithinWorkspace(searchDirAbsolute)) {
-          const rawError = `Error: Path "${this.params.dir_path}" is not within any workspace directory`;
+        const validationError = this.config.validatePathAccess(
+          searchDirAbsolute,
+          'read',
+        );
+        if (validationError) {
           return {
-            llmContent: rawError,
-            returnDisplay: `Path is not within workspace`,
+            llmContent: validationError,
+            returnDisplay: 'Path not in workspace.',
             error: {
-              message: rawError,
+              message: validationError,
               type: ToolErrorType.PATH_NOT_IN_WORKSPACE,
             },
           };
@@ -266,8 +271,8 @@ export class GlobTool extends BaseDeclarativeTool<GlobToolParams, ToolResult> {
   ) {
     super(
       GlobTool.Name,
-      'FindFiles',
-      'Efficiently finds files matching specific glob patterns (e.g., `src/**/*.ts`, `**/*.md`), returning absolute paths sorted by modification time (newest first). Ideal for quickly locating files based on their name or path structure, especially in large codebases.',
+      GLOB_DISPLAY_NAME,
+      GLOB_DEFINITION.base.description!,
       Kind.Search,
       {
         properties: {
@@ -317,10 +322,12 @@ export class GlobTool extends BaseDeclarativeTool<GlobToolParams, ToolResult> {
       params.dir_path || '.',
     );
 
-    const workspaceContext = this.config.getWorkspaceContext();
-    if (!workspaceContext.isPathWithinWorkspace(searchDirAbsolute)) {
-      const directories = workspaceContext.getDirectories();
-      return `Search path ("${searchDirAbsolute}") resolves outside the allowed workspace directories: ${directories.join(', ')}`;
+    const validationError = this.config.validatePathAccess(
+      searchDirAbsolute,
+      'read',
+    );
+    if (validationError) {
+      return validationError;
     }
 
     const targetDir = searchDirAbsolute || this.config.getTargetDir();
@@ -359,5 +366,9 @@ export class GlobTool extends BaseDeclarativeTool<GlobToolParams, ToolResult> {
       _toolName,
       _toolDisplayName,
     );
+  }
+
+  override getSchema(modelId?: string) {
+    return resolveToolDeclaration(GLOB_DEFINITION, modelId);
   }
 }

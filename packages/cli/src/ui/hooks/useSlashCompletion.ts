@@ -272,6 +272,7 @@ function useCommandSuggestions(
           const fzfInstance = getFzfForCommands(commandsToSearch);
           if (fzfInstance) {
             try {
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               const fzfResults = await fzfInstance.fzf.find(partial);
               if (signal.aborted) return;
               const uniqueCommands = new Set<SlashCommand>();

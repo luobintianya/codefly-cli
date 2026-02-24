@@ -13,7 +13,7 @@ import { MessageType } from '../types.js';
 import type { EditorType } from '@codeflyai/codefly-core';
 import {
   allowEditorTypeInSandbox,
-  checkHasEditorType,
+  hasValidEditorCommand,
   getEditorDisplayName,
 } from '@codeflyai/codefly-core';
 import type { UseHistoryManagerReturn } from './useHistoryManager.js';
@@ -45,7 +45,7 @@ export const useEditorSettings = (
     (editorType: EditorType | undefined, scope: LoadableSettingScope) => {
       if (
         editorType &&
-        (!checkHasEditorType(editorType) ||
+        (!hasValidEditorCommand(editorType) ||
           !allowEditorTypeInSandbox(editorType))
       ) {
         return;
@@ -66,6 +66,7 @@ export const useEditorSettings = (
         );
         setEditorError(null);
         setIsEditorDialogOpen(false);
+        coreEvents.emit(CoreEvent.EditorSelected, { editor: editorType });
       } catch (error) {
         setEditorError(`Failed to set editor preference: ${error}`);
       }
@@ -75,6 +76,7 @@ export const useEditorSettings = (
 
   const exitEditorDialog = useCallback(() => {
     setIsEditorDialogOpen(false);
+    coreEvents.emit(CoreEvent.EditorSelected, { editor: undefined });
   }, []);
 
   return {

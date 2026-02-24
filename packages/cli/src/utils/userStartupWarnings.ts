@@ -17,11 +17,13 @@ import {
 type WarningCheck = {
   id: string;
   check: (workspaceRoot: string, settings: Settings) => Promise<string | null>;
+  priority: WarningPriority;
 };
 
 // Individual warning checks
 const homeDirectoryCheck: WarningCheck = {
   id: 'home-directory',
+  priority: WarningPriority.Low,
   check: async (workspaceRoot: string, settings: Settings) => {
     if (settings.ui?.showHomeDirectoryWarning === false) {
       return null;
@@ -53,6 +55,7 @@ const homeDirectoryCheck: WarningCheck = {
 
 const rootDirectoryCheck: WarningCheck = {
   id: 'root-directory',
+  priority: WarningPriority.High,
   check: async (workspaceRoot: string, _settings: Settings) => {
     try {
       const workspaceRealPath = await fs.realpath(workspaceRoot);
@@ -80,9 +83,30 @@ const WARNING_CHECKS: readonly WarningCheck[] = [
 export async function getUserStartupWarnings(
   settings: Settings,
   workspaceRoot: string = process.cwd(),
-): Promise<string[]> {
+  options?: { isAlternateBuffer?: boolean },
+): Promise<StartupWarning[]> {
   const results = await Promise.all(
-    WARNING_CHECKS.map((check) => check.check(workspaceRoot, settings)),
+    WARNING_CHECKS.map(async (check) => {
+      const message = await check.check(workspaceRoot, settings);
+      if (message) {
+        return {
+          id: check.id,
+          message,
+          priority: check.priority,
+        };
+      }
+      return null;
+    }),
   );
-  return results.filter((msg) => msg !== null);
+  const warnings = results.filter((w): w is StartupWarning => w !== null);
+
+  if (settings.ui?.showCompatibilityWarnings !== false) {
+    warnings.push(
+      ...getCompatibilityWarnings({
+        isAlternateBuffer: options?.isAlternateBuffer,
+      }),
+    );
+  }
+
+  return warnings;
 }

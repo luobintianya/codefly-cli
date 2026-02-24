@@ -27,7 +27,6 @@ describe('Fallback Integration', () => {
       getModel: () => PREVIEW_CODEFLY_MODEL_AUTO,
       getActiveModel: () => PREVIEW_CODEFLY_MODEL_AUTO,
       setActiveModel: vi.fn(),
-      getPreviewFeatures: () => true, // Preview enabled for Gemini 3
       getUserTier: () => undefined,
       getModelAvailabilityService: () => availabilityService,
       modelConfigService: undefined as unknown as ModelConfigService,
@@ -59,7 +58,7 @@ describe('Fallback Integration', () => {
     );
   });
 
-  it('should NOT fallback if config is NOT in AUTO mode', () => {
+  it('should fallback for Gemini 3 models even if config is NOT in AUTO mode', () => {
     // 1. Config is explicitly set to Pro, not Auto
     vi.spyOn(config, 'getModel').mockReturnValue(PREVIEW_CODEFLY_MODEL);
 

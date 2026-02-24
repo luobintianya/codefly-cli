@@ -1,56 +1,51 @@
 # Gemini CLI extensions
 
-_This documentation is up-to-date with the v0.4.0 release._
+Gemini CLI extensions package prompts, MCP servers, custom commands, themes,
+hooks, sub-agents, and agent skills into a familiar and user-friendly format.
+With extensions, you can expand the capabilities of Gemini CLI and share those
+capabilities with others. They are designed to be easily installable and
+shareable.
 
 Gemini CLI extensions package prompts, MCP servers, and custom commands into a
 familiar and user-friendly format. With extensions, you can expand the
 capabilities of Gemini CLI and share those capabilities with others. They are
 designed to be easily installable and shareable.
 
-To see examples of extensions, you can browse a gallery of
-[Gemini CLI extensions](https://geminicli.com/extensions/browse/).
+## Choose your path
 
-See [getting started docs](getting-started-extensions.md) for a guide on
-creating your first extension.
+Choose the guide that best fits your needs.
 
-See [releasing docs](extension-releasing.md) for an advanced guide on setting up
-GitHub releases.
+### I want to use extensions
 
-## Extension management
+Learn how to discover, install, and manage extensions to enhance your Gemini CLI
+experience.
 
-We offer a suite of extension management tools using `gemini extensions`
-commands.
+- **[Manage extensions](#manage-extensions):** List and verify your installed
+  extensions.
+- **[Install extensions](#installation):** Add new capabilities from GitHub or
+  local paths.
 
-Note that these commands are not supported from within the CLI, although you can
-list installed extensions using the `/extensions list` subcommand.
+### I want to build extensions
 
-Note that all of these commands will only be reflected in active CLI sessions on
-restart.
+Learn how to create, test, and share your own extensions with the community.
 
-### Installing an extension
+- **[Build extensions](writing-extensions.md):** Create your first extension
+  from a template.
+- **[Best practices](best-practices.md):** Learn how to build secure and
+  reliable extensions.
+- **[Publish to the gallery](releasing.md):** Share your work with the world.
 
-You can install an extension using `gemini extensions install` with either a
-GitHub URL or a local path.
+## Manage extensions
 
-Note that we create a copy of the installed extension, so you will need to run
-`gemini extensions update` to pull in changes from both locally-defined
-extensions and those on GitHub.
+Use the interactive `/extensions` command to verify your installed extensions
+and their status:
 
-NOTE: If you are installing an extension from GitHub, you'll need to have `git`
-installed on your machine. See
-[git installation instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
-for help.
-
-```
-gemini extensions install <source> [--ref <ref>] [--auto-update] [--pre-release] [--consent]
+```bash
+/extensions list
 ```
 
-- `<source>`: The github URL or local path of the extension to install.
-- `--ref`: The git ref to install from.
-- `--auto-update`: Enable auto-update for this extension.
-- `--pre-release`: Enable pre-release versions for this extension.
-- `--consent`: Acknowledge the security risks of installing an extension and
-  skip the confirmation prompt.
+You can also manage extensions from your terminal using the `gemini extensions`
+command group:
 
 ### Uninstalling an extension
 
@@ -229,7 +224,7 @@ You can view a list of an extension's settings by running:
 gemini extensions settings list <extension name>
 ```
 
-and you can update a given setting using:
+## Installation
 
 ```
 gemini extensions settings set <extension name> <setting name> [--scope <scope>]

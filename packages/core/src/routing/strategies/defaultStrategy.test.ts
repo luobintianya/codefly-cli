@@ -61,7 +61,7 @@ describe('DefaultStrategy', () => {
     });
   });
 
-  it('should route to the preview model when requested model is auto and previewfeature is on', async () => {
+  it('should route to the default model when requested model is auto', async () => {
     const strategy = new DefaultStrategy();
     const mockContext = {} as RoutingContext;
     const mockConfig = {

@@ -14,8 +14,6 @@ import { type HistoryItem } from '../types.js';
 import { convertSessionToHistoryFormats } from '../hooks/useSessionBrowser.js';
 import { revertFileChanges } from '../utils/rewindFileOps.js';
 import { RewindOutcome } from '../components/RewindConfirmation.js';
-import { checkExhaustive } from '../../utils/checks.js';
-
 import type { Content } from '@google/genai';
 import type {
   ChatRecordingService,
@@ -52,9 +50,8 @@ async function rewindConversation(
     }
 
     // Convert to UI and Client formats
-    const { uiHistory, clientHistory } = convertSessionToHistoryFormats(
-      conversation.messages,
-    );
+    const { uiHistory } = convertSessionToHistoryFormats(conversation.messages);
+    const clientHistory = convertSessionToClientHistory(conversation.messages);
 
     client.setHistory(clientHistory as Content[]);
 
@@ -144,6 +141,9 @@ export const rewindCommand: SlashCommand = {
             context.ui.removeComponent();
           }}
           onRewind={async (messageId, newText, outcome) => {
+            if (outcome !== RewindOutcome.Cancel) {
+              logRewind(config, new RewindEvent(outcome));
+            }
             switch (outcome) {
               case RewindOutcome.Cancel:
                 context.ui.removeComponent();
