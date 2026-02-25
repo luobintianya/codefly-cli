@@ -6,7 +6,7 @@
 
 import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import {
-  CodeflyEventType as ServerCodeflyEventType,
+  GeminiEventType as ServerGeminiEventType,
   getErrorMessage,
   isNodeError,
   MessageSenderType,
@@ -14,7 +14,7 @@ import {
   GitService,
   UnauthorizedError,
   UserPromptEvent,
-  DEFAULT_CODEFLY_FLASH_MODEL,
+  DEFAULT_GEMINI_FLASH_MODEL,
   logConversationFinishedEvent,
   ConversationFinishedEvent,
   ApprovalMode,
@@ -33,12 +33,16 @@ import {
   ValidationRequiredError,
   coreEvents,
   CoreEvent,
-} from '@codeflyai/codefly-core';
+  CoreToolCallStatus,
+  buildUserSteeringHintPrompt,
+  generateSteeringAckMessage,
+  getPlanModeExitMessage,
+} from '@google/gemini-cli-core';
 import type {
   Config,
   EditorType,
-  CodeflyClient,
-  ServerCodeflyChatCompressedEvent,
+  GeminiClient,
+  ServerGeminiChatCompressedEvent,
   ServerGeminiContentEvent as ContentEvent,
   ServerGeminiFinishedEvent,
   ServerGeminiStreamEvent as GeminiEvent,
@@ -47,8 +51,7 @@ import type {
   ToolCallResponseInfo,
   GeminiErrorEventValue,
   RetryAttemptPayload,
-  ToolCallConfirmationDetails,
-} from '@codeflyai/codefly-core';
+} from '@google/gemini-cli-core';
 import { type Part, type PartListUnion, FinishReason } from '@google/genai';
 import type {
   HistoryItem,
@@ -172,7 +175,7 @@ function calculateStreamingState(
  * API interaction, and tool call lifecycle.
  */
 export const useGeminiStream = (
-  geminiClient: CodeflyClient,
+  geminiClient: GeminiClient,
   history: HistoryItem[],
   addItem: UseHistoryManagerReturn['addItem'],
   config: Config,
@@ -201,6 +204,9 @@ export const useGeminiStream = (
   const abortControllerRef = useRef<AbortController | null>(null);
   const turnCancelledRef = useRef(false);
   const activeQueryIdRef = useRef<string | null>(null);
+  const previousApprovalModeRef = useRef<ApprovalMode>(
+    config.getApprovalMode(),
+  );
   const [isResponding, setIsResponding] = useState<boolean>(false);
   const [thought, thoughtRef, setThought] =
     useStateAndRef<ThoughtSummary | null>(null);
@@ -266,10 +272,10 @@ export const useGeminiStream = (
         // Record tool calls with full metadata before sending responses.
         try {
           const currentModel =
-            config.getCodeflyClient().getCurrentSequenceModel() ??
+            config.getGeminiClient().getCurrentSequenceModel() ??
             config.getModel();
           config
-            .getCodeflyClient()
+            .getGeminiClient()
             .getChat()
             .recordCompletedToolCalls(
               currentModel,
@@ -907,8 +913,9 @@ export const useGeminiStream = (
           text: parseAndFormatApiError(
             eventValue.error,
             config.getContentGeneratorConfig()?.authType,
+            undefined,
             config.getModel(),
-            DEFAULT_CODEFLY_FLASH_MODEL,
+            DEFAULT_GEMINI_FLASH_MODEL,
           ),
         },
         userMessageTimestamp,
@@ -986,7 +993,7 @@ export const useGeminiStream = (
 
   const handleChatCompressionEvent = useCallback(
     (
-      eventValue: ServerCodeflyChatCompressedEvent['value'],
+      eventValue: ServerGeminiChatCompressedEvent['value'],
       userMessageTimestamp: number,
     ) => {
       if (pendingHistoryItemRef.current) {
@@ -1020,20 +1027,16 @@ export const useGeminiStream = (
     (estimatedRequestTokenCount: number, remainingTokenCount: number) => {
       onCancelSubmit(true);
 
-      const limit = tokenLimit(config.getModel(), config);
+      const limit = tokenLimit(config.getModel());
+
+      const isLessThan75Percent =
+        limit > 0 && remainingTokenCount < limit * 0.75;
 
       let text = `Sending this message (${estimatedRequestTokenCount} tokens) might exceed the remaining context window limit (${remainingTokenCount} tokens).`;
 
-      if (estimatedRequestTokenCount > limit) {
-        text = `This message is too large (${estimatedRequestTokenCount} tokens) and exceeds the total context window limit (${limit} tokens). Please try reducing the size of your message by removing large file attachments or @ commands.`;
-      } else {
-        const isLessThan75Percent =
-          limit > 0 && remainingTokenCount < limit * 0.75;
-
-        if (isLessThan75Percent) {
-          text +=
-            ' Please try reducing the size of your message or use the `/compress` command to compress the chat history.';
-        }
+      if (isLessThan75Percent) {
+        text +=
+          ' Please try reducing the size of your message or use the `/compress` command to compress the chat history.';
       }
 
       addItem({
@@ -1144,11 +1147,11 @@ export const useGeminiStream = (
         }
 
         switch (event.type) {
-          case ServerCodeflyEventType.Thought:
+          case ServerGeminiEventType.Thought:
             setLastGeminiActivityTime(Date.now());
             handleThoughtEvent(event.value, userMessageTimestamp);
             break;
-          case ServerCodeflyEventType.Content:
+          case ServerGeminiEventType.Content:
             setLastGeminiActivityTime(Date.now());
             geminiMessageBuffer = handleContentEvent(
               event.value,
@@ -1156,16 +1159,16 @@ export const useGeminiStream = (
               userMessageTimestamp,
             );
             break;
-          case ServerCodeflyEventType.ToolCallRequest:
+          case ServerGeminiEventType.ToolCallRequest:
             toolCallRequests.push(event.value);
             break;
-          case ServerCodeflyEventType.UserCancelled:
+          case ServerGeminiEventType.UserCancelled:
             handleUserCancelledEvent(userMessageTimestamp);
             break;
-          case ServerCodeflyEventType.Error:
+          case ServerGeminiEventType.Error:
             handleErrorEvent(event.value, userMessageTimestamp);
             break;
-          case ServerCodeflyEventType.AgentExecutionStopped:
+          case ServerGeminiEventType.AgentExecutionStopped:
             handleAgentExecutionStoppedEvent(
               event.value.reason,
               userMessageTimestamp,
@@ -1173,7 +1176,7 @@ export const useGeminiStream = (
               event.value.contextCleared,
             );
             break;
-          case ServerCodeflyEventType.AgentExecutionBlocked:
+          case ServerGeminiEventType.AgentExecutionBlocked:
             handleAgentExecutionBlockedEvent(
               event.value.reason,
               userMessageTimestamp,
@@ -1181,38 +1184,38 @@ export const useGeminiStream = (
               event.value.contextCleared,
             );
             break;
-          case ServerCodeflyEventType.ChatCompressed:
+          case ServerGeminiEventType.ChatCompressed:
             handleChatCompressionEvent(event.value, userMessageTimestamp);
             break;
-          case ServerCodeflyEventType.ToolCallConfirmation:
-          case ServerCodeflyEventType.ToolCallResponse:
+          case ServerGeminiEventType.ToolCallConfirmation:
+          case ServerGeminiEventType.ToolCallResponse:
             // do nothing
             break;
-          case ServerCodeflyEventType.MaxSessionTurns:
+          case ServerGeminiEventType.MaxSessionTurns:
             handleMaxSessionTurnsEvent();
             break;
-          case ServerCodeflyEventType.ContextWindowWillOverflow:
+          case ServerGeminiEventType.ContextWindowWillOverflow:
             handleContextWindowWillOverflowEvent(
               event.value.estimatedRequestTokenCount,
               event.value.remainingTokenCount,
             );
             break;
-          case ServerCodeflyEventType.Finished:
+          case ServerGeminiEventType.Finished:
             handleFinishedEvent(event, userMessageTimestamp);
             break;
-          case ServerCodeflyEventType.Citation:
+          case ServerGeminiEventType.Citation:
             handleCitationEvent(event.value, userMessageTimestamp);
             break;
-          case ServerCodeflyEventType.ModelInfo:
+          case ServerGeminiEventType.ModelInfo:
             handleChatModelEvent(event.value, userMessageTimestamp);
             break;
-          case ServerCodeflyEventType.LoopDetected:
+          case ServerGeminiEventType.LoopDetected:
             // handle later because we want to move pending history to history
             // before we add loop detected message to history
             loopDetectedRef.current = true;
             break;
-          case ServerCodeflyEventType.Retry:
-          case ServerCodeflyEventType.InvalidStream:
+          case ServerGeminiEventType.Retry:
+          case ServerGeminiEventType.InvalidStream:
             // Will add the missing logic later
             break;
           default: {
@@ -1358,7 +1361,7 @@ export const useGeminiStream = (
 
                     if (result.userSelection === 'disable') {
                       config
-                        .getCodeflyClient()
+                        .getGeminiClient()
                         .getLoopDetectionService()
                         .disableForSession();
                       addItem({
@@ -1400,8 +1403,9 @@ export const useGeminiStream = (
                     text: parseAndFormatApiError(
                       getErrorMessage(error) || 'Unknown error',
                       config.getContentGeneratorConfig()?.authType,
+                      undefined,
                       config.getModel(),
-                      DEFAULT_CODEFLY_FLASH_MODEL,
+                      DEFAULT_GEMINI_FLASH_MODEL,
                     ),
                   },
                   userMessageTimestamp,
@@ -1435,6 +1439,34 @@ export const useGeminiStream = (
 
   const handleApprovalModeChange = useCallback(
     async (newApprovalMode: ApprovalMode) => {
+      if (
+        previousApprovalModeRef.current === ApprovalMode.PLAN &&
+        newApprovalMode !== ApprovalMode.PLAN &&
+        streamingState === StreamingState.Idle
+      ) {
+        if (geminiClient) {
+          try {
+            await geminiClient.addHistory({
+              role: 'user',
+              parts: [
+                {
+                  text: getPlanModeExitMessage(newApprovalMode, true),
+                },
+              ],
+            });
+          } catch (error) {
+            onDebugMessage(
+              `Failed to notify model of Plan Mode exit: ${getErrorMessage(error)}`,
+            );
+            addItem({
+              type: MessageType.ERROR,
+              text: 'Failed to update the model about exiting Plan Mode. The model might be out of sync. Please consider restarting the session if you see unexpected behavior.',
+            });
+          }
+        }
+      }
+      previousApprovalModeRef.current = newApprovalMode;
+
       // Auto-approve pending tool calls when switching to auto-approval modes
       if (
         newApprovalMode === ApprovalMode.YOLO ||
@@ -1473,7 +1505,7 @@ export const useGeminiStream = (
         }
       }
     },
-    [config, toolCalls],
+    [config, toolCalls, geminiClient, streamingState, addItem, onDebugMessage],
   );
 
   const handleCompletedTools = useCallback(

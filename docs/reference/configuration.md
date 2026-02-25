@@ -40,11 +40,11 @@ locations for these files:
     settings have the lowest precedence and are intended to be overridden by
     user, project, or system override settings.
 - **User settings file:**
-  - **Location:** `~/.codefly/settings.json` (where `~` is your home directory).
+  - **Location:** `~/.gemini/settings.json` (where `~` is your home directory).
   - **Scope:** Applies to all Gemini CLI sessions for the current user. User
     settings override system defaults.
 - **Project settings file:**
-  - **Location:** `.codefly/settings.json` within your project's root directory.
+  - **Location:** `.gemini/settings.json` within your project's root directory.
   - **Scope:** Applies only when running Gemini CLI from that specific project.
     Project settings override user settings and system defaults.
 - **System settings file:**
@@ -70,13 +70,13 @@ this: `"apiKey": "$MY_API_TOKEN"`. Additionally, each extension can have its own
 > CLI in a corporate environment, please see the
 > [Enterprise Configuration](../cli/enterprise.md) documentation.
 
-### The `.codefly` directory in your project
+### The `.gemini` directory in your project
 
-In addition to a project settings file, a project's `.codefly` directory can
+In addition to a project settings file, a project's `.gemini` directory can
 contain other project-specific files related to Gemini CLI's operation, such as:
 
 - [Custom sandbox profiles](#sandboxing) (e.g.,
-  `.codefly/sandbox-macos-custom.sb`, `.codefly/sandbox.Dockerfile`).
+  `.gemini/sandbox-macos-custom.sb`, `.gemini/sandbox.Dockerfile`).
 
 ### Available settings in `settings.json`
 
@@ -87,14 +87,12 @@ their corresponding top-level category object in your `settings.json` file.
 
 #### `policyPaths`
 
-- **`general.language`** (string):
-  - **Description:** The language for the CLI interface.
-  - **Default:** `"en"`
+- **`policyPaths`** (array):
+  - **Description:** Additional policy files or directories to load.
+  - **Default:** `[]`
   - **Requires restart:** Yes
 
-- **`general.previewFeatures`** (boolean):
-  - **Description:** Enable preview features (e.g., preview models).
-  - **Default:** `false`
+#### `general`
 
 - **`general.preferredEditor`** (string):
   - **Description:** The preferred editor to open files in.
@@ -139,10 +137,21 @@ their corresponding top-level category object in your `settings.json` file.
   - **Default:** `undefined`
   - **Requires restart:** Yes
 
+- **`general.plan.modelRouting`** (boolean):
+  - **Description:** Automatically switch between Pro and Flash models based on
+    Plan Mode status. Uses Pro for the planning phase and Flash for the
+    implementation phase.
+  - **Default:** `true`
+
 - **`general.retryFetchErrors`** (boolean):
   - **Description:** Retry on "exception TypeError: fetch failed sending
     request" errors.
   - **Default:** `false`
+
+- **`general.maxAttempts`** (number):
+  - **Description:** Maximum number of attempts for requests to the main chat
+    model. Cannot exceed 10.
+  - **Default:** `10`
 
 - **`general.debugKeystrokeLogging`** (boolean):
   - **Description:** Enable debug logging of keystrokes to the console.
@@ -209,8 +218,8 @@ their corresponding top-level category object in your `settings.json` file.
   - **Values:** `"off"`, `"full"`
 
 - **`ui.showStatusInTitle`** (boolean):
-  - **Description:** Show Codefly CLI model thoughts in the terminal window
-    title during the working phase
+  - **Description:** Show Gemini CLI model thoughts in the terminal window title
+    during the working phase
   - **Default:** `false`
 
 - **`ui.dynamicWindowTitle`** (boolean):
@@ -219,7 +228,7 @@ their corresponding top-level category object in your `settings.json` file.
   - **Default:** `true`
 
 - **`ui.showHomeDirectoryWarning`** (boolean):
-  - **Description:** Show a warning when running Codefly CLI in the home
+  - **Description:** Show a warning when running Gemini CLI in the home
     directory.
   - **Default:** `true`
   - **Requires restart:** Yes
@@ -242,8 +251,8 @@ their corresponding top-level category object in your `settings.json` file.
   - **Default:** `false`
 
 - **`ui.hideContextSummary`** (boolean):
-  - **Description:** Hide the context summary (CODEFLY.md, MCP servers) above
-    the input.
+  - **Description:** Hide the context summary (GEMINI.md, MCP servers) above the
+    input.
   - **Default:** `false`
 
 - **`ui.footer.hideCWD`** (boolean):
@@ -380,10 +389,6 @@ their corresponding top-level category object in your `settings.json` file.
 - **`model.skipNextSpeakerCheck`** (boolean):
   - **Description:** Skip the next speaker check.
   - **Default:** `true`
-
-- **`model.enableThink`** (boolean):
-  - **Description:** Enable think mode for models that support it.
-  - **Default:** `false`
 
 #### `modelConfigs`
 
@@ -592,7 +597,7 @@ their corresponding top-level category object in your `settings.json` file.
       },
       "chat-compression-3-pro": {
         "modelConfig": {
-          "model": "gemini-3-flash-preview"
+          "model": "gemini-3-pro-preview"
         }
       },
       "chat-compression-3-flash": {
@@ -602,7 +607,7 @@ their corresponding top-level category object in your `settings.json` file.
       },
       "chat-compression-2.5-pro": {
         "modelConfig": {
-          "model": "gemini-2.5-flash"
+          "model": "gemini-2.5-pro"
         }
       },
       "chat-compression-2.5-flash": {
@@ -617,7 +622,7 @@ their corresponding top-level category object in your `settings.json` file.
       },
       "chat-compression-default": {
         "modelConfig": {
-          "model": "gemini-2.5-flash"
+          "model": "gemini-3-pro-preview"
         }
       }
     }
@@ -647,6 +652,27 @@ their corresponding top-level category object in your `settings.json` file.
   - **Default:** `{}`
   - **Requires restart:** Yes
 
+- **`agents.browser.sessionMode`** (enum):
+  - **Description:** Session mode: 'persistent', 'isolated', or 'existing'.
+  - **Default:** `"persistent"`
+  - **Values:** `"persistent"`, `"isolated"`, `"existing"`
+  - **Requires restart:** Yes
+
+- **`agents.browser.headless`** (boolean):
+  - **Description:** Run browser in headless mode.
+  - **Default:** `false`
+  - **Requires restart:** Yes
+
+- **`agents.browser.profilePath`** (string):
+  - **Description:** Path to browser profile directory for session persistence.
+  - **Default:** `undefined`
+  - **Requires restart:** Yes
+
+- **`agents.browser.visualModel`** (string):
+  - **Description:** Model override for the visual agent.
+  - **Default:** `undefined`
+  - **Requires restart:** Yes
+
 #### `context`
 
 - **`context.fileName`** (string | string[]):
@@ -673,7 +699,7 @@ their corresponding top-level category object in your `settings.json` file.
   - **Default:** `[]`
 
 - **`context.loadMemoryFromIncludeDirectories`** (boolean):
-  - **Description:** Controls how /memory refresh loads CODEFLY.md files. When
+  - **Description:** Controls how /memory refresh loads GEMINI.md files. When
     true, include directories are scanned; when false, only the current
     directory is used.
   - **Default:** `false`
@@ -683,8 +709,8 @@ their corresponding top-level category object in your `settings.json` file.
   - **Default:** `true`
   - **Requires restart:** Yes
 
-- **`context.fileFiltering.respectCodeflyIgnore`** (boolean):
-  - **Description:** Respect .codeflyignore files when searching.
+- **`context.fileFiltering.respectGeminiIgnore`** (boolean):
+  - **Description:** Respect .geminiignore files when searching.
   - **Default:** `true`
   - **Requires restart:** Yes
 
@@ -858,31 +884,6 @@ their corresponding top-level category object in your `settings.json` file.
   - **Default:** `false`
   - **Requires restart:** Yes
 
-- **`security.auth.openai.apiKey`** (string):
-  - **Description:** OpenAI Compatible API key.
-  - **Default:** `undefined`
-  - **Requires restart:** Yes
-
-- **`security.auth.openai.model`** (string):
-  - **Description:** OpenAI Compatible model (e.g., gpt-4o).
-  - **Default:** `undefined`
-  - **Requires restart:** Yes
-
-- **`security.auth.openai.baseUrl`** (string):
-  - **Description:** OpenAI Compatible Base URL.
-  - **Default:** `undefined`
-  - **Requires restart:** Yes
-
-- **`security.auth.openai.models`** (string):
-  - **Description:** OpenAI Compatible model names (comma-separated).
-  - **Default:** `undefined`
-  - **Requires restart:** Yes
-
-- **`security.auth.openai.contextWindowLimit`** (number):
-  - **Description:** The maximum number of tokens allowed in the context window
-    for OpenAI-compatible models.
-  - **Default:** `undefined`
-
 - **`security.auth.selectedType`** (string):
   - **Description:** The currently selected authentication type.
   - **Default:** `undefined`
@@ -897,6 +898,14 @@ their corresponding top-level category object in your `settings.json` file.
 - **`security.auth.useExternal`** (boolean):
   - **Description:** Whether to use an external authentication flow.
   - **Default:** `undefined`
+  - **Requires restart:** Yes
+
+- **`security.enableConseca`** (boolean):
+  - **Description:** Enable the context-aware security checker. This feature
+    uses an LLM to dynamically generate and enforce security policies for tool
+    use based on your prompt, providing an additional layer of protection
+    against unintended actions.
+  - **Default:** `false`
   - **Requires restart:** Yes
 
 #### `advanced`
@@ -950,7 +959,7 @@ their corresponding top-level category object in your `settings.json` file.
 - **`experimental.enableAgents`** (boolean):
   - **Description:** Enable local and remote subagents. Warning: Experimental
     feature, uses YOLO mode for subagents
-  - **Default:** `true`
+  - **Default:** `false`
   - **Requires restart:** Yes
 
 - **`experimental.extensionManagement`** (boolean):
@@ -999,6 +1008,11 @@ their corresponding top-level category object in your `settings.json` file.
   - **Description:** Enable model steering (user hints) to guide the model
     during tool execution.
   - **Default:** `false`
+
+- **`experimental.directWebFetch`** (boolean):
+  - **Description:** Enable web fetch behavior that bypasses LLM summarization.
+  - **Default:** `false`
+  - **Requires restart:** Yes
 
 #### `skills`
 
@@ -1230,7 +1244,7 @@ of v0.3.0:
     }
   },
   "context": {
-    "fileName": ["CONTEXT.md", "CODEFLY.md"],
+    "fileName": ["CONTEXT.md", "GEMINI.md"],
     "includeDirectories": ["path/to/dir1", "~/path/to/dir2", "../path/to/dir3"],
     "loadFromIncludeDirectories": true,
     "fileFiltering": {
@@ -1249,7 +1263,7 @@ The CLI keeps a history of shell commands you run. To avoid conflicts between
 different projects, this history is stored in a project-specific directory
 within your user's home folder.
 
-- **Location:** `~/.codefly/tmp/<project_hash>/shell_history`
+- **Location:** `~/.gemini/tmp/<project_hash>/shell_history`
   - `<project_hash>` is a unique identifier generated from your project's root
     path.
   - The history is stored in a file named `shell_history`.
@@ -1274,7 +1288,7 @@ loading order is:
 **Environment variable exclusion:** Some environment variables (like `DEBUG` and
 `DEBUG_MODE`) are automatically excluded from being loaded from project `.env`
 files to prevent interference with gemini-cli behavior. Variables from
-`.codefly/.env` files are never excluded. You can customize this behavior using
+`.gemini/.env` files are never excluded. You can customize this behavior using
 the `advanced.excludedEnvVars` setting in your `settings.json` file.
 
 - **`GEMINI_API_KEY`**:
@@ -1286,7 +1300,19 @@ the `advanced.excludedEnvVars` setting in your `settings.json` file.
 - **`GEMINI_MODEL`**:
   - Specifies the default Gemini model to use.
   - Overrides the hardcoded default
-  - Example: `export GEMINI_MODEL="gemini-2.5-flash"`
+  - Example: `export GEMINI_MODEL="gemini-3-flash-preview"`
+- **`GEMINI_CLI_IDE_PID`**:
+  - Manually specifies the PID of the IDE process to use for integration. This
+    is useful when running Gemini CLI in a standalone terminal while still
+    wanting to associate it with a specific IDE instance.
+  - Overrides the automatic IDE detection logic.
+- **`GEMINI_CLI_HOME`**:
+  - Specifies the root directory for Gemini CLI's user-level configuration and
+    storage.
+  - By default, this is the user's system home directory. The CLI will create a
+    `.gemini` folder inside this directory.
+  - Useful for shared compute environments or keeping CLI state isolated.
+  - Example: `export GEMINI_CLI_HOME="/path/to/user/config"`
 - **`GOOGLE_API_KEY`**:
   - Your Google Cloud API key.
   - Required for using Vertex AI in express mode.
@@ -1347,14 +1373,14 @@ the `advanced.excludedEnvVars` setting in your `settings.json` file.
   - Accepts `true`, `false`, `docker`, `podman`, or a custom command string.
 - **`GEMINI_SYSTEM_MD`**:
   - Replaces the built‑in system prompt with content from a Markdown file.
-  - `true`/`1`: Use project default path `./.codefly/system.md`.
+  - `true`/`1`: Use project default path `./.gemini/system.md`.
   - Any other string: Treat as a path (relative/absolute supported, `~`
     expands).
   - `false`/`0` or unset: Use the built‑in prompt. See
     [System Prompt Override](../cli/system-prompt.md).
 - **`GEMINI_WRITE_SYSTEM_MD`**:
   - Writes the current built‑in system prompt to a file for review.
-  - `true`/`1`: Write to `./.codefly/system.md`. Otherwise treat the value as a
+  - `true`/`1`: Write to `./.gemini/system.md`. Otherwise treat the value as a
     path.
   - Run the CLI once with this set to generate the file.
 - **`SEATBELT_PROFILE`** (macOS specific):
@@ -1368,15 +1394,15 @@ the `advanced.excludedEnvVars` setting in your `settings.json` file.
     allows network.
   - `strict-proxied`: Same as `strict-open` but routes network through proxy.
   - `<profile_name>`: Uses a custom profile. To define a custom profile, create
-    a file named `sandbox-macos-<profile_name>.sb` in your project's `.codefly/`
-    directory (e.g., `my-project/.codefly/sandbox-macos-custom.sb`).
+    a file named `sandbox-macos-<profile_name>.sb` in your project's `.gemini/`
+    directory (e.g., `my-project/.gemini/sandbox-macos-custom.sb`).
 - **`DEBUG` or `DEBUG_MODE`** (often used by underlying libraries or the CLI
   itself):
   - Set to `true` or `1` to enable verbose debug logging, which can be helpful
     for troubleshooting.
   - **Note:** These variables are automatically excluded from project `.env`
     files by default to prevent interference with gemini-cli behavior. Use
-    `.codefly/.env` files if you need to set these for gemini-cli specifically.
+    `.gemini/.env` files if you need to set these for gemini-cli specifically.
 - **`NO_COLOR`**:
   - Set to any value to disable all color output in the CLI.
 - **`CLI_TITLE`**:
@@ -1438,7 +1464,7 @@ for that specific session.
 
 - **`--model <model_name>`** (**`-m <model_name>`**):
   - Specifies the Gemini model to use for this session.
-  - Example: `npm start -- --model gemini-1.5-pro-latest`
+  - Example: `npm start -- --model gemini-3-pro-preview`
 - **`--prompt <your_prompt>`** (**`-p <your_prompt>`**):
   - **Deprecated:** Use positional arguments instead.
   - Used to pass a prompt directly to the command. This invokes Gemini CLI in a
@@ -1460,7 +1486,8 @@ for that specific session.
 - **`--sandbox`** (**`-s`**):
   - Enables sandbox mode for this session.
 - **`--debug`** (**`-d`**):
-  - Enables debug mode for this session, providing more verbose output.
+  - Enables debug mode for this session, providing more verbose output. Open the
+    debug console with F12 to see the additional logging.
 
 - **`--help`** (or **`-h`**):
   - Displays help information about command-line arguments.
@@ -1472,6 +1499,10 @@ for that specific session.
     - `auto_edit`: Automatically approve edit tools (replace, write_file) while
       prompting for others
     - `yolo`: Automatically approve all tool calls (equivalent to `--yolo`)
+    - `plan`: Read-only mode for tool calls (requires experimental planning to
+      be enabled).
+      > **Note:** This mode is currently under development and not yet fully
+      > functional.
   - Cannot be used together with `--yolo`. Use `--approval-mode=yolo` instead of
     `--yolo` for the new unified approach.
   - Example: `gemini --approval-mode auto_edit`
@@ -1528,7 +1559,7 @@ for that specific session.
 ## Context files (hierarchical instructional context)
 
 While not strictly configuration for the CLI's _behavior_, context files
-(defaulting to `CODEFLY.md` but configurable via the `context.fileName` setting)
+(defaulting to `GEMINI.md` but configurable via the `context.fileName` setting)
 are crucial for configuring the _instructional context_ (also referred to as
 "memory") provided to the Gemini model. This powerful feature allows you to give
 project-specific instructions, coding style guides, or any relevant background
@@ -1541,7 +1572,7 @@ context.
   that you want the Gemini model to be aware of during your interactions. The
   system is designed to manage this instructional context hierarchically.
 
-### Example context file content (e.g., `CODEFLY.md`)
+### Example context file content (e.g., `GEMINI.md`)
 
 Here's a conceptual example of what a context file at the root of a TypeScript
 project might contain:
@@ -1583,14 +1614,14 @@ you. Project-specific context files are highly encouraged to establish
 conventions and context.
 
 - **Hierarchical loading and precedence:** The CLI implements a sophisticated
-  hierarchical memory system by loading context files (e.g., `CODEFLY.md`) from
+  hierarchical memory system by loading context files (e.g., `GEMINI.md`) from
   several locations. Content from files lower in this list (more specific)
   typically overrides or supplements content from files higher up (more
   general). The exact concatenation order and final context can be inspected
   using the `/memory show` command. The typical loading order is:
   1.  **Global context file:**
-      - Location: `~/.codefly/<configured-context-filename>` (e.g.,
-        `~/.codefly/CODEFLY.md` in your user home directory).
+      - Location: `~/.gemini/<configured-context-filename>` (e.g.,
+        `~/.gemini/GEMINI.md` in your user home directory).
       - Scope: Provides default instructions for all your projects.
   2.  **Project root and ancestors context files:**
       - Location: The CLI searches for the configured context file in the
@@ -1628,8 +1659,6 @@ By understanding and utilizing these configuration layers and the hierarchical
 nature of context files, you can effectively manage the AI's memory and tailor
 the Gemini CLI's responses to your specific needs and projects.
 
-<!-- SETTINGS-AUTOGEN:END -->
-
 ## Sandboxing
 
 The Gemini CLI can execute potentially unsafe operations (like shell commands
@@ -1644,7 +1673,7 @@ Sandboxing is disabled by default, but you can enable it in a few ways:
 By default, it uses a pre-built `gemini-cli-sandbox` Docker image.
 
 For project-specific sandboxing needs, you can create a custom Dockerfile at
-`.codefly/sandbox.Dockerfile` in your project's root directory. This Dockerfile
+`.gemini/sandbox.Dockerfile` in your project's root directory. This Dockerfile
 can be based on the base sandbox image:
 
 ```dockerfile
@@ -1656,7 +1685,7 @@ FROM gemini-cli-sandbox
 # COPY ./my-config /app/my-config
 ```
 
-When `.codefly/sandbox.Dockerfile` exists, you can use `BUILD_SANDBOX`
+When `.gemini/sandbox.Dockerfile` exists, you can use `BUILD_SANDBOX`
 environment variable when running Gemini CLI to automatically build the custom
 sandbox image:
 

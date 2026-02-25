@@ -260,7 +260,10 @@ describe('Turn', () => {
       const errorEvent = events[0] as ServerGeminiErrorEvent;
       expect(errorEvent.type).toBe(CodeflyEventType.Error);
       expect(errorEvent.value).toEqual({
-        error: { message: 'API Error', status: undefined },
+        error: {
+          message: 'API Error',
+          status: undefined,
+        },
       });
       expect(turn.getDebugResponses().length).toBe(0);
       expect(reportError).toHaveBeenCalledWith(

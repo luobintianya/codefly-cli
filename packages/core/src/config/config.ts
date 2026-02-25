@@ -6,6 +6,8 @@
 
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import * as os from 'node:os';
+import { inspect } from 'node:util';
 import process from 'node:process';
 import type {
   ContentGenerator,
@@ -16,9 +18,6 @@ import {
   createContentGenerator,
   createContentGeneratorConfig,
 } from '../core/contentGenerator.js';
-import { inspect } from 'node:util';
-import { getCodeAssistServer } from '../code_assist/codeAssist.js';
-import type { UserTierId } from '../code_assist/types.js';
 import { PromptRegistry } from '../prompts/prompt-registry.js';
 import { ResourceRegistry } from '../resources/resource-registry.js';
 import { ToolRegistry } from '../tools/tool-registry.js';
@@ -32,12 +31,12 @@ import { EditTool } from '../tools/edit.js';
 import { ShellTool } from '../tools/shell.js';
 import { WriteFileTool } from '../tools/write-file.js';
 import { WebFetchTool } from '../tools/web-fetch.js';
-import { MemoryTool, setCodeflyMdFilename } from '../tools/memoryTool.js';
+import { MemoryTool, setGeminiMdFilename } from '../tools/memoryTool.js';
 import { WebSearchTool } from '../tools/web-search.js';
-import { DatabaseSchemaTool } from '../tools/database-schema.js';
-import { DrawioToSqlTool } from '../tools/drawio-to-sql-tool.js';
-import { SwaggerSchemaTool } from '../tools/swagger-schema.js';
-import { CodeflyClient } from '../core/client.js';
+import { AskUserTool } from '../tools/ask-user.js';
+import { ExitPlanModeTool } from '../tools/exit-plan-mode.js';
+import { EnterPlanModeTool } from '../tools/enter-plan-mode.js';
+import { GeminiClient } from '../core/client.js';
 import { BaseLlmClient } from '../core/baseLlmClient.js';
 import type { HookDefinition, HookEventName } from '../hooks/types.js';
 import { FileDiscoveryService } from '../services/fileDiscoveryService.js';
@@ -52,14 +51,16 @@ import {
 import { coreEvents, CoreEvent } from '../utils/events.js';
 import { tokenLimit } from '../core/tokenLimits.js';
 import {
-  DEFAULT_CODEFLY_EMBEDDING_MODEL,
-  DEFAULT_CODEFLY_FLASH_MODEL,
-  DEFAULT_CODEFLY_MODEL_AUTO,
-  isPreviewModel,
-  PREVIEW_CODEFLY_MODEL_AUTO,
-  PREVIEW_CODEFLY_MODEL,
-  isGeminiModel,
+  DEFAULT_GEMINI_EMBEDDING_MODEL,
+  DEFAULT_GEMINI_FLASH_MODEL,
+  DEFAULT_GEMINI_MODEL,
+  DEFAULT_GEMINI_MODEL_AUTO,
   isAutoModel,
+  isPreviewModel,
+  PREVIEW_GEMINI_FLASH_MODEL,
+  PREVIEW_GEMINI_MODEL,
+  PREVIEW_GEMINI_MODEL_AUTO,
+  resolveModel,
 } from './models.js';
 import { shouldAttemptBrowserLaunch } from '../utils/browser.js';
 import type { MCPOAuthConfig } from '../mcp/oauth-provider.js';
@@ -107,25 +108,34 @@ import type { EventEmitter } from 'node:events';
 import { PolicyEngine } from '../policy/policy-engine.js';
 import { ApprovalMode, type PolicyEngineConfig } from '../policy/types.js';
 import { HookSystem } from '../hooks/index.js';
+import type {
+  UserTierId,
+  RetrieveUserQuotaResponse,
+  AdminControlsSettings,
+} from '../code_assist/types.js';
+import type { HierarchicalMemory } from './memory.js';
+import { getCodeAssistServer } from '../code_assist/codeAssist.js';
+import type { Experiments } from '../code_assist/experiments/experiments.js';
 import { AgentRegistry } from '../agents/registry.js';
 import { AcknowledgedAgentsService } from '../agents/acknowledgedAgents.js';
 import { setGlobalProxy } from '../utils/fetch.js';
-
-import { SkillManager, type SkillDefinition } from '../skills/skillManager.js';
-import { startupProfiler } from '../telemetry/startupProfiler.js';
-
-import type { FetchAdminControlsResponse } from '../code_assist/types.js';
-import type { Experiments } from '../code_assist/experiments/experiments.js';
 import { SubagentTool } from '../agents/subagent-tool.js';
 import { getExperiments } from '../code_assist/experiments/experiments.js';
 import { ExperimentFlags } from '../code_assist/experiments/flagNames.js';
 import { debugLogger } from '../utils/debugLogger.js';
+import { SkillManager, type SkillDefinition } from '../skills/skillManager.js';
+import { startupProfiler } from '../telemetry/startupProfiler.js';
 import type { AgentDefinition } from '../agents/types.js';
 import { fetchAdminControls } from '../code_assist/admin/admin_controls.js';
 import { isSubpath } from '../utils/paths.js';
 import { UserHintService } from './userHintService.js';
 import { WORKSPACE_POLICY_TIER } from '../policy/config.js';
 import { loadPoliciesFromToml } from '../policy/toml-loader.js';
+
+import { CheckerRunner } from '../safety/checker-runner.js';
+import { ContextBuilder } from '../safety/context-builder.js';
+import { CheckerRegistry } from '../safety/registry.js';
+import { ConsecaSafetyChecker } from '../safety/conseca/conseca.js';
 
 export interface AccessibilitySettings {
   /** @deprecated Use ui.loadingPhrases instead. */
@@ -143,6 +153,7 @@ export interface SummarizeToolOutputSettings {
 
 export interface PlanSettings {
   directory?: string;
+  modelRouting?: boolean;
 }
 
 export interface TelemetrySettings {
@@ -188,6 +199,10 @@ export interface AgentRunConfig {
   maxTurns?: number;
 }
 
+/**
+ * Override configuration for a specific agent.
+ * Generic fields (modelConfig, runConfig, enabled) are standard across all agents.
+ */
 export interface AgentOverride {
   modelConfig?: ModelConfig;
   runConfig?: AgentRunConfig;
@@ -196,6 +211,7 @@ export interface AgentOverride {
 
 export interface AgentSettings {
   overrides?: Record<string, AgentOverride>;
+  browser?: BrowserAgentCustomConfig;
 }
 
 export interface CustomTheme {
@@ -250,12 +266,36 @@ export interface CustomTheme {
 }
 
 /**
+ * Browser agent custom configuration.
+ * Used in agents.browser
+ *
+ * IMPORTANT: Keep in sync with the browser settings schema in
+ * packages/cli/src/config/settingsSchema.ts (agents.browser.properties).
+ */
+export interface BrowserAgentCustomConfig {
+  /**
+   * Session mode:
+   * - 'persistent': Launch Chrome with a persistent profile at ~/.cache/chrome-devtools-mcp/ (default)
+   * - 'isolated': Launch Chrome with a temporary profile, cleaned up after session
+   * - 'existing': Attach to an already-running Chrome instance (requires remote debugging
+   *   enabled at chrome://inspect/#remote-debugging)
+   */
+  sessionMode?: 'isolated' | 'persistent' | 'existing';
+  /** Run browser in headless mode. Default: false */
+  headless?: boolean;
+  /** Path to Chrome profile directory for session persistence. */
+  profilePath?: string;
+  /** Model override for the visual agent. */
+  visualModel?: string;
+}
+
+/**
  * All information required in CLI to handle an extension. Defined in Core so
  * that the collection of loaded, active, and inactive extensions can be passed
  * around on the config object though Core does not use this information
  * directly.
  */
-export interface CodeflyCLIExtension {
+export interface GeminiCLIExtension {
   name: string;
   version: string;
   isActive: boolean;
@@ -286,6 +326,7 @@ export interface ExtensionInstallMetadata {
   allowPreRelease?: boolean;
 }
 
+import { DEFAULT_MAX_ATTEMPTS } from '../utils/retry.js';
 import type { FileFilteringOptions } from './constants.js';
 import {
   DEFAULT_FILE_FILTERING_OPTIONS,
@@ -344,7 +385,7 @@ export class MCPServerConfig {
     readonly description?: string,
     readonly includeTools?: string[],
     readonly excludeTools?: string[],
-    readonly extension?: CodeflyCLIExtension,
+    readonly extension?: GeminiCLIExtension,
     // OAuth configuration
     readonly oauth?: MCPOAuthConfig,
     readonly authProviderType?: AuthProviderType,
@@ -389,13 +430,11 @@ export interface PolicyUpdateConfirmationRequest {
 export interface ConfigParameters {
   sessionId: string;
   clientVersion?: string;
-  usageStatisticsEnabled?: boolean;
   embeddingModel?: string;
   sandbox?: SandboxConfig;
   targetDir: string;
   debugMode: boolean;
   question?: string;
-  language?: string;
 
   coreTools?: string[];
   /** @deprecated Use Policy Engine instead */
@@ -407,17 +446,18 @@ export interface ConfigParameters {
   mcpServerCommand?: string;
   mcpServers?: Record<string, MCPServerConfig>;
   mcpEnablementCallbacks?: McpEnablementCallbacks;
-  userMemory?: string;
-  codeflyMdFileCount?: number;
-  codeflyMdFilePaths?: string[];
+  userMemory?: string | HierarchicalMemory;
+  geminiMdFileCount?: number;
+  geminiMdFilePaths?: string[];
   approvalMode?: ApprovalMode;
   showMemoryUsage?: boolean;
   contextFileName?: string | string[];
   accessibility?: AccessibilitySettings;
   telemetry?: TelemetrySettings;
+  usageStatisticsEnabled?: boolean;
   fileFiltering?: {
     respectGitIgnore?: boolean;
-    respectCodeflyIgnore?: boolean;
+    respectGeminiIgnore?: boolean;
     enableRecursiveFileSearch?: boolean;
     enableFuzzySearch?: boolean;
     maxFileCount?: number;
@@ -460,18 +500,19 @@ export interface ConfigParameters {
   useRipgrep?: boolean;
   enableInteractiveShell?: boolean;
   skipNextSpeakerCheck?: boolean;
-  enableThink?: boolean;
   shellExecutionConfig?: ShellExecutionConfig;
   extensionManagement?: boolean;
   truncateToolOutputThreshold?: number;
   eventEmitter?: EventEmitter;
   useWriteTodos?: boolean;
   policyEngineConfig?: PolicyEngineConfig;
+  directWebFetch?: boolean;
   policyUpdateConfirmationRequest?: PolicyUpdateConfirmationRequest;
   output?: OutputSettings;
   disableModelRouterForAuth?: AuthType[];
   continueOnFailedApiCall?: boolean;
   retryFetchErrors?: boolean;
+  maxAttempts?: number;
   enableShellOutputEfficiency?: boolean;
   shellToolInactivityTimeout?: number;
   fakeResponses?: string;
@@ -483,13 +524,10 @@ export interface ConfigParameters {
   modelConfigServiceConfig?: ModelConfigServiceConfig;
   enableHooks?: boolean;
   enableHooksUI?: boolean;
-  hooks?: { [K in HookEventName]?: HookDefinition[] } & { disabled?: string[] };
-  projectHooks?: { [K in HookEventName]?: HookDefinition[] } & {
-    disabled?: string[];
-  };
-  disabledHooks?: string[];
   experiments?: Experiments;
-  previewFeatures?: boolean;
+  hooks?: { [K in HookEventName]?: HookDefinition[] };
+  disabledHooks?: string[];
+  projectHooks?: { [K in HookEventName]?: HookDefinition[] };
   enableAgents?: boolean;
   enableEventDrivenScheduler?: boolean;
   skillsSupport?: boolean;
@@ -502,14 +540,6 @@ export interface ConfigParameters {
   planSettings?: PlanSettings;
   modelSteering?: boolean;
   onModelChange?: (model: string) => void;
-  openaiConfig?: {
-    baseUrl?: string;
-    model?: string;
-    apiKey?: string;
-    models?: string;
-    contextWindowLimit?: number;
-  };
-
   mcpEnabled?: boolean;
   extensionsEnabled?: boolean;
   agents?: AgentSettings;
@@ -518,6 +548,7 @@ export interface ConfigParameters {
     adminSkillsEnabled?: boolean;
     agents?: AgentSettings;
   }>;
+  enableConseca?: boolean;
 }
 
 export class Config {
@@ -545,7 +576,7 @@ export class Config {
   private workspaceContext: WorkspaceContext;
   private readonly debugMode: boolean;
   private readonly question: string | undefined;
-  readonly language: string;
+  readonly enableConseca: boolean;
 
   private readonly coreTools: string[] | undefined;
   /** @deprecated Use Policy Engine instead */
@@ -559,20 +590,20 @@ export class Config {
   private readonly extensionsEnabled: boolean;
   private mcpServers: Record<string, MCPServerConfig> | undefined;
   private readonly mcpEnablementCallbacks?: McpEnablementCallbacks;
-  private userMemory: string;
-  private codeflyMdFileCount: number;
-  private codeflyMdFilePaths: string[];
+  private userMemory: string | HierarchicalMemory;
+  private geminiMdFileCount: number;
+  private geminiMdFilePaths: string[];
   private readonly showMemoryUsage: boolean;
   private readonly accessibility: AccessibilitySettings;
   private readonly telemetrySettings: TelemetrySettings;
   private readonly usageStatisticsEnabled: boolean;
-  private codeflyClient!: CodeflyClient;
+  private geminiClient!: GeminiClient;
   private baseLlmClient!: BaseLlmClient;
   private modelRouterService: ModelRouterService;
   private readonly modelAvailabilityService: ModelAvailabilityService;
   private readonly fileFiltering: {
     respectGitIgnore: boolean;
-    respectCodeflyIgnore: boolean;
+    respectGeminiIgnore: boolean;
     enableRecursiveFileSearch: boolean;
     enableFuzzySearch: boolean;
     maxFileCount: number;
@@ -642,10 +673,11 @@ export class Config {
   readonly interactive: boolean;
   private readonly ptyInfo: string;
   private readonly trustedFolder: boolean | undefined;
+  private readonly directWebFetch: boolean;
   private readonly useRipgrep: boolean;
   private readonly enableInteractiveShell: boolean;
   private readonly skipNextSpeakerCheck: boolean;
-  private readonly enableThink: boolean;
+  private readonly useBackgroundColor: boolean;
   private shellExecutionConfig: ShellExecutionConfig;
   private readonly extensionManagement: boolean = true;
   private readonly truncateToolOutputThreshold: number;
@@ -664,6 +696,7 @@ export class Config {
   private readonly outputSettings: OutputSettings;
   private readonly continueOnFailedApiCall: boolean;
   private readonly retryFetchErrors: boolean;
+  private readonly maxAttempts: number;
   private readonly enableShellOutputEfficiency: boolean;
   private readonly shellToolInactivityTimeout: number;
   readonly fakeResponses?: string;
@@ -673,22 +706,13 @@ export class Config {
   private readonly acceptRawOutputRisk: boolean;
   private pendingIncludeDirectories: string[];
   private readonly enableHooks: boolean;
-
-  private readonly experimentalJitContext: boolean;
-  private readonly disableLLMCorrection: boolean;
-  private readonly planEnabled: boolean;
-  private contextManager?: ContextManager;
-  private terminalBackground: string | undefined = undefined;
-  private remoteAdminSettings: FetchAdminControlsResponse | undefined;
-  private latestApiRequest: GenerateContentParameters | undefined;
-  private lastModeSwitchTime: number = Date.now();
-
-  private readonly enableAgents: boolean;
-  private agents: AgentSettings;
-  private readonly enableEventDrivenScheduler: boolean;
-  private readonly skillsSupport: boolean;
-  private disabledSkills: string[];
-  private readonly adminSkillsEnabled: boolean;
+  private readonly enableHooksUI: boolean;
+  private readonly toolOutputMasking: ToolOutputMaskingConfig;
+  private hooks: { [K in HookEventName]?: HookDefinition[] } | undefined;
+  private projectHooks:
+    | ({ [K in HookEventName]?: HookDefinition[] } & { disabled?: string[] })
+    | undefined;
+  private disabledHooks: string[];
   private experiments: Experiments | undefined;
   private experimentsPromise: Promise<void> | undefined;
   private hookSystem?: HookSystem;
@@ -701,26 +725,32 @@ export class Config {
       }>)
     | undefined;
 
-  openaiConfig?: {
-    baseUrl?: string;
-    model?: string;
-    apiKey?: string;
-    models?: string;
-    contextWindowLimit?: number;
-  };
-  private readonly enableHooksUI: boolean;
-  private hooks: { [K in HookEventName]?: HookDefinition[] } | undefined;
-  private projectHooks:
-    | ({ [K in HookEventName]?: HookDefinition[] } & { disabled?: string[] })
-    | undefined;
-  private disabledHooks: string[];
+  private readonly enableAgents: boolean;
+  private agents: AgentSettings;
+  private readonly enableEventDrivenScheduler: boolean;
+  private readonly skillsSupport: boolean;
+  private disabledSkills: string[];
+  private readonly adminSkillsEnabled: boolean;
+
+  private readonly experimentalJitContext: boolean;
+  private readonly disableLLMCorrection: boolean;
+  private readonly planEnabled: boolean;
+  private readonly planModeRoutingEnabled: boolean;
+  private readonly modelSteering: boolean;
+  private contextManager?: ContextManager;
+  private terminalBackground: string | undefined = undefined;
+  private remoteAdminSettings: AdminControlsSettings | undefined;
+  private latestApiRequest: GenerateContentParameters | undefined;
+  private lastModeSwitchTime: number = performance.now();
+  readonly userHintService: UserHintService;
+  private approvedPlanPath: string | undefined;
 
   constructor(params: ConfigParameters) {
     this.sessionId = params.sessionId;
     this.clientVersion = params.clientVersion ?? 'unknown';
     this.approvedPlanPath = undefined;
     this.embeddingModel =
-      params.embeddingModel ?? DEFAULT_CODEFLY_EMBEDDING_MODEL;
+      params.embeddingModel ?? DEFAULT_GEMINI_EMBEDDING_MODEL;
     this.fileSystemService = new StandardFileSystemService();
     this.sandbox = params.sandbox;
     this.targetDir = path.resolve(params.targetDir);
@@ -729,7 +759,6 @@ export class Config {
     this.pendingIncludeDirectories = params.includeDirectories ?? [];
     this.debugMode = params.debugMode;
     this.question = params.question;
-    this.language = params.language ?? 'auto';
 
     this.coreTools = params.coreTools;
     this.allowedTools = params.allowedTools;
@@ -738,7 +767,6 @@ export class Config {
     this.toolCallCommand = params.toolCallCommand;
     this.mcpServerCommand = params.mcpServerCommand;
     this.mcpServers = params.mcpServers;
-    this.usageStatisticsEnabled = params.usageStatisticsEnabled ?? true;
     this.mcpEnablementCallbacks = params.mcpEnablementCallbacks;
     this.mcpEnabled = params.mcpEnabled ?? true;
     this.extensionsEnabled = params.extensionsEnabled ?? true;
@@ -749,8 +777,8 @@ export class Config {
     this.enableEnvironmentVariableRedaction =
       params.enableEnvironmentVariableRedaction ?? false;
     this.userMemory = params.userMemory ?? '';
-    this.codeflyMdFileCount = params.codeflyMdFileCount ?? 0;
-    this.codeflyMdFilePaths = params.codeflyMdFilePaths ?? [];
+    this.geminiMdFileCount = params.geminiMdFileCount ?? 0;
+    this.geminiMdFilePaths = params.geminiMdFilePaths ?? [];
     this.showMemoryUsage = params.showMemoryUsage ?? false;
     this.accessibility = params.accessibility ?? {};
     this.telemetrySettings = {
@@ -763,14 +791,15 @@ export class Config {
       useCollector: params.telemetry?.useCollector,
       useCliAuth: params.telemetry?.useCliAuth,
     };
+    this.usageStatisticsEnabled = params.usageStatisticsEnabled ?? true;
 
     this.fileFiltering = {
       respectGitIgnore:
         params.fileFiltering?.respectGitIgnore ??
         DEFAULT_FILE_FILTERING_OPTIONS.respectGitIgnore,
-      respectCodeflyIgnore:
-        params.fileFiltering?.respectCodeflyIgnore ??
-        DEFAULT_FILE_FILTERING_OPTIONS.respectCodeflyIgnore,
+      respectGeminiIgnore:
+        params.fileFiltering?.respectGeminiIgnore ??
+        DEFAULT_FILE_FILTERING_OPTIONS.respectGeminiIgnore,
       enableRecursiveFileSearch:
         params.fileFiltering?.enableRecursiveFileSearch ?? true,
       enableFuzzySearch: params.fileFiltering?.enableFuzzySearch ?? true,
@@ -796,6 +825,7 @@ export class Config {
     this.agents = params.agents ?? {};
     this.disableLLMCorrection = params.disableLLMCorrection ?? true;
     this.planEnabled = params.plan ?? false;
+    this.planModeRoutingEnabled = params.planSettings?.modelRouting ?? true;
     this.enableEventDrivenScheduler = params.enableEventDrivenScheduler ?? true;
     this.skillsSupport = params.skillsSupport ?? true;
     this.disabledSkills = params.disabledSkills ?? [];
@@ -840,6 +870,7 @@ export class Config {
     this.interactive = params.interactive ?? false;
     this.ptyInfo = params.ptyInfo ?? 'child_process';
     this.trustedFolder = params.trustedFolder;
+    this.directWebFetch = params.directWebFetch ?? false;
     this.useRipgrep = params.useRipgrep ?? true;
     this.useBackgroundColor = params.useBackgroundColor ?? true;
     this.enableInteractiveShell = params.enableInteractiveShell ?? false;
@@ -876,13 +907,35 @@ export class Config {
     this.recordResponses = params.recordResponses;
     this.fileExclusions = new FileExclusions(this);
     this.eventEmitter = params.eventEmitter;
-    this.policyEngine = new PolicyEngine({
-      ...params.policyEngineConfig,
-      approvalMode:
-        params.approvalMode ?? params.policyEngineConfig?.approvalMode,
+    this.enableConseca = params.enableConseca ?? false;
+
+    // Initialize Safety Infrastructure
+    const contextBuilder = new ContextBuilder(this);
+    const checkersPath = this.targetDir;
+    // The checkersPath  is used to resolve external checkers. Since we do not have any external checkers currently, it is set to the targetDir.
+    const checkerRegistry = new CheckerRegistry(checkersPath);
+    const checkerRunner = new CheckerRunner(contextBuilder, checkerRegistry, {
+      checkersPath,
+      timeout: 30000, // 30 seconds to allow for LLM-based checkers
     });
     this.policyUpdateConfirmationRequest =
       params.policyUpdateConfirmationRequest;
+
+    this.policyEngine = new PolicyEngine(
+      {
+        ...params.policyEngineConfig,
+        approvalMode:
+          params.approvalMode ?? params.policyEngineConfig?.approvalMode,
+      },
+      checkerRunner,
+    );
+
+    // Register Conseca if enabled
+    if (this.enableConseca) {
+      debugLogger.log('[SAFETY] Registering Conseca Safety Checker');
+      ConsecaSafetyChecker.getInstance().setConfig(this);
+    }
+
     this.messageBus = new MessageBus(this.policyEngine, this.debugMode);
     this.acknowledgedAgentsService = new AcknowledgedAgentsService();
     this.skillManager = new SkillManager();
@@ -890,25 +943,32 @@ export class Config {
       format: params.output?.format ?? OutputFormat.TEXT,
     };
     this.retryFetchErrors = params.retryFetchErrors ?? false;
+    this.maxAttempts = Math.min(
+      params.maxAttempts ?? DEFAULT_MAX_ATTEMPTS,
+      DEFAULT_MAX_ATTEMPTS,
+    );
     this.disableYoloMode = params.disableYoloMode ?? false;
     this.rawOutput = params.rawOutput ?? false;
     this.acceptRawOutputRisk = params.acceptRawOutputRisk ?? false;
-    this.enableThink = params.enableThink ?? false;
 
-    this.hooks = params.hooks;
-    this.projectHooks = params.projectHooks;
+    if (params.hooks) {
+      this.hooks = params.hooks;
+    }
+    if (params.projectHooks) {
+      this.projectHooks = params.projectHooks;
+    }
 
     this.experiments = params.experiments;
     this.onModelChange = params.onModelChange;
     this.onReload = params.onReload;
-    this.openaiConfig = params.openaiConfig;
 
     if (params.contextFileName) {
-      setCodeflyMdFilename(params.contextFileName);
+      setGeminiMdFilename(params.contextFileName);
     }
 
     if (this.telemetrySettings.enabled) {
-      void initializeTelemetry(this);
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      initializeTelemetry(this);
     }
 
     const proxy = this.getProxy();
@@ -923,7 +983,7 @@ export class Config {
         );
       }
     }
-    this.codeflyClient = new CodeflyClient(this);
+    this.geminiClient = new GeminiClient(this);
     this.modelRouterService = new ModelRouterService(this);
 
     // HACK: The settings loading logic doesn't currently merge the default
@@ -1000,7 +1060,6 @@ export class Config {
     await this.agentRegistry.initialize();
 
     coreEvents.on(CoreEvent.AgentsRefreshed, this.onAgentsRefreshed);
-    coreEvents.on(CoreEvent.CommandsRefreshed, this.onCommandsRefreshed);
 
     this.toolRegistry = await this.createToolRegistry();
     discoverToolsHandle?.end();
@@ -1058,7 +1117,9 @@ export class Config {
       await this.contextManager.refresh();
     }
 
-    await this.codeflyClient.initialize();
+    await this.geminiClient.initialize();
+    this.syncPlanModeTools();
+    this.initialized = true;
   }
 
   getContentGenerator(): ContentGenerator {
@@ -1076,7 +1137,7 @@ export class Config {
       authMethod !== AuthType.USE_GEMINI
     ) {
       // Restore the conversation history to the new client
-      this.codeflyClient.stripThoughtsFromHistory();
+      this.geminiClient.stripThoughtsFromHistory();
     }
 
     // Reset availability status when switching auth (e.g. from limited key to OAuth)
@@ -1115,6 +1176,7 @@ export class Config {
       .catch((e) => {
         debugLogger.error('Failed to fetch experiments', e);
       });
+
     const authType = this.contentGeneratorConfig.authType;
     if (
       authType === AuthType.USE_GEMINI ||
@@ -1123,9 +1185,10 @@ export class Config {
       this.setHasAccessToPreviewModel(true);
     }
 
-    // Update model if user no longer has access to the preview model
-    if (!this.hasAccessToPreviewModel && isPreviewModel(this.model)) {
-      await this.setModel(DEFAULT_CODEFLY_MODEL_AUTO);
+    // Only reset when we have explicit "no access" (hasAccessToPreviewModel === false).
+    // When null (quota not fetched) or true, we preserve the saved model.
+    if (isPreviewModel(this.model) && this.hasAccessToPreviewModel === false) {
+      this.setModel(DEFAULT_GEMINI_MODEL_AUTO);
     }
 
     // Fetch admin controls
@@ -1145,12 +1208,6 @@ export class Config {
     this.setRemoteAdminSettings(adminControls);
   }
 
-  async ensureExperimentsLoaded(): Promise<void> {
-    if (this.experimentsPromise) {
-      await this.experimentsPromise;
-    }
-  }
-
   async getExperimentsAsync(): Promise<Experiments | undefined> {
     if (this.experiments) {
       return this.experiments;
@@ -1166,6 +1223,7 @@ export class Config {
   getUserTierName(): string | undefined {
     return this.contentGenerator?.userTierName;
   }
+
   /**
    * Provides access to the BaseLlmClient for stateless LLM operations.
    */
@@ -1239,39 +1297,18 @@ export class Config {
   }
 
   getModel(): string {
-    return this._activeModel;
+    return this.model;
   }
 
-  async setModel(newModel: string, isTemporary: boolean = true): Promise<void> {
+  getDisableLoopDetection(): boolean {
+    return this.disableLoopDetection ?? false;
+  }
+
+  setModel(newModel: string, isTemporary: boolean = true): void {
     if (this.model !== newModel || this._activeModel !== newModel) {
-      if (!isTemporary) {
-        this.model = newModel;
-      }
+      this.model = newModel;
+      // When the user explicitly sets a model, that becomes the active model.
       this._activeModel = newModel;
-
-      // Check if we should switch to OpenAI auth
-      const currentAuthType = this.contentGeneratorConfig?.authType;
-      const isNewModelGemini = isGeminiModel(newModel) || isAutoModel(newModel);
-
-      if (
-        isNewModelGemini &&
-        currentAuthType === AuthType.OPENAI &&
-        !isGeminiModel(this.openaiConfig?.model || '')
-      ) {
-        // Switching from OpenAI to Gemini
-        await this.refreshAuth(AuthType.LOGIN_WITH_GOOGLE); // Fallback to default
-      } else if (
-        !isNewModelGemini &&
-        currentAuthType !== AuthType.OPENAI &&
-        this.openaiConfig?.models
-          ?.split(',')
-          .map((m) => m.trim())
-          .includes(newModel)
-      ) {
-        // Switching to OpenAI model
-        await this.refreshAuth(AuthType.OPENAI);
-      }
-
       coreEvents.emitModelChanged(newModel);
       if (this.onModelChange && !isTemporary) {
         this.onModelChange(newModel);
@@ -1281,7 +1318,7 @@ export class Config {
   }
 
   activateFallbackMode(model: string): void {
-    void this.setModel(model, true);
+    this.setModel(model, true);
     const authType = this.getContentGeneratorConfig()?.authType;
     if (authType) {
       logFlashFallback(this, new FlashFallbackEvent(authType));
@@ -1486,29 +1523,6 @@ export class Config {
     return this.question;
   }
 
-  getPreviewFeatures(): boolean | undefined {
-    return this.previewFeatures;
-  }
-
-  setPreviewFeatures(previewFeatures: boolean) {
-    // No change in state, no action needed
-    if (this.previewFeatures === previewFeatures) {
-      return;
-    }
-    this.previewFeatures = previewFeatures;
-    const currentModel = this.getModel();
-
-    // Case 1: Disabling preview features while on a preview model
-    if (!previewFeatures && isPreviewModel(currentModel)) {
-      void this.setModel(DEFAULT_CODEFLY_MODEL_AUTO);
-    }
-
-    // Case 2: Enabling preview features while on the default auto model
-    else if (previewFeatures && currentModel === DEFAULT_CODEFLY_MODEL_AUTO) {
-      void this.setModel(PREVIEW_CODEFLY_MODEL_AUTO);
-    }
-  }
-
   getHasAccessToPreviewModel(): boolean {
     return this.hasAccessToPreviewModel !== false;
   }
@@ -1517,21 +1531,52 @@ export class Config {
     this.hasAccessToPreviewModel = hasAccess;
   }
 
-  async refreshUserQuota(): Promise<undefined> {
+  async refreshUserQuota(): Promise<RetrieveUserQuotaResponse | undefined> {
     const codeAssistServer = getCodeAssistServer(this);
     if (!codeAssistServer || !codeAssistServer.projectId) {
-      return;
+      return undefined;
     }
     try {
       const quota = await codeAssistServer.retrieveUserQuota({
         project: codeAssistServer.projectId,
       });
-      const hasAccess = quota.buckets?.some(
-        (bucket) => bucket.modelId === PREVIEW_CODEFLY_MODEL,
-      );
-      this.setHasAccessToPreviewModel(hasAccess ?? false);
+
+      if (quota.buckets) {
+        this.lastRetrievedQuota = quota;
+        this.lastQuotaFetchTime = Date.now();
+
+        for (const bucket of quota.buckets) {
+          if (
+            bucket.modelId &&
+            bucket.remainingAmount &&
+            bucket.remainingFraction != null
+          ) {
+            const remaining = parseInt(bucket.remainingAmount, 10);
+            const limit =
+              bucket.remainingFraction > 0
+                ? Math.round(remaining / bucket.remainingFraction)
+                : (this.modelQuotas.get(bucket.modelId)?.limit ?? 0);
+
+            if (!isNaN(remaining) && Number.isFinite(limit) && limit > 0) {
+              this.modelQuotas.set(bucket.modelId, {
+                remaining,
+                limit,
+                resetTime: bucket.resetTime,
+              });
+            }
+          }
+        }
+        this.emitQuotaChangedEvent();
+      }
+
+      const hasAccess =
+        quota.buckets?.some((b) => b.modelId && isPreviewModel(b.modelId)) ??
+        false;
+      this.setHasAccessToPreviewModel(hasAccess);
+      return quota;
     } catch (e) {
       debugLogger.debug('Failed to retrieve user quota', e);
+      return undefined;
     }
   }
 
@@ -1584,7 +1629,10 @@ export class Config {
    *
    * May change over time.
    */
-  getExcludeTools(): Set<string> | undefined {
+  getExcludeTools(
+    toolMetadata?: Map<string, Record<string, unknown>>,
+    allToolNames?: Set<string>,
+  ): Set<string> | undefined {
     // Right now this is present for backward compatibility with settings.json exclude
     const excludeToolsSet = new Set([...(this.excludeTools ?? [])]);
     for (const extension of this.getExtensionLoader().getExtensions()) {
@@ -1596,7 +1644,10 @@ export class Config {
       }
     }
 
-    const policyExclusions = this.policyEngine.getExcludedTools();
+    const policyExclusions = this.policyEngine.getExcludedTools(
+      toolMetadata,
+      allToolNames,
+    );
     for (const tool of policyExclusions) {
       excludeToolsSet.add(tool);
     }
@@ -1685,9 +1736,9 @@ export class Config {
       );
       await refreshServerHierarchicalMemory(this);
     }
-    if (this.codeflyClient?.isInitialized()) {
-      await this.codeflyClient.setTools();
-      await this.codeflyClient.updateSystemInstruction();
+    if (this.geminiClient?.isInitialized()) {
+      await this.geminiClient.setTools();
+      this.geminiClient.updateSystemInstruction();
     }
   }
 
@@ -1707,34 +1758,73 @@ export class Config {
     return this.contextManager;
   }
 
-  getOpenaiContextWindowLimit(): number | undefined {
-    return this.openaiConfig?.contextWindowLimit;
-  }
-
   isJitContextEnabled(): boolean {
     return this.experimentalJitContext;
   }
 
-  getCodeflyMdFileCount(): number {
+  isModelSteeringEnabled(): boolean {
+    return this.modelSteering;
+  }
+
+  getToolOutputMaskingEnabled(): boolean {
+    return this.toolOutputMasking.enabled;
+  }
+
+  async getToolOutputMaskingConfig(): Promise<ToolOutputMaskingConfig> {
+    await this.ensureExperimentsLoaded();
+
+    const remoteProtection =
+      this.experiments?.flags[ExperimentFlags.MASKING_PROTECTION_THRESHOLD]
+        ?.intValue;
+    const remotePrunable =
+      this.experiments?.flags[ExperimentFlags.MASKING_PRUNABLE_THRESHOLD]
+        ?.intValue;
+    const remoteProtectLatest =
+      this.experiments?.flags[ExperimentFlags.MASKING_PROTECT_LATEST_TURN]
+        ?.boolValue;
+
+    const parsedProtection = remoteProtection
+      ? parseInt(remoteProtection, 10)
+      : undefined;
+    const parsedPrunable = remotePrunable
+      ? parseInt(remotePrunable, 10)
+      : undefined;
+
+    return {
+      enabled: this.toolOutputMasking.enabled,
+      toolProtectionThreshold:
+        parsedProtection !== undefined && !isNaN(parsedProtection)
+          ? parsedProtection
+          : this.toolOutputMasking.toolProtectionThreshold,
+      minPrunableTokensThreshold:
+        parsedPrunable !== undefined && !isNaN(parsedPrunable)
+          ? parsedPrunable
+          : this.toolOutputMasking.minPrunableTokensThreshold,
+      protectLatestTurn:
+        remoteProtectLatest ?? this.toolOutputMasking.protectLatestTurn,
+    };
+  }
+
+  getGeminiMdFileCount(): number {
     if (this.experimentalJitContext && this.contextManager) {
       return this.contextManager.getLoadedPaths().size;
     }
-    return this.codeflyMdFileCount;
+    return this.geminiMdFileCount;
   }
 
-  setCodeflyMdFileCount(count: number): void {
-    this.codeflyMdFileCount = count;
+  setGeminiMdFileCount(count: number): void {
+    this.geminiMdFileCount = count;
   }
 
-  getCodeflyMdFilePaths(): string[] {
+  getGeminiMdFilePaths(): string[] {
     if (this.experimentalJitContext && this.contextManager) {
       return Array.from(this.contextManager.getLoadedPaths());
     }
-    return this.codeflyMdFilePaths;
+    return this.geminiMdFilePaths;
   }
 
-  setCodeflyMdFilePaths(paths: string[]): void {
-    this.codeflyMdFilePaths = paths;
+  setGeminiMdFilePaths(paths: string[]): void {
+    this.geminiMdFilePaths = paths;
   }
 
   getApprovalMode(): ApprovalMode {
@@ -1895,10 +1985,6 @@ export class Config {
     return this.telemetrySettings.enabled ?? false;
   }
 
-  getEnableThink(): boolean {
-    return this.enableThink;
-  }
-
   getTelemetryLogPromptsEnabled(): boolean {
     return this.telemetrySettings.logPrompts ?? true;
   }
@@ -1927,16 +2013,16 @@ export class Config {
     return this.telemetrySettings.useCliAuth ?? false;
   }
 
-  getCodeflyClient(): CodeflyClient {
-    return this.codeflyClient;
+  getGeminiClient(): GeminiClient {
+    return this.geminiClient;
   }
 
   /**
    * Updates the system instruction with the latest user memory.
-   * Whenever the user memory (CODEFLY.md files) is updated.
+   * Whenever the user memory (GEMINI.md files) is updated.
    */
-  async updateSystemInstructionIfInitialized(): Promise<void> {
-    const geminiClient = this.getCodeflyClient();
+  updateSystemInstructionIfInitialized(): void {
+    const geminiClient = this.getGeminiClient();
     if (geminiClient?.isInitialized()) {
       geminiClient.updateSystemInstruction();
     }
@@ -1961,16 +2047,9 @@ export class Config {
   getFileFilteringRespectGitIgnore(): boolean {
     return this.fileFiltering.respectGitIgnore;
   }
-  getFileFilteringRespectCodeflyIgnore(): boolean {
-    return this.fileFiltering.respectCodeflyIgnore;
-  }
 
-  setFileFilteringRespectGitIgnore(value: boolean): void {
-    this.fileFiltering.respectGitIgnore = value;
-  }
-
-  setFileFilteringRespectCodeflyIgnore(value: boolean): void {
-    this.fileFiltering.respectCodeflyIgnore = value;
+  getFileFilteringRespectGeminiIgnore(): boolean {
+    return this.fileFiltering.respectGeminiIgnore;
   }
 
   getCustomIgnoreFilePaths(): string[] {
@@ -1980,7 +2059,7 @@ export class Config {
   getFileFilteringOptions(): FileFilteringOptions {
     return {
       respectGitIgnore: this.fileFiltering.respectGitIgnore,
-      respectCodeflyIgnore: this.fileFiltering.respectCodeflyIgnore,
+      respectGeminiIgnore: this.fileFiltering.respectGeminiIgnore,
       maxFileCount: this.fileFiltering.maxFileCount,
       searchTimeout: this.fileFiltering.searchTimeout,
       customIgnoreFilePaths: this.fileFiltering.customIgnoreFilePaths,
@@ -2029,6 +2108,10 @@ export class Config {
     return this.fileDiscoveryService;
   }
 
+  getUsageStatisticsEnabled(): boolean {
+    return this.usageStatisticsEnabled;
+  }
+
   getExperimentalZedIntegration(): boolean {
     return this.experimentalZedIntegration;
   }
@@ -2049,7 +2132,7 @@ export class Config {
     return this.extensionManagement;
   }
 
-  getExtensions(): CodeflyCLIExtension[] {
+  getExtensions(): GeminiCLIExtension[] {
     return this._extensionLoader.getExtensions();
   }
 
@@ -2075,11 +2158,16 @@ export class Config {
     return this.planEnabled;
   }
 
-  /**
-   * Get usage statistics enabled status
-   */
-  getUsageStatisticsEnabled(): boolean {
-    return this.usageStatisticsEnabled;
+  getApprovedPlanPath(): string | undefined {
+    return this.approvedPlanPath;
+  }
+
+  getDirectWebFetch(): boolean {
+    return this.directWebFetch;
+  }
+
+  setApprovedPlanPath(path: string | undefined): void {
+    this.approvedPlanPath = path;
   }
 
   isAgentsEnabled(): boolean {
@@ -2212,19 +2300,29 @@ export class Config {
   }
 
   async getCompressionThreshold(): Promise<number | undefined> {
-    if (this.compressionThreshold !== undefined) {
+    if (this.compressionThreshold) {
       return this.compressionThreshold;
     }
-    const experiments = await this.getExperimentsAsync();
-    const threshold =
-      experiments?.flags?.[ExperimentFlags.CONTEXT_COMPRESSION_THRESHOLD]
+
+    await this.ensureExperimentsLoaded();
+
+    const remoteThreshold =
+      this.experiments?.flags[ExperimentFlags.CONTEXT_COMPRESSION_THRESHOLD]
         ?.floatValue;
-    return threshold !== undefined && threshold > 0 ? threshold : undefined;
+    if (remoteThreshold === 0) {
+      return undefined;
+    }
+    return remoteThreshold;
   }
 
   async getUserCaching(): Promise<boolean | undefined> {
-    const experiments = await this.getExperimentsAsync();
-    return experiments?.flags?.[ExperimentFlags.USER_CACHING]?.boolValue;
+    await this.ensureExperimentsLoaded();
+
+    return this.experiments?.flags[ExperimentFlags.USER_CACHING]?.boolValue;
+  }
+
+  async getPlanModeRoutingEnabled(): Promise<boolean> {
+    return this.planModeRoutingEnabled;
   }
 
   async getNumericalRoutingEnabled(): Promise<boolean> {
@@ -2245,11 +2343,60 @@ export class Config {
   }
 
   async getBannerTextNoCapacityIssues(): Promise<string> {
-    return '';
+    await this.ensureExperimentsLoaded();
+    return (
+      this.experiments?.flags[ExperimentFlags.BANNER_TEXT_NO_CAPACITY_ISSUES]
+        ?.stringValue ?? ''
+    );
   }
 
   async getBannerTextCapacityIssues(): Promise<string> {
-    return '';
+    await this.ensureExperimentsLoaded();
+    return (
+      this.experiments?.flags[ExperimentFlags.BANNER_TEXT_CAPACITY_ISSUES]
+        ?.stringValue ?? ''
+    );
+  }
+
+  /**
+   * Returns whether Gemini 3.1 has been launched.
+   * This method is async and ensures that experiments are loaded before returning the result.
+   */
+  async getGemini31Launched(): Promise<boolean> {
+    await this.ensureExperimentsLoaded();
+    return this.getGemini31LaunchedSync();
+  }
+
+  /**
+   * Returns whether Gemini 3.1 has been launched.
+   *
+   * Note: This method should only be called after startup, once experiments have been loaded.
+   * If you need to call this during startup or from an async context, use
+   * getGemini31Launched instead.
+   */
+  getGemini31LaunchedSync(): boolean {
+    const authType = this.contentGeneratorConfig?.authType;
+    if (
+      authType === AuthType.USE_GEMINI ||
+      authType === AuthType.USE_VERTEX_AI
+    ) {
+      return true;
+    }
+    return (
+      this.experiments?.flags[ExperimentFlags.GEMINI_3_1_PRO_LAUNCHED]
+        ?.boolValue ?? false
+    );
+  }
+
+  private async ensureExperimentsLoaded(): Promise<void> {
+    if (!this.experimentsPromise) {
+      return;
+    }
+    try {
+      await this.experimentsPromise;
+    } catch (e) {
+      debugLogger.debug('Failed to fetch experiments', e);
+    }
   }
 
   isInteractiveShellEnabled(): boolean {
@@ -2346,6 +2493,10 @@ export class Config {
     return this.retryFetchErrors;
   }
 
+  getMaxAttempts(): number {
+    return this.maxAttempts;
+  }
+
   getEnableShellOutputEfficiency(): boolean {
     return this.enableShellOutputEfficiency;
   }
@@ -2426,6 +2577,38 @@ export class Config {
     return this.enableHooksUI;
   }
 
+  /**
+   * Get override settings for a specific agent.
+   * Reads from agents.overrides.<agentName>.
+   */
+  getAgentOverride(agentName: string): AgentOverride | undefined {
+    return this.getAgentsSettings()?.overrides?.[agentName];
+  }
+
+  /**
+   * Get browser agent configuration.
+   * Combines generic AgentOverride fields with browser-specific customConfig.
+   * This is the canonical way to access browser agent settings.
+   */
+  getBrowserAgentConfig(): {
+    enabled: boolean;
+    model?: string;
+    customConfig: BrowserAgentCustomConfig;
+  } {
+    const override = this.getAgentOverride('browser_agent');
+    const customConfig = this.getAgentsSettings()?.browser ?? {};
+    return {
+      enabled: override?.enabled ?? false,
+      model: override?.modelConfig?.model,
+      customConfig: {
+        sessionMode: customConfig.sessionMode ?? 'persistent',
+        headless: customConfig.headless ?? false,
+        profilePath: customConfig.profilePath,
+        visualModel: customConfig.visualModel,
+      },
+    };
+  }
+
   async createToolRegistry(): Promise<ToolRegistry> {
     const registry = new ToolRegistry(this, this.messageBus);
 
@@ -2487,17 +2670,33 @@ export class Config {
       );
     }
 
-    registerCoreTool(GlobTool, this);
-    registerCoreTool(ActivateSkillTool, this);
-    registerCoreTool(EditTool, this);
-    registerCoreTool(WriteFileTool, this);
-    registerCoreTool(WebFetchTool, this);
-    registerCoreTool(ShellTool, this);
-    registerCoreTool(MemoryTool);
-    registerCoreTool(WebSearchTool, this);
-    registerCoreTool(DatabaseSchemaTool, this);
-    registerCoreTool(DrawioToSqlTool, this);
-    registerCoreTool(SwaggerSchemaTool, this);
+    maybeRegister(GlobTool, () =>
+      registry.registerTool(new GlobTool(this, this.messageBus)),
+    );
+    maybeRegister(ActivateSkillTool, () =>
+      registry.registerTool(new ActivateSkillTool(this, this.messageBus)),
+    );
+    maybeRegister(EditTool, () =>
+      registry.registerTool(new EditTool(this, this.messageBus)),
+    );
+    maybeRegister(WriteFileTool, () =>
+      registry.registerTool(new WriteFileTool(this, this.messageBus)),
+    );
+    maybeRegister(WebFetchTool, () =>
+      registry.registerTool(new WebFetchTool(this, this.messageBus)),
+    );
+    maybeRegister(ShellTool, () =>
+      registry.registerTool(new ShellTool(this, this.messageBus)),
+    );
+    maybeRegister(MemoryTool, () =>
+      registry.registerTool(new MemoryTool(this.messageBus)),
+    );
+    maybeRegister(WebSearchTool, () =>
+      registry.registerTool(new WebSearchTool(this, this.messageBus)),
+    );
+    maybeRegister(AskUserTool, () =>
+      registry.registerTool(new AskUserTool(this.messageBus)),
+    );
     if (this.getUseWriteTodos()) {
       maybeRegister(WriteTodosTool, () =>
         registry.registerTool(new WriteTodosTool(this.messageBus)),
@@ -2581,6 +2780,7 @@ export class Config {
   getDisabledHooks(): string[] {
     return this.disabledHooks;
   }
+
   /**
    * Get experiments configuration
    */
@@ -2638,21 +2838,15 @@ export class Config {
       this.registerSubAgentTools(this.toolRegistry);
     }
     // Propagate updates to the active chat session
-    const client = this.getCodeflyClient();
+    const client = this.getGeminiClient();
     if (client?.isInitialized()) {
       await client.setTools();
       client.updateSystemInstruction();
     } else {
       debugLogger.debug(
-        '[Config] CodeflyClient not initialized; skipping live prompt/tool refresh.',
+        '[Config] GeminiClient not initialized; skipping live prompt/tool refresh.',
       );
     }
-  };
-
-  private onCommandsRefreshed = async () => {
-    await this.refreshMcpContext();
-    await this.reloadSkills();
-    await this.agentRegistry.reload();
   };
 
   /**
@@ -2661,13 +2855,12 @@ export class Config {
   async dispose(): Promise<void> {
     this.logCurrentModeDuration(this.getApprovalMode());
     coreEvents.off(CoreEvent.AgentsRefreshed, this.onAgentsRefreshed);
-    coreEvents.off(CoreEvent.CommandsRefreshed, this.onCommandsRefreshed);
     this.agentRegistry?.dispose();
-    this.codeflyClient?.dispose();
+    this.geminiClient?.dispose();
     if (this.mcpClientManager) {
       await this.mcpClientManager.stop();
     }
   }
 }
 // Export model constants for use in CLI
-export { DEFAULT_CODEFLY_FLASH_MODEL };
+export { DEFAULT_GEMINI_FLASH_MODEL };

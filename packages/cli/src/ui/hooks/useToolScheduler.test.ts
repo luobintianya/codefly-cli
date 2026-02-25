@@ -7,44 +7,26 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { act } from 'react';
 import { renderHook } from '../../test-utils/render.js';
-import { useReactToolScheduler } from './useReactToolScheduler.js';
-import { mapToDisplay } from './toolMapping.js';
-import type { PartUnion, FunctionResponse } from '@google/genai';
-import type {
-  Config,
-  ToolCallRequestInfo,
-  ToolRegistry,
-  ToolResult,
-  ToolCallConfirmationDetails,
-  ToolCallResponseInfo,
-  ToolCall, // Import from core
-  Status as ToolCallStatusType,
-  AnyDeclarativeTool,
-  AnyToolInvocation,
-} from '@codeflyai/codefly-core';
+import { useToolScheduler } from './useToolScheduler.js';
 import {
-  DEFAULT_TRUNCATE_TOOL_OUTPUT_LINES,
-  DEFAULT_TRUNCATE_TOOL_OUTPUT_THRESHOLD,
-  ToolConfirmationOutcome,
-  ApprovalMode,
-  HookSystem,
-  PREVIEW_CODEFLY_MODEL,
-  PolicyDecision,
-} from '@codeflyai/codefly-core';
-import { MockTool } from '@codeflyai/codefly-core/src/test-utils/mock-tool.js';
-import { createMockMessageBus } from '@codeflyai/codefly-core/src/test-utils/mock-message-bus.js';
-import { ToolCallStatus } from '../types.js';
+  MessageBusType,
+  Scheduler,
+  type Config,
+  type MessageBus,
+  type ExecutingToolCall,
+  type CompletedToolCall,
+  type ToolCallsUpdateMessage,
+  type AnyDeclarativeTool,
+  type AnyToolInvocation,
+  ROOT_SCHEDULER_ID,
+  CoreToolCallStatus,
+} from '@google/gemini-cli-core';
+import { createMockMessageBus } from '@google/gemini-cli-core/src/test-utils/mock-message-bus.js';
 
-// Mocks
-vi.mock('@codeflyai/codefly-core', async () => {
-  const actual = await vi.importActual<any>('@codeflyai/codefly-core');
-  // Patch CoreToolScheduler to have cancelAll if it's missing in the test environment
-  if (
-    actual.CoreToolScheduler &&
-    !actual.CoreToolScheduler.prototype.cancelAll
-  ) {
-    actual.CoreToolScheduler.prototype.cancelAll = vi.fn();
-  }
+// Mock Core Scheduler
+vi.mock('@google/gemini-cli-core', async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import('@google/gemini-cli-core')>();
   return {
     ...actual,
     Scheduler: vi.fn().mockImplementation(() => ({
@@ -68,42 +50,17 @@ const createMockTool = (
     ...overrides,
   }) as AnyDeclarativeTool;
 
-const mockConfig = {
-  getToolRegistry: vi.fn(() => mockToolRegistry as unknown as ToolRegistry),
-  getApprovalMode: vi.fn(() => ApprovalMode.DEFAULT),
-  getSessionId: () => 'test-session-id',
-  getUsageStatisticsEnabled: () => true,
-  getDebugMode: () => false,
-  storage: {
-    getProjectTempDir: () => '/tmp',
-  },
-  getWorkingDir: () => '/tmp',
-  getTruncateToolOutputThreshold: () => DEFAULT_TRUNCATE_TOOL_OUTPUT_THRESHOLD,
-  getTruncateToolOutputLines: () => DEFAULT_TRUNCATE_TOOL_OUTPUT_LINES,
-  getAllowedTools: vi.fn(() => []),
-  getActiveModel: () => PREVIEW_CODEFLY_MODEL,
-  getContentGeneratorConfig: () => ({
-    model: 'test-model',
-    authType: 'oauth-personal',
-  }),
-  getCodeflyClient: () => null, // No client needed for these tests
-  getShellExecutionConfig: () => ({ terminalWidth: 80, terminalHeight: 24 }),
-  getMessageBus: () => null,
-  isInteractive: () => false,
-  getExperiments: () => {},
-  getEnableHooks: () => false,
-} as unknown as Config;
-mockConfig.getMessageBus = vi.fn().mockReturnValue(createMockMessageBus());
-mockConfig.getHookSystem = vi.fn().mockReturnValue(new HookSystem(mockConfig));
-mockConfig.getPolicyEngine = vi.fn().mockReturnValue({
-  check: async () => {
-    const mode = mockConfig.getApprovalMode();
-    if (mode === ApprovalMode.YOLO) {
-      return { decision: PolicyDecision.ALLOW };
-    }
-    return { decision: PolicyDecision.ASK_USER };
-  },
-});
+const createMockInvocation = (
+  overrides: Partial<AnyToolInvocation> = {},
+): AnyToolInvocation =>
+  ({
+    getDescription: () => 'Executing test tool',
+    shouldConfirmExecute: vi.fn(),
+    execute: vi.fn(),
+    params: {},
+    toolLocations: [],
+    ...overrides,
+  }) as AnyToolInvocation;
 
 describe('useToolScheduler', () => {
   let mockConfig: Config;
@@ -154,7 +111,7 @@ describe('useToolScheduler', () => {
       tool: createMockTool(),
       invocation: createMockInvocation(),
       liveOutput: 'Loading...',
-    };
+    } as ExecutingToolCall;
 
     act(() => {
       void mockMessageBus.publish({
@@ -448,5 +405,63 @@ describe('useToolScheduler', () => {
     expect(
       toolCalls.find((t) => t.request.callId === 'call-sub')?.schedulerId,
     ).toBe('subagent-1');
+  });
+
+  it('adapts success/error status to executing when a tail call is present', () => {
+    vi.useFakeTimers();
+    const { result } = renderHook(() =>
+      useToolScheduler(
+        vi.fn().mockResolvedValue(undefined),
+        mockConfig,
+        () => undefined,
+      ),
+    );
+
+    const startTime = Date.now();
+    vi.advanceTimersByTime(1000);
+
+    const mockToolCall = {
+      status: CoreToolCallStatus.Success as const,
+      request: {
+        callId: 'call-1',
+        name: 'test_tool',
+        args: {},
+        isClientInitiated: false,
+        prompt_id: 'p1',
+      },
+      tool: createMockTool(),
+      invocation: createMockInvocation(),
+      response: {
+        callId: 'call-1',
+        resultDisplay: 'OK',
+        responseParts: [],
+        error: undefined,
+        errorType: undefined,
+      },
+      tailToolCallRequest: {
+        name: 'tail_tool',
+        args: {},
+        isClientInitiated: false,
+        prompt_id: '123',
+      },
+    };
+
+    act(() => {
+      void mockMessageBus.publish({
+        type: MessageBusType.TOOL_CALLS_UPDATE,
+        toolCalls: [mockToolCall],
+        schedulerId: ROOT_SCHEDULER_ID,
+      } as ToolCallsUpdateMessage);
+    });
+
+    const [toolCalls, , , , , lastOutputTime] = result.current;
+
+    // Check if status has been adapted to 'executing'
+    expect(toolCalls[0].status).toBe(CoreToolCallStatus.Executing);
+
+    // Check if lastOutputTime was updated due to the transitional state
+    expect(lastOutputTime).toBeGreaterThan(startTime);
+
+    vi.useRealTimers();
   });
 });

@@ -8,7 +8,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import * as fs from 'node:fs';
 import { TrustedHooksManager } from './trustedHooks.js';
 import { Storage } from '../config/storage.js';
-import { HookEventName, HookType } from './types.js';
+import { HookEventName, HookType, type HookDefinition } from './types.js';
 
 vi.mock('node:fs');
 vi.mock('../config/storage.js');
@@ -74,8 +74,16 @@ describe('TrustedHooksManager', () => {
         [HookEventName.BeforeTool]: [
           {
             hooks: [
-              { name: 'trusted-hook', type: HookType.Command, command: 'cmd1' },
-              { name: 'new-hook', type: HookType.Command, command: 'cmd2' },
+              {
+                name: 'trusted-hook',
+                type: HookType.Command,
+                command: 'cmd1',
+              } as const,
+              {
+                name: 'new-hook',
+                type: HookType.Command,
+                command: 'cmd2',
+              } as const,
             ],
           },
         ],
@@ -92,7 +100,11 @@ describe('TrustedHooksManager', () => {
         [HookEventName.BeforeTool]: [
           {
             hooks: [
-              { name: 'trusted-hook', type: HookType.Command, command: 'cmd1' },
+              {
+                name: 'trusted-hook',
+                type: HookType.Command,
+                command: 'cmd1',
+              } as const,
             ],
           },
         ],
@@ -116,9 +128,12 @@ describe('TrustedHooksManager', () => {
         ],
       };
 
-      expect(manager.getUntrustedHooks('/project', projectHooks)).toEqual([
-        './script.sh',
-      ]);
+      expect(
+        manager.getUntrustedHooks(
+          '/project',
+          projectHooks as Partial<Record<HookEventName, HookDefinition[]>>,
+        ),
+      ).toEqual(['./script.sh']);
     });
 
     it('should detect change in command as untrusted', () => {
@@ -144,11 +159,17 @@ describe('TrustedHooksManager', () => {
         ],
       };
 
-      manager.trustHooks('/project', originalHook);
+      manager.trustHooks(
+        '/project',
+        originalHook as Partial<Record<HookEventName, HookDefinition[]>>,
+      );
 
-      expect(manager.getUntrustedHooks('/project', updatedHook)).toEqual([
-        'my-hook',
-      ]);
+      expect(
+        manager.getUntrustedHooks(
+          '/project',
+          updatedHook as Partial<Record<HookEventName, HookDefinition[]>>,
+        ),
+      ).toEqual(['my-hook']);
     });
   });
 

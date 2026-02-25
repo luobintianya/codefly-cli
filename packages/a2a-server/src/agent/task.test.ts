@@ -518,7 +518,10 @@ describe('Task', () => {
           {
             request: { callId: '1' },
             status: 'awaiting_approval',
-            confirmationDetails: { onConfirm: onConfirmSpy },
+            confirmationDetails: {
+              type: 'edit',
+              onConfirm: onConfirmSpy,
+            },
           },
         ] as unknown as ToolCall[];
 
@@ -538,7 +541,10 @@ describe('Task', () => {
           {
             request: { callId: '1' },
             status: 'awaiting_approval',
-            confirmationDetails: { onConfirm: onConfirmSpy },
+            confirmationDetails: {
+              type: 'edit',
+              onConfirm: onConfirmSpy,
+            },
           },
         ] as unknown as ToolCall[];
 

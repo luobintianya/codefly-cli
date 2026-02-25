@@ -11,15 +11,11 @@ import { mcpCommand } from '../commands/mcp.js';
 import { extensionsCommand } from '../commands/extensions.js';
 import { skillsCommand } from '../commands/skills.js';
 import { hooksCommand } from '../commands/hooks.js';
-import { openspecCommand } from '../commands/openspec.js';
-
 import {
-  Config,
-  setCodeflyMdFilename as setServerGeminiMdFilename,
-  getCurrentCodeflyMdFilename,
+  setGeminiMdFilename as setServerGeminiMdFilename,
+  getCurrentGeminiMdFilename,
   ApprovalMode,
-  DEFAULT_CODEFLY_MODEL_AUTO,
-  DEFAULT_CODEFLY_EMBEDDING_MODEL,
+  DEFAULT_GEMINI_EMBEDDING_MODEL,
   DEFAULT_FILE_FILTERING_OPTIONS,
   DEFAULT_MEMORY_FILE_FILTERING_OPTIONS,
   FileDiscoveryService,
@@ -35,13 +31,19 @@ import {
   WEB_FETCH_TOOL_NAME,
   ASK_USER_TOOL_NAME,
   getVersion,
-  PREVIEW_CODEFLY_MODEL_AUTO,
+  PREVIEW_GEMINI_MODEL_AUTO,
+  type HierarchicalMemory,
+  coreEvents,
+  GEMINI_MODEL_ALIAS_AUTO,
+  getAdminErrorMessage,
+  isHeadlessMode,
+  Config,
+  applyAdminAllowlist,
+  getAdminBlockedMcpServersMessage,
   type HookDefinition,
   type HookEventName,
   type OutputFormat,
-  coreEvents,
-  CODEFLY_MODEL_ALIAS_AUTO,
-} from '@codeflyai/codefly-core';
+} from '@google/gemini-cli-core';
 import {
   type Settings,
   type MergedSettings,
@@ -60,7 +62,7 @@ import {
 } from './policy.js';
 import { ExtensionManager } from './extension-manager.js';
 import { McpServerEnablementManager } from './mcp/mcpServerEnablement.js';
-import type { ExtensionEvents } from '@codeflyai/codefly-core/src/utils/extensionLoader.js';
+import type { ExtensionEvents } from '@google/gemini-cli-core/src/utils/extensionLoader.js';
 import { requestConsentNonInteractive } from './extensions/consent.js';
 import { promptForSetting } from './extensions/extensionSettings.js';
 import type { EventEmitter } from 'node:stream';
@@ -104,9 +106,9 @@ export async function parseArguments(
   const startupMessages: string[] = [];
   const yargsInstance = yargs(rawArgv)
     .locale('en')
-    .scriptName('codefly')
+    .scriptName('gemini')
     .usage(
-      'Usage: codefly [options] [command]\n\nCodefly CLI - Defaults to interactive mode. Use -p/--prompt for non-interactive (headless) mode.',
+      'Usage: gemini [options] [command]\n\nGemini CLI - Defaults to interactive mode. Use -p/--prompt for non-interactive (headless) mode.',
     )
     .option('debug', {
       alias: 'd',
@@ -114,7 +116,7 @@ export async function parseArguments(
       description: 'Run in debug mode (open debug console with F12)',
       default: false,
     })
-    .command('$0 [query..]', 'Launch Codefly CLI', (yargsInstance) =>
+    .command('$0 [query..]', 'Launch Gemini CLI', (yargsInstance) =>
       yargsInstance
         .positional('query', {
           description:
@@ -290,9 +292,6 @@ export async function parseArguments(
     )
     // Register MCP subcommands
     .command(mcpCommand)
-    // Register OpenSpec subcommand
-    .command(openspecCommand)
-
     // Ensure validation flows through .fail() for clean UX
     .fail((msg, err) => {
       if (err) throw err;
@@ -454,7 +453,7 @@ export async function loadCliConfig(
   const loadedSettings = loadSettings(cwd);
 
   if (argv.sandbox) {
-    process.env['CODEFLY_SANDBOX'] = 'true';
+    process.env['GEMINI_SANDBOX'] = 'true';
   }
 
   const memoryImportFormat = settings.context?.importFormat || 'tree';
@@ -475,13 +474,13 @@ export async function loadCliConfig(
 
   // Set the context filename in the server's memoryTool module BEFORE loading memory
   // TODO(b/343434939): This is a bit of a hack. The contextFileName should ideally be passed
-  // directly to the Config constructor in core, and have core handle setCodeflyMdFilename.
-  // However, loadHierarchicalCodeflyMemory is called *before* createServerConfig.
+  // directly to the Config constructor in core, and have core handle setGeminiMdFilename.
+  // However, loadHierarchicalGeminiMemory is called *before* createServerConfig.
   if (settings.context?.fileName) {
     setServerGeminiMdFilename(settings.context.fileName);
   } else {
     // Reset to default if not provided in settings.
-    setServerGeminiMdFilename(getCurrentCodeflyMdFilename());
+    setServerGeminiMdFilename(getCurrentGeminiMdFilename());
   }
 
   const fileService = new FileDiscoveryService(cwd);
@@ -519,7 +518,7 @@ export async function loadCliConfig(
   let filePaths: string[] = [];
 
   if (!experimentalJitContext) {
-    // Call the (now wrapper) loadHierarchicalCodeflyMemory which calls the server's version
+    // Call the (now wrapper) loadHierarchicalGeminiMemory which calls the server's version
     const result = await loadServerHierarchicalMemory(
       cwd,
       settings.context?.loadMemoryFromIncludeDirectories || false
@@ -710,14 +709,12 @@ export async function loadCliConfig(
   );
   policyEngineConfig.nonInteractive = !interactive;
 
-  const defaultModel = settings.general?.previewFeatures
-    ? PREVIEW_CODEFLY_MODEL_AUTO
-    : DEFAULT_CODEFLY_MODEL_AUTO;
+  const defaultModel = PREVIEW_GEMINI_MODEL_AUTO;
   const specifiedModel =
-    argv.model || process.env['CODEFLY_MODEL'] || settings.model?.name;
+    argv.model || process.env['GEMINI_MODEL'] || settings.model?.name;
 
   const resolvedModel =
-    specifiedModel === CODEFLY_MODEL_ALIAS_AUTO
+    specifiedModel === GEMINI_MODEL_ALIAS_AUTO
       ? defaultModel
       : specifiedModel || defaultModel;
   const sandboxConfig = await loadSandboxConfig(settings, argv);
@@ -759,7 +756,7 @@ export async function loadCliConfig(
   return new Config({
     sessionId,
     clientVersion: await getVersion(),
-    embeddingModel: DEFAULT_CODEFLY_EMBEDDING_MODEL,
+    embeddingModel: DEFAULT_GEMINI_EMBEDDING_MODEL,
     sandbox: sandboxConfig,
     targetDir: cwd,
     includeDirectoryTree,
@@ -796,10 +793,9 @@ export async function loadCliConfig(
     enableEnvironmentVariableRedaction:
       settings.security?.environmentVariableRedaction?.enabled,
     userMemory: memoryContent,
-    codeflyMdFileCount: fileCount,
-    codeflyMdFilePaths: filePaths,
+    geminiMdFileCount: fileCount,
+    geminiMdFilePaths: filePaths,
     approvalMode,
-    language: settings.general?.language,
     disableYoloMode:
       settings.security?.disableYoloMode || settings.admin?.secureModeEnabled,
     showMemoryUsage: settings.ui?.showMemoryUsage || false,
@@ -830,7 +826,8 @@ export async function loadCliConfig(
     enableExtensionReloading: settings.experimental?.extensionReloading,
     enableAgents: settings.experimental?.enableAgents,
     plan: settings.experimental?.plan,
-    planSettings: settings.general.plan,
+    directWebFetch: settings.experimental?.directWebFetch,
+    planSettings: settings.general?.plan,
     enableEventDrivenScheduler: true,
     skillsSupport: settings.skills?.enabled ?? true,
     disabledSkills: settings.skills?.disabled,
@@ -862,7 +859,6 @@ export async function loadCliConfig(
     fakeResponses: argv.fakeResponses,
     recordResponses: argv.recordResponses,
     retryFetchErrors: settings.general?.retryFetchErrors,
-    enableThink: settings.model?.enableThink,
     ptyInfo: ptyInfo?.name,
     disableLLMCorrection: settings.tools?.disableLLMCorrection,
     rawOutput: argv.rawOutput,
@@ -882,7 +878,7 @@ export async function loadCliConfig(
         agents: refreshedSettings.merged.agents,
       };
     },
-    openaiConfig: settings.security?.auth?.openai,
+    enableConseca: settings.security?.enableConseca,
   });
 }
 

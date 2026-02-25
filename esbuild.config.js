@@ -82,8 +82,7 @@ const commonAliases = {
 const cliConfig = {
   ...baseConfig,
   banner: {
-    js: `#!/usr/bin/env node
-import { createRequire as createRequireBanner } from 'module'; const require = createRequireBanner(import.meta.url); globalThis.__filename = require('url').fileURLToPath(import.meta.url); globalThis.__dirname = require('path').dirname(globalThis.__filename);`,
+    js: `const require = (await import('node:module')).createRequire(import.meta.url); globalThis.__filename = (await import('node:url')).fileURLToPath(import.meta.url); globalThis.__dirname = (await import('node:path')).dirname(globalThis.__filename);`,
   },
   entryPoints: ['packages/cli/index.ts'],
   outfile: 'bundle/codefly.js',
@@ -101,7 +100,7 @@ import { createRequire as createRequireBanner } from 'module'; const require = c
 const a2aServerConfig = {
   ...baseConfig,
   banner: {
-    js: `const require = (await import('module')).createRequire(import.meta.url); globalThis.__filename = require('url').fileURLToPath(import.meta.url); globalThis.__dirname = require('path').dirname(globalThis.__filename);`,
+    js: `const require = (await import('node:module')).createRequire(import.meta.url); globalThis.__filename = (await import('node:url')).fileURLToPath(import.meta.url); globalThis.__dirname = (await import('node:path')).dirname(globalThis.__filename);`,
   },
   entryPoints: ['packages/a2a-server/src/http/server.ts'],
   outfile: 'packages/a2a-server/dist/a2a-server.mjs',

@@ -32,6 +32,7 @@ import {
   ExtensionUninstallEvent,
   ExtensionUpdateEvent,
   getErrorMessage,
+  getRealPath,
   logExtensionDisable,
   logExtensionEnable,
   logExtensionInstallEvent,
@@ -43,12 +44,16 @@ import {
   type ExtensionEvents,
   type MCPServerConfig,
   type ExtensionInstallMetadata,
-  type CodeflyCLIExtension,
+  type GeminiCLIExtension,
   type HookDefinition,
   type HookEventName,
   type ResolvedExtensionSetting,
   coreEvents,
-} from '@codeflyai/codefly-core';
+  applyAdminAllowlist,
+  getAdminBlockedMcpServersMessage,
+  CoreToolCallStatus,
+  HookType,
+} from '@google/gemini-cli-core';
 import { maybeRequestConsentOrFail } from './extensions/consent.js';
 import { resolveEnvVarsInObject } from '../utils/envVarResolver.js';
 import { ExtensionStorage } from './extensions/storage.js';
@@ -96,7 +101,7 @@ export class ExtensionManager extends ExtensionLoader {
     | undefined;
   private telemetryConfig: Config;
   private workspaceDir: string;
-  private loadedExtensions: CodeflyCLIExtension[] | undefined;
+  private loadedExtensions: GeminiCLIExtension[] | undefined;
 
   constructor(options: ExtensionManagerParams) {
     super(options.eventEmitter);
@@ -131,7 +136,7 @@ export class ExtensionManager extends ExtensionLoader {
     this.requestSetting = requestSetting;
   }
 
-  getExtensions(): CodeflyCLIExtension[] {
+  getExtensions(): GeminiCLIExtension[] {
     if (!this.loadedExtensions) {
       throw new Error(
         'Extensions not yet loaded, must call `loadExtensions` first',
@@ -143,7 +148,7 @@ export class ExtensionManager extends ExtensionLoader {
   async installOrUpdateExtension(
     installMetadata: ExtensionInstallMetadata,
     previousExtensionConfig?: ExtensionConfig,
-  ): Promise<CodeflyCLIExtension> {
+  ): Promise<GeminiCLIExtension> {
     if (
       this.settings.security?.allowedExtensions &&
       this.settings.security?.allowedExtensions.length > 0
@@ -177,7 +182,7 @@ export class ExtensionManager extends ExtensionLoader {
     const isUpdate = !!previousExtensionConfig;
     let newExtensionConfig: ExtensionConfig | null = null;
     let localSourcePath: string | undefined;
-    let extension: CodeflyCLIExtension | null;
+    let extension: GeminiCLIExtension | null;
     try {
       if (!isWorkspaceTrusted(this.settings).isTrusted) {
         if (
@@ -199,13 +204,11 @@ export class ExtensionManager extends ExtensionLoader {
       const extensionsDir = ExtensionStorage.getUserExtensionsDir();
       await fs.promises.mkdir(extensionsDir, { recursive: true });
 
-      if (
-        !path.isAbsolute(installMetadata.source) &&
-        (installMetadata.type === 'local' || installMetadata.type === 'link')
-      ) {
-        installMetadata.source = path.resolve(
-          this.workspaceDir,
-          installMetadata.source,
+      if (installMetadata.type === 'local' || installMetadata.type === 'link') {
+        installMetadata.source = getRealPath(
+          path.isAbsolute(installMetadata.source)
+            ? installMetadata.source
+            : path.resolve(this.workspaceDir, installMetadata.source),
         );
       }
 
@@ -511,7 +514,7 @@ Would you like to attempt to install via "git clone" instead?`,
   /**
    * Loads all installed extensions, should only be called once.
    */
-  async loadExtensions(): Promise<CodeflyCLIExtension[]> {
+  async loadExtensions(): Promise<GeminiCLIExtension[]> {
     if (this.loadedExtensions) {
       throw new Error('Extensions already loaded, only load extensions once.');
     }
@@ -538,7 +541,7 @@ Would you like to attempt to install via "git clone" instead?`,
    */
   private async loadExtension(
     extensionDir: string,
-  ): Promise<CodeflyCLIExtension | null> {
+  ): Promise<GeminiCLIExtension | null> {
     this.loadedExtensions ??= [];
     if (!fs.statSync(extensionDir).isDirectory()) {
       return null;
@@ -733,8 +736,10 @@ Would you like to attempt to install via "git clone" instead?`,
             if (eventHooks) {
               for (const definition of eventHooks) {
                 for (const hook of definition.hooks) {
-                  // Merge existing env with new env vars, giving extension settings precedence.
-                  hook.env = { ...hook.env, ...hookEnv };
+                  if (hook.type === HookType.Command) {
+                    // Merge existing env with new env vars, giving extension settings precedence.
+                    hook.env = { ...hook.env, ...hookEnv };
+                  }
                 }
               }
             }
@@ -763,7 +768,7 @@ Would you like to attempt to install via "git clone" instead?`,
         );
       }
 
-      const extension: CodeflyCLIExtension = {
+      const extension: GeminiCLIExtension = {
         name: config.name,
         version: config.version,
         path: effectiveExtensionPath,
@@ -810,7 +815,7 @@ Would you like to attempt to install via "git clone" instead?`,
    * appropriate.
    */
   private unloadExtension(
-    extension: CodeflyCLIExtension,
+    extension: GeminiCLIExtension,
   ): Promise<void> | undefined {
     this.loadedExtensions = this.getExtensions().filter(
       (entry) => extension !== entry,
@@ -905,7 +910,7 @@ Would you like to attempt to install via "git clone" instead?`,
     }
   }
 
-  toOutputString(extension: CodeflyCLIExtension): string {
+  toOutputString(extension: GeminiCLIExtension): string {
     const userEnabled = this.extensionEnablementManager.isEnabled(
       extension.name,
       homedir(),
@@ -1056,7 +1061,7 @@ export async function copyExtension(
 
 function getContextFileNames(config: ExtensionConfig): string[] {
   if (!config.contextFileName) {
-    return ['CODEFLY.md'];
+    return ['GEMINI.md'];
   } else if (!Array.isArray(config.contextFileName)) {
     return [config.contextFileName];
   }

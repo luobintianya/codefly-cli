@@ -12,8 +12,8 @@ import {
   StreamableHTTPError,
 } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { type Config } from '../config/config.js';
-// import { GoogleCredentialProvider } from '../mcp/google-auth-provider.js'; // Removed with Google login
+import { AuthProviderType, type Config } from '../config/config.js';
+import { GoogleCredentialProvider } from '../mcp/google-auth-provider.js';
 import { MCPOAuthProvider } from '../mcp/oauth-provider.js';
 import { MCPOAuthTokenStorage } from '../mcp/oauth-token-storage.js';
 import { OAuthUtils } from '../mcp/oauth-utils.js';
@@ -23,7 +23,7 @@ import {
   ResourceListChangedNotificationSchema,
   ToolListChangedNotificationSchema,
 } from '@modelcontextprotocol/sdk/types.js';
-import { ApprovalMode, PolicyDecision } from '../policy/types.js';
+import type { DiscoveredMCPTool } from './mcp-tool.js';
 
 import { WorkspaceContext } from '../utils/workspaceContext.js';
 import {
@@ -55,6 +55,7 @@ vi.mock('../mcp/oauth-provider.js');
 vi.mock('../mcp/oauth-token-storage.js');
 vi.mock('../mcp/oauth-utils.js');
 vi.mock('google-auth-library');
+import { GoogleAuth } from 'google-auth-library';
 
 vi.mock('../utils/events.js', () => ({
   coreEvents: {
@@ -391,7 +392,7 @@ describe('mcp-client', () => {
       expect(mockedToolRegistry.registerTool).toHaveBeenCalledOnce();
     });
 
-    it('should register tool with readOnlyHint and add policy rule', async () => {
+    it('should register tool with readOnlyHint and preserve annotations', async () => {
       const mockedClient = {
         connect: vi.fn(),
         discover: vi.fn(),
@@ -461,17 +462,18 @@ describe('mcp-client', () => {
       // Verify tool registration
       expect(mockedToolRegistry.registerTool).toHaveBeenCalledOnce();
 
-      // Verify policy rule addition
-      expect(mockPolicyEngine.addRule).toHaveBeenCalledWith({
-        toolName: 'test-server__readOnlyTool',
-        decision: PolicyDecision.ASK_USER,
-        priority: 50,
-        modes: [ApprovalMode.PLAN],
-        source: 'MCP Annotation (readOnlyHint) - test-server',
-      });
+      // Verify addRule is NOT called (annotation-based rules are in plan.toml now)
+      expect(mockPolicyEngine.addRule).not.toHaveBeenCalled();
+
+      // Verify annotations are preserved on the registered tool
+      const registeredTool = (
+        mockedToolRegistry.registerTool as ReturnType<typeof vi.fn>
+      ).mock.calls[0][0] as DiscoveredMCPTool;
+      expect(registeredTool.toolAnnotations).toEqual({ readOnlyHint: true });
+      expect(registeredTool.isReadOnly).toBe(true);
     });
 
-    it('should not add policy rule for tool without readOnlyHint', async () => {
+    it('should preserve undefined annotations for tool without readOnlyHint', async () => {
       const mockedClient = {
         connect: vi.fn(),
         discover: vi.fn(),
@@ -540,6 +542,93 @@ describe('mcp-client', () => {
 
       expect(mockedToolRegistry.registerTool).toHaveBeenCalledOnce();
       expect(mockPolicyEngine.addRule).not.toHaveBeenCalled();
+
+      // Verify annotations are undefined for tools without annotations
+      const registeredTool = (
+        mockedToolRegistry.registerTool as ReturnType<typeof vi.fn>
+      ).mock.calls[0][0] as DiscoveredMCPTool;
+      expect(registeredTool.toolAnnotations).toBeUndefined();
+    });
+
+    it('should preserve full annotations object with multiple hints', async () => {
+      const mockedClient = {
+        connect: vi.fn(),
+        discover: vi.fn(),
+        disconnect: vi.fn(),
+        getStatus: vi.fn(),
+        registerCapabilities: vi.fn(),
+        setRequestHandler: vi.fn(),
+        setNotificationHandler: vi.fn(),
+        getServerCapabilities: vi.fn().mockReturnValue({ tools: {} }),
+        listTools: vi.fn().mockResolvedValue({
+          tools: [
+            {
+              name: 'multiAnnotationTool',
+              description: 'A tool with multiple annotations',
+              inputSchema: { type: 'object', properties: {} },
+              annotations: {
+                readOnlyHint: true,
+                destructiveHint: false,
+                idempotentHint: true,
+              },
+            },
+          ],
+        }),
+        listPrompts: vi.fn().mockResolvedValue({ prompts: [] }),
+        request: vi.fn().mockResolvedValue({}),
+      };
+      vi.mocked(ClientLib.Client).mockReturnValue(
+        mockedClient as unknown as ClientLib.Client,
+      );
+      vi.spyOn(SdkClientStdioLib, 'StdioClientTransport').mockReturnValue(
+        {} as SdkClientStdioLib.StdioClientTransport,
+      );
+
+      const mockConfig = {
+        getPolicyEngine: vi.fn().mockReturnValue({ addRule: vi.fn() }),
+      } as unknown as Config;
+
+      const mockedToolRegistry = {
+        registerTool: vi.fn(),
+        sortTools: vi.fn(),
+        getMessageBus: vi.fn().mockReturnValue(undefined),
+        removeMcpToolsByServer: vi.fn(),
+      } as unknown as ToolRegistry;
+      const promptRegistry = {
+        registerPrompt: vi.fn(),
+        removePromptsByServer: vi.fn(),
+      } as unknown as PromptRegistry;
+      const resourceRegistry = {
+        setResourcesForServer: vi.fn(),
+        removeResourcesByServer: vi.fn(),
+      } as unknown as ResourceRegistry;
+
+      const client = new McpClient(
+        'test-server',
+        { command: 'test-command' },
+        mockedToolRegistry,
+        promptRegistry,
+        resourceRegistry,
+        workspaceContext,
+        { sanitizationConfig: EMPTY_CONFIG } as Config,
+        false,
+        '0.0.1',
+      );
+
+      await client.connect();
+      await client.discover(mockConfig);
+
+      expect(mockedToolRegistry.registerTool).toHaveBeenCalledOnce();
+
+      const registeredTool = (
+        mockedToolRegistry.registerTool as ReturnType<typeof vi.fn>
+      ).mock.calls[0][0] as DiscoveredMCPTool;
+      expect(registeredTool.toolAnnotations).toEqual({
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+      });
+      expect(registeredTool.isReadOnly).toBe(true);
     });
 
     it('should discover tools with $defs and $ref in schema', async () => {
@@ -1646,9 +1735,235 @@ describe('mcp-client', () => {
       });
     });
 
-    // describe('useGoogleCredentialProvider', () => {
-    //   GoogleCredentialProvider tests removed with Google login functionality
-    // });
+    it('sets an env variable GEMINI_CLI=1 for stdio MCP servers', async () => {
+      const mockedTransport = vi
+        .spyOn(SdkClientStdioLib, 'StdioClientTransport')
+        .mockReturnValue({} as SdkClientStdioLib.StdioClientTransport);
+
+      await createTransport(
+        'test-server',
+        {
+          command: 'test-command',
+          args: ['--foo', 'bar'],
+          env: {},
+          cwd: 'test/cwd',
+        },
+        false,
+        EMPTY_CONFIG,
+      );
+
+      const callArgs = mockedTransport.mock.calls[0][0];
+      expect(callArgs.env).toBeDefined();
+      expect(callArgs.env!['GEMINI_CLI']).toBe('1');
+    });
+
+    it('should exclude extension settings with undefined values from environment', async () => {
+      const mockedTransport = vi
+        .spyOn(SdkClientStdioLib, 'StdioClientTransport')
+        .mockReturnValue({} as SdkClientStdioLib.StdioClientTransport);
+
+      await createTransport(
+        'test-server',
+        {
+          command: 'test-command',
+          extension: {
+            name: 'test-ext',
+            resolvedSettings: [
+              {
+                envVar: 'GEMINI_CLI_EXT_VAR',
+                value: undefined,
+                sensitive: false,
+                name: 'ext-setting',
+              },
+            ],
+            version: '',
+            isActive: false,
+            path: '',
+            contextFiles: [],
+            id: '',
+          },
+        },
+        false,
+        EMPTY_CONFIG,
+      );
+
+      const callArgs = mockedTransport.mock.calls[0][0];
+      expect(callArgs.env).toBeDefined();
+      expect(callArgs.env!['GEMINI_CLI_EXT_VAR']).toBeUndefined();
+    });
+
+    it('should expand environment variables in mcpServerConfig.env and not redact them', async () => {
+      const mockedTransport = vi
+        .spyOn(SdkClientStdioLib, 'StdioClientTransport')
+        .mockReturnValue({} as SdkClientStdioLib.StdioClientTransport);
+
+      const originalEnv = process.env;
+      process.env = {
+        ...originalEnv,
+        GEMINI_TEST_VAR: 'expanded-value',
+      };
+
+      try {
+        await createTransport(
+          'test-server',
+          {
+            command: 'test-command',
+            env: {
+              TEST_EXPANDED: 'Value is $GEMINI_TEST_VAR',
+              SECRET_KEY: 'intentional-secret-123',
+            },
+          },
+          false,
+          EMPTY_CONFIG,
+        );
+
+        const callArgs = mockedTransport.mock.calls[0][0];
+        expect(callArgs.env).toBeDefined();
+        expect(callArgs.env!['TEST_EXPANDED']).toBe('Value is expanded-value');
+        expect(callArgs.env!['SECRET_KEY']).toBe('intentional-secret-123');
+      } finally {
+        process.env = originalEnv;
+      }
+    });
+
+    describe('useGoogleCredentialProvider', () => {
+      beforeEach(() => {
+        // Mock GoogleAuth client
+        const mockClient = {
+          getAccessToken: vi.fn().mockResolvedValue({ token: 'test-token' }),
+          quotaProjectId: 'myproject',
+        };
+
+        GoogleAuth.prototype.getClient = vi.fn().mockResolvedValue(mockClient);
+      });
+
+      it('should use GoogleCredentialProvider when specified', async () => {
+        const transport = await createTransport(
+          'test-server',
+          {
+            httpUrl: 'http://test.googleapis.com',
+            authProviderType: AuthProviderType.GOOGLE_CREDENTIALS,
+            oauth: {
+              scopes: ['scope1'],
+            },
+            headers: {
+              'X-Goog-User-Project': 'myproject',
+            },
+          },
+          false,
+          EMPTY_CONFIG,
+        );
+
+        expect(transport).toBeInstanceOf(StreamableHTTPClientTransport);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const authProvider = (transport as any)._authProvider;
+        expect(authProvider).toBeInstanceOf(GoogleCredentialProvider);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const googUserProject = (transport as any)._requestInit?.headers?.[
+          'X-Goog-User-Project'
+        ];
+        expect(googUserProject).toBe('myproject');
+      });
+
+      it('should use headers from GoogleCredentialProvider', async () => {
+        const mockGetRequestHeaders = vi.fn().mockResolvedValue({
+          'X-Goog-User-Project': 'provider-project',
+        });
+        vi.spyOn(
+          GoogleCredentialProvider.prototype,
+          'getRequestHeaders',
+        ).mockImplementation(mockGetRequestHeaders);
+
+        const transport = await createTransport(
+          'test-server',
+          {
+            httpUrl: 'http://test.googleapis.com',
+            authProviderType: AuthProviderType.GOOGLE_CREDENTIALS,
+            oauth: {
+              scopes: ['scope1'],
+            },
+          },
+          false,
+          EMPTY_CONFIG,
+        );
+
+        expect(transport).toBeInstanceOf(StreamableHTTPClientTransport);
+        expect(mockGetRequestHeaders).toHaveBeenCalled();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const headers = (transport as any)._requestInit?.headers;
+        expect(headers['X-Goog-User-Project']).toBe('provider-project');
+      });
+
+      it('should prioritize provider headers over config headers', async () => {
+        const mockGetRequestHeaders = vi.fn().mockResolvedValue({
+          'X-Goog-User-Project': 'provider-project',
+        });
+        vi.spyOn(
+          GoogleCredentialProvider.prototype,
+          'getRequestHeaders',
+        ).mockImplementation(mockGetRequestHeaders);
+
+        const transport = await createTransport(
+          'test-server',
+          {
+            httpUrl: 'http://test.googleapis.com',
+            authProviderType: AuthProviderType.GOOGLE_CREDENTIALS,
+            oauth: {
+              scopes: ['scope1'],
+            },
+            headers: {
+              'X-Goog-User-Project': 'config-project',
+            },
+          },
+          false,
+          EMPTY_CONFIG,
+        );
+
+        expect(transport).toBeInstanceOf(StreamableHTTPClientTransport);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const headers = (transport as any)._requestInit?.headers;
+        expect(headers['X-Goog-User-Project']).toBe('provider-project');
+      });
+
+      it('should use GoogleCredentialProvider with SSE transport', async () => {
+        const transport = await createTransport(
+          'test-server',
+          {
+            url: 'http://test.googleapis.com',
+            type: 'sse',
+            authProviderType: AuthProviderType.GOOGLE_CREDENTIALS,
+            oauth: {
+              scopes: ['scope1'],
+            },
+          },
+          false,
+          EMPTY_CONFIG,
+        );
+
+        expect(transport).toBeInstanceOf(SSEClientTransport);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const authProvider = (transport as any)._authProvider;
+        expect(authProvider).toBeInstanceOf(GoogleCredentialProvider);
+      });
+
+      it('should throw an error if no URL is provided with GoogleCredentialProvider', async () => {
+        await expect(
+          createTransport(
+            'test-server',
+            {
+              authProviderType: AuthProviderType.GOOGLE_CREDENTIALS,
+              oauth: {
+                scopes: ['scope1'],
+              },
+            },
+            false,
+            EMPTY_CONFIG,
+          ),
+        ).rejects.toThrow(
+          'URL must be provided in the config for Google Credentials provider',
+        );
+      });
+    });
   });
   describe('isEnabled', () => {
     const funcDecl = { name: 'myTool' };
@@ -1753,14 +2068,6 @@ describe('connectToMcpServer with OAuth', () => {
     vi.spyOn(console, 'log').mockImplementation(() => {});
     vi.spyOn(console, 'warn').mockImplementation(() => {});
     vi.spyOn(console, 'error').mockImplementation(() => {});
-
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue({
-        status: 404,
-        headers: new Map(),
-      }),
-    );
 
     mockTokenStorage = {
       getCredentials: vi.fn().mockResolvedValue({ clientId: 'test-client' }),
@@ -2114,11 +2421,16 @@ describe('connectToMcpServer - OAuth with transport fallback', () => {
     vi.spyOn(console, 'warn').mockImplementation(() => {});
     vi.spyOn(console, 'error').mockImplementation(() => {});
 
+    // Mock fetch to prevent real network calls during OAuth discovery fallback.
+    // When a 401 error lacks a www-authenticate header, the code attempts to
+    // fetch the header directly from the server, which would hang without this mock.
     vi.stubGlobal(
       'fetch',
       vi.fn().mockResolvedValue({
-        status: 404,
-        headers: new Map(),
+        status: 401,
+        headers: new Headers({
+          'www-authenticate': `Bearer realm="test", resource_metadata="http://test-server/.well-known/oauth-protected-resource"`,
+        }),
       }),
     );
 

@@ -18,14 +18,15 @@ import * as fs from 'node:fs';
 import * as os from 'node:os';
 import * as path from 'node:path';
 import {
-  type CodeflyCLIExtension,
+  type GeminiCLIExtension,
   ExtensionUninstallEvent,
   ExtensionDisableEvent,
   ExtensionEnableEvent,
   KeychainTokenStorage,
   loadAgentsFromDirectory,
   loadSkillsFromDir,
-} from '@codeflyai/codefly-core';
+  getRealPath,
+} from '@google/gemini-cli-core';
 import {
   loadSettings,
   createTestMergedSettings,
@@ -101,9 +102,9 @@ const mockLogExtensionInstallEvent = vi.hoisted(() => vi.fn());
 const mockLogExtensionUninstall = vi.hoisted(() => vi.fn());
 const mockLogExtensionUpdateEvent = vi.hoisted(() => vi.fn());
 const mockLogExtensionDisable = vi.hoisted(() => vi.fn());
-vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
+vi.mock('@google/gemini-cli-core', async (importOriginal) => {
   const actual =
-    await importOriginal<typeof import('@codeflyai/codefly-core')>();
+    await importOriginal<typeof import('@google/gemini-cli-core')>();
   return {
     ...actual,
     logExtensionEnable: mockLogExtensionEnable,
@@ -186,11 +187,11 @@ describe('extension tests', () => {
       errors: [],
     });
     vi.mocked(loadSkillsFromDir).mockResolvedValue([]);
-    tempHomeDir = fs.mkdtempSync(
-      path.join(os.tmpdir(), 'gemini-cli-test-home-'),
+    tempHomeDir = getRealPath(
+      fs.mkdtempSync(path.join(os.tmpdir(), 'gemini-cli-test-home-')),
     );
-    tempWorkspaceDir = fs.mkdtempSync(
-      path.join(tempHomeDir, 'gemini-cli-test-workspace-'),
+    tempWorkspaceDir = getRealPath(
+      fs.mkdtempSync(path.join(tempHomeDir, 'gemini-cli-test-workspace-')),
     );
     userExtensionsDir = path.join(tempHomeDir, EXTENSIONS_DIRECTORY_NAME);
     mockRequestConsent = vi.fn();
@@ -199,7 +200,6 @@ describe('extension tests', () => {
     mockPromptForSettings.mockResolvedValue('');
     fs.mkdirSync(userExtensionsDir, { recursive: true });
     vi.mocked(os.homedir).mockReturnValue(tempHomeDir);
-    mockHomedir.mockReturnValue(tempHomeDir);
     vi.mocked(isWorkspaceTrusted).mockReturnValue({
       isTrusted: true,
       source: undefined,
@@ -239,7 +239,7 @@ describe('extension tests', () => {
       expect(extensions[0].name).toBe('test-extension');
     });
 
-    it('should load context file path when CODEFLY.md is present', async () => {
+    it('should load context file path when GEMINI.md is present', async () => {
       createExtension({
         extensionsDir: userExtensionsDir,
         name: 'ext1',
@@ -258,7 +258,7 @@ describe('extension tests', () => {
       const ext1 = extensions.find((e) => e.name === 'ext1');
       const ext2 = extensions.find((e) => e.name === 'ext2');
       expect(ext1?.contextFiles).toEqual([
-        path.join(userExtensionsDir, 'ext1', 'CODEFLY.md'),
+        path.join(userExtensionsDir, 'ext1', 'GEMINI.md'),
       ]);
       expect(ext2?.contextFiles).toEqual([]);
     });
@@ -330,12 +330,14 @@ describe('extension tests', () => {
     });
 
     it('should load a linked extension correctly', async () => {
-      const sourceExtDir = createExtension({
-        extensionsDir: tempWorkspaceDir,
-        name: 'my-linked-extension',
-        version: '1.0.0',
-        contextFileName: 'context.md',
-      });
+      const sourceExtDir = getRealPath(
+        createExtension({
+          extensionsDir: tempWorkspaceDir,
+          name: 'my-linked-extension',
+          version: '1.0.0',
+          contextFileName: 'context.md',
+        }),
+      );
       fs.writeFileSync(path.join(sourceExtDir, 'context.md'), 'linked context');
 
       await extensionManager.loadExtensions();
@@ -362,18 +364,20 @@ describe('extension tests', () => {
     });
 
     it('should hydrate ${extensionPath} correctly for linked extensions', async () => {
-      const sourceExtDir = createExtension({
-        extensionsDir: tempWorkspaceDir,
-        name: 'my-linked-extension-with-path',
-        version: '1.0.0',
-        mcpServers: {
-          'test-server': {
-            command: 'node',
-            args: ['${extensionPath}${/}server${/}index.js'],
-            cwd: '${extensionPath}${/}server',
+      const sourceExtDir = getRealPath(
+        createExtension({
+          extensionsDir: tempWorkspaceDir,
+          name: 'my-linked-extension-with-path',
+          version: '1.0.0',
+          mcpServers: {
+            'test-server': {
+              command: 'node',
+              args: ['${extensionPath}${/}server${/}index.js'],
+              cwd: '${extensionPath}${/}server',
+            },
           },
-        },
-      });
+        }),
+      );
 
       await extensionManager.loadExtensions();
       await extensionManager.installOrUpdateExtension({
@@ -845,11 +849,13 @@ describe('extension tests', () => {
 
       it('should generate id from the original source for linked extensions', async () => {
         const extDevelopmentDir = path.join(tempHomeDir, 'local_extensions');
-        const actualExtensionDir = createExtension({
-          extensionsDir: extDevelopmentDir,
-          name: 'link-ext-name',
-          version: '1.0.0',
-        });
+        const actualExtensionDir = getRealPath(
+          createExtension({
+            extensionsDir: extDevelopmentDir,
+            name: 'link-ext-name',
+            version: '1.0.0',
+          }),
+        );
         await extensionManager.loadExtensions();
         await extensionManager.installOrUpdateExtension({
           type: 'link',
@@ -973,7 +979,7 @@ describe('extension tests', () => {
         );
 
         fs.writeFileSync(
-          path.join(sourceExtDir, 'codefly-extension.json'),
+          path.join(sourceExtDir, 'gemini-extension.json'),
           JSON.stringify({
             name: 'hook-extension-install',
             version: '1.0.0',
@@ -995,11 +1001,13 @@ describe('extension tests', () => {
 
   describe('installExtension', () => {
     it('should install an extension from a local path', async () => {
-      const sourceExtDir = createExtension({
-        extensionsDir: tempHomeDir,
-        name: 'my-local-extension',
-        version: '1.0.0',
-      });
+      const sourceExtDir = getRealPath(
+        createExtension({
+          extensionsDir: tempHomeDir,
+          name: 'my-local-extension',
+          version: '1.0.0',
+        }),
+      );
       const targetExtDir = path.join(userExtensionsDir, 'my-local-extension');
       const metadataPath = path.join(targetExtDir, INSTALL_METADATA_FILENAME);
 
@@ -1040,8 +1048,8 @@ describe('extension tests', () => {
       );
     });
 
-    it('should throw an error and cleanup if codefly-extension.json is missing', async () => {
-      const sourceExtDir = path.join(tempHomeDir, 'bad-extension');
+    it('should throw an error and cleanup if gemini-extension.json is missing', async () => {
+      const sourceExtDir = getRealPath(path.join(tempHomeDir, 'bad-extension'));
       fs.mkdirSync(sourceExtDir, { recursive: true });
       const configPath = path.join(sourceExtDir, EXTENSIONS_CONFIG_FILENAME);
 
@@ -1056,8 +1064,8 @@ describe('extension tests', () => {
       expect(fs.existsSync(targetExtDir)).toBe(false);
     });
 
-    it('should throw an error for invalid JSON in codefly-extension.json', async () => {
-      const sourceExtDir = path.join(tempHomeDir, 'bad-json-ext');
+    it('should throw an error for invalid JSON in gemini-extension.json', async () => {
+      const sourceExtDir = getRealPath(path.join(tempHomeDir, 'bad-json-ext'));
       fs.mkdirSync(sourceExtDir, { recursive: true });
       const configPath = path.join(sourceExtDir, EXTENSIONS_CONFIG_FILENAME);
       fs.writeFileSync(configPath, '{ "name": "bad-json", "version": "1.0.0"'); // Malformed JSON
@@ -1067,22 +1075,17 @@ describe('extension tests', () => {
           source: sourceExtDir,
           type: 'local',
         }),
-      ).rejects.toThrow(
-        new RegExp(
-          `^Failed to load extension config from ${configPath.replace(
-            /\\/g,
-            '\\\\',
-          )}`,
-        ),
-      );
+      ).rejects.toThrow(`Failed to load extension config from ${configPath}`);
     });
 
-    it('should throw an error for missing name in codefly-extension.json', async () => {
-      const sourceExtDir = createExtension({
-        extensionsDir: tempHomeDir,
-        name: 'missing-name-ext',
-        version: '1.0.0',
-      });
+    it('should throw an error for missing name in gemini-extension.json', async () => {
+      const sourceExtDir = getRealPath(
+        createExtension({
+          extensionsDir: tempHomeDir,
+          name: 'missing-name-ext',
+          version: '1.0.0',
+        }),
+      );
       const configPath = path.join(sourceExtDir, EXTENSIONS_CONFIG_FILENAME);
       // Overwrite with invalid config
       fs.writeFileSync(configPath, JSON.stringify({ version: '1.0.0' }));
@@ -1135,11 +1138,13 @@ describe('extension tests', () => {
     });
 
     it('should install a linked extension', async () => {
-      const sourceExtDir = createExtension({
-        extensionsDir: tempHomeDir,
-        name: 'my-linked-extension',
-        version: '1.0.0',
-      });
+      const sourceExtDir = getRealPath(
+        createExtension({
+          extensionsDir: tempHomeDir,
+          name: 'my-linked-extension',
+          version: '1.0.0',
+        }),
+      );
       const targetExtDir = path.join(userExtensionsDir, 'my-linked-extension');
       const metadataPath = path.join(targetExtDir, INSTALL_METADATA_FILENAME);
       const configPath = path.join(targetExtDir, EXTENSIONS_CONFIG_FILENAME);
@@ -1266,7 +1271,7 @@ describe('extension tests', () => {
     it('should add the workspace to trusted folders if user consents', async () => {
       const trustedFoldersPath = path.join(
         tempHomeDir,
-        '.codefly',
+        '.gemini',
         'trustedFolders.json',
       );
       vi.mocked(isWorkspaceTrusted).mockReturnValue({
@@ -1440,11 +1445,13 @@ ${INSTALL_WARNING_MESSAGE}`,
     });
 
     it('should save the autoUpdate flag to the install metadata', async () => {
-      const sourceExtDir = createExtension({
-        extensionsDir: tempHomeDir,
-        name: 'my-local-extension',
-        version: '1.0.0',
-      });
+      const sourceExtDir = getRealPath(
+        createExtension({
+          extensionsDir: tempHomeDir,
+          name: 'my-local-extension',
+          version: '1.0.0',
+        }),
+      );
       const targetExtDir = path.join(userExtensionsDir, 'my-local-extension');
       const metadataPath = path.join(targetExtDir, INSTALL_METADATA_FILENAME);
 
@@ -2132,7 +2139,7 @@ ${INSTALL_WARNING_MESSAGE}`,
       vi.restoreAllMocks();
     });
 
-    const getActiveExtensions = (): CodeflyCLIExtension[] => {
+    const getActiveExtensions = (): GeminiCLIExtension[] => {
       const extensions = extensionManager.getExtensions();
       return extensions.filter((e) => e.isActive);
     };
