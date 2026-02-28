@@ -863,7 +863,7 @@ const SETTINGS_SCHEMA = {
         category: 'Model',
         requiresRestart: false,
         default: undefined as string | undefined,
-        description: 'The Gemini model to use for conversations.',
+        description: 'The Codefly model to use for conversations.',
         showInDialog: false,
       },
       maxSessionTurns: {
@@ -1198,7 +1198,7 @@ const SETTINGS_SCHEMA = {
             requiresRestart: true,
             default: [] as string[],
             description:
-              'Additional ignore file paths to respect. These files take precedence over .geminiignore and .gitignore. Files earlier in the array take precedence over files later in the array, e.g. the first file takes precedence over the second one.',
+              'Additional ignore file paths to respect. These files take precedence over .codeflyignore and .gitignore. Files earlier in the array take precedence over files later in the array, e.g. the first file takes precedence over the second one.',
             showInDialog: true,
             items: { type: 'string' },
             mergeStrategy: MergeStrategy.UNION,
@@ -1473,6 +1473,17 @@ const SETTINGS_SCHEMA = {
         default: false,
         description: 'Blocks installing and loading extensions from Git.',
         showInDialog: true,
+      },
+      allowedExtensions: {
+        type: 'array',
+        label: 'Allowed Extensions',
+        category: 'Security',
+        requiresRestart: true,
+        default: [] as string[],
+        description:
+          'A list of regex patterns of extension sources that are allowed to be installed and loaded.',
+        showInDialog: true,
+        items: { type: 'string' },
       },
 
       folderTrust: {

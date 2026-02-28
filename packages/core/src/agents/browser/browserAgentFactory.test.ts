@@ -164,7 +164,7 @@ describe('browserAgentFactory', () => {
           },
           browser: {
             headless: false,
-            visualModel: 'gemini-2.5-flash-preview',
+            visualModel: 'codefly-2.5-flash-preview',
           },
         },
       });
@@ -189,7 +189,7 @@ describe('browserAgentFactory', () => {
           },
           browser: {
             headless: false,
-            visualModel: 'gemini-2.5-flash-preview',
+            visualModel: 'codefly-2.5-flash-preview',
           },
         },
       });

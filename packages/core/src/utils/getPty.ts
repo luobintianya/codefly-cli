@@ -18,7 +18,7 @@ export interface PtyProcess {
 }
 
 export const getPty = async (): Promise<PtyImplementation> => {
-  if (process.env['GEMINI_PTY_INFO'] === 'child_process') {
+  if (process.env['CODEFLY_PTY_INFO'] === 'child_process') {
     return null;
   }
   try {

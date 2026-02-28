@@ -1,5 +1,5 @@
 # This workflow is triggered on every new release.
-# It uses Gemini to generate release notes and creates a PR with the changes.
+# It uses Codefly to generate release notes and creates a PR with the changes.
 name: 'Generate Release Notes'
 
 on:
@@ -53,13 +53,13 @@ jobs:
           printf "%s\n" "$BODY" >> "$GITHUB_OUTPUT"
           echo 'EOF' >> "$GITHUB_OUTPUT"
         env:
-          GH_TOKEN: '${{ secrets.GEMINI_CLI_ROBOT_GITHUB_PAT }}'
+          GH_TOKEN: '${{ secrets.CODEFLY_CLI_ROBOT_GITHUB_PAT }}'
           BODY: '${{ github.event.inputs.body || github.event.release.body }}'
 
-      - name: 'Generate Changelog with Gemini'
-        uses: 'google-github-actions/run-gemini-cli@a3bf79042542528e91937b3a3a6fbc4967ee3c31' # ratchet:google-github-actions/run-gemini-cli@v0
+      - name: 'Generate Changelog with Codefly'
+        uses: 'google-github-actions/run-codefly-cli@a3bf79042542528e91937b3a3a6fbc4967ee3c31' # ratchet:google-github-actions/run-codefly-cli@v0
         with:
-          gemini_api_key: '${{ secrets.GEMINI_API_KEY }}'
+          codefly_api_key: '${{ secrets.CODEFLY_API_KEY }}'
           prompt: |
             Activate the 'docs-changelog' skill.
 
@@ -73,7 +73,7 @@ jobs:
       - name: 'Create Pull Request'
         uses: 'peter-evans/create-pull-request@v6'
         with:
-          token: '${{ secrets.GEMINI_CLI_ROBOT_GITHUB_PAT }}'
+          token: '${{ secrets.CODEFLY_CLI_ROBOT_GITHUB_PAT }}'
           commit-message: 'docs(changelog): update for ${{ steps.release_info.outputs.VERSION }}'
           title: 'Changelog for ${{ steps.release_info.outputs.VERSION }}'
           body: |
@@ -82,5 +82,5 @@ jobs:
             Please review and merge.
           branch: 'changelog-${{ steps.release_info.outputs.VERSION }}'
           base: 'main'
-          team-reviewers: 'gemini-cli-docs, gemini-cli-maintainers'
+          team-reviewers: 'codefly-cli-docs, codefly-cli-maintainers'
           delete-branch: true

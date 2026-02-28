@@ -47,7 +47,7 @@ const AGENT_CONFIG_FIELDS: AgentConfigField[] = [
   {
     key: 'model',
     label: 'Model',
-    description: "Model to use (e.g., 'gemini-2.0-flash' or 'inherit')",
+    description: "Model to use (e.g., 'codefly-2.0-flash' or 'inherit')",
     type: 'string',
     path: ['modelConfig', 'model'],
     defaultValue: 'inherit',

@@ -31,13 +31,13 @@ export const initCommand: SlashCommand = {
       };
     }
     const targetDir = context.services.config.getTargetDir();
-    const geminiMdPath = path.join(targetDir, 'CODEFLY.md');
+    const codeflyMdPath = path.join(targetDir, 'CODEFLY.md');
 
-    const result = performInit(fs.existsSync(geminiMdPath));
+    const result = performInit(fs.existsSync(codeflyMdPath));
 
     if (result.type === 'submit_prompt') {
       // Create an empty CODEFLY.md file
-      fs.writeFileSync(geminiMdPath, '', 'utf8');
+      fs.writeFileSync(codeflyMdPath, '', 'utf8');
 
       context.ui.addItem(
         {

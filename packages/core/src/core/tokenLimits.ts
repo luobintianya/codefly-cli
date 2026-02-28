@@ -5,7 +5,7 @@
  */
 
 import {
-  DEFAULT_GEMINI_FLASH_LITE_MODEL,
+  DEFAULT_CODEFLY_FLASH_LITE_MODEL,
   DEFAULT_CODEFLY_FLASH_MODEL,
   DEFAULT_CODEFLY_MODEL,
   PREVIEW_CODEFLY_FLASH_MODEL,
@@ -27,13 +27,13 @@ export function tokenLimit(model: Model, config?: Config): TokenCount {
   }
 
   // Add other models as they become relevant or if specified by config
-  // Pulled from https://ai.google.dev/gemini-api/docs/models
+  // Pulled from https://ai.google.dev/codefly-api/docs/models
   switch (model) {
     case PREVIEW_CODEFLY_MODEL:
     case PREVIEW_CODEFLY_FLASH_MODEL:
     case DEFAULT_CODEFLY_MODEL:
     case DEFAULT_CODEFLY_FLASH_MODEL:
-    case DEFAULT_GEMINI_FLASH_LITE_MODEL:
+    case DEFAULT_CODEFLY_FLASH_LITE_MODEL:
       return 1_048_576;
     default:
       // Special case for GLM models which are often used in OpenAI compatible mode

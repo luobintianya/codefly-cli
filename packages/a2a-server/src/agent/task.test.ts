@@ -14,13 +14,6 @@ import {
   type Mock,
 } from 'vitest';
 import { Task } from './task.js';
-import type {
-  ToolCall,
-  Config,
-  ToolCallRequestInfo,
-  GitService,
-  CompletedToolCall,
-} from '@google/gemini-cli-core';
 import {
   CodeflyEventType,
   type Config,
@@ -29,11 +22,11 @@ import {
   type CompletedToolCall,
   ApprovalMode,
   ToolConfirmationOutcome,
+  type ToolCall,
 } from '@codeflyai/codefly-core';
 import { createMockConfig } from '../utils/testing_utils.js';
 import type { ExecutionEventBus, RequestContext } from '@a2a-js/sdk/server';
 import { CoderAgentEvent } from '../types.js';
-import type { ToolCall } from '@codeflyai/codefly-core';
 
 const mockProcessRestorableToolCalls = vi.hoisted(() => vi.fn());
 

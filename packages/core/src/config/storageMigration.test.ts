@@ -17,7 +17,7 @@ describe('StorageMigration', () => {
   let tempDir: string;
 
   beforeEach(() => {
-    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'gemini-migration-test-'));
+    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'codefly-migration-test-'));
   });
 
   afterEach(() => {

@@ -101,7 +101,7 @@ export async function installSkill(
   try {
     if (isGitUrl) {
       tempDirToClean = await fs.mkdtemp(
-        path.join(os.tmpdir(), 'gemini-skill-'),
+        path.join(os.tmpdir(), 'codefly-skill-'),
       );
       sourcePath = tempDirToClean;
 
@@ -116,7 +116,7 @@ export async function installSkill(
       );
     } else if (isSkillFile) {
       tempDirToClean = await fs.mkdtemp(
-        path.join(os.tmpdir(), 'gemini-skill-'),
+        path.join(os.tmpdir(), 'codefly-skill-'),
       );
       sourcePath = tempDirToClean;
 

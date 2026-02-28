@@ -69,12 +69,12 @@ describe('CloudFreePrivacyNotice', () => {
     {
       stateName: 'non-free tier state',
       mockState: { isFreeTier: false },
-      expectedText: 'Gemini Code Assist Privacy Notice',
+      expectedText: 'Codefly Code Assist Privacy Notice',
     },
     {
       stateName: 'free tier state',
       mockState: { isFreeTier: true },
-      expectedText: 'Gemini Code Assist for Individuals Privacy Notice',
+      expectedText: 'Codefly Code Assist for Individuals Privacy Notice',
     },
   ])('renders correctly in $stateName', async ({ mockState, expectedText }) => {
     mockedUsePrivacySettings.mockReturnValue({

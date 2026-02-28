@@ -1,11 +1,11 @@
 {
-  "name": "@google/gemini-cli-sdk",
+  "name": "@codeflyai/codefly-sdk",
   "version": "0.29.0-nightly.20260203.71f46f116",
-  "description": "Gemini CLI SDK",
+  "description": "Codefly CLI SDK",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/google-gemini/gemini-cli.git"
+    "url": "git+https://github.com/google-codefly/codefly-cli.git"
   },
   "type": "module",
   "main": "dist/index.js",
@@ -22,7 +22,7 @@
     "dist"
   ],
   "dependencies": {
-    "@google/gemini-cli-core": "file:../core",
+    "@codeflyai/codefly-core": "file:../core",
     "zod": "^3.23.8",
     "zod-to-json-schema": "^3.23.1"
   },

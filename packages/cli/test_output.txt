@@ -266,7 +266,7 @@ act(() => {
 
 This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
 
-stderr | src/ui/components/ModelDialog.test.tsx > <ModelDialog /> > Preview Logic > should show "Gemini 3 is now available" header if user has access but preview features disabled
+stderr | src/ui/components/ModelDialog.test.tsx > <ModelDialog /> > Preview Logic > should show "Codefly 3 is now available" header if user has access but preview features disabled
 An update to Root inside a test was not wrapped in act(...).
 
 When testing, code that causes React state updates should be wrapped into act(...):
@@ -288,7 +288,7 @@ act(() => {
 
 This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
 
-stderr | src/ui/components/ModelDialog.test.tsx > <ModelDialog /> > Preview Logic > should show "Gemini 3 is coming soon" header if user has no access
+stderr | src/ui/components/ModelDialog.test.tsx > <ModelDialog /> > Preview Logic > should show "Codefly 3 is coming soon" header if user has no access
 An update to Root inside a test was not wrapped in act(...).
 
 When testing, code that causes React state updates should be wrapped into act(...):
@@ -336,18 +336,18 @@ This ensures that you're testing the behavior the user would see in the browser.
    × <ModelDialog /> > renders the initial "main" view correctly 33ms
      → expected '\n  ERROR  useSettings must be used w…' to contain 'Select Model'
    × <ModelDialog /> > renders "main" view with preview options when preview features are enabled 12ms
-     → expected '\n  ERROR  useSettings must be used w…' to contain 'Auto (Gemini 3)'
+     → expected '\n  ERROR  useSettings must be used w…' to contain 'Auto (Codefly 3)'
    × <ModelDialog /> > switches to "manual" view when "Manual" is selected 314ms
-     → expected '\n  ERROR  useSettings must be used w…' to contain 'gemini-3-pro-preview'
+     → expected '\n  ERROR  useSettings must be used w…' to contain 'codefly-3-pro-preview'
    × <ModelDialog /> > renders "manual" view with preview options when preview features are enabled 315ms
-     → expected '\n  ERROR  useSettings must be used w…' to contain 'gemini-3-pro-preview'
+     → expected '\n  ERROR  useSettings must be used w…' to contain 'codefly-3-pro-preview'
    × <ModelDialog /> > sets model and closes when a model is selected in "main" view 168ms
-     → expected "spy" to be called with arguments: [ 'auto-gemini-3', true ][90m
+     → expected "spy" to be called with arguments: [ 'auto-codefly-3', true ][90m
 
 Number of calls: [1m0[22m
 [39m
    × <ModelDialog /> > sets model and closes when a model is selected in "manual" view 465ms
-     → expected "spy" to be called with arguments: [ 'gemini-3-pro-preview', true ][90m
+     → expected "spy" to be called with arguments: [ 'codefly-3-pro-preview', true ][90m
 
 Number of calls: [1m0[22m
 [39m
@@ -356,15 +356,15 @@ Number of calls: [1m0[22m
    × <ModelDialog /> > closes dialog on escape in "main" view 163ms
      → expected "spy" to be called at least once
    × <ModelDialog /> > goes back to "main" view on escape in "manual" view 322ms
-     → expected '\n  ERROR  useSettings must be used w…' to contain 'gemini-3-pro-preview'
+     → expected '\n  ERROR  useSettings must be used w…' to contain 'codefly-3-pro-preview'
    ✓ <ModelDialog /> > Preview Logic > should NOT show preview options if user has no access 15ms
    ✓ <ModelDialog /> > Preview Logic > should NOT show preview options if user has access but preview features are disabled 12ms
    × <ModelDialog /> > Preview Logic > should show preview options if user has access AND preview features are enabled 13ms
-     → expected '\n  ERROR  useSettings must be used w…' to contain 'Auto (Gemini 3)'
-   × <ModelDialog /> > Preview Logic > should show "Gemini 3 is now available" header if user has access but preview features disabled 10ms
-     → expected '\n  ERROR  useSettings must be used w…' to contain 'Gemini 3 is now available.'
-   × <ModelDialog /> > Preview Logic > should show "Gemini 3 is coming soon" header if user has no access 9ms
-     → expected '\n  ERROR  useSettings must be used w…' to contain 'Gemini 3 is coming soon.'
+     → expected '\n  ERROR  useSettings must be used w…' to contain 'Auto (Codefly 3)'
+   × <ModelDialog /> > Preview Logic > should show "Codefly 3 is now available" header if user has access but preview features disabled 10ms
+     → expected '\n  ERROR  useSettings must be used w…' to contain 'Codefly 3 is now available.'
+   × <ModelDialog /> > Preview Logic > should show "Codefly 3 is coming soon" header if user has no access 9ms
+     → expected '\n  ERROR  useSettings must be used w…' to contain 'Codefly 3 is coming soon.'
    ✓ <ModelDialog /> > Preview Logic > should NOT show header/subheader if preview options are shown 7ms
 
 ⎯⎯⎯⎯⎯⎯ Failed Tests 12 ⎯⎯⎯⎯⎯⎯⎯
@@ -428,12 +428,12 @@ AssertionError: expected '\n  ERROR  useSettings must be used w…' to contain '
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/12]⎯
 
  FAIL  src/ui/components/ModelDialog.test.tsx > <ModelDialog /> > renders "main" view with preview options when preview features are enabled
-AssertionError: expected '\n  ERROR  useSettings must be used w…' to contain 'Auto (Gemini 3)'
+AssertionError: expected '\n  ERROR  useSettings must be used w…' to contain 'Auto (Codefly 3)'
 
 [32m- Expected[39m
 [31m+ Received[39m
 
-[32m- Auto (Gemini 3)[39m
+[32m- Auto (Codefly 3)[39m
 [31m+[39m
 [31m+   ERROR  useSettings must be used within a SettingsProvider[39m
 [31m+[39m
@@ -478,7 +478,7 @@ AssertionError: expected '\n  ERROR  useSettings must be used w…' to contain '
  ❯ src/ui/components/ModelDialog.test.tsx:101:25
      99|     mockGetHasAccessToPreviewModel.mockReturnValue(true); // Must have…
     100|     const { lastFrame } = renderComponent();
-    101|     expect(lastFrame()).toContain('Auto (Gemini 3)');
+    101|     expect(lastFrame()).toContain('Auto (Codefly 3)');
        |                         ^
     102|   });
     103| 
@@ -486,12 +486,12 @@ AssertionError: expected '\n  ERROR  useSettings must be used w…' to contain '
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/12]⎯
 
  FAIL  src/ui/components/ModelDialog.test.tsx > <ModelDialog /> > switches to "manual" view when "Manual" is selected
-AssertionError: expected '\n  ERROR  useSettings must be used w…' to contain 'gemini-3-pro-preview'
+AssertionError: expected '\n  ERROR  useSettings must be used w…' to contain 'codefly-3-pro-preview'
 
 [32m- Expected[39m
 [31m+ Received[39m
 
-[32m- gemini-3-pro-preview[39m
+[32m- codefly-3-pro-preview[39m
 [31m+[39m
 [31m+   ERROR  useSettings must be used within a SettingsProvider[39m
 [31m+[39m
@@ -539,17 +539,17 @@ AssertionError: expected '\n  ERROR  useSettings must be used w…' to contain '
     119|     expect(lastFrame()).toContain(DEFAULT_CODEFLY_MODEL);
        |                         ^
     120|     expect(lastFrame()).toContain(DEFAULT_CODEFLY_FLASH_MODEL);
-    121|     expect(lastFrame()).toContain(DEFAULT_GEMINI_FLASH_LITE_MODEL);
+    121|     expect(lastFrame()).toContain(DEFAULT_CODEFLY_FLASH_LITE_MODEL);
 
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/12]⎯
 
  FAIL  src/ui/components/ModelDialog.test.tsx > <ModelDialog /> > renders "manual" view with preview options when preview features are enabled
-AssertionError: expected '\n  ERROR  useSettings must be used w…' to contain 'gemini-3-pro-preview'
+AssertionError: expected '\n  ERROR  useSettings must be used w…' to contain 'codefly-3-pro-preview'
 
 [32m- Expected[39m
 [31m+ Received[39m
 
-[32m- gemini-3-pro-preview[39m
+[32m- codefly-3-pro-preview[39m
 [31m+[39m
 [31m+   ERROR  useSettings must be used within a SettingsProvider[39m
 [31m+[39m
@@ -602,7 +602,7 @@ AssertionError: expected '\n  ERROR  useSettings must be used w…' to contain '
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/12]⎯
 
  FAIL  src/ui/components/ModelDialog.test.tsx > <ModelDialog /> > sets model and closes when a model is selected in "main" view
-AssertionError: expected "spy" to be called with arguments: [ 'auto-gemini-3', true ][90m
+AssertionError: expected "spy" to be called with arguments: [ 'auto-codefly-3', true ][90m
 
 Number of calls: [1m0[22m
 [39m
@@ -617,7 +617,7 @@ Number of calls: [1m0[22m
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/12]⎯
 
  FAIL  src/ui/components/ModelDialog.test.tsx > <ModelDialog /> > sets model and closes when a model is selected in "manual" view
-AssertionError: expected "spy" to be called with arguments: [ 'gemini-3-pro-preview', true ][90m
+AssertionError: expected "spy" to be called with arguments: [ 'codefly-3-pro-preview', true ][90m
 
 Number of calls: [1m0[22m
 [39m
@@ -702,12 +702,12 @@ AssertionError: expected "spy" to be called at least once
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/12]⎯
 
  FAIL  src/ui/components/ModelDialog.test.tsx > <ModelDialog /> > goes back to "main" view on escape in "manual" view
-AssertionError: expected '\n  ERROR  useSettings must be used w…' to contain 'gemini-3-pro-preview'
+AssertionError: expected '\n  ERROR  useSettings must be used w…' to contain 'codefly-3-pro-preview'
 
 [32m- Expected[39m
 [31m+ Received[39m
 
-[32m- gemini-3-pro-preview[39m
+[32m- codefly-3-pro-preview[39m
 [31m+[39m
 [31m+   ERROR  useSettings must be used within a SettingsProvider[39m
 [31m+[39m
@@ -760,12 +760,12 @@ AssertionError: expected '\n  ERROR  useSettings must be used w…' to contain '
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/12]⎯
 
  FAIL  src/ui/components/ModelDialog.test.tsx > <ModelDialog /> > Preview Logic > should show preview options if user has access AND preview features are enabled
-AssertionError: expected '\n  ERROR  useSettings must be used w…' to contain 'Auto (Gemini 3)'
+AssertionError: expected '\n  ERROR  useSettings must be used w…' to contain 'Auto (Codefly 3)'
 
 [32m- Expected[39m
 [31m+ Received[39m
 
-[32m- Auto (Gemini 3)[39m
+[32m- Auto (Codefly 3)[39m
 [31m+[39m
 [31m+   ERROR  useSettings must be used within a SettingsProvider[39m
 [31m+[39m
@@ -810,20 +810,20 @@ AssertionError: expected '\n  ERROR  useSettings must be used w…' to contain '
  ❯ src/ui/components/ModelDialog.test.tsx:248:27
     246|       mockGetPreviewFeatures.mockReturnValue(true);
     247|       const { lastFrame } = renderComponent();
-    248|       expect(lastFrame()).toContain('Auto (Gemini 3)');
+    248|       expect(lastFrame()).toContain('Auto (Codefly 3)');
        |                           ^
     249|     });
     250| 
 
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/12]⎯
 
- FAIL  src/ui/components/ModelDialog.test.tsx > <ModelDialog /> > Preview Logic > should show "Gemini 3 is now available" header if user has access but preview features disabled
-AssertionError: expected '\n  ERROR  useSettings must be used w…' to contain 'Gemini 3 is now available.'
+ FAIL  src/ui/components/ModelDialog.test.tsx > <ModelDialog /> > Preview Logic > should show "Codefly 3 is now available" header if user has access but preview features disabled
+AssertionError: expected '\n  ERROR  useSettings must be used w…' to contain 'Codefly 3 is now available.'
 
 [32m- Expected[39m
 [31m+ Received[39m
 
-[32m- Gemini 3 is now available.[39m
+[32m- Codefly 3 is now available.[39m
 [31m+[39m
 [31m+   ERROR  useSettings must be used within a SettingsProvider[39m
 [31m+[39m
@@ -868,20 +868,20 @@ AssertionError: expected '\n  ERROR  useSettings must be used w…' to contain '
  ❯ src/ui/components/ModelDialog.test.tsx:255:27
     253|       mockGetPreviewFeatures.mockReturnValue(false);
     254|       const { lastFrame } = renderComponent();
-    255|       expect(lastFrame()).toContain('Gemini 3 is now available.');
+    255|       expect(lastFrame()).toContain('Codefly 3 is now available.');
        |                           ^
     256|       expect(lastFrame()).toContain('Enable "Preview features" in /set…
     257|     });
 
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/12]⎯
 
- FAIL  src/ui/components/ModelDialog.test.tsx > <ModelDialog /> > Preview Logic > should show "Gemini 3 is coming soon" header if user has no access
-AssertionError: expected '\n  ERROR  useSettings must be used w…' to contain 'Gemini 3 is coming soon.'
+ FAIL  src/ui/components/ModelDialog.test.tsx > <ModelDialog /> > Preview Logic > should show "Codefly 3 is coming soon" header if user has no access
+AssertionError: expected '\n  ERROR  useSettings must be used w…' to contain 'Codefly 3 is coming soon.'
 
 [32m- Expected[39m
 [31m+ Received[39m
 
-[32m- Gemini 3 is coming soon.[39m
+[32m- Codefly 3 is coming soon.[39m
 [31m+[39m
 [31m+   ERROR  useSettings must be used within a SettingsProvider[39m
 [31m+[39m
@@ -926,7 +926,7 @@ AssertionError: expected '\n  ERROR  useSettings must be used w…' to contain '
  ❯ src/ui/components/ModelDialog.test.tsx:263:27
     261|       mockGetPreviewFeatures.mockReturnValue(false);
     262|       const { lastFrame } = renderComponent();
-    263|       expect(lastFrame()).toContain('Gemini 3 is coming soon.');
+    263|       expect(lastFrame()).toContain('Codefly 3 is coming soon.');
        |                           ^
     264|     });
     265| 

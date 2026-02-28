@@ -4,35 +4,40 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {
+  AuthType,
+  CoreToolCallStatus,
+  Kind,
+  LlmRole,
+  REFERENCE_CONTENT_START,
+  StreamEventType,
+  clearCachedCredentialFile,
+  convertSessionToClientHistory,
+  convertToFunctionResponse,
+  createWorkingStdio,
+  debugLogger,
+  getErrorMessage,
+  getErrorStatus,
+  isNodeError,
+  isWithinRoot,
+  logToolCall,
+  partListUnionToString,
+  resolveModel,
+  startupProfiler,
+  ApprovalMode,
+  ToolCallEvent,
+  DiscoveredMCPTool,
+  MCPServerConfig,
+  ReadManyFilesTool,
+  ToolConfirmationOutcome,
+} from '@codeflyai/codefly-core';
 import type {
   Config,
   CodeflyChat,
   ToolResult,
   ToolCallConfirmationDetails,
   FilterFilesOptions,
-} from '@codeflyai/codefly-core';
-import {
-  CoreToolCallStatus,
-  AuthType,
-  logToolCall,
-  convertToFunctionResponse,
-  ToolConfirmationOutcome,
-  clearCachedCredentialFile,
-  isNodeError,
-  getErrorMessage,
-  isWithinRoot,
-  getErrorStatus,
-  MCPServerConfig,
-  DiscoveredMCPTool,
-  StreamEventType,
-  ToolCallEvent,
-  debugLogger,
-  ReadManyFilesTool,
-  REFERENCE_CONTENT_START,
-  resolveModel,
-  createWorkingStdio,
-  startupProfiler,
-  Kind,
+  ConversationRecord,
 } from '@codeflyai/codefly-core';
 import * as acp from '@agentclientprotocol/sdk';
 import { AcpFileSystemService } from './fileSystemService.js';
@@ -63,7 +68,7 @@ export async function runZedIntegration(
 
   const stream = acp.ndJsonStream(stdout, stdin);
   const connection = new acp.AgentSideConnection(
-    (connection) => new GeminiAgent(config, settings, argv, connection),
+    (connection) => new CodeflyAgent(config, settings, argv, connection),
     stream,
   );
 
@@ -73,7 +78,7 @@ export async function runZedIntegration(
   await connection.closed.finally(runExitCleanup);
 }
 
-export class GeminiAgent {
+export class CodeflyAgent {
   private sessions: Map<string, Session> = new Map();
   private clientCapabilities: acp.ClientCapabilities | undefined;
 
@@ -95,10 +100,10 @@ export class GeminiAgent {
         description: null,
       },
       {
-        id: AuthType.USE_GEMINI,
-        name: 'Use Gemini API key',
+        id: AuthType.USE_CODEFLY,
+        name: 'Use Codefly API key',
         description:
-          'Requires setting the `GEMINI_API_KEY` environment variable',
+          'Requires setting the `CODEFLY_API_KEY` environment variable',
       },
       {
         id: AuthType.USE_VERTEX_AI,
@@ -167,7 +172,7 @@ export class GeminiAgent {
     );
 
     const authType =
-      loadedSettings.merged.security.auth.selectedType || AuthType.USE_GEMINI;
+      loadedSettings.merged.security.auth.selectedType || AuthType.USE_CODEFLY;
 
     let isAuthenticated = false;
     let authErrorMessage = '';
@@ -175,14 +180,14 @@ export class GeminiAgent {
       await config.refreshAuth(authType);
       isAuthenticated = true;
 
-      // Extra validation for Gemini API key
+      // Extra validation for Codefly API key
       const contentGeneratorConfig = config.getContentGeneratorConfig();
       if (
-        authType === AuthType.USE_GEMINI &&
+        authType === AuthType.USE_CODEFLY &&
         (!contentGeneratorConfig || !contentGeneratorConfig.apiKey)
       ) {
         isAuthenticated = false;
-        authErrorMessage = 'Gemini API key is missing or not configured.';
+        authErrorMessage = 'Codefly API key is missing or not configured.';
       }
     } catch (e) {
       isAuthenticated = false;
@@ -209,8 +214,8 @@ export class GeminiAgent {
       config.setFileSystemService(acpFileSystemService);
     }
 
-    const geminiClient = config.getCodeflyClient();
-    const chat = await geminiClient.startChat();
+    const codeflyClient = config.getCodeflyClient();
+    const chat = await codeflyClient.startChat();
     const session = new Session(sessionId, chat, config, this.connection);
     this.sessions.set(sessionId, session);
 
@@ -250,16 +255,16 @@ export class GeminiAgent {
 
     const clientHistory = convertSessionToClientHistory(sessionData.messages);
 
-    const geminiClient = config.getGeminiClient();
-    await geminiClient.initialize();
-    await geminiClient.resumeChat(clientHistory, {
+    const codeflyClient = config.getCodeflyClient();
+    await codeflyClient.initialize();
+    await codeflyClient.resumeChat(clientHistory, {
       conversation: sessionData,
       filePath: sessionPath,
     });
 
     const session = new Session(
       sessionId,
-      geminiClient.getChat(),
+      codeflyClient.getChat(),
       config,
       this.connection,
     );
@@ -428,7 +433,7 @@ export class Session {
             content: { type: 'text', text: contentString },
           });
         }
-      } else if (msg.type === 'gemini') {
+      } else if (msg.type === 'codefly') {
         // Thoughts
         if (msg.thoughts) {
           for (const thought of msg.thoughts) {
@@ -510,7 +515,7 @@ export class Session {
       try {
         const model = resolveModel(
           this.config.getModel(),
-          (await this.config.getGemini31Launched?.()) ?? false,
+          (await this.config.getCodefly31Launched?.()) ?? false,
         );
         const responseStream = await chat.sendMessageStream(
           { model },

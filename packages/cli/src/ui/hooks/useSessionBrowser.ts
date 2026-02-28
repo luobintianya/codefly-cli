@@ -14,10 +14,12 @@ import type {
   ResumedSessionData,
 } from '@codeflyai/codefly-core';
 import type { Part } from '@google/genai';
-import { partListUnionToString, coreEvents } from '@codeflyai/codefly-core';
+import {
+  convertSessionToClientHistory,
+  coreEvents,
+} from '@codeflyai/codefly-core';
 import type { SessionInfo } from '../../utils/sessionUtils.js';
 import { convertSessionToHistoryFormats } from '../../utils/sessionUtils.js';
-import type { Part } from '@google/genai';
 
 export { convertSessionToHistoryFormats };
 

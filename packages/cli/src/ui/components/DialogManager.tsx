@@ -37,7 +37,6 @@ import { NewAgentsNotification } from './NewAgentsNotification.js';
 import { AgentConfigDialog } from './AgentConfigDialog.js';
 import { SessionRetentionWarningDialog } from './SessionRetentionWarningDialog.js';
 import { useCallback } from 'react';
-import { SettingScope } from '../../config/settings.js';
 import { PolicyUpdateDialog } from './PolicyUpdateDialog.js';
 
 interface DialogManagerProps {

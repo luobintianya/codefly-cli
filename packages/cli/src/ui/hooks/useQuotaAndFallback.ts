@@ -4,20 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {
-  AuthType,
-  type Config,
-  type FallbackModelHandler,
-  type FallbackIntent,
-  type ValidationHandler,
-  type ValidationIntent,
-  TerminalQuotaError,
-  ModelNotFoundError,
-  type UserTierId,
-  PREVIEW_CODEFLY_MODEL,
-  DEFAULT_CODEFLY_MODEL,
-  VALID_CODEFLY_MODELS,
-} from '@codeflyai/codefly-core';
+import { AuthType, DEFAULT_CODEFLY_MODEL, ModelNotFoundError, PREVIEW_CODEFLY_MODEL, TerminalQuotaError, VALID_CODEFLY_MODELS, getDisplayString, type Config, type FallbackIntent, type FallbackModelHandler, type UserTierId, type ValidationHandler, type ValidationIntent } from '@codeflyai/codefly-core';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { type UseHistoryManagerReturn } from './useHistoryManager.js';
 import { MessageType } from '../types.js';
@@ -88,7 +75,7 @@ export function useQuotaAndFallback({
         VALID_CODEFLY_MODELS.has(failedModel)
       ) {
         isModelNotFoundError = true;
-        if (VALID_GEMINI_MODELS.has(failedModel)) {
+        if (VALID_CODEFLY_MODELS.has(failedModel)) {
           const messageLines = [
             `It seems like you don't have access to ${getDisplayString(failedModel)}.`,
             `Your admin might have disabled the access. Contact them to enable the Preview Release Channel.`,

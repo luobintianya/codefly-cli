@@ -40,12 +40,12 @@ vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
     },
     Storage: Object.assign(
       vi.fn().mockImplementation((_cwd: string) => ({
-        getGlobalSettingsPath: () => '/tmp/gemini/settings.json',
-        getWorkspaceSettingsPath: () => '/tmp/gemini/workspace-settings.json',
+        getGlobalSettingsPath: () => '/tmp/codefly/settings.json',
+        getWorkspaceSettingsPath: () => '/tmp/codefly/workspace-settings.json',
         getProjectTempDir: () => '/test/home/.codefly/tmp/mocked_hash',
       })),
       {
-        getGlobalSettingsPath: () => '/tmp/gemini/settings.json',
+        getGlobalSettingsPath: () => '/tmp/codefly/settings.json',
       },
     ),
     CODEFLY_DIR: '.codefly',

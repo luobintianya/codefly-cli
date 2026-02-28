@@ -6,10 +6,10 @@
 
 import type { Config } from '../../config/config.js';
 import {
-  DEFAULT_GEMINI_MODEL,
-  DEFAULT_GEMINI_FLASH_MODEL,
-  PREVIEW_GEMINI_MODEL,
-  PREVIEW_GEMINI_FLASH_MODEL,
+  DEFAULT_CODEFLY_MODEL,
+  DEFAULT_CODEFLY_FLASH_MODEL,
+  PREVIEW_CODEFLY_MODEL,
+  PREVIEW_CODEFLY_FLASH_MODEL,
   isAutoModel,
   isPreviewModel,
 } from '../../config/models.js';
@@ -54,7 +54,7 @@ export class ApprovalModeStrategy implements RoutingStrategy {
 
     // 1. Planning Phase: If ApprovalMode === PLAN, explicitly route to the Pro model.
     if (approvalMode === ApprovalMode.PLAN) {
-      const proModel = isPreview ? PREVIEW_GEMINI_MODEL : DEFAULT_GEMINI_MODEL;
+      const proModel = isPreview ? PREVIEW_CODEFLY_MODEL : DEFAULT_CODEFLY_MODEL;
       return {
         model: proModel,
         metadata: {
@@ -66,8 +66,8 @@ export class ApprovalModeStrategy implements RoutingStrategy {
     } else if (approvedPlanPath) {
       // 2. Implementation Phase: If ApprovalMode !== PLAN AND an approved plan path is set, prefer the Flash model.
       const flashModel = isPreview
-        ? PREVIEW_GEMINI_FLASH_MODEL
-        : DEFAULT_GEMINI_FLASH_MODEL;
+        ? PREVIEW_CODEFLY_FLASH_MODEL
+        : DEFAULT_CODEFLY_FLASH_MODEL;
       return {
         model: flashModel,
         metadata: {

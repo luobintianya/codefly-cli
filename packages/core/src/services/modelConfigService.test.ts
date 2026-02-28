@@ -17,7 +17,7 @@ describe('ModelConfigService', () => {
       aliases: {
         classifier: {
           modelConfig: {
-            model: 'gemini-1.5-flash-latest',
+            model: 'codefly-1.5-flash-latest',
             generateContentConfig: {
               temperature: 0,
               topP: 0.9,
@@ -30,7 +30,7 @@ describe('ModelConfigService', () => {
     const service = new ModelConfigService(config);
     const resolved = service.getResolvedConfig({ model: 'classifier' });
 
-    expect(resolved.model).toBe('gemini-1.5-flash-latest');
+    expect(resolved.model).toBe('codefly-1.5-flash-latest');
     expect(resolved.generateContentConfig).toEqual({
       temperature: 0,
       topP: 0.9,
@@ -42,7 +42,7 @@ describe('ModelConfigService', () => {
       aliases: {
         classifier: {
           modelConfig: {
-            model: 'gemini-1.5-flash-latest',
+            model: 'codefly-1.5-flash-latest',
             generateContentConfig: {
               temperature: 0,
               topP: 0.9,
@@ -65,7 +65,7 @@ describe('ModelConfigService', () => {
     const service = new ModelConfigService(config);
     const resolved = service.getResolvedConfig({ model: 'classifier' });
 
-    expect(resolved.model).toBe('gemini-1.5-flash-latest');
+    expect(resolved.model).toBe('codefly-1.5-flash-latest');
     expect(resolved.generateContentConfig).toEqual({
       temperature: 0.5,
       topP: 0.9,
@@ -78,22 +78,22 @@ describe('ModelConfigService', () => {
       aliases: {},
       overrides: [
         {
-          match: { model: 'gemini-pro' },
+          match: { model: 'codefly-pro' },
           modelConfig: { generateContentConfig: { temperature: 0.5 } },
         },
         {
-          match: { model: 'gemini-pro', overrideScope: 'my-agent' },
+          match: { model: 'codefly-pro', overrideScope: 'my-agent' },
           modelConfig: { generateContentConfig: { temperature: 0.1 } },
         },
       ],
     };
     const service = new ModelConfigService(config);
     const resolved = service.getResolvedConfig({
-      model: 'gemini-pro',
+      model: 'codefly-pro',
       overrideScope: 'my-agent',
     });
 
-    expect(resolved.model).toBe('gemini-pro');
+    expect(resolved.model).toBe('codefly-pro');
     expect(resolved.generateContentConfig).toEqual({ temperature: 0.1 });
   });
 
@@ -102,21 +102,21 @@ describe('ModelConfigService', () => {
       aliases: {},
       overrides: [
         {
-          match: { model: 'gemini-pro' },
+          match: { model: 'codefly-pro' },
           modelConfig: {
             generateContentConfig: { temperature: 0.5, topP: 0.8 },
           },
         },
         {
-          match: { model: 'gemini-pro' },
+          match: { model: 'codefly-pro' },
           modelConfig: { generateContentConfig: { temperature: 0.1 } },
         },
       ],
     };
     const service = new ModelConfigService(config);
-    const resolved = service.getResolvedConfig({ model: 'gemini-pro' });
+    const resolved = service.getResolvedConfig({ model: 'codefly-pro' });
 
-    expect(resolved.model).toBe('gemini-pro');
+    expect(resolved.model).toBe('codefly-pro');
     expect(resolved.generateContentConfig).toEqual({
       temperature: 0.1,
       topP: 0.8,
@@ -128,7 +128,7 @@ describe('ModelConfigService', () => {
       aliases: {
         'thinking-alias': {
           modelConfig: {
-            model: 'gemini-pro',
+            model: 'codefly-pro',
             generateContentConfig: {
               candidateCount: 500,
             },
@@ -148,7 +148,7 @@ describe('ModelConfigService', () => {
       aliases: {
         'thinking-alias': {
           modelConfig: {
-            model: 'gemini-pro',
+            model: 'codefly-pro',
             generateContentConfig: {
               candidateCount: 500,
             },
@@ -179,7 +179,7 @@ describe('ModelConfigService', () => {
       aliases: {
         'test-alias': {
           modelConfig: {
-            model: 'gemini-test-model',
+            model: 'codefly-test-model',
             generateContentConfig: {
               topP: 0.9,
               topK: 50,
@@ -189,7 +189,7 @@ describe('ModelConfigService', () => {
       },
       overrides: [
         {
-          match: { model: 'gemini-test-model' },
+          match: { model: 'codefly-test-model' },
           modelConfig: {
             generateContentConfig: {
               topK: 40,
@@ -206,7 +206,7 @@ describe('ModelConfigService', () => {
           },
         },
         {
-          match: { model: 'gemini-test-model', overrideScope: 'test-agent' },
+          match: { model: 'codefly-test-model', overrideScope: 'test-agent' },
           modelConfig: {
             generateContentConfig: {
               temperature: 0.2,
@@ -222,7 +222,7 @@ describe('ModelConfigService', () => {
       overrideScope: 'test-agent',
     });
 
-    expect(resolved.model).toBe('gemini-test-model');
+    expect(resolved.model).toBe('codefly-test-model');
     expect(resolved.generateContentConfig).toEqual({
       // From global, overridden by most specific override
       temperature: 0.2,
@@ -252,11 +252,11 @@ describe('ModelConfigService', () => {
 
     const service = new ModelConfigService(config);
     const resolved = service.getResolvedConfig({
-      model: 'gemini-pro',
+      model: 'codefly-pro',
       overrideScope: undefined, // Explicitly undefined
     });
 
-    expect(resolved.model).toBe('gemini-pro');
+    expect(resolved.model).toBe('codefly-pro');
     expect(resolved.generateContentConfig).toEqual({
       temperature: 0.1,
     });
@@ -268,7 +268,7 @@ describe('ModelConfigService', () => {
         aliases: {
           base: {
             modelConfig: {
-              model: 'gemini-1.5-pro-latest',
+              model: 'codefly-1.5-pro-latest',
               generateContentConfig: {
                 temperature: 0.7,
                 topP: 0.9,
@@ -278,7 +278,7 @@ describe('ModelConfigService', () => {
           'flash-variant': {
             extends: 'base',
             modelConfig: {
-              model: 'gemini-1.5-flash-latest',
+              model: 'codefly-1.5-flash-latest',
             },
           },
         },
@@ -286,7 +286,7 @@ describe('ModelConfigService', () => {
       const service = new ModelConfigService(config);
       const resolved = service.getResolvedConfig({ model: 'flash-variant' });
 
-      expect(resolved.model).toBe('gemini-1.5-flash-latest');
+      expect(resolved.model).toBe('codefly-1.5-flash-latest');
       expect(resolved.generateContentConfig).toEqual({
         temperature: 0.7,
         topP: 0.9,
@@ -298,7 +298,7 @@ describe('ModelConfigService', () => {
         aliases: {
           base: {
             modelConfig: {
-              model: 'gemini-1.5-pro-latest',
+              model: 'codefly-1.5-pro-latest',
               generateContentConfig: {
                 temperature: 0.7,
                 topP: 0.9,
@@ -308,7 +308,7 @@ describe('ModelConfigService', () => {
           'flash-variant': {
             extends: 'base',
             modelConfig: {
-              model: 'gemini-1.5-flash-latest',
+              model: 'codefly-1.5-flash-latest',
               generateContentConfig: {
                 temperature: 0.2,
               },
@@ -319,7 +319,7 @@ describe('ModelConfigService', () => {
       const service = new ModelConfigService(config);
       const resolved = service.getResolvedConfig({ model: 'flash-variant' });
 
-      expect(resolved.model).toBe('gemini-1.5-flash-latest');
+      expect(resolved.model).toBe('codefly-1.5-flash-latest');
       expect(resolved.generateContentConfig).toEqual({
         temperature: 0.2,
         topP: 0.9,
@@ -331,7 +331,7 @@ describe('ModelConfigService', () => {
         aliases: {
           base: {
             modelConfig: {
-              model: 'gemini-1.5-pro-latest',
+              model: 'codefly-1.5-pro-latest',
               generateContentConfig: {
                 temperature: 0.7,
                 topP: 0.9,
@@ -341,7 +341,7 @@ describe('ModelConfigService', () => {
           'base-flash': {
             extends: 'base',
             modelConfig: {
-              model: 'gemini-1.5-flash-latest',
+              model: 'codefly-1.5-flash-latest',
             },
           },
           'classifier-flash': {
@@ -359,7 +359,7 @@ describe('ModelConfigService', () => {
         model: 'classifier-flash',
       });
 
-      expect(resolved.model).toBe('gemini-1.5-flash-latest');
+      expect(resolved.model).toBe('codefly-1.5-flash-latest');
       expect(resolved.generateContentConfig).toEqual({
         temperature: 0,
         topP: 0.9,
@@ -393,7 +393,7 @@ describe('ModelConfigService', () => {
             'concrete-child': {
               extends: 'abstract-base',
               modelConfig: {
-                model: 'gemini-1.5-pro-latest',
+                model: 'codefly-1.5-pro-latest',
                 generateContentConfig: {
                   topP: 0.9,
                 },
@@ -404,7 +404,7 @@ describe('ModelConfigService', () => {
         const service = new ModelConfigService(config);
         const resolved = service.getResolvedConfig({ model: 'concrete-child' });
 
-        expect(resolved.model).toBe('gemini-1.5-pro-latest');
+        expect(resolved.model).toBe('codefly-1.5-pro-latest');
         expect(resolved.generateContentConfig).toEqual({
           temperature: 0.1,
           topP: 0.9,
@@ -444,7 +444,7 @@ describe('ModelConfigService', () => {
             {
               match: { model: 'abstract-base' },
               modelConfig: {
-                model: 'gemini-1.5-flash-latest',
+                model: 'codefly-1.5-flash-latest',
               },
             },
           ],
@@ -452,7 +452,7 @@ describe('ModelConfigService', () => {
         const service = new ModelConfigService(config);
         const resolved = service.getResolvedConfig({ model: 'abstract-base' });
 
-        expect(resolved.model).toBe('gemini-1.5-flash-latest');
+        expect(resolved.model).toBe('codefly-1.5-flash-latest');
         expect(resolved.generateContentConfig).toEqual({
           temperature: 0.1,
         });
@@ -479,7 +479,7 @@ describe('ModelConfigService', () => {
       for (let i = 0; i < 101; i++) {
         aliases[`alias-${i}`] = {
           extends: i === 100 ? undefined : `alias-${i + 1}`,
-          modelConfig: i === 100 ? { model: 'gemini-pro' } : {},
+          modelConfig: i === 100 ? { model: 'codefly-pro' } : {},
         };
       }
       const config: ModelConfigServiceConfig = { aliases };
@@ -496,7 +496,7 @@ describe('ModelConfigService', () => {
         aliases: {
           'base-safe': {
             modelConfig: {
-              model: 'gemini-pro',
+              model: 'codefly-pro',
               generateContentConfig: {
                 safetySettings: {
                   HARM_CATEGORY_HARASSMENT: 'BLOCK_ONLY_HIGH',
@@ -525,7 +525,7 @@ describe('ModelConfigService', () => {
       const service = new ModelConfigService(config);
       const resolved = service.getResolvedConfig({ model: 'base-safe' });
 
-      expect(resolved.model).toBe('gemini-pro');
+      expect(resolved.model).toBe('codefly-pro');
       expect(resolved.generateContentConfig.safetySettings).toEqual({
         // From alias
         HARM_CATEGORY_HARASSMENT: 'BLOCK_ONLY_HIGH',
@@ -541,7 +541,7 @@ describe('ModelConfigService', () => {
         aliases: {
           base: {
             modelConfig: {
-              model: 'gemini-pro',
+              model: 'codefly-pro',
               generateContentConfig: {
                 stopSequences: ['foo'],
               },
@@ -562,7 +562,7 @@ describe('ModelConfigService', () => {
       const service = new ModelConfigService(config);
       const resolved = service.getResolvedConfig({ model: 'base' });
 
-      expect(resolved.model).toBe('gemini-pro');
+      expect(resolved.model).toBe('codefly-pro');
       expect(resolved.generateContentConfig.stopSequences).toEqual([
         'overrideFoo',
       ]);
@@ -579,7 +579,7 @@ describe('ModelConfigService', () => {
 
       service.registerRuntimeModelConfig('runtime-alias', {
         modelConfig: {
-          model: 'gemini-runtime-model',
+          model: 'codefly-runtime-model',
           generateContentConfig: {
             temperature: 0.123,
           },
@@ -588,7 +588,7 @@ describe('ModelConfigService', () => {
 
       const resolved = service.getResolvedConfig({ model: 'runtime-alias' });
 
-      expect(resolved.model).toBe('gemini-runtime-model');
+      expect(resolved.model).toBe('codefly-runtime-model');
       expect(resolved.generateContentConfig).toEqual({
         temperature: 0.123,
       });
@@ -604,7 +604,7 @@ describe('ModelConfigService', () => {
       const service = new ModelConfigService(config);
 
       service.registerRuntimeModelOverride({
-        match: { model: 'gemini-pro' },
+        match: { model: 'codefly-pro' },
         modelConfig: {
           generateContentConfig: {
             temperature: 0.99,
@@ -612,9 +612,9 @@ describe('ModelConfigService', () => {
         },
       });
 
-      const resolved = service.getResolvedConfig({ model: 'gemini-pro' });
+      const resolved = service.getResolvedConfig({ model: 'codefly-pro' });
 
-      expect(resolved.model).toBe('gemini-pro');
+      expect(resolved.model).toBe('codefly-pro');
       expect(resolved.generateContentConfig.temperature).toBe(0.99);
     });
 
@@ -623,7 +623,7 @@ describe('ModelConfigService', () => {
         aliases: {},
         overrides: [
           {
-            match: { model: 'gemini-pro' },
+            match: { model: 'codefly-pro' },
             modelConfig: { generateContentConfig: { temperature: 0.1 } },
           },
         ],
@@ -631,11 +631,11 @@ describe('ModelConfigService', () => {
       const service = new ModelConfigService(config);
 
       service.registerRuntimeModelOverride({
-        match: { model: 'gemini-pro' },
+        match: { model: 'codefly-pro' },
         modelConfig: { generateContentConfig: { temperature: 0.9 } },
       });
 
-      const resolved = service.getResolvedConfig({ model: 'gemini-pro' });
+      const resolved = service.getResolvedConfig({ model: 'codefly-pro' });
 
       // Runtime overrides are appended after overrides/customOverrides, so they should win.
       expect(resolved.generateContentConfig.temperature).toBe(0.9);
@@ -650,18 +650,18 @@ describe('ModelConfigService', () => {
 
       // Register a more specific runtime override
       service.registerRuntimeModelOverride({
-        match: { model: 'gemini-pro', overrideScope: 'my-agent' },
+        match: { model: 'codefly-pro', overrideScope: 'my-agent' },
         modelConfig: { generateContentConfig: { temperature: 0.1 } },
       });
 
       // Register a less specific runtime override later
       service.registerRuntimeModelOverride({
-        match: { model: 'gemini-pro' },
+        match: { model: 'codefly-pro' },
         modelConfig: { generateContentConfig: { temperature: 0.9 } },
       });
 
       const resolved = service.getResolvedConfig({
-        model: 'gemini-pro',
+        model: 'codefly-pro',
         overrideScope: 'my-agent',
       });
 
@@ -677,7 +677,7 @@ describe('ModelConfigService', () => {
         customAliases: {
           'my-custom-alias': {
             modelConfig: {
-              model: 'gemini-custom',
+              model: 'codefly-custom',
               generateContentConfig: {
                 temperature: 0.9,
               },
@@ -689,7 +689,7 @@ describe('ModelConfigService', () => {
       const service = new ModelConfigService(config);
       const resolved = service.getResolvedConfig({ model: 'my-custom-alias' });
 
-      expect(resolved.model).toBe('gemini-custom');
+      expect(resolved.model).toBe('codefly-custom');
       expect(resolved.generateContentConfig).toEqual({
         temperature: 0.9,
       });
@@ -700,7 +700,7 @@ describe('ModelConfigService', () => {
         aliases: {
           'standard-alias': {
             modelConfig: {
-              model: 'gemini-standard',
+              model: 'codefly-standard',
               generateContentConfig: {
                 temperature: 0.5,
               },
@@ -710,7 +710,7 @@ describe('ModelConfigService', () => {
         customAliases: {
           'standard-alias': {
             modelConfig: {
-              model: 'gemini-custom-override',
+              model: 'codefly-custom-override',
               generateContentConfig: {
                 temperature: 0.1,
               },
@@ -722,7 +722,7 @@ describe('ModelConfigService', () => {
       const service = new ModelConfigService(config);
       const resolved = service.getResolvedConfig({ model: 'standard-alias' });
 
-      expect(resolved.model).toBe('gemini-custom-override');
+      expect(resolved.model).toBe('codefly-custom-override');
       expect(resolved.generateContentConfig).toEqual({
         temperature: 0.1,
       });
@@ -862,7 +862,7 @@ describe('ModelConfigService', () => {
         aliases: {
           'test-alias': {
             modelConfig: {
-              model: 'gemini-test',
+              model: 'codefly-test',
               generateContentConfig: { temperature: 0.5 },
             },
           },
@@ -894,7 +894,7 @@ describe('ModelConfigService', () => {
         aliases: {
           'test-model': {
             modelConfig: {
-              model: 'gemini-test',
+              model: 'codefly-test',
               generateContentConfig: {
                 temperature: 0.5,
               },
@@ -931,7 +931,7 @@ describe('ModelConfigService', () => {
         aliases: {
           'test-model': {
             modelConfig: {
-              model: 'gemini-test',
+              model: 'codefly-test',
               generateContentConfig: {
                 temperature: 0.5,
               },
@@ -978,7 +978,7 @@ describe('ModelConfigService', () => {
         aliases: {
           'base-alias': {
             modelConfig: {
-              model: 'gemini-test',
+              model: 'codefly-test',
               generateContentConfig: {
                 temperature: 0.5,
               },

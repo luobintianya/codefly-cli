@@ -4,17 +4,17 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type { Content } from '@google/gemini-cli-core';
+import type { Content } from '@codeflyai/codefly-core';
 import type { Tool } from './tool.js';
 import type { SkillReference } from './skills.js';
-import type { GeminiCliAgent } from './agent.js';
-import type { GeminiCliSession } from './session.js';
+import type { CodeflyCliAgent } from './agent.js';
+import type { CodeflyCliSession } from './session.js';
 
 export type SystemInstructions =
   | string
   | ((context: SessionContext) => string | Promise<string>);
 
-export interface GeminiCliAgentOptions {
+export interface CodeflyCliAgentOptions {
   instructions: SystemInstructions;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   tools?: Array<Tool<any>>;
@@ -56,6 +56,6 @@ export interface SessionContext {
   timestamp: string;
   fs: AgentFilesystem;
   shell: AgentShell;
-  agent: GeminiCliAgent;
-  session: GeminiCliSession;
+  agent: CodeflyCliAgent;
+  session: CodeflyCliSession;
 }

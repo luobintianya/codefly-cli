@@ -48,7 +48,7 @@ describe('createPolicyUpdater', () => {
   it('should persist policy when persist flag is true', async () => {
     createPolicyUpdater(policyEngine, messageBus, mockStorage);
 
-    const workspacePoliciesDir = '/mock/project/.gemini/policies';
+    const workspacePoliciesDir = '/mock/project/.codefly/policies';
     const policyFile = path.join(
       workspacePoliciesDir,
       AUTO_SAVED_POLICY_FILENAME,
@@ -115,7 +115,7 @@ describe('createPolicyUpdater', () => {
   it('should persist policy with commandPrefix when provided', async () => {
     createPolicyUpdater(policyEngine, messageBus, mockStorage);
 
-    const workspacePoliciesDir = '/mock/project/.gemini/policies';
+    const workspacePoliciesDir = '/mock/project/.codefly/policies';
     const policyFile = path.join(
       workspacePoliciesDir,
       AUTO_SAVED_POLICY_FILENAME,
@@ -168,7 +168,7 @@ describe('createPolicyUpdater', () => {
   it('should persist policy with mcpName and toolName when provided', async () => {
     createPolicyUpdater(policyEngine, messageBus, mockStorage);
 
-    const workspacePoliciesDir = '/mock/project/.gemini/policies';
+    const workspacePoliciesDir = '/mock/project/.codefly/policies';
     const policyFile = path.join(
       workspacePoliciesDir,
       AUTO_SAVED_POLICY_FILENAME,
@@ -214,7 +214,7 @@ describe('createPolicyUpdater', () => {
   it('should escape special characters in toolName and mcpName', async () => {
     createPolicyUpdater(policyEngine, messageBus, mockStorage);
 
-    const workspacePoliciesDir = '/mock/project/.gemini/policies';
+    const workspacePoliciesDir = '/mock/project/.codefly/policies';
     const policyFile = path.join(
       workspacePoliciesDir,
       AUTO_SAVED_POLICY_FILENAME,

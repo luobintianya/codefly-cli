@@ -15,7 +15,7 @@ export const GOOGLE_ACCOUNTS_FILENAME = 'google_accounts.json';
 
 /**
  * Returns the home directory.
- * If GEMINI_CLI_HOME environment variable is set, it returns its value.
+ * If CODEFLY_CLI_HOME environment variable is set, it returns its value.
  * Otherwise, it returns the user's home directory.
  */
 export function homedir(): string {

@@ -13,7 +13,7 @@ import {
   debugLogger,
   coreEvents,
   type CommandHookConfig,
-} from '@google/gemini-cli-core';
+} from '@codeflyai/codefly-core';
 import { createTestMergedSettings } from './settings.js';
 import { createExtension } from '../test-utils/createExtension.js';
 import { EXTENSIONS_DIRECTORY_NAME } from './extensions/variables.js';
@@ -28,10 +28,10 @@ vi.mock('node:os', async (importOriginal) => {
   };
 });
 
-// Mock @google/gemini-cli-core
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
+// Mock @codeflyai/codefly-core
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
   const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+    await importOriginal<typeof import('@codeflyai/codefly-core')>();
   return {
     ...actual,
     homedir: mockHomedir,
@@ -51,11 +51,11 @@ describe('ExtensionManager hydration', () => {
     vi.spyOn(coreEvents, 'emitFeedback');
     vi.spyOn(debugLogger, 'debug').mockImplementation(() => {});
 
-    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'gemini-test-'));
+    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'codefly-test-'));
     mockHomedir.mockReturnValue(tempDir);
 
     // Create the extensions directory that ExtensionManager expects
-    extensionsDir = path.join(tempDir, '.gemini', EXTENSIONS_DIRECTORY_NAME);
+    extensionsDir = path.join(tempDir, '.codefly', EXTENSIONS_DIRECTORY_NAME);
     fs.mkdirSync(extensionsDir, { recursive: true });
 
     extensionManager = new ExtensionManager({
@@ -165,7 +165,7 @@ System using model: \${MODEL_NAME}
     await extensionManager.loadExtensions();
 
     extensionManager.setRequestSetting(async (setting) => {
-      if (setting.envVar === 'MODEL_NAME') return 'gemini-pro';
+      if (setting.envVar === 'MODEL_NAME') return 'codefly-pro';
       return '';
     });
 
@@ -178,7 +178,7 @@ System using model: \${MODEL_NAME}
     const agent = extension.agents![0];
     if (agent.kind === 'local') {
       expect(agent.promptConfig.systemPrompt).toContain(
-        'System using model: gemini-pro',
+        'System using model: codefly-pro',
       );
     } else {
       throw new Error('Expected local agent');

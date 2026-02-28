@@ -13,7 +13,7 @@ import {
 } from '@opentelemetry/api';
 import { safeJsonStringify } from '../utils/safeJsonStringify.js';
 
-const TRACER_NAME = 'gemini-cli';
+const TRACER_NAME = 'codefly-cli';
 const TRACER_VERSION = 'v1';
 
 /**
@@ -60,8 +60,8 @@ export async function runInDevTraceSpan<R>(
   }) => Promise<R>,
 ): Promise<R> {
   const { name: spanName, noAutoEnd, ...restOfSpanOpts } = opts;
-  if (process.env['GEMINI_DEV_TRACING'] !== 'true') {
-    // If GEMINI_DEV_TRACING env var not set, we do not trace.
+  if (process.env['CODEFLY_DEV_TRACING'] !== 'true') {
+    // If CODEFLY_DEV_TRACING env var not set, we do not trace.
     return fn({
       metadata: {
         name: spanName,

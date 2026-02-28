@@ -311,19 +311,19 @@ describe('Telemetry Metrics', () => {
 
     it('should not record metrics if not initialized', () => {
       recordTokenUsageMetricsModule(mockConfig, 100, {
-        model: 'gemini-pro',
+        model: 'codefly-pro',
         type: 'input',
       });
       expect(mockCounterAddFn).not.toHaveBeenCalled();
     });
 
     it.each([
-      { type: 'input', tokens: 100, model: 'gemini-pro' },
-      { type: 'output', tokens: 50, model: 'gemini-pro' },
-      { type: 'thought', tokens: 25, model: 'gemini-pro' },
-      { type: 'cache', tokens: 75, model: 'gemini-pro' },
-      { type: 'tool', tokens: 125, model: 'gemini-pro' },
-      { type: 'input', tokens: 200, model: 'gemini-different-model' },
+      { type: 'input', tokens: 100, model: 'codefly-pro' },
+      { type: 'output', tokens: 50, model: 'codefly-pro' },
+      { type: 'thought', tokens: 25, model: 'codefly-pro' },
+      { type: 'cache', tokens: 75, model: 'codefly-pro' },
+      { type: 'tool', tokens: 125, model: 'codefly-pro' },
+      { type: 'input', tokens: 200, model: 'codefly-different-model' },
     ])(
       'should record token usage for $type type with $tokens tokens for model $model',
       ({ type, tokens, model }) => {
@@ -485,7 +485,7 @@ describe('Telemetry Metrics', () => {
 
     it('should not record metrics if not initialized', () => {
       const event = new ModelRoutingEvent(
-        'gemini-pro',
+        'codefly-pro',
         'default',
         100,
         'test-reason',
@@ -501,7 +501,7 @@ describe('Telemetry Metrics', () => {
     it('should record latency for a successful routing decision', () => {
       initializeMetricsModule(mockConfig);
       const event = new ModelRoutingEvent(
-        'gemini-pro',
+        'codefly-pro',
         'default',
         150,
         'test-reason',
@@ -515,7 +515,7 @@ describe('Telemetry Metrics', () => {
         'session.id': 'test-session-id',
         'installation.id': 'test-installation-id',
         'user.email': 'test@example.com',
-        'routing.decision_model': 'gemini-pro',
+        'routing.decision_model': 'codefly-pro',
         'routing.decision_source': 'default',
         'routing.failed': false,
         'routing.reasoning': 'test-reason',
@@ -528,7 +528,7 @@ describe('Telemetry Metrics', () => {
     it('should record latency and failure for a failed routing decision', () => {
       initializeMetricsModule(mockConfig);
       const event = new ModelRoutingEvent(
-        'gemini-pro',
+        'codefly-pro',
         'Classifier',
         200,
         'test-reason',
@@ -542,7 +542,7 @@ describe('Telemetry Metrics', () => {
         'session.id': 'test-session-id',
         'installation.id': 'test-installation-id',
         'user.email': 'test@example.com',
-        'routing.decision_model': 'gemini-pro',
+        'routing.decision_model': 'codefly-pro',
         'routing.decision_source': 'Classifier',
         'routing.failed': true,
         'routing.reasoning': 'test-reason',
@@ -554,7 +554,7 @@ describe('Telemetry Metrics', () => {
         'session.id': 'test-session-id',
         'installation.id': 'test-installation-id',
         'user.email': 'test@example.com',
-        'routing.decision_model': 'gemini-pro',
+        'routing.decision_model': 'codefly-pro',
         'routing.decision_source': 'Classifier',
         'routing.failed': true,
         'routing.reasoning': 'test-reason',
@@ -649,8 +649,8 @@ describe('Telemetry Metrics', () => {
           'gen_ai.operation.name': 'generate_content',
           'gen_ai.provider.name': 'gcp.gen_ai',
           'gen_ai.token.type': 'input',
-          'gen_ai.request.model': 'gemini-2.0-flash',
-          'gen_ai.response.model': 'gemini-2.0-flash',
+          'gen_ai.request.model': 'codefly-2.0-flash',
+          'gen_ai.response.model': 'codefly-2.0-flash',
         });
 
         expect(mockHistogramRecordFn).toHaveBeenCalledWith(150, {
@@ -660,8 +660,8 @@ describe('Telemetry Metrics', () => {
           'gen_ai.operation.name': 'generate_content',
           'gen_ai.provider.name': 'gcp.gen_ai',
           'gen_ai.token.type': 'input',
-          'gen_ai.request.model': 'gemini-2.0-flash',
-          'gen_ai.response.model': 'gemini-2.0-flash',
+          'gen_ai.request.model': 'codefly-2.0-flash',
+          'gen_ai.response.model': 'codefly-2.0-flash',
         });
       });
 
@@ -673,7 +673,7 @@ describe('Telemetry Metrics', () => {
           'gen_ai.operation.name': 'generate_content',
           'gen_ai.provider.name': 'gcp.vertex_ai',
           'gen_ai.token.type': 'output',
-          'gen_ai.request.model': 'gemini-pro',
+          'gen_ai.request.model': 'codefly-pro',
         });
 
         expect(mockHistogramRecordFn).toHaveBeenCalledWith(75, {
@@ -683,7 +683,7 @@ describe('Telemetry Metrics', () => {
           'gen_ai.operation.name': 'generate_content',
           'gen_ai.provider.name': 'gcp.vertex_ai',
           'gen_ai.token.type': 'output',
-          'gen_ai.request.model': 'gemini-pro',
+          'gen_ai.request.model': 'codefly-pro',
         });
       });
 
@@ -731,8 +731,8 @@ describe('Telemetry Metrics', () => {
         recordGenAiClientOperationDurationModule(mockConfig, 1.25, {
           'gen_ai.operation.name': 'generate_content',
           'gen_ai.provider.name': 'gcp.gen_ai',
-          'gen_ai.request.model': 'gemini-2.0-flash',
-          'gen_ai.response.model': 'gemini-2.0-flash',
+          'gen_ai.request.model': 'codefly-2.0-flash',
+          'gen_ai.response.model': 'codefly-2.0-flash',
         });
 
         expect(mockHistogramRecordFn).toHaveBeenCalledWith(1.25, {
@@ -741,8 +741,8 @@ describe('Telemetry Metrics', () => {
           'user.email': 'test@example.com',
           'gen_ai.operation.name': 'generate_content',
           'gen_ai.provider.name': 'gcp.gen_ai',
-          'gen_ai.request.model': 'gemini-2.0-flash',
-          'gen_ai.response.model': 'gemini-2.0-flash',
+          'gen_ai.request.model': 'codefly-2.0-flash',
+          'gen_ai.response.model': 'codefly-2.0-flash',
         });
       });
 
@@ -753,7 +753,7 @@ describe('Telemetry Metrics', () => {
         recordGenAiClientOperationDurationModule(mockConfig, 3.75, {
           'gen_ai.operation.name': 'generate_content',
           'gen_ai.provider.name': 'gcp.vertex_ai',
-          'gen_ai.request.model': 'gemini-pro',
+          'gen_ai.request.model': 'codefly-pro',
           'error.type': 'quota_exceeded',
         });
 
@@ -763,7 +763,7 @@ describe('Telemetry Metrics', () => {
           'user.email': 'test@example.com',
           'gen_ai.operation.name': 'generate_content',
           'gen_ai.provider.name': 'gcp.vertex_ai',
-          'gen_ai.request.model': 'gemini-pro',
+          'gen_ai.request.model': 'codefly-pro',
           'error.type': 'quota_exceeded',
         });
       });
@@ -775,8 +775,8 @@ describe('Telemetry Metrics', () => {
         recordGenAiClientOperationDurationModule(mockConfig, 0.95, {
           'gen_ai.operation.name': 'generate_content',
           'gen_ai.provider.name': 'gcp.vertex_ai',
-          'gen_ai.request.model': 'gemini-1.5-pro',
-          'gen_ai.response.model': 'gemini-1.5-pro-001',
+          'gen_ai.request.model': 'codefly-1.5-pro',
+          'gen_ai.response.model': 'codefly-1.5-pro-001',
           'server.address': 'us-central1-aiplatform.googleapis.com',
           'server.port': 443,
         });
@@ -787,8 +787,8 @@ describe('Telemetry Metrics', () => {
           'user.email': 'test@example.com',
           'gen_ai.operation.name': 'generate_content',
           'gen_ai.provider.name': 'gcp.vertex_ai',
-          'gen_ai.request.model': 'gemini-1.5-pro',
-          'gen_ai.response.model': 'gemini-1.5-pro-001',
+          'gen_ai.request.model': 'codefly-1.5-pro',
+          'gen_ai.response.model': 'codefly-1.5-pro-001',
           'server.address': 'us-central1-aiplatform.googleapis.com',
           'server.port': 443,
         });
@@ -834,7 +834,7 @@ describe('Telemetry Metrics', () => {
         recordStartupPerformanceModule(mockConfigDisabled, 100, {
           phase: 'settings_loading',
           details: {
-            auth_type: 'gemini',
+            auth_type: 'codefly',
           },
         });
 
@@ -848,7 +848,7 @@ describe('Telemetry Metrics', () => {
         recordStartupPerformanceModule(mockConfig, 150, {
           phase: 'settings_loading',
           details: {
-            auth_type: 'gemini',
+            auth_type: 'codefly',
             telemetry_enabled: true,
             settings_sources: 2,
           },
@@ -859,7 +859,7 @@ describe('Telemetry Metrics', () => {
           'installation.id': 'test-installation-id',
           'user.email': 'test@example.com',
           phase: 'settings_loading',
-          auth_type: 'gemini',
+          auth_type: 'codefly',
           telemetry_enabled: true,
           settings_sources: 2,
         });
@@ -1090,7 +1090,7 @@ describe('Telemetry Metrics', () => {
         mockHistogramRecordFn.mockClear();
 
         recordTokenEfficiencyModule(mockConfig, 0.85, {
-          model: 'gemini-pro',
+          model: 'codefly-pro',
           metric: 'cache_hit_rate',
           context: 'api_request',
         });
@@ -1099,7 +1099,7 @@ describe('Telemetry Metrics', () => {
           'session.id': 'test-session-id',
           'installation.id': 'test-installation-id',
           'user.email': 'test@example.com',
-          model: 'gemini-pro',
+          model: 'codefly-pro',
           metric: 'cache_hit_rate',
           context: 'api_request',
         });
@@ -1110,7 +1110,7 @@ describe('Telemetry Metrics', () => {
         mockHistogramRecordFn.mockClear();
 
         recordTokenEfficiencyModule(mockConfig, 125.5, {
-          model: 'gemini-pro',
+          model: 'codefly-pro',
           metric: 'tokens_per_operation',
         });
 
@@ -1118,7 +1118,7 @@ describe('Telemetry Metrics', () => {
           'session.id': 'test-session-id',
           'installation.id': 'test-installation-id',
           'user.email': 'test@example.com',
-          model: 'gemini-pro',
+          model: 'codefly-pro',
           metric: 'tokens_per_operation',
         });
       });
@@ -1130,7 +1130,7 @@ describe('Telemetry Metrics', () => {
         mockHistogramRecordFn.mockClear();
 
         recordApiRequestBreakdownModule(mockConfig, 15, {
-          model: 'gemini-pro',
+          model: 'codefly-pro',
           phase: ApiRequestPhase.REQUEST_PREPARATION,
         });
 
@@ -1138,7 +1138,7 @@ describe('Telemetry Metrics', () => {
           'session.id': 'test-session-id',
           'installation.id': 'test-installation-id',
           'user.email': 'test@example.com',
-          model: 'gemini-pro',
+          model: 'codefly-pro',
           phase: 'request_preparation',
         });
       });
@@ -1148,15 +1148,15 @@ describe('Telemetry Metrics', () => {
         mockHistogramRecordFn.mockClear();
 
         recordApiRequestBreakdownModule(mockConfig, 250, {
-          model: 'gemini-pro',
+          model: 'codefly-pro',
           phase: ApiRequestPhase.NETWORK_LATENCY,
         });
         recordApiRequestBreakdownModule(mockConfig, 100, {
-          model: 'gemini-pro',
+          model: 'codefly-pro',
           phase: ApiRequestPhase.RESPONSE_PROCESSING,
         });
         recordApiRequestBreakdownModule(mockConfig, 50, {
-          model: 'gemini-pro',
+          model: 'codefly-pro',
           phase: ApiRequestPhase.TOKEN_PROCESSING,
         });
 
@@ -1165,21 +1165,21 @@ describe('Telemetry Metrics', () => {
           'session.id': 'test-session-id',
           'installation.id': 'test-installation-id',
           'user.email': 'test@example.com',
-          model: 'gemini-pro',
+          model: 'codefly-pro',
           phase: 'network_latency',
         });
         expect(mockHistogramRecordFn).toHaveBeenNthCalledWith(2, 100, {
           'session.id': 'test-session-id',
           'installation.id': 'test-installation-id',
           'user.email': 'test@example.com',
-          model: 'gemini-pro',
+          model: 'codefly-pro',
           phase: 'response_processing',
         });
         expect(mockHistogramRecordFn).toHaveBeenNthCalledWith(3, 50, {
           'session.id': 'test-session-id',
           'installation.id': 'test-installation-id',
           'user.email': 'test@example.com',
-          model: 'gemini-pro',
+          model: 'codefly-pro',
           phase: 'token_processing',
         });
       });

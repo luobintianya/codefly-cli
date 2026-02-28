@@ -22,6 +22,10 @@ import {
 } from './ToolShared.js';
 import type { ToolMessageProps } from './ToolMessage.js';
 import type { Config } from '@codeflyai/codefly-core';
+import { useUIState } from '../../contexts/UIStateContext.js';
+import { useAlternateBuffer } from '../../hooks/useAlternateBuffer.js';
+import { calculateShellMaxLines } from '../../utils/toolLayoutUtils.js';
+import { ACTIVE_SHELL_MAX_LINES } from '../../constants.js';
 
 export interface ShellToolMessageProps extends ToolMessageProps {
   config?: Config;

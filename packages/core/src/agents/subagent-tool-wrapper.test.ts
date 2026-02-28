@@ -42,7 +42,7 @@ const mockDefinition: LocalAgentDefinition = {
     },
   },
   modelConfig: {
-    model: 'gemini-test-model',
+    model: 'codefly-test-model',
     generateContentConfig: {
       temperature: 0,
       topP: 1,

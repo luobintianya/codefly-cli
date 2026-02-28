@@ -76,8 +76,8 @@ async function main() {
   }
 
   const repo = {
-    owner: process.env.GITHUB_REPOSITORY_OWNER || 'google-gemini',
-    repo: process.env.GITHUB_REPOSITORY_NAME || 'gemini-cli',
+    owner: process.env.GITHUB_REPOSITORY_OWNER || 'google-codefly',
+    repo: process.env.GITHUB_REPOSITORY_NAME || 'codefly-cli',
   };
 
   // Get inputs from CLI args or environment

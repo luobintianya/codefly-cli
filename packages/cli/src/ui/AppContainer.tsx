@@ -40,42 +40,7 @@ import {
 import { checkPermissions } from './hooks/atCommandProcessor.js';
 import { MessageType, StreamingState } from './types.js';
 import { ToolActionsProvider } from './contexts/ToolActionsContext.js';
-import {
-  type StartupWarning,
-  type EditorType,
-  type Config,
-  type IdeInfo,
-  type IdeContext,
-  type UserTierId,
-  type UserFeedbackPayload,
-  type AgentDefinition,
-  type ApprovalMode,
-  IdeClient,
-  ideContextStore,
-  getErrorMessage,
-  getAllCodeflyMdFilenames,
-  AuthType,
-  clearCachedCredentialFile,
-  type ResumedSessionData,
-  recordExitFail,
-  ShellExecutionService,
-  saveApiKey,
-  debugLogger,
-  coreEvents,
-  CoreEvent,
-  refreshServerHierarchicalMemory,
-  flattenMemory,
-  type MemoryChangedPayload,
-  disableMouseEvents,
-  enterAlternateScreen,
-  enableMouseEvents,
-  disableLineWrapping,
-  shouldEnterAlternateScreen,
-  startupProfiler,
-  SessionStartSource,
-  SessionEndReason,
-  generateSummary,
-} from '@codeflyai/codefly-core';
+import { AuthType, ChangeAuthRequestedError, CoreEvent, CoreToolCallStatus, IdeClient, SessionEndReason, SessionStartSource, ShellExecutionService, buildUserSteeringHintPrompt, clearCachedCredentialFile, coreEvents, debugLogger, disableLineWrapping, disableMouseEvents, enableMouseEvents, enterAlternateScreen, flattenMemory, generateSteeringAckMessage, generateSummary, getAllCodeflyMdFilenames, getErrorMessage, ideContextStore, recordExitFail, refreshServerHierarchicalMemory, saveApiKey, shouldEnterAlternateScreen, startupProfiler, type AgentsDiscoveredPayload, type ConsentRequestPayload, type AgentDefinition, type ApprovalMode, type Config, type EditorType, type IdeContext, type IdeInfo, type MemoryChangedPayload, type ResumedSessionData, type StartupWarning, type UserFeedbackPayload, type UserTierId } from '@codeflyai/codefly-core';
 import { validateAuthMethod } from '../config/auth.js';
 import process from 'node:process';
 import { useHistory } from './hooks/useHistoryManager.js';
@@ -101,7 +66,7 @@ import { basename } from 'node:path';
 import { computeTerminalTitle } from '../utils/windowTitle.js';
 import { useTextBuffer } from './components/shared/text-buffer.js';
 import { useLogger } from './hooks/useLogger.js';
-import { useGeminiStream } from './hooks/useGeminiStream.js';
+import { useCodeflyStream } from './hooks/useCodeflyStream.js';
 import { type BackgroundShell } from './hooks/shellCommandProcessor.js';
 import { useVim } from './hooks/vim.js';
 import { type LoadableSettingScope, SettingScope } from '../config/settings.js';
@@ -158,6 +123,7 @@ import { shouldDismissShortcutsHelpOnHotkey } from './utils/shortcutsHelp.js';
 import { useSuspend } from './hooks/useSuspend.js';
 import { useRunEventNotifications } from './hooks/useRunEventNotifications.js';
 import { isNotificationsEnabled } from '../utils/terminalNotifications.js';
+import { NewAgentsChoice } from './components/NewAgentsNotification.js';
 
 function isToolExecuting(pendingHistoryItems: HistoryItemWithoutId[]) {
   return pendingHistoryItems.some((item) => {
@@ -459,9 +425,9 @@ export const AppContainer = (props: AppContainerProps) => {
         }
 
         const additionalContext = result.getAdditionalContext();
-        const geminiClient = config.getCodeflyClient();
-        if (additionalContext && geminiClient) {
-          await geminiClient.addHistory({
+        const codeflyClient = config.getCodeflyClient();
+        if (additionalContext && codeflyClient) {
+          await codeflyClient.addHistory({
             role: 'user',
             parts: [
               { text: `<hook_context>${additionalContext}</hook_context>` },
@@ -750,7 +716,7 @@ export const AppContainer = (props: AppContainerProps) => {
 
         if (
           (authType === AuthType.LOGIN_WITH_GOOGLE ||
-            authType === AuthType.USE_GEMINI ||
+            authType === AuthType.USE_CODEFLY ||
             authType === AuthType.OPENAI) &&
           config.isBrowserLaunchSuppressed()
         ) {
@@ -841,12 +807,12 @@ export const AppContainer = (props: AppContainerProps) => {
           }
         }
 
-        if (currentAuthType === AuthType.USE_GEMINI) {
+        if (currentAuthType === AuthType.USE_CODEFLY) {
           await saveApiKey(apiKey);
         }
 
         await reloadApiKey();
-        await config.refreshAuth(currentAuthType || AuthType.USE_GEMINI);
+        await config.refreshAuth(currentAuthType || AuthType.USE_CODEFLY);
         setAuthState(AuthState.Authenticated);
       } catch (e) {
         onAuthError(
@@ -885,11 +851,11 @@ export const AppContainer = (props: AppContainerProps) => {
       settings.merged.security.auth.selectedType &&
       !settings.merged.security.auth.useExternal
     ) {
-      // We skip validation for Gemini API key here because it might be stored
+      // We skip validation for Codefly API key here because it might be stored
       // in the keychain, which we can't check synchronously.
       // The useAuth hook handles validation for this case.
       if (
-        settings.merged.security.auth.selectedType === AuthType.USE_GEMINI ||
+        settings.merged.security.auth.selectedType === AuthType.USE_CODEFLY ||
         settings.merged.security.auth.selectedType === AuthType.OPENAI ||
         authState === AuthState.AwaitingApiKeyInput
       ) {
@@ -1034,7 +1000,7 @@ export const AppContainer = (props: AppContainerProps) => {
     historyManager.addItem(
       {
         type: MessageType.INFO,
-        text: 'Refreshing hierarchical memory (GEMINI.md or other context files)...',
+        text: 'Refreshing hierarchical memory (CODEFLY.md or other context files)...',
       },
       Date.now(),
     );
@@ -1135,7 +1101,7 @@ export const AppContainer = (props: AppContainerProps) => {
     streamingState,
     submitQuery,
     initError,
-    pendingHistoryItems: pendingGeminiHistoryItems,
+    pendingHistoryItems: pendingCodeflyHistoryItems,
     thought,
     cancelOngoingRequest,
     pendingToolCalls,
@@ -1150,7 +1116,7 @@ export const AppContainer = (props: AppContainerProps) => {
     backgroundShells,
     dismissBackgroundShell,
     retryStatus,
-  } = useGeminiStream(
+  } = useCodeflyStream(
     config.getCodeflyClient(),
     historyManager.history,
     historyManager.addItem,
@@ -1245,7 +1211,7 @@ export const AppContainer = (props: AppContainerProps) => {
     (shouldRestorePrompt: boolean = true) => {
       const pendingHistoryItems = [
         ...pendingSlashCommandHistoryItems,
-        ...pendingGeminiHistoryItems,
+        ...pendingCodeflyHistoryItems,
       ];
       if (isToolAwaitingConfirmation(pendingHistoryItems)) {
         return; // Don't clear - user may be composing a follow-up message
@@ -1274,7 +1240,7 @@ export const AppContainer = (props: AppContainerProps) => {
       getQueuedMessagesText,
       clearQueue,
       pendingSlashCommandHistoryItems,
-      pendingGeminiHistoryItems,
+      pendingCodeflyHistoryItems,
     ],
   );
 
@@ -1315,7 +1281,7 @@ export const AppContainer = (props: AppContainerProps) => {
         streamingState === StreamingState.Responding ||
         isToolExecuting([
           ...pendingSlashCommandHistoryItems,
-          ...pendingGeminiHistoryItems,
+          ...pendingCodeflyHistoryItems,
         ]);
 
       if (config.isModelSteeringEnabled() && isAgentRunning && !isSlash) {
@@ -1365,7 +1331,7 @@ export const AppContainer = (props: AppContainerProps) => {
       streamingState,
       messageQueue.length,
       pendingSlashCommandHistoryItems,
-      pendingGeminiHistoryItems,
+      pendingCodeflyHistoryItems,
       config,
       constrainHeight,
       setConstrainHeight,
@@ -1461,7 +1427,7 @@ export const AppContainer = (props: AppContainerProps) => {
   // Initial prompt handling
   const initialPrompt = useMemo(() => config.getQuestion(), [config]);
   const initialPromptSubmitted = useRef(false);
-  const geminiClient = config.getCodeflyClient();
+  const codeflyClient = config.getCodeflyClient();
 
   useEffect(() => {
     if (activePtyId) {
@@ -1499,7 +1465,7 @@ export const AppContainer = (props: AppContainerProps) => {
       !isThemeDialogOpen &&
       !isEditorDialogOpen &&
       !showPrivacyNotice &&
-      geminiClient?.isInitialized?.()
+      codeflyClient?.isInitialized?.()
     ) {
       void handleFinalSubmit(initialPrompt);
       initialPromptSubmitted.current = true;
@@ -1513,7 +1479,7 @@ export const AppContainer = (props: AppContainerProps) => {
     isThemeDialogOpen,
     isEditorDialogOpen,
     showPrivacyNotice,
-    geminiClient,
+    codeflyClient,
   ]);
 
   const [idePromptAnswered, setIdePromptAnswered] = useState(false);
@@ -2107,8 +2073,8 @@ export const AppContainer = (props: AppContainerProps) => {
     !!newAgents;
 
   const pendingHistoryItems = useMemo(
-    () => [...pendingSlashCommandHistoryItems, ...pendingGeminiHistoryItems],
-    [pendingSlashCommandHistoryItems, pendingGeminiHistoryItems],
+    () => [...pendingSlashCommandHistoryItems, ...pendingCodeflyHistoryItems],
+    [pendingSlashCommandHistoryItems, pendingCodeflyHistoryItems],
   );
 
   const hasPendingToolConfirmation = useMemo(
@@ -2277,6 +2243,7 @@ export const AppContainer = (props: AppContainerProps) => {
       editorError,
       isEditorDialogOpen,
       showPrivacyNotice,
+      showIsExpandableHint,
       corgiMode,
       debugMessage,
       quittingMessages,
@@ -2294,12 +2261,14 @@ export const AppContainer = (props: AppContainerProps) => {
       commandContext,
       commandConfirmationRequest,
       authConsentRequest,
+      permissionConfirmationRequest,
+      newAgents,
       confirmUpdateExtensionRequests,
       loopDetectionConfirmationRequest,
       codeflyMdFileCount,
       streamingState,
       initError,
-      pendingGeminiHistoryItems,
+      pendingCodeflyHistoryItems,
       thought,
       shellModeActive,
       userMessages: inputHistory,
@@ -2411,12 +2380,14 @@ export const AppContainer = (props: AppContainerProps) => {
       commandContext,
       commandConfirmationRequest,
       authConsentRequest,
+      permissionConfirmationRequest,
+      newAgents,
       confirmUpdateExtensionRequests,
       loopDetectionConfirmationRequest,
       codeflyMdFileCount,
       streamingState,
       initError,
-      pendingGeminiHistoryItems,
+      pendingCodeflyHistoryItems,
       thought,
       shellModeActive,
       inputHistory,
@@ -2498,7 +2469,20 @@ export const AppContainer = (props: AppContainerProps) => {
       isBackgroundShellListOpen,
       activeBackgroundShellPid,
       backgroundShells,
+      modelsDefaultValue,
+      authState,
+      copyModeEnabled,
+      transientMessage,
+      bannerData,
+      bannerVisible,
+      config,
+      settingsNonce,
+      backgroundShellHeight,
+      isBackgroundShellListOpen,
+      activeBackgroundShellPid,
+      backgroundShells,
       adminSettingsChanged,
+      showIsExpandableHint,
       settings.merged.security.auth.selectedType,
     ],
   );
@@ -2585,6 +2569,9 @@ export const AppContainer = (props: AppContainerProps) => {
         }
         setNewAgents(null);
       },
+      dismissBackgroundShell,
+      setActiveBackgroundShellPid,
+      setIsBackgroundShellListOpen,
     }),
     [
       handleThemeSelect,
@@ -2629,6 +2616,12 @@ export const AppContainer = (props: AppContainerProps) => {
       revealCleanUiDetailsTemporarily,
       handleWarning,
       setEmbeddedShellFocused,
+      config,
+      historyManager,
+      newAgents,
+      dismissBackgroundShell,
+      setActiveBackgroundShellPid,
+      setIsBackgroundShellListOpen,
     ],
   );
 

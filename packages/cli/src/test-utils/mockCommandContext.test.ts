@@ -41,7 +41,7 @@ describe('createMockCommandContext', () => {
     // This is the most important test for factory's logic.
     const mockConfig = {
       getProjectRoot: () => '/test/project',
-      getModel: () => 'gemini-pro',
+      getModel: () => 'codefly-pro',
     };
 
     const overrides = {
@@ -53,7 +53,7 @@ describe('createMockCommandContext', () => {
     const context = createMockCommandContext(overrides);
 
     expect(context.services.config).toBeDefined();
-    expect(context.services.config?.getModel()).toBe('gemini-pro');
+    expect(context.services.config?.getModel()).toBe('codefly-pro');
     expect(context.services.config?.getProjectRoot()).toBe('/test/project');
 
     // Verify a default property on the same nested object is still there

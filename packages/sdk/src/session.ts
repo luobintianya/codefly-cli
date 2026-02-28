@@ -8,11 +8,11 @@ import {
   Config,
   type ConfigParameters,
   AuthType,
-  PREVIEW_GEMINI_MODEL_AUTO,
-  GeminiEventType,
+  PREVIEW_CODEFLY_MODEL_AUTO,
+  CodeflyEventType,
   type ToolCallRequestInfo,
-  type ServerGeminiStreamEvent,
-  type GeminiClient,
+  type ServerCodeflyStreamEvent,
+  type CodeflyClient,
   type Content,
   scheduleAgentTools,
   getAuthTypeFromEnv,
@@ -21,32 +21,32 @@ import {
   ActivateSkillTool,
   type ResumedSessionData,
   PolicyDecision,
-} from '@google/gemini-cli-core';
+} from '@codeflyai/codefly-core';
 
 import { type Tool, SdkTool } from './tool.js';
 import { SdkAgentFilesystem } from './fs.js';
 import { SdkAgentShell } from './shell.js';
 import type {
   SessionContext,
-  GeminiCliAgentOptions,
+  CodeflyCliAgentOptions,
   SystemInstructions,
 } from './types.js';
 import type { SkillReference } from './skills.js';
-import type { GeminiCliAgent } from './agent.js';
+import type { CodeflyCliAgent } from './agent.js';
 
-export class GeminiCliSession {
+export class CodeflyCliSession {
   private readonly config: Config;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private readonly tools: Array<Tool<any>>;
   private readonly skillRefs: SkillReference[];
   private readonly instructions: SystemInstructions | undefined;
-  private client: GeminiClient | undefined;
+  private client: CodeflyClient | undefined;
   private initialized = false;
 
   constructor(
-    options: GeminiCliAgentOptions,
+    options: CodeflyCliAgentOptions,
     private readonly sessionId: string,
-    private readonly agent: GeminiCliAgent,
+    private readonly agent: CodeflyCliAgent,
     private readonly resumedData?: ResumedSessionData,
   ) {
     this.instructions = options.instructions;
@@ -66,7 +66,7 @@ export class GeminiCliSession {
       targetDir: cwd,
       cwd,
       debugMode: options.debug ?? false,
-      model: options.model || PREVIEW_GEMINI_MODEL_AUTO,
+      model: options.model || PREVIEW_CODEFLY_MODEL_AUTO,
       userMemory: initialMemory,
       // Minimal config
       enableHooks: false,
@@ -143,12 +143,12 @@ export class GeminiCliSession {
       registry.registerTool(sdkTool);
     }
 
-    this.client = this.config.getGeminiClient();
+    this.client = this.config.getCodeflyClient();
 
     if (this.resumedData) {
       const history: Content[] = this.resumedData.conversation.messages.map(
         (m) => {
-          const role = m.type === 'gemini' ? 'model' : 'user';
+          const role = m.type === 'codefly' ? 'model' : 'user';
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           let parts: any[] = [];
           if (Array.isArray(m.content)) {
@@ -168,7 +168,7 @@ export class GeminiCliSession {
   async *sendStream(
     prompt: string,
     signal?: AbortSignal,
-  ): AsyncGenerator<ServerGeminiStreamEvent> {
+  ): AsyncGenerator<ServerCodeflyStreamEvent> {
     if (!this.initialized || !this.client) {
       await this.initialize();
     }
@@ -179,7 +179,7 @@ export class GeminiCliSession {
     const fs = new SdkAgentFilesystem(this.config);
     const shell = new SdkAgentShell(this.config);
 
-    let request: Parameters<GeminiClient['sendMessageStream']>[0] = [
+    let request: Parameters<CodeflyClient['sendMessageStream']>[0] = [
       { text: prompt },
     ];
 
@@ -206,7 +206,7 @@ export class GeminiCliSession {
 
       for await (const event of stream) {
         yield event;
-        if (event.type === GeminiEventType.ToolCallRequest) {
+        if (event.type === CodeflyEventType.ToolCallRequest) {
           const toolCall = event.value;
           let args = toolCall.args;
           if (typeof args === 'string') {
@@ -265,7 +265,7 @@ export class GeminiCliSession {
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       request = functionResponses as unknown as Parameters<
-        GeminiClient['sendMessageStream']
+        CodeflyClient['sendMessageStream']
       >[0];
     }
   }

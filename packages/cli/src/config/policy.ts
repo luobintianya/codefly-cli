@@ -5,13 +5,18 @@
  */
 
 import {
-  type PolicyEngineConfig,
-  type ApprovalMode,
-  type PolicyEngine,
-  type MessageBus,
-  type PolicySettings,
+  IntegrityStatus,
+  PolicyIntegrityManager,
+  Storage as CoreStorage,
   createPolicyEngineConfig as createCorePolicyEngineConfig,
   createPolicyUpdater as createCorePolicyUpdater,
+  writeToStderr,
+  type ApprovalMode,
+  type MessageBus,
+  type PolicyEngine,
+  type PolicyEngineConfig,
+  type PolicySettings,
+  type PolicyUpdateConfirmationRequest,
 } from '@codeflyai/codefly-core';
 import { type Settings } from './settings.js';
 
@@ -36,7 +41,7 @@ export async function createPolicyEngineConfig(
 export function createPolicyUpdater(
   policyEngine: PolicyEngine,
   messageBus: MessageBus,
-  storage: Storage,
+  storage: CoreStorage,
 ) {
   return createCorePolicyUpdater(policyEngine, messageBus, storage);
 }
@@ -62,9 +67,9 @@ export async function resolveWorkspacePolicyState(options: {
     | undefined;
 
   if (trustedFolder) {
-    const storage = new Storage(cwd);
+    const storage = new CoreStorage(cwd);
 
-    // If we are in the home directory (or rather, our target Gemini dir is the global one),
+    // If we are in the home directory (or rather, our target Codefly dir is the global one),
     // don't treat it as a workspace to avoid loading global policies twice.
     if (storage.isWorkspaceHomeDir()) {
       return { workspacePoliciesDir: undefined };

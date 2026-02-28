@@ -79,8 +79,8 @@ describe('Core System Prompt (prompts.ts)', () => {
     mockPlatform('linux');
 
     vi.stubEnv('SANDBOX', undefined);
-    vi.stubEnv('GEMINI_SYSTEM_MD', undefined);
-    vi.stubEnv('GEMINI_WRITE_SYSTEM_MD', undefined);
+    vi.stubEnv('CODEFLY_SYSTEM_MD', undefined);
+    vi.stubEnv('CODEFLY_WRITE_SYSTEM_MD', undefined);
     mockConfig = {
       getToolRegistry: vi.fn().mockReturnValue({
         getAllToolNames: vi.fn().mockReturnValue(['grep_search', 'glob']),
@@ -150,7 +150,7 @@ describe('Core System Prompt (prompts.ts)', () => {
   });
 
   it('should include available_skills with updated verbiage for preview models', () => {
-    vi.mocked(mockConfig.getActiveModel).mockReturnValue(PREVIEW_GEMINI_MODEL);
+    vi.mocked(mockConfig.getActiveModel).mockReturnValue(PREVIEW_CODEFLY_MODEL);
     const skills = [
       {
         name: 'test-skill',
@@ -179,7 +179,7 @@ describe('Core System Prompt (prompts.ts)', () => {
   });
 
   it('should include sub-agents in XML for preview models', () => {
-    vi.mocked(mockConfig.getActiveModel).mockReturnValue(PREVIEW_GEMINI_MODEL);
+    vi.mocked(mockConfig.getActiveModel).mockReturnValue(PREVIEW_CODEFLY_MODEL);
     const agents = [
       {
         name: 'test-agent',
@@ -206,7 +206,7 @@ describe('Core System Prompt (prompts.ts)', () => {
 
   it('should use legacy system prompt for non-preview model', () => {
     vi.mocked(mockConfig.getActiveModel).mockReturnValue(
-      DEFAULT_GEMINI_FLASH_LITE_MODEL,
+      DEFAULT_CODEFLY_FLASH_LITE_MODEL,
     );
     const prompt = getCoreSystemPrompt(mockConfig);
     expect(prompt).toContain(
@@ -224,7 +224,7 @@ describe('Core System Prompt (prompts.ts)', () => {
   it('should use chatty system prompt for preview model', () => {
     vi.mocked(mockConfig.getActiveModel).mockReturnValue(PREVIEW_CODEFLY_MODEL);
     const prompt = getCoreSystemPrompt(mockConfig);
-    expect(prompt).toContain('You are Gemini CLI, an interactive CLI agent'); // Check for core content
+    expect(prompt).toContain('You are Codefly CLI, an interactive CLI agent'); // Check for core content
     expect(prompt).toContain('- **User Hints:**');
     expect(prompt).toContain('No Chitchat:');
     expect(prompt).toMatchSnapshot();
@@ -235,13 +235,13 @@ describe('Core System Prompt (prompts.ts)', () => {
       PREVIEW_CODEFLY_FLASH_MODEL,
     );
     const prompt = getCoreSystemPrompt(mockConfig);
-    expect(prompt).toContain('You are Gemini CLI, an interactive CLI agent'); // Check for core content
+    expect(prompt).toContain('You are Codefly CLI, an interactive CLI agent'); // Check for core content
     expect(prompt).toContain('No Chitchat:');
     expect(prompt).toMatchSnapshot();
   });
 
   it('should include mandate to distinguish between Directives and Inquiries', () => {
-    vi.mocked(mockConfig.getActiveModel).mockReturnValue(PREVIEW_GEMINI_MODEL);
+    vi.mocked(mockConfig.getActiveModel).mockReturnValue(PREVIEW_CODEFLY_MODEL);
     const prompt = getCoreSystemPrompt(mockConfig);
 
     expect(prompt).toContain('Distinguish between **Directives**');
@@ -257,7 +257,7 @@ describe('Core System Prompt (prompts.ts)', () => {
     ['whitespace only', '   \n  \t '],
   ])('should return the base prompt when userMemory is %s', (_, userMemory) => {
     vi.stubEnv('SANDBOX', undefined);
-    vi.mocked(mockConfig.getActiveModel).mockReturnValue(PREVIEW_GEMINI_MODEL);
+    vi.mocked(mockConfig.getActiveModel).mockReturnValue(PREVIEW_CODEFLY_MODEL);
     const prompt = getCoreSystemPrompt(mockConfig, userMemory);
     expect(prompt).not.toContain('---\n\n'); // Separator should not be present
     expect(prompt).toContain('You are an interactive CLI agent'); // Check for core content
@@ -266,14 +266,14 @@ describe('Core System Prompt (prompts.ts)', () => {
 
   it('should append userMemory with separator when provided', () => {
     vi.stubEnv('SANDBOX', undefined);
-    vi.mocked(mockConfig.getActiveModel).mockReturnValue(PREVIEW_GEMINI_MODEL);
+    vi.mocked(mockConfig.getActiveModel).mockReturnValue(PREVIEW_CODEFLY_MODEL);
     const memory = 'This is custom user memory.\nBe extra polite.';
     const prompt = getCoreSystemPrompt(mockConfig, memory);
 
-    expect(prompt).toContain('# Contextual Instructions (GEMINI.md)');
+    expect(prompt).toContain('# Contextual Instructions (CODEFLY.md)');
     expect(prompt).toContain('<loaded_context>');
     expect(prompt).toContain(memory);
-    expect(prompt).toContain('You are Gemini CLI, an interactive CLI agent'); // Ensure base prompt follows
+    expect(prompt).toContain('You are Codefly CLI, an interactive CLI agent'); // Ensure base prompt follows
     expect(prompt).toMatchSnapshot(); // Snapshot the combined prompt
   });
 
@@ -312,7 +312,7 @@ describe('Core System Prompt (prompts.ts)', () => {
     ['sandbox-exec', '# macOS Seatbelt', ['# Sandbox', '# Outside of Sandbox']],
     [
       undefined,
-      'You are Gemini CLI, an interactive CLI agent',
+      'You are Codefly CLI, an interactive CLI agent',
       ['# Sandbox', '# macOS Seatbelt'],
     ],
   ])(
@@ -320,7 +320,7 @@ describe('Core System Prompt (prompts.ts)', () => {
     (sandboxValue, expectedContains, expectedNotContains) => {
       vi.stubEnv('SANDBOX', sandboxValue);
       vi.mocked(mockConfig.getActiveModel).mockReturnValue(
-        PREVIEW_GEMINI_MODEL,
+        PREVIEW_CODEFLY_MODEL,
       );
       const prompt = getCoreSystemPrompt(mockConfig);
       expect(prompt).toContain(expectedContains);
@@ -358,7 +358,7 @@ describe('Core System Prompt (prompts.ts)', () => {
   });
 
   it('should redact grep and glob from the system prompt when they are disabled', () => {
-    vi.mocked(mockConfig.getActiveModel).mockReturnValue(PREVIEW_GEMINI_MODEL);
+    vi.mocked(mockConfig.getActiveModel).mockReturnValue(PREVIEW_CODEFLY_MODEL);
     vi.mocked(mockConfig.getToolRegistry().getAllToolNames).mockReturnValue([]);
     const prompt = getCoreSystemPrompt(mockConfig);
 
@@ -449,7 +449,7 @@ describe('Core System Prompt (prompts.ts)', () => {
 
     const setupPlanMode = () => {
       vi.mocked(mockConfig.getActiveModel).mockReturnValue(
-        PREVIEW_GEMINI_MODEL,
+        PREVIEW_CODEFLY_MODEL,
       );
       vi.mocked(mockConfig.getApprovalMode).mockReturnValue(ApprovalMode.PLAN);
       vi.mocked(mockConfig.getToolRegistry().getAllTools).mockReturnValue(
@@ -495,7 +495,7 @@ describe('Core System Prompt (prompts.ts)', () => {
         { name: 'ask_user' },
       ] as unknown as AnyDeclarativeTool[];
       vi.mocked(mockConfig.getActiveModel).mockReturnValue(
-        PREVIEW_GEMINI_MODEL,
+        PREVIEW_CODEFLY_MODEL,
       );
       vi.mocked(mockConfig.getApprovalMode).mockReturnValue(ApprovalMode.PLAN);
       vi.mocked(mockConfig.getToolRegistry().getAllTools).mockReturnValue(
@@ -565,7 +565,7 @@ describe('Core System Prompt (prompts.ts)', () => {
     it('should include Windows-specific shell efficiency commands on win32', () => {
       mockPlatform('win32');
       vi.mocked(mockConfig.getActiveModel).mockReturnValue(
-        DEFAULT_GEMINI_FLASH_LITE_MODEL,
+        DEFAULT_CODEFLY_FLASH_LITE_MODEL,
       );
       const prompt = getCoreSystemPrompt(mockConfig);
       expect(prompt).toContain(
@@ -579,7 +579,7 @@ describe('Core System Prompt (prompts.ts)', () => {
     it('should include generic shell efficiency commands on non-Windows', () => {
       mockPlatform('linux');
       vi.mocked(mockConfig.getActiveModel).mockReturnValue(
-        DEFAULT_GEMINI_FLASH_LITE_MODEL,
+        DEFAULT_CODEFLY_FLASH_LITE_MODEL,
       );
       const prompt = getCoreSystemPrompt(mockConfig);
       expect(prompt).toContain("using commands like 'grep', 'tail', 'head'");
@@ -598,7 +598,7 @@ describe('Core System Prompt (prompts.ts)', () => {
 
     it("should include 'ctrl + f' instructions when interactive shell is enabled", () => {
       vi.mocked(mockConfig.getActiveModel).mockReturnValue(
-        PREVIEW_GEMINI_MODEL,
+        PREVIEW_CODEFLY_MODEL,
       );
       vi.mocked(mockConfig.isInteractive).mockReturnValue(true);
       vi.mocked(mockConfig.isInteractiveShellEnabled).mockReturnValue(true);
@@ -608,7 +608,7 @@ describe('Core System Prompt (prompts.ts)', () => {
 
     it("should NOT include 'ctrl + f' instructions when interactive shell is disabled", () => {
       vi.mocked(mockConfig.getActiveModel).mockReturnValue(
-        PREVIEW_GEMINI_MODEL,
+        PREVIEW_CODEFLY_MODEL,
       );
       vi.mocked(mockConfig.isInteractive).mockReturnValue(true);
       vi.mocked(mockConfig.isInteractiveShellEnabled).mockReturnValue(false);
@@ -628,7 +628,7 @@ describe('Core System Prompt (prompts.ts)', () => {
   it('should include modern approved plan instructions with completion in DEFAULT mode when approvedPlanPath is set', () => {
     const planPath = '/tmp/plans/feature-x.md';
     vi.mocked(mockConfig.getApprovedPlanPath).mockReturnValue(planPath);
-    vi.mocked(mockConfig.getActiveModel).mockReturnValue(PREVIEW_GEMINI_MODEL);
+    vi.mocked(mockConfig.getActiveModel).mockReturnValue(PREVIEW_CODEFLY_MODEL);
     vi.mocked(mockConfig.getApprovalMode).mockReturnValue(ApprovalMode.DEFAULT);
 
     const prompt = getCoreSystemPrompt(mockConfig);
@@ -642,7 +642,7 @@ describe('Core System Prompt (prompts.ts)', () => {
   });
 
   it('should include planning phase suggestion when enter_plan_mode tool is enabled', () => {
-    vi.mocked(mockConfig.getActiveModel).mockReturnValue(PREVIEW_GEMINI_MODEL);
+    vi.mocked(mockConfig.getActiveModel).mockReturnValue(PREVIEW_CODEFLY_MODEL);
     vi.mocked(mockConfig.getToolRegistry().getAllToolNames).mockReturnValue([
       'enter_plan_mode',
     ]);
@@ -677,20 +677,20 @@ describe('Core System Prompt (prompts.ts)', () => {
     });
   });
 
-  describe('GEMINI_SYSTEM_MD environment variable', () => {
+  describe('CODEFLY_SYSTEM_MD environment variable', () => {
     it.each(['false', '0'])(
-      'should use default prompt when GEMINI_SYSTEM_MD is "%s"',
+      'should use default prompt when CODEFLY_SYSTEM_MD is "%s"',
       (value) => {
-        vi.stubEnv('GEMINI_SYSTEM_MD', value);
+        vi.stubEnv('CODEFLY_SYSTEM_MD', value);
         const prompt = getCoreSystemPrompt(mockConfig);
         expect(fs.readFileSync).not.toHaveBeenCalled();
         expect(prompt).not.toContain('custom system prompt');
       },
     );
 
-    it('should throw error if GEMINI_SYSTEM_MD points to a non-existent file', () => {
+    it('should throw error if CODEFLY_SYSTEM_MD points to a non-existent file', () => {
       const customPath = '/non/existent/path/system.md';
-      vi.stubEnv('GEMINI_SYSTEM_MD', customPath);
+      vi.stubEnv('CODEFLY_SYSTEM_MD', customPath);
       vi.mocked(fs.existsSync).mockReturnValue(false);
       expect(() => getCoreSystemPrompt(mockConfig)).toThrow(
         `missing system prompt file '${path.resolve(customPath)}'`,
@@ -698,10 +698,10 @@ describe('Core System Prompt (prompts.ts)', () => {
     });
 
     it.each(['true', '1'])(
-      'should read from default path when GEMINI_SYSTEM_MD is "%s"',
+      'should read from default path when CODEFLY_SYSTEM_MD is "%s"',
       (value) => {
         const defaultPath = path.resolve(path.join(CODEFLY_DIR, 'system.md'));
-        vi.stubEnv('GEMINI_SYSTEM_MD', value);
+        vi.stubEnv('CODEFLY_SYSTEM_MD', value);
         vi.mocked(fs.existsSync).mockReturnValue(true);
         vi.mocked(fs.readFileSync).mockReturnValue('custom system prompt');
 
@@ -711,9 +711,9 @@ describe('Core System Prompt (prompts.ts)', () => {
       },
     );
 
-    it('should read from custom path when GEMINI_SYSTEM_MD provides one, preserving case', () => {
+    it('should read from custom path when CODEFLY_SYSTEM_MD provides one, preserving case', () => {
       const customPath = path.resolve('/custom/path/SyStEm.Md');
-      vi.stubEnv('GEMINI_SYSTEM_MD', customPath);
+      vi.stubEnv('CODEFLY_SYSTEM_MD', customPath);
       vi.mocked(fs.existsSync).mockReturnValue(true);
       vi.mocked(fs.readFileSync).mockReturnValue('custom system prompt');
 
@@ -722,12 +722,12 @@ describe('Core System Prompt (prompts.ts)', () => {
       expect(prompt).toBe('custom system prompt');
     });
 
-    it('should expand tilde in custom path when GEMINI_SYSTEM_MD is set', () => {
+    it('should expand tilde in custom path when CODEFLY_SYSTEM_MD is set', () => {
       const homeDir = '/Users/test';
       vi.spyOn(os, 'homedir').mockReturnValue(homeDir);
       const customPath = '~/custom/system.md';
       const expectedPath = path.join(homeDir, 'custom/system.md');
-      vi.stubEnv('GEMINI_SYSTEM_MD', customPath);
+      vi.stubEnv('CODEFLY_SYSTEM_MD', customPath);
       vi.mocked(fs.existsSync).mockReturnValue(true);
       vi.mocked(fs.readFileSync).mockReturnValue('custom system prompt');
 
@@ -740,21 +740,21 @@ describe('Core System Prompt (prompts.ts)', () => {
     });
   });
 
-  describe('GEMINI_WRITE_SYSTEM_MD environment variable', () => {
+  describe('CODEFLY_WRITE_SYSTEM_MD environment variable', () => {
     it.each(['false', '0'])(
-      'should not write to file when GEMINI_WRITE_SYSTEM_MD is "%s"',
+      'should not write to file when CODEFLY_WRITE_SYSTEM_MD is "%s"',
       (value) => {
-        vi.stubEnv('GEMINI_WRITE_SYSTEM_MD', value);
+        vi.stubEnv('CODEFLY_WRITE_SYSTEM_MD', value);
         getCoreSystemPrompt(mockConfig);
         expect(fs.writeFileSync).not.toHaveBeenCalled();
       },
     );
 
     it.each(['true', '1'])(
-      'should write to default path when GEMINI_WRITE_SYSTEM_MD is "%s"',
+      'should write to default path when CODEFLY_WRITE_SYSTEM_MD is "%s"',
       (value) => {
         const defaultPath = path.resolve(path.join(CODEFLY_DIR, 'system.md'));
-        vi.stubEnv('GEMINI_WRITE_SYSTEM_MD', value);
+        vi.stubEnv('CODEFLY_WRITE_SYSTEM_MD', value);
         getCoreSystemPrompt(mockConfig);
         expect(fs.writeFileSync).toHaveBeenCalledWith(
           defaultPath,
@@ -763,9 +763,9 @@ describe('Core System Prompt (prompts.ts)', () => {
       },
     );
 
-    it('should write to custom path when GEMINI_WRITE_SYSTEM_MD provides one', () => {
+    it('should write to custom path when CODEFLY_WRITE_SYSTEM_MD provides one', () => {
       const customPath = path.resolve('/custom/path/system.md');
-      vi.stubEnv('GEMINI_WRITE_SYSTEM_MD', customPath);
+      vi.stubEnv('CODEFLY_WRITE_SYSTEM_MD', customPath);
       getCoreSystemPrompt(mockConfig);
       expect(fs.writeFileSync).toHaveBeenCalledWith(
         customPath,
@@ -777,14 +777,14 @@ describe('Core System Prompt (prompts.ts)', () => {
       ['~/custom/system.md', 'custom/system.md'],
       ['~', ''],
     ])(
-      'should expand tilde in custom path when GEMINI_WRITE_SYSTEM_MD is "%s"',
+      'should expand tilde in custom path when CODEFLY_WRITE_SYSTEM_MD is "%s"',
       (customPath, relativePath) => {
         const homeDir = '/Users/test';
         vi.spyOn(os, 'homedir').mockReturnValue(homeDir);
         const expectedPath = relativePath
           ? path.join(homeDir, relativePath)
           : homeDir;
-        vi.stubEnv('GEMINI_WRITE_SYSTEM_MD', customPath);
+        vi.stubEnv('CODEFLY_WRITE_SYSTEM_MD', customPath);
         getCoreSystemPrompt(mockConfig);
         expect(fs.writeFileSync).toHaveBeenCalledWith(
           path.resolve(expectedPath),

@@ -1,13 +1,13 @@
-# Getting started with Gemini CLI extensions
+# Getting started with Codefly CLI extensions
 
-This guide will walk you through creating your first Gemini CLI extension.
+This guide will walk you through creating your first Codefly CLI extension.
 You'll learn how to set up a new extension, add a custom tool via an MCP server,
 create a custom command, and provide context to the model with a `CODEFLY.md`
 file.
 
 ## Prerequisites
 
-Before you start, make sure you have the Gemini CLI installed and a basic
+Before you start, make sure you have the Codefly CLI installed and a basic
 understanding of Node.js and TypeScript.
 
 ## Step 1: Create a new extension
@@ -19,7 +19,7 @@ Run the following command to create a new directory called `my-first-extension`
 with the template files:
 
 ```bash
-gemini extensions new my-first-extension mcp-server
+codefly extensions new my-first-extension mcp-server
 ```
 
 This will create a new directory with the following structure:
@@ -27,7 +27,7 @@ This will create a new directory with the following structure:
 ```
 my-first-extension/
 ├── example.ts
-├── gemini-extension.json
+├── codefly-extension.json
 ├── package.json
 └── tsconfig.json
 ```
@@ -36,9 +36,9 @@ my-first-extension/
 
 Let's look at the key files in your new extension.
 
-### `gemini-extension.json`
+### `codefly-extension.json`
 
-This is the manifest file for your extension. It tells Gemini CLI how to load
+This is the manifest file for your extension. It tells Codefly CLI how to load
 and use your extension.
 
 ```json
@@ -60,7 +60,7 @@ and use your extension.
 - `mcpServers`: This section defines one or more Model Context Protocol (MCP)
   servers. MCP servers are how you can add new tools for the model to use.
   - `command`, `args`, `cwd`: These fields specify how to start your server.
-    Notice the use of the `${extensionPath}` variable, which Gemini CLI replaces
+    Notice the use of the `${extensionPath}` variable, which Codefly CLI replaces
     with the absolute path to your extension's installation directory. This
     allows your extension to work regardless of where it's installed.
 
@@ -127,7 +127,7 @@ These are standard configuration files for a TypeScript project. The
 ## Step 3: Build and link your extension
 
 Before you can use the extension, you need to compile the TypeScript code and
-link the extension to your Gemini CLI installation for local development.
+link the extension to your Codefly CLI installation for local development.
 
 1.  **Install dependencies:**
 
@@ -143,19 +143,19 @@ link the extension to your Gemini CLI installation for local development.
     ```
 
     This will compile `example.ts` into `dist/example.js`, which is the file
-    referenced in your `gemini-extension.json`.
+    referenced in your `codefly-extension.json`.
 
 3.  **Link the extension:**
 
-    The `link` command creates a symbolic link from the Gemini CLI extensions
+    The `link` command creates a symbolic link from the Codefly CLI extensions
     directory to your development directory. This means any changes you make
     will be reflected immediately without needing to reinstall.
 
     ```bash
-    gemini extensions link .
+    codefly extensions link .
     ```
 
-Now, restart your Gemini CLI session. The new `fetch_posts` tool will be
+Now, restart your Codefly CLI session. The new `fetch_posts` tool will be
 available. You can test it by asking: "fetch posts".
 
 ## Step 4: Add a custom command
@@ -183,7 +183,7 @@ a command that searches for a pattern in your code.
     This command, `/fs:grep-code`, will take an argument, run the `grep` shell
     command with it, and pipe the results into a prompt for summarization.
 
-After saving the file, restart the Gemini CLI. You can now run
+After saving the file, restart the Codefly CLI. You can now run
 `/fs:grep-code "some pattern"` to use your new command.
 
 ## Step 5: Add a custom `CODEFLY.md`
@@ -202,7 +202,7 @@ need this for extensions built to expose commands and prompts.
     posts, use the `fetch_posts` tool. Be concise in your responses.
     ```
 
-2.  Update your `gemini-extension.json` to tell the CLI to load this file:
+2.  Update your `codefly-extension.json` to tell the CLI to load this file:
 
     ```json
     {
@@ -227,7 +227,7 @@ Restart the CLI again. The model will now have the context from your
 _Note: This is an experimental feature enabled via `experimental.skills`._
 
 [Agent Skills](../cli/skills.md) let you bundle specialized expertise and
-procedural workflows. Unlike `GEMINI.md`, which provides persistent context,
+procedural workflows. Unlike `CODEFLY.md`, which provides persistent context,
 skills are activated only when needed, saving context tokens.
 
 1.  Create a `skills` directory and a subdirectory for your skill:
@@ -269,7 +269,7 @@ For detailed instructions on both methods, please refer to the
 
 ## Conclusion
 
-You've successfully created a Gemini CLI extension! You learned how to:
+You've successfully created a Codefly CLI extension! You learned how to:
 
 - Bootstrap a new extension from a template.
 - Add custom tools with an MCP server.
@@ -279,4 +279,4 @@ You've successfully created a Gemini CLI extension! You learned how to:
 - Link your extension for local development.
 
 From here, you can explore more advanced features and build powerful new
-capabilities into the Gemini CLI.
+capabilities into the Codefly CLI.

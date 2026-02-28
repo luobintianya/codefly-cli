@@ -9,7 +9,7 @@ import { Box, Text } from 'ink';
 import { theme } from '../semantic-colors.js';
 import { GIT_COMMIT_INFO } from '../../generated/git-commit.js';
 import { useSettings } from '../contexts/SettingsContext.js';
-import { getDisplayString } from '@google/gemini-cli-core';
+import { getDisplayString } from '@codeflyai/codefly-core';
 
 interface AboutBoxProps {
   cliVersion: string;
@@ -33,8 +33,12 @@ export const AboutBox: React.FC<AboutBoxProps> = ({
   ideClient,
   userEmail,
   tier,
-}) => (
-  <Box
+}) => {
+  const { merged } = useSettings();
+  const showUserIdentity = Boolean(merged.ui?.showUserIdentity);
+
+  return (
+    <Box
     borderStyle="round"
     borderColor={theme.border.default}
     flexDirection="column"
@@ -162,5 +166,6 @@ export const AboutBox: React.FC<AboutBoxProps> = ({
         </Box>
       )}
     </Box>
+  </Box>
   );
 };

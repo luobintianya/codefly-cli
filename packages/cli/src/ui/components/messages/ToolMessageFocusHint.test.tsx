@@ -15,9 +15,10 @@ import {
   SHELL_FOCUS_HINT_DELAY_MS,
 } from '../../constants.js';
 import type { Config, ToolResultDisplay } from '@codeflyai/codefly-core';
+import { CoreToolCallStatus } from '@codeflyai/codefly-core';
 
-vi.mock('../GeminiRespondingSpinner.js', () => ({
-  GeminiRespondingSpinner: () => null,
+vi.mock('../CodeflyRespondingSpinner.js', () => ({
+  CodeflyRespondingSpinner: () => null,
 }));
 
 vi.mock('./ToolResultDisplay.js', () => ({

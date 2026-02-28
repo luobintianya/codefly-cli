@@ -7,7 +7,7 @@
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import stripJsonComments from 'strip-json-comments';
-import { GEMINI_DIR } from '../utils/paths.js';
+import { CODEFLY_DIR } from '../utils/paths.js';
 import { debugLogger } from '../utils/debugLogger.js';
 import { isNodeError } from '../utils/errors.js';
 
@@ -42,25 +42,25 @@ export class FolderTrustDiscoveryService {
       discoveryErrors: [],
     };
 
-    const geminiDir = path.join(workspaceDir, GEMINI_DIR);
-    if (!(await this.exists(geminiDir))) {
+    const codeflyDir = path.join(workspaceDir, CODEFLY_DIR);
+    if (!(await this.exists(codeflyDir))) {
       return results;
     }
 
     await Promise.all([
-      this.discoverCommands(geminiDir, results),
-      this.discoverSkills(geminiDir, results),
-      this.discoverSettings(geminiDir, results),
+      this.discoverCommands(codeflyDir, results),
+      this.discoverSkills(codeflyDir, results),
+      this.discoverSettings(codeflyDir, results),
     ]);
 
     return results;
   }
 
   private static async discoverCommands(
-    geminiDir: string,
+    codeflyDir: string,
     results: FolderDiscoveryResults,
   ) {
-    const commandsDir = path.join(geminiDir, 'commands');
+    const commandsDir = path.join(codeflyDir, 'commands');
     if (await this.exists(commandsDir)) {
       try {
         const files = await fs.readdir(commandsDir, { recursive: true });
@@ -76,10 +76,10 @@ export class FolderTrustDiscoveryService {
   }
 
   private static async discoverSkills(
-    geminiDir: string,
+    codeflyDir: string,
     results: FolderDiscoveryResults,
   ) {
-    const skillsDir = path.join(geminiDir, 'skills');
+    const skillsDir = path.join(codeflyDir, 'skills');
     if (await this.exists(skillsDir)) {
       try {
         const entries = await fs.readdir(skillsDir, { withFileTypes: true });
@@ -100,10 +100,10 @@ export class FolderTrustDiscoveryService {
   }
 
   private static async discoverSettings(
-    geminiDir: string,
+    codeflyDir: string,
     results: FolderDiscoveryResults,
   ) {
-    const settingsPath = path.join(geminiDir, 'settings.json');
+    const settingsPath = path.join(codeflyDir, 'settings.json');
     if (!(await this.exists(settingsPath))) return;
 
     try {

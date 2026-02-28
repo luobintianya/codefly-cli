@@ -19,6 +19,10 @@ import {
 
 const mockIsBinary = vi.hoisted(() => vi.fn());
 const mockShellExecutionService = vi.hoisted(() => vi.fn());
+const mockShellKill = vi.hoisted(() => vi.fn());
+const mockShellBackground = vi.hoisted(() => vi.fn());
+const mockShellSubscribe = vi.hoisted(() => vi.fn());
+const mockShellOnExit = vi.hoisted(() => vi.fn());
 vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
   const actual =
     await importOriginal<typeof import('@codeflyai/codefly-core')>();
@@ -54,12 +58,7 @@ import {
   useShellCommandProcessor,
   OUTPUT_UPDATE_INTERVAL_MS,
 } from './shellCommandProcessor.js';
-import {
-  type Config,
-  type CodeflyClient,
-  type ShellExecutionResult,
-  type ShellOutputEvent,
-} from '@codeflyai/codefly-core';
+import { CoreToolCallStatus, type CodeflyClient, type Config, type ShellExecutionResult, type ShellOutputEvent } from '@codeflyai/codefly-core';
 import * as fs from 'node:fs';
 import * as os from 'node:os';
 import * as path from 'node:path';
@@ -440,7 +439,7 @@ describe('useShellCommandProcessor', () => {
     await act(async () => await execPromise);
 
     // With the new logic, cancelled commands are not added to history by this hook
-    // to avoid duplication/flickering, as they are handled by useGeminiStream.
+    // to avoid duplication/flickering, as they are handled by useCodeflyStream.
     expect(addItemToHistoryMock).toHaveBeenCalledTimes(1);
     expect(setPendingHistoryItemMock).toHaveBeenCalledWith(null);
     expect(setShellInputFocusedMock).toHaveBeenCalledWith(false);

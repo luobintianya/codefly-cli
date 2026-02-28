@@ -6,8 +6,8 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import type {
-  ServerGeminiToolCallRequestEvent,
-  ServerGeminiErrorEvent,
+  ServerCodeflyToolCallRequestEvent,
+  ServerCodeflyErrorEvent,
 } from './turn.js';
 import { Turn, CodeflyEventType } from './turn.js';
 import type { GenerateContentResponse, Part, Content } from '@google/genai';
@@ -90,7 +90,7 @@ describe('Turn', () => {
       const events = [];
       const reqParts: Part[] = [{ text: 'Hi' }];
       for await (const event of turn.run(
-        { model: 'gemini' },
+        { model: 'codefly' },
         reqParts,
         new AbortController().signal,
       )) {
@@ -98,7 +98,7 @@ describe('Turn', () => {
       }
 
       expect(mockSendMessageStream).toHaveBeenCalledWith(
-        { model: 'gemini' },
+        { model: 'codefly' },
         reqParts,
         'prompt-id-1',
         expect.any(AbortSignal),
@@ -139,7 +139,7 @@ describe('Turn', () => {
       const events = [];
       const reqParts: Part[] = [{ text: 'Use tools' }];
       for await (const event of turn.run(
-        { model: 'gemini' },
+        { model: 'codefly' },
         reqParts,
         new AbortController().signal,
       )) {
@@ -147,7 +147,7 @@ describe('Turn', () => {
       }
 
       expect(events.length).toBe(2);
-      const event1 = events[0] as ServerGeminiToolCallRequestEvent;
+      const event1 = events[0] as ServerCodeflyToolCallRequestEvent;
       expect(event1.type).toBe(CodeflyEventType.ToolCallRequest);
       expect(event1.value).toEqual(
         expect.objectContaining({
@@ -159,7 +159,7 @@ describe('Turn', () => {
       );
       expect(turn.pendingToolCalls[0]).toEqual(event1.value);
 
-      const event2 = events[1] as ServerGeminiToolCallRequestEvent;
+      const event2 = events[1] as ServerCodeflyToolCallRequestEvent;
       expect(event2.type).toBe(CodeflyEventType.ToolCallRequest);
       expect(event2.value).toEqual(
         expect.objectContaining({
@@ -203,7 +203,7 @@ describe('Turn', () => {
       const events = [];
       const reqParts: Part[] = [{ text: 'Test abort' }];
       for await (const event of turn.run(
-        { model: 'gemini' },
+        { model: 'codefly' },
         reqParts,
         abortController.signal,
       )) {
@@ -226,7 +226,7 @@ describe('Turn', () => {
 
       const events = [];
       for await (const event of turn.run(
-        { model: 'gemini' },
+        { model: 'codefly' },
         reqParts,
         new AbortController().signal,
       )) {
@@ -249,7 +249,7 @@ describe('Turn', () => {
       mockMaybeIncludeSchemaDepthContext.mockResolvedValue(undefined);
       const events = [];
       for await (const event of turn.run(
-        { model: 'gemini' },
+        { model: 'codefly' },
         reqParts,
         new AbortController().signal,
       )) {
@@ -257,7 +257,7 @@ describe('Turn', () => {
       }
 
       expect(events.length).toBe(1);
-      const errorEvent = events[0] as ServerGeminiErrorEvent;
+      const errorEvent = events[0] as ServerCodeflyErrorEvent;
       expect(errorEvent.type).toBe(CodeflyEventType.Error);
       expect(errorEvent.value).toEqual({
         error: {
@@ -268,7 +268,7 @@ describe('Turn', () => {
       expect(turn.getDebugResponses().length).toBe(0);
       expect(reportError).toHaveBeenCalledWith(
         error,
-        'Error when talking to Gemini API',
+        'Error when talking to Codefly API',
         [...historyContent, { role: 'user', parts: reqParts }],
         'Turn.run-sendMessageStream',
       );
@@ -293,7 +293,7 @@ describe('Turn', () => {
 
       const events = [];
       for await (const event of turn.run(
-        { model: 'gemini' },
+        { model: 'codefly' },
         [{ text: 'Test undefined tool parts' }],
         new AbortController().signal,
       )) {
@@ -303,21 +303,21 @@ describe('Turn', () => {
       expect(events.length).toBe(3);
 
       // Assertions for each specific tool call event
-      const event1 = events[0] as ServerGeminiToolCallRequestEvent;
+      const event1 = events[0] as ServerCodeflyToolCallRequestEvent;
       expect(event1.value).toMatchObject({
         callId: 'fc1',
         name: 'undefined_tool_name',
         args: { arg1: 'val1' },
       });
 
-      const event2 = events[1] as ServerGeminiToolCallRequestEvent;
+      const event2 = events[1] as ServerCodeflyToolCallRequestEvent;
       expect(event2.value).toMatchObject({
         callId: 'fc2',
         name: 'tool2',
         args: {},
       });
 
-      const event3 = events[2] as ServerGeminiToolCallRequestEvent;
+      const event3 = events[2] as ServerCodeflyToolCallRequestEvent;
       expect(event3.value).toMatchObject({
         callId: 'fc3',
         name: 'undefined_tool_name',
@@ -370,7 +370,7 @@ describe('Turn', () => {
 
       const events = [];
       for await (const event of turn.run(
-        { model: 'gemini' },
+        { model: 'codefly' },
         [{ text: 'Test' }],
         new AbortController().signal,
       )) {
@@ -407,7 +407,7 @@ describe('Turn', () => {
       const events = [];
       const reqParts: Part[] = [{ text: 'Test no finish reason' }];
       for await (const event of turn.run(
-        { model: 'gemini' },
+        { model: 'codefly' },
         reqParts,
         new AbortController().signal,
       )) {
@@ -452,7 +452,7 @@ describe('Turn', () => {
       const events = [];
       const reqParts: Part[] = [{ text: 'Test multiple responses' }];
       for await (const event of turn.run(
-        { model: 'gemini' },
+        { model: 'codefly' },
         reqParts,
         new AbortController().signal,
       )) {
@@ -495,7 +495,7 @@ describe('Turn', () => {
 
       const events = [];
       for await (const event of turn.run(
-        { model: 'gemini' },
+        { model: 'codefly' },
         [{ text: 'Test citations' }],
         new AbortController().signal,
       )) {
@@ -545,7 +545,7 @@ describe('Turn', () => {
 
       const events = [];
       for await (const event of turn.run(
-        { model: 'gemini' },
+        { model: 'codefly' },
         [{ text: 'test' }],
         new AbortController().signal,
       )) {
@@ -592,7 +592,7 @@ describe('Turn', () => {
 
       const events = [];
       for await (const event of turn.run(
-        { model: 'gemini' },
+        { model: 'codefly' },
         [{ text: 'test' }],
         new AbortController().signal,
       )) {
@@ -638,7 +638,7 @@ describe('Turn', () => {
 
       const events = [];
       for await (const event of turn.run(
-        { model: 'gemini' },
+        { model: 'codefly' },
         [{ text: 'test' }],
         new AbortController().signal,
       )) {
@@ -676,7 +676,7 @@ describe('Turn', () => {
       const reqParts: Part[] = [{ text: 'Test malformed error handling' }];
 
       for await (const event of turn.run(
-        { model: 'gemini' },
+        { model: 'codefly' },
         reqParts,
         abortController.signal,
       )) {
@@ -702,7 +702,7 @@ describe('Turn', () => {
 
       const events = [];
       for await (const event of turn.run(
-        { model: 'gemini' },
+        { model: 'codefly' },
         [],
         new AbortController().signal,
       )) {
@@ -750,7 +750,7 @@ describe('Turn', () => {
 
       const events = [];
       for await (const event of turn.run(
-        { model: 'gemini' },
+        { model: 'codefly' },
         [{ text: 'Hi' }],
         new AbortController().signal,
       )) {
@@ -794,7 +794,7 @@ describe('Turn', () => {
 
       const events = [];
       for await (const event of turn.run(
-        { model: 'gemini' },
+        { model: 'codefly' },
         [{ text: 'Test mixed content' }],
         new AbortController().signal,
       )) {
@@ -878,7 +878,7 @@ describe('Turn', () => {
       mockSendMessageStream.mockResolvedValue(mockResponseStream);
       const reqParts: Part[] = [{ text: 'Hi' }];
       for await (const _ of turn.run(
-        { model: 'gemini' },
+        { model: 'codefly' },
         reqParts,
         new AbortController().signal,
       )) {

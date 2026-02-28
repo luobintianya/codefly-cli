@@ -8,10 +8,10 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { PromptProvider } from './promptProvider.js';
 import type { Config } from '../config/config.js';
 import {
-  getAllGeminiMdFilenames,
+  getAllCodeflyMdFilenames,
   DEFAULT_CONTEXT_FILENAME,
 } from '../tools/memoryTool.js';
-import { PREVIEW_GEMINI_MODEL } from '../config/models.js';
+import { PREVIEW_CODEFLY_MODEL } from '../config/models.js';
 import { ApprovalMode } from '../policy/types.js';
 import { DiscoveredMCPTool } from '../tools/mcp-tool.js';
 import { MockTool } from '../test-utils/mock-tool.js';
@@ -22,7 +22,7 @@ vi.mock('../tools/memoryTool.js', async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...(actual as object),
-    getAllGeminiMdFilenames: vi.fn(),
+    getAllCodeflyMdFilenames: vi.fn(),
   };
 });
 
@@ -50,7 +50,7 @@ describe('PromptProvider', () => {
       getSkillManager: vi.fn().mockReturnValue({
         getSkills: vi.fn().mockReturnValue([]),
       }),
-      getActiveModel: vi.fn().mockReturnValue(PREVIEW_GEMINI_MODEL),
+      getActiveModel: vi.fn().mockReturnValue(PREVIEW_CODEFLY_MODEL),
       getAgentRegistry: vi.fn().mockReturnValue({
         getAllDefinitions: vi.fn().mockReturnValue([]),
       }),
@@ -60,7 +60,7 @@ describe('PromptProvider', () => {
   });
 
   it('should handle multiple context filenames in the system prompt', () => {
-    vi.mocked(getAllGeminiMdFilenames).mockReturnValue([
+    vi.mocked(getAllCodeflyMdFilenames).mockReturnValue([
       DEFAULT_CONTEXT_FILENAME,
       'CUSTOM.md',
       'ANOTHER.md',
@@ -76,7 +76,7 @@ describe('PromptProvider', () => {
   });
 
   it('should handle multiple context filenames in user memory section', () => {
-    vi.mocked(getAllGeminiMdFilenames).mockReturnValue([
+    vi.mocked(getAllCodeflyMdFilenames).mockReturnValue([
       DEFAULT_CONTEXT_FILENAME,
       'CUSTOM.md',
     ]);
@@ -101,7 +101,7 @@ describe('PromptProvider', () => {
     } as unknown as MessageBus;
 
     beforeEach(() => {
-      vi.mocked(getAllGeminiMdFilenames).mockReturnValue([
+      vi.mocked(getAllCodeflyMdFilenames).mockReturnValue([
         DEFAULT_CONTEXT_FILENAME,
       ]);
       (mockConfig.getApprovalMode as ReturnType<typeof vi.fn>).mockReturnValue(

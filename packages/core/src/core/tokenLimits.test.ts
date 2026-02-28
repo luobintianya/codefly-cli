@@ -7,7 +7,7 @@
 import { describe, it, expect } from 'vitest';
 import { tokenLimit, DEFAULT_TOKEN_LIMIT } from './tokenLimits.js';
 import {
-  DEFAULT_GEMINI_FLASH_LITE_MODEL,
+  DEFAULT_CODEFLY_FLASH_LITE_MODEL,
   DEFAULT_CODEFLY_FLASH_MODEL,
   DEFAULT_CODEFLY_MODEL,
   PREVIEW_CODEFLY_FLASH_MODEL,
@@ -19,7 +19,7 @@ describe('tokenLimit', () => {
   it('should return the correct token limit for default models', () => {
     expect(tokenLimit(DEFAULT_CODEFLY_MODEL)).toBe(1_048_576);
     expect(tokenLimit(DEFAULT_CODEFLY_FLASH_MODEL)).toBe(1_048_576);
-    expect(tokenLimit(DEFAULT_GEMINI_FLASH_LITE_MODEL)).toBe(1_048_576);
+    expect(tokenLimit(DEFAULT_CODEFLY_FLASH_LITE_MODEL)).toBe(1_048_576);
   });
 
   it('should return the correct token limit for preview models', () => {

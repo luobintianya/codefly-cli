@@ -1,6 +1,6 @@
-# Gemini CLI tools
+# Codefly CLI tools
 
-Gemini CLI uses tools to interact with your local environment, access
+Codefly CLI uses tools to interact with your local environment, access
 information, and perform actions on your behalf. These tools extend the model's
 capabilities beyond text generation, letting it read files, execute commands,
 and search the web.
@@ -18,7 +18,7 @@ You can directly trigger these tools using special syntax in your prompts.
 
 ## Model-triggered tools
 
-The Gemini model automatically requests these tools when it needs to perform
+The Codefly model automatically requests these tools when it needs to perform
 specific actions or gather information to fulfill your requests. You do not call
 these tools manually.
 
@@ -47,7 +47,7 @@ These tools help the model manage its plan and interact with you.
 - **Ask user (`ask_user`):** Requests clarification or missing information from
   you via an interactive dialog.
 - **[Memory](./memory.md) (`save_memory`):** Saves important facts to your
-  long-term memory (`GEMINI.md`).
+  long-term memory (`CODEFLY.md`).
 - **[Todos](./todos.md) (`write_todos`):** Manages a list of subtasks for
   complex plans.
 - **[Agent Skills](../cli/skills.md) (`activate_skill`):** Loads specialized
@@ -55,7 +55,7 @@ These tools help the model manage its plan and interact with you.
 - **[Browser agent](../core/subagents.md#browser-agent-experimental)
   (`browser_agent`):** Automates web browser tasks through the accessibility
   tree.
-- **Internal docs (`get_internal_docs`):** Accesses Gemini CLI's own
+- **Internal docs (`get_internal_docs`):** Accesses Codefly CLI's own
   documentation to help answer your questions.
 
 ### Information gathering
@@ -69,7 +69,7 @@ These tools provide the model with access to external data.
 
 ## How to use tools
 
-You use tools indirectly by providing natural language prompts to Gemini CLI.
+You use tools indirectly by providing natural language prompts to Codefly CLI.
 
 1.  **Prompt:** You enter a request or use syntax like `@` or `!`.
 2.  **Request:** The model analyzes your request and identifies if a tool is
@@ -84,7 +84,7 @@ You use tools indirectly by providing natural language prompts to Gemini CLI.
 
 ## Security and confirmation
 
-Safety is a core part of the tool system. To protect your system, Gemini CLI
+Safety is a core part of the tool system. To protect your system, Codefly CLI
 implements several safeguards.
 
 - **User confirmation:** You must manually approve tools that modify files or
@@ -100,7 +100,7 @@ Always review confirmation prompts carefully before allowing a tool to execute.
 
 ## Next steps
 
-Gemini CLI's built-in tools can be broadly categorized as follows:
+Codefly CLI's built-in tools can be broadly categorized as follows:
 
 - **[File System Tools](./file-system.md):** For interacting with files and
   directories (reading, writing, listing, searching, etc.).
@@ -122,7 +122,7 @@ Gemini CLI's built-in tools can be broadly categorized as follows:
 Additionally, these tools incorporate:
 
 - **[MCP servers](./mcp-server.md)**: MCP servers act as a bridge between the
-  Gemini model and your local environment or other services like APIs.
+  Codefly model and your local environment or other services like APIs.
 - **[Agent Skills](../cli/skills.md)**: (Experimental) On-demand expertise
   packages that are activated via the `activate_skill` tool to provide
   specialized guidance and resources.

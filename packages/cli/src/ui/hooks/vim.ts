@@ -5,7 +5,8 @@
  */
 
 import { useCallback, useReducer, useEffect, useRef } from 'react';
-import type { Key } from './useKeypress.js';
+import { type Key } from './useKeypress.js';
+import { Command, keyMatchers } from '../keyMatchers.js';
 import type { TextBuffer } from '../components/shared/text-buffer.js';
 import { useVimMode } from '../contexts/VimModeContext.js';
 import { debugLogger } from '@codeflyai/codefly-core';

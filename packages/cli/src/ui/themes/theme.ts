@@ -14,7 +14,7 @@ import {
   getThemeTypeFromBackgroundColor,
 } from './color-utils.js';
 
-import type { CustomTheme } from '@google/gemini-cli-core';
+import type { CustomTheme } from '@codeflyai/codefly-core';
 import {
   DEFAULT_BACKGROUND_OPACITY,
   DEFAULT_INPUT_BACKGROUND_OPACITY,

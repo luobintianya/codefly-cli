@@ -136,7 +136,7 @@ describe('Settings Repro', () => {
       },
       security: {
         auth: {
-          selectedType: 'gemini-api-key',
+          selectedType: 'codefly-api-key',
         },
         folderTrust: {
           enabled: true,

@@ -14,7 +14,13 @@ import {
 } from '../../config/trustedFolders.js';
 import * as process from 'node:process';
 import { type HistoryItemWithoutId, MessageType } from '../types.js';
-import { coreEvents, ExitCodes } from '@codeflyai/codefly-core';
+import {
+  ExitCodes,
+  FolderTrustDiscoveryService,
+  coreEvents,
+  isHeadlessMode,
+} from '@codeflyai/codefly-core';
+import type { FolderDiscoveryResults } from '@codeflyai/codefly-core';
 import { runExitCleanup } from '../../utils/cleanup.js';
 
 export const useFolderTrust = (
@@ -53,7 +59,7 @@ export const useFolderTrust = (
         addItem(
           {
             type: MessageType.INFO,
-            text: 'This folder is untrusted, project settings, hooks, MCPs, and GEMINI.md files will not be applied for this folder.\nUse the `/permissions` command to change the trust level.',
+            text: 'This folder is untrusted, project settings, hooks, MCPs, and CODEFLY.md files will not be applied for this folder.\nUse the `/permissions` command to change the trust level.',
           },
           Date.now(),
         );

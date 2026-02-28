@@ -16,6 +16,7 @@ import {
 import { WITTY_LOADING_PHRASES } from '../constants/wittyPhrases.js';
 import { INFORMATIVE_TIPS } from '../constants/tips.js';
 import type { RetryAttemptPayload } from '@codeflyai/codefly-core';
+import type { LoadingPhrasesMode } from '../../config/settings.js';
 
 describe('useLoadingIndicator', () => {
   beforeEach(() => {
@@ -213,7 +214,7 @@ describe('useLoadingIndicator', () => {
 
   it('should reflect retry status in currentLoadingPhrase when provided', () => {
     const retryStatus = {
-      model: 'gemini-pro',
+      model: 'codefly-pro',
       attempt: 2,
       maxAttempts: 3,
       delayMs: 1000,

@@ -9,13 +9,18 @@ import type { CodeflyIgnoreFilter } from '../utils/codeflyIgnoreParser.js';
 import { GitIgnoreParser } from '../utils/gitIgnoreParser.js';
 import { CodeflyIgnoreParser } from '../utils/codeflyIgnoreParser.js';
 import { isGitRepository } from '../utils/gitUtils.js';
-import { GEMINI_IGNORE_FILE_NAME } from '../config/constants.js';
 import fs from 'node:fs';
 import * as path from 'node:path';
+
+import {
+  IgnoreFileParser,
+  type IgnoreFileFilter,
+} from '../utils/ignoreFileParser.js';
 
 export interface FilterFilesOptions {
   respectGitIgnore?: boolean;
   respectCodeflyIgnore?: boolean;
+  customIgnoreFilePaths?: string[];
 }
 
 export interface FilterReport {
@@ -24,9 +29,15 @@ export interface FilterReport {
 }
 
 export class FileDiscoveryService {
+  private defaultFilterFileOptions: FilterFilesOptions = {
+    respectGitIgnore: true,
+    respectCodeflyIgnore: true,
+  };
   private gitIgnoreFilter: GitIgnoreFilter | null = null;
   private codeflyIgnoreFilter: CodeflyIgnoreFilter | null = null;
-  private combinedIgnoreFilter: GitIgnoreFilter | null = null;
+  private customIgnoreFilter: IgnoreFileFilter | null = null;
+  private combinedIgnoreFilter: GitIgnoreFilter | IgnoreFileFilter | null =
+    null;
   private projectRoot: string;
 
   constructor(projectRoot: string, options?: FilterFilesOptions) {
@@ -37,23 +48,30 @@ export class FileDiscoveryService {
     }
     this.codeflyIgnoreFilter = new CodeflyIgnoreParser(this.projectRoot);
 
-    if (this.gitIgnoreFilter) {
-      const geminiPatterns = this.codeflyIgnoreFilter.getPatterns();
-      // Create combined parser: .gitignore + .codeflyignore
-      this.combinedIgnoreFilter = new GitIgnoreParser(
+    if (this.defaultFilterFileOptions.customIgnoreFilePaths?.length) {
+      this.customIgnoreFilter = new IgnoreFileParser(
         this.projectRoot,
-        // customPatterns should go the last to ensure overwriting of geminiPatterns
-        [...geminiPatterns, ...customPatterns],
+        this.defaultFilterFileOptions.customIgnoreFilePaths,
       );
+    }
+
+    const customPatterns = this.customIgnoreFilter
+      ? this.customIgnoreFilter.getPatterns()
+      : [];
+
+    if (this.gitIgnoreFilter) {
+      const codeflyPatterns = this.codeflyIgnoreFilter.getPatterns();
+      // Create combined parser: .gitignore + .codeflyignore + custom
+      this.combinedIgnoreFilter = new GitIgnoreParser(this.projectRoot, [
+        ...codeflyPatterns,
+        ...customPatterns,
+      ]);
     } else {
       // Create combined parser when not git repo
-      const geminiPatterns = this.geminiIgnoreFilter.getPatterns();
-      const customPatterns = this.customIgnoreFilter
-        ? this.customIgnoreFilter.getPatterns()
-        : [];
+      const codeflyPatterns = this.codeflyIgnoreFilter.getPatterns();
       this.combinedIgnoreFilter = new IgnoreFileParser(
         this.projectRoot,
-        [...geminiPatterns, ...customPatterns],
+        [...codeflyPatterns, ...customPatterns],
         true,
       );
     }
@@ -65,9 +83,9 @@ export class FileDiscoveryService {
     if (options.respectGitIgnore !== undefined) {
       this.defaultFilterFileOptions.respectGitIgnore = options.respectGitIgnore;
     }
-    if (options.respectGeminiIgnore !== undefined) {
-      this.defaultFilterFileOptions.respectGeminiIgnore =
-        options.respectGeminiIgnore;
+    if (options.respectCodeflyIgnore !== undefined) {
+      this.defaultFilterFileOptions.respectCodeflyIgnore =
+        options.respectCodeflyIgnore;
     }
     if (options.customIgnoreFilePaths) {
       this.defaultFilterFileOptions.customIgnoreFilePaths =
@@ -138,15 +156,19 @@ export class FileDiscoveryService {
   }
 
   /**
-   * Returns the list of ignore files being used (e.g. .geminiignore) excluding .gitignore.
+   * Returns the list of ignore files being used (e.g. .codeflyignore) excluding .gitignore.
    */
   getIgnoreFilePaths(): string[] {
     const paths: string[] = [];
     if (
-      this.geminiIgnoreFilter &&
-      this.defaultFilterFileOptions.respectGeminiIgnore
+      this.codeflyIgnoreFilter &&
+      this.defaultFilterFileOptions.respectCodeflyIgnore
     ) {
-      paths.push(...this.geminiIgnoreFilter.getIgnoreFilePaths());
+      const codeflyIgnoreFilePath =
+        this.codeflyIgnoreFilter.getIgnoreFilePath();
+      if (codeflyIgnoreFilePath) {
+        paths.push(codeflyIgnoreFilePath);
+      }
     }
     if (this.customIgnoreFilter) {
       paths.push(...this.customIgnoreFilter.getIgnoreFilePaths());

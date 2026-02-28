@@ -1,6 +1,6 @@
-# Gemini CLI hooks
+# Codefly CLI hooks
 
-Hooks are scripts or programs that Gemini CLI executes at specific points in the
+Hooks are scripts or programs that Codefly CLI executes at specific points in the
 agentic loop, allowing you to intercept and customize behavior without modifying
 the CLI's source code.
 
@@ -25,13 +25,13 @@ With hooks, you can:
 - **Optimize behavior:** Dynamically adjust tool selection or model parameters
 
 Hooks run synchronously as part of the agent loop—when a hook event fires,
-Gemini CLI waits for all matching hooks to complete before continuing.
+Codefly CLI waits for all matching hooks to complete before continuing.
 
 ## Security and Risks
 
 > [!WARNING] **Hooks execute arbitrary code with your user privileges.**
 
-By configuring hooks, you are explicitly allowing Gemini CLI to run shell
+By configuring hooks, you are explicitly allowing Codefly CLI to run shell
 commands on your machine. Malicious or poorly configured hooks can:
 
 - **Exfiltrate data**: Read sensitive files (`.env`, ssh keys) and send them to
@@ -41,7 +41,7 @@ commands on your machine. Malicious or poorly configured hooks can:
 
 **Project-level hooks** (in `.codefly/settings.json`) and **Extension hooks**
 are particularly risky when opening third-party projects or extensions from
-untrusted authors. Gemini CLI will **warn you** the first time it detects a new
+untrusted authors. Codefly CLI will **warn you** the first time it detects a new
 project hook (identified by its name and command), but it is **your
 responsibility** to review these hooks (and any installed extensions) before
 trusting them.
@@ -62,7 +62,7 @@ detailed threat model and mitigation strategies.
 
 ### Hook events
 
-Hooks are triggered by specific events in Gemini CLI's lifecycle. The following
+Hooks are triggered by specific events in Codefly CLI's lifecycle. The following
 table lists all available hook events:
 
 | Event                 | When It Fires                                 | Common Use Cases                           |
@@ -81,13 +81,13 @@ table lists all available hook events:
 
 ### Hook types
 
-Gemini CLI currently supports **command hooks** that run shell commands or
+Codefly CLI currently supports **command hooks** that run shell commands or
 scripts:
 
 ```json
 {
   "type": "command",
-  "command": "$GEMINI_PROJECT_DIR/.codefly/hooks/my-hook.sh",
+  "command": "$CODEFLY_PROJECT_DIR/.codefly/hooks/my-hook.sh",
   "timeout": 30000
 }
 ```
@@ -241,7 +241,7 @@ Or simple exit codes:
 ```json
 {
   "llm_request": {
-    "model": "gemini-2.0-flash-exp",
+    "model": "codefly-2.0-flash-exp",
     "messages": [{ "role": "user", "content": "Hello" }],
     "config": { "temperature": 0.7 },
     "toolConfig": {
@@ -278,7 +278,7 @@ Or simple exit codes:
 ```json
 {
   "llm_request": {
-    "model": "gemini-2.0-flash-exp",
+    "model": "codefly-2.0-flash-exp",
     "messages": [
       /* ... */
     ],
@@ -326,7 +326,7 @@ Or simple exit codes:
 ```json
 {
   "llm_request": {
-    "model": "gemini-2.0-flash-exp",
+    "model": "codefly-2.0-flash-exp",
     "messages": [
       /* ... */
     ],
@@ -451,14 +451,14 @@ numbers run first):
 1.  **Project settings:** `.codefly/settings.json` in your project directory
     (highest priority)
 2.  **User settings:** `~/.codefly/settings.json`
-3.  **System settings:** `/etc/gemini-cli/settings.json`
+3.  **System settings:** `/etc/codefly-cli/settings.json`
 4.  **Extensions:** Internal hooks defined by installed extensions (lowest
     priority)
 
 #### Deduplication and shadowing
 
 If multiple hooks with the identical **name** and **command** are discovered
-across different configuration layers, Gemini CLI deduplicates them. The hook
+across different configuration layers, Codefly CLI deduplicates them. The hook
 from the higher-priority layer (e.g., Project) will be kept, and others will be
 ignored.
 
@@ -506,9 +506,9 @@ configuration.
 
 Hooks have access to:
 
-- `GEMINI_PROJECT_DIR`: Project root directory
-- `GEMINI_SESSION_ID`: Current session ID
-- `GEMINI_API_KEY`: Gemini API key (if configured)
+- `CODEFLY_PROJECT_DIR`: Project root directory
+- `CODEFLY_SESSION_ID`: Current session ID
+- `CODEFLY_API_KEY`: Codefly API key (if configured)
 - All other environment variables from the parent process
 
 ## Managing hooks
@@ -564,7 +564,7 @@ deduplicated, meaning a hook disabled at any level remains disabled.
 If you have hooks configured for Claude Code, you can migrate them:
 
 ```bash
-gemini hooks migrate --from-claude
+codefly hooks migrate --from-claude
 ```
 
 This command:
@@ -577,7 +577,7 @@ This command:
 
 ### Event name mapping
 
-| Claude Code        | Gemini CLI     |
+| Claude Code        | Codefly CLI     |
 | ------------------ | -------------- |
 | `PreToolUse`       | `BeforeTool`   |
 | `PostToolUse`      | `AfterTool`    |
@@ -590,7 +590,7 @@ This command:
 
 ### Tool name mapping
 
-| Claude Code | Gemini CLI            |
+| Claude Code | Codefly CLI            |
 | ----------- | --------------------- |
 | `Bash`      | `run_shell_command`   |
 | `Edit`      | `replace`             |
@@ -692,5 +692,5 @@ matchers:
 - [Best Practices](best-practices.md) - Security, performance, and debugging
 - [Custom Commands](../cli/custom-commands.md) - Create reusable prompt
   shortcuts
-- [Configuration](../cli/configuration.md) - Gemini CLI configuration options
+- [Configuration](../cli/configuration.md) - Codefly CLI configuration options
 - [Hooks Design Document](../hooks-design.md) - Technical architecture details

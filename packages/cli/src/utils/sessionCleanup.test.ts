@@ -22,9 +22,9 @@ vi.mock('./sessionUtils.js', () => ({
   getAllSessionFiles: vi.fn(),
 }));
 
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
   const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+    await importOriginal<typeof import('@codeflyai/codefly-core')>();
   return {
     ...actual,
     Storage: class MockStorage {

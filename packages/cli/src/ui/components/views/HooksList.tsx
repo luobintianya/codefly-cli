@@ -61,7 +61,7 @@ export const HooksList: React.FC<HooksListProps> = ({ hooks }) => {
       <Box marginTop={1}>
         <Text>
           Learn more:{' '}
-          <Text color={theme.text.link}>https://geminicli.com/docs/hooks</Text>
+          <Text color={theme.text.link}>https://codeflycli.com/docs/hooks</Text>
         </Text>
       </Box>
 

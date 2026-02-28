@@ -9,12 +9,15 @@ import * as path from 'node:path';
 import * as crypto from 'node:crypto';
 import { lock } from 'proper-lockfile';
 import {
-  FatalConfigError,
-  getErrorMessage,
-  isWithinRoot,
-  ideContextStore,
   CODEFLY_DIR,
+  FatalConfigError,
+  type HeadlessModeOptions,
+  coreEvents,
+  getErrorMessage,
   homedir,
+  ideContextStore,
+  isHeadlessMode,
+  isWithinRoot,
 } from '@codeflyai/codefly-core';
 import type { Settings } from './settings.js';
 import stripJsonComments from 'strip-json-comments';
@@ -28,8 +31,8 @@ export function getUserSettingsDir(): string {
 }
 
 export function getTrustedFoldersPath(): string {
-  if (process.env['GEMINI_CLI_TRUSTED_FOLDERS_PATH']) {
-    return process.env['GEMINI_CLI_TRUSTED_FOLDERS_PATH'];
+  if (process.env['CODEFLY_CLI_TRUSTED_FOLDERS_PATH']) {
+    return process.env['CODEFLY_CLI_TRUSTED_FOLDERS_PATH'];
   }
   return path.join(getUserSettingsDir(), TRUSTED_FOLDERS_FILENAME);
 }

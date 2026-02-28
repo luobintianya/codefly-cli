@@ -24,13 +24,13 @@ import {
   estimateTokenCountSync,
 } from '../utils/tokenCalculation.js';
 import {
-  DEFAULT_GEMINI_FLASH_LITE_MODEL,
+  DEFAULT_CODEFLY_FLASH_LITE_MODEL,
   DEFAULT_CODEFLY_FLASH_MODEL,
   DEFAULT_CODEFLY_MODEL,
   PREVIEW_CODEFLY_MODEL,
   PREVIEW_CODEFLY_FLASH_MODEL,
-  LEGACY_GEMINI_2_5_PRO,
-  LEGACY_GEMINI_2_5_FLASH,
+  LEGACY_CODEFLY_2_5_PRO,
+  LEGACY_CODEFLY_2_5_FLASH,
 } from '../config/models.js';
 import { PreCompressTrigger } from '../hooks/types.js';
 
@@ -105,15 +105,15 @@ export function modelStringToModelConfigAlias(model: string): string {
       return 'chat-compression-3-pro';
     case PREVIEW_CODEFLY_FLASH_MODEL:
       return 'chat-compression-3-flash';
-    case LEGACY_GEMINI_2_5_PRO:
+    case LEGACY_CODEFLY_2_5_PRO:
       return 'chat-compression-2.5-pro';
-    case LEGACY_GEMINI_2_5_FLASH:
+    case LEGACY_CODEFLY_2_5_FLASH:
       return 'chat-compression-2.5-flash';
     case DEFAULT_CODEFLY_MODEL:
       return 'chat-compression-2.5-pro';
     case DEFAULT_CODEFLY_FLASH_MODEL:
       return 'chat-compression-2.5-flash';
-    case DEFAULT_GEMINI_FLASH_LITE_MODEL:
+    case DEFAULT_CODEFLY_FLASH_LITE_MODEL:
       return 'chat-compression-2.5-flash-lite';
     default:
       return 'chat-compression-default';

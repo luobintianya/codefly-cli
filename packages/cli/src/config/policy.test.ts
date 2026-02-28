@@ -9,12 +9,12 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as os from 'node:os';
 import { resolveWorkspacePolicyState } from './policy.js';
-import { writeToStderr } from '@google/gemini-cli-core';
+import { writeToStderr } from '@codeflyai/codefly-core';
 
 // Mock debugLogger to avoid noise in test output
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
   const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+    await importOriginal<typeof import('@codeflyai/codefly-core')>();
   return {
     ...actual,
     debugLogger: {
@@ -33,13 +33,13 @@ describe('resolveWorkspacePolicyState', () => {
 
   beforeEach(() => {
     // Create a temporary directory for the test
-    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'gemini-cli-test-'));
-    // Redirect GEMINI_CLI_HOME to the temp directory to isolate integrity storage
-    vi.stubEnv('GEMINI_CLI_HOME', tempDir);
+    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'codefly-cli-test-'));
+    // Redirect CODEFLY_CLI_HOME to the temp directory to isolate integrity storage
+    vi.stubEnv('CODEFLY_CLI_HOME', tempDir);
 
     workspaceDir = path.join(tempDir, 'workspace');
     fs.mkdirSync(workspaceDir);
-    policiesDir = path.join(workspaceDir, '.gemini', 'policies');
+    policiesDir = path.join(workspaceDir, '.codefly', 'policies');
 
     vi.clearAllMocks();
   });
@@ -77,7 +77,7 @@ describe('resolveWorkspacePolicyState', () => {
     expect(firstResult.policyUpdateConfirmationRequest).toBeDefined();
 
     // Establish integrity manually as if accepted
-    const { PolicyIntegrityManager } = await import('@google/gemini-cli-core');
+    const { PolicyIntegrityManager } = await import('@codeflyai/codefly-core');
     const integrityManager = new PolicyIntegrityManager();
     await integrityManager.acceptIntegrity(
       'workspace',
@@ -144,7 +144,7 @@ describe('resolveWorkspacePolicyState', () => {
   });
 
   it('should not return workspace policies if cwd is the home directory', async () => {
-    const policiesDir = path.join(tempDir, '.gemini', 'policies');
+    const policiesDir = path.join(tempDir, '.codefly', 'policies');
     fs.mkdirSync(policiesDir, { recursive: true });
     fs.writeFileSync(path.join(policiesDir, 'policy.toml'), 'rules = []');
 
@@ -160,14 +160,14 @@ describe('resolveWorkspacePolicyState', () => {
   });
 
   it('should not return workspace policies if cwd is a symlink to the home directory', async () => {
-    const policiesDir = path.join(tempDir, '.gemini', 'policies');
+    const policiesDir = path.join(tempDir, '.codefly', 'policies');
     fs.mkdirSync(policiesDir, { recursive: true });
     fs.writeFileSync(path.join(policiesDir, 'policy.toml'), 'rules = []');
 
     // Create a symlink to the home directory
     const symlinkDir = path.join(
       os.tmpdir(),
-      `gemini-cli-symlink-${Date.now()}`,
+      `codefly-cli-symlink-${Date.now()}`,
     );
     fs.symlinkSync(tempDir, symlinkDir, 'dir');
 

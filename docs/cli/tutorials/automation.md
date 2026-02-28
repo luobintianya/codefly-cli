@@ -1,17 +1,17 @@
 # Automate tasks with headless mode
 
-Automate tasks with Gemini CLI. Learn how to use headless mode, pipe data into
-Gemini CLI, automate workflows with shell scripts, and generate structured JSON
+Automate tasks with Codefly CLI. Learn how to use headless mode, pipe data into
+Codefly CLI, automate workflows with shell scripts, and generate structured JSON
 output for other applications.
 
 ## Prerequisites
 
-- Gemini CLI installed and authenticated.
+- Codefly CLI installed and authenticated.
 - Familiarity with shell scripting (Bash/Zsh).
 
 ## Why headless mode?
 
-Headless mode runs Gemini CLI once and exits. It's perfect for:
+Headless mode runs Codefly CLI once and exits. It's perfect for:
 
 - **CI/CD:** Analyzing pull requests automatically.
 - **Batch processing:** Summarizing a large number of log files.
@@ -19,37 +19,37 @@ Headless mode runs Gemini CLI once and exits. It's perfect for:
 
 ## How to use headless mode
 
-Run Gemini CLI in headless mode by providing a prompt as a positional argument.
+Run Codefly CLI in headless mode by providing a prompt as a positional argument.
 This bypasses the interactive chat interface and prints the response to standard
 output (stdout).
 
 Run a single command:
 
 ```bash
-gemini "Write a poem about TypeScript"
+codefly "Write a poem about TypeScript"
 ```
 
-## How to pipe input to Gemini CLI
+## How to pipe input to Codefly CLI
 
-Feed data into Gemini using the standard Unix pipe `|`. Gemini reads the
+Feed data into Codefly using the standard Unix pipe `|`. Codefly reads the
 standard input (stdin) as context and answers your question using standard
 output.
 
 Pipe a file:
 
 ```bash
-cat error.log | gemini "Explain why this failed"
+cat error.log | codefly "Explain why this failed"
 ```
 
 Pipe a command:
 
 ```bash
-git diff | gemini "Write a commit message for these changes"
+git diff | codefly "Write a commit message for these changes"
 ```
 
-## Use Gemini CLI output in scripts
+## Use Codefly CLI output in scripts
 
-Because Gemini prints to stdout, you can chain it with other tools or save the
+Because Codefly prints to stdout, you can chain it with other tools or save the
 results to a file.
 
 ### Scenario: Bulk documentation generator
@@ -66,8 +66,8 @@ one.
     for file in *.py; do
       echo "Generating docs for $file..."
 
-      # Ask Gemini CLI to generate the documentation and print it to stdout
-      gemini "Generate a Markdown documentation summary for @$file. Print the
+      # Ask Codefly CLI to generate the documentation and print it to stdout
+      codefly "Generate a Markdown documentation summary for @$file. Print the
       result to standard output." > "${file%.py}.md"
     done
     ```
@@ -102,7 +102,7 @@ like `jq`. To get pure JSON data from the model, combine the
     fi
 
     # Extract data
-    gemini --output-format json "Return a raw JSON object with keys 'version' and 'deps' from @package.json" | jq -r '.response' > data.json
+    codefly --output-format json "Return a raw JSON object with keys 'version' and 'deps' from @package.json" | jq -r '.response' > data.json
     ```
 
 2.  Run `generate_json.sh`:
@@ -153,9 +153,9 @@ to create a `git commit` wrapper that writes the message for you.
         return 1
       fi
 
-      # Ask Gemini to write the message
+      # Ask Codefly to write the message
       echo "Generating commit message..."
-      msg=$(echo "$diff" | gemini "Write a concise Conventional Commit message for this diff. Output ONLY the message.")
+      msg=$(echo "$diff" | codefly "Write a concise Conventional Commit message for this diff. Output ONLY the message.")
 
       # Commit with the generated message
       git commit -m "$msg"
@@ -176,7 +176,7 @@ to create a `git commit` wrapper that writes the message for you.
     gcommit
     ```
 
-    Gemini CLI will analyze your staged changes and commit them with a generated
+    Codefly CLI will analyze your staged changes and commit them with a generated
     message.
 
 ## Next steps

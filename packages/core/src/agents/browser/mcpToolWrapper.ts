@@ -42,7 +42,7 @@ class McpToolInvocation extends BaseToolInvocation<
     private readonly browserManager: BrowserManager,
     private readonly toolName: string,
     params: Record<string, unknown>,
-    messageBus: MessageBus,
+    messageBus: MessageBus | undefined,
   ) {
     super(params, messageBus, toolName, toolName);
   }
@@ -146,7 +146,7 @@ class TypeTextInvocation extends BaseToolInvocation<
     private readonly browserManager: BrowserManager,
     private readonly text: string,
     private readonly submitKey: string | undefined,
-    messageBus: MessageBus,
+    messageBus: MessageBus | undefined,
   ) {
     super({ text, submitKey }, messageBus, 'type_text', 'type_text');
   }
@@ -284,7 +284,7 @@ class McpDeclarativeTool extends DeclarativeTool<
     name: string,
     description: string,
     parameterSchema: unknown,
-    messageBus: MessageBus,
+    messageBus: MessageBus | undefined,
   ) {
     super(
       name,
@@ -319,7 +319,7 @@ class TypeTextDeclarativeTool extends DeclarativeTool<
 > {
   constructor(
     private readonly browserManager: BrowserManager,
-    messageBus: MessageBus,
+    messageBus: MessageBus | undefined,
   ) {
     super(
       'type_text',
@@ -383,7 +383,7 @@ class TypeTextDeclarativeTool extends DeclarativeTool<
  */
 export async function createMcpDeclarativeTools(
   browserManager: BrowserManager,
-  messageBus: MessageBus,
+  messageBus: MessageBus | undefined,
 ): Promise<Array<McpDeclarativeTool | TypeTextDeclarativeTool>> {
   // Get dynamically discovered tools from the MCP server
   const mcpTools = await browserManager.getDiscoveredTools();
@@ -420,7 +420,7 @@ export async function createMcpDeclarativeTools(
 }
 
 /**
- * Converts MCP tool definition to Gemini FunctionDeclaration.
+ * Converts MCP tool definition to Codefly FunctionDeclaration.
  */
 function convertMcpToolToFunctionDeclaration(
   mcpTool: McpTool,

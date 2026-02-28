@@ -13,7 +13,7 @@ import { mkdir, readdir, rm } from 'node:fs/promises';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { canUseRipgrep } from '../packages/core/src/tools/ripGrep.js';
-import { disableMouseTracking } from '@google/gemini-cli-core';
+import { disableMouseTracking } from '@codeflyai/codefly-core';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const rootDir = join(__dirname, '..');
@@ -32,7 +32,7 @@ export async function setup() {
   }
   // We also need to set the config dir explicitly, since the code might
   // construct the path before the HOME env var is set.
-  process.env['GEMINI_CONFIG_DIR'] = join(runDir, '.codefly');
+  process.env['CODEFLY_CONFIG_DIR'] = join(runDir, '.codefly');
 
   // Download ripgrep to avoid race conditions in parallel tests
   const available = await canUseRipgrep();
@@ -59,9 +59,9 @@ export async function setup() {
   }
 
   process.env['INTEGRATION_TEST_FILE_DIR'] = runDir;
-  process.env['GEMINI_CLI_INTEGRATION_TEST'] = 'true';
+  process.env['CODEFLY_CLI_INTEGRATION_TEST'] = 'true';
   // Force file storage to avoid keychain prompts/hangs in CI, especially on macOS
-  process.env['GEMINI_FORCE_FILE_STORAGE'] = 'true';
+  process.env['CODEFLY_FORCE_FILE_STORAGE'] = 'true';
   process.env['TELEMETRY_LOG_FILE'] = join(runDir, 'telemetry.log');
 
   if (process.env['KEEP_OUTPUT']) {

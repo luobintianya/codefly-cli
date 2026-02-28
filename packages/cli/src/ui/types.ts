@@ -9,13 +9,14 @@ import type {
   CodeflyCLIExtension,
   MCPServerConfig,
   ThoughtSummary,
-  ToolCallConfirmationDetails,
   SerializableConfirmationDetails,
   ToolResultDisplay,
   RetrieveUserQuotaResponse,
   SkillDefinition,
   AgentDefinition,
+  ApprovalMode,
 } from '@codeflyai/codefly-core';
+import { CoreToolCallStatus, checkExhaustive } from '@codeflyai/codefly-core';
 import type { PartListUnion } from '@google/genai';
 import { type ReactNode } from 'react';
 
@@ -125,7 +126,7 @@ export interface CompressionProps {
 export const emptyIcon = '  ';
 
 export interface HistoryItemBase {
-  text?: string; // Text content for user/gemini/info/error messages
+  text?: string; // Text content for user/codefly/info/error messages
 }
 
 export type HistoryItemUser = HistoryItemBase & {
@@ -133,13 +134,13 @@ export type HistoryItemUser = HistoryItemBase & {
   text: string;
 };
 
-export type HistoryItemGemini = HistoryItemBase & {
-  type: 'gemini';
+export type HistoryItemCodefly = HistoryItemBase & {
+  type: 'codefly';
   text: string;
 };
 
-export type HistoryItemGeminiContent = HistoryItemBase & {
-  type: 'gemini_content';
+export type HistoryItemCodeflyContent = HistoryItemBase & {
+  type: 'codefly_content';
   text: string;
 };
 
@@ -361,8 +362,8 @@ export type HistoryItemHooksList = HistoryItemBase & {
 export type HistoryItemWithoutId =
   | HistoryItemUser
   | HistoryItemUserShell
-  | HistoryItemGemini
-  | HistoryItemGeminiContent
+  | HistoryItemCodefly
+  | HistoryItemCodeflyContent
   | HistoryItemInfo
   | HistoryItemError
   | HistoryItemWarning
@@ -399,7 +400,7 @@ export enum MessageType {
   MODEL_STATS = 'model_stats',
   TOOL_STATS = 'tool_stats',
   QUIT = 'quit',
-  GEMINI = 'gemini',
+  CODEFLY = 'codefly',
   COMPRESSION = 'compression',
   EXTENSIONS_LIST = 'extensions_list',
   TOOLS_LIST = 'tools_list',
@@ -472,7 +473,7 @@ export interface ConsoleMessageItem {
 
 /**
  * Result type for a slash command that should immediately result in a prompt
- * being submitted to the Gemini model.
+ * being submitted to the Codefly model.
  */
 export interface SubmitPromptResult {
   type: 'submit_prompt';
@@ -480,7 +481,7 @@ export interface SubmitPromptResult {
 }
 
 /**
- * Defines the result of the slash command processor for its consumer (useGeminiStream).
+ * Defines the result of the slash command processor for its consumer (useCodeflyStream).
  */
 export type SlashCommandProcessorResult =
   | {

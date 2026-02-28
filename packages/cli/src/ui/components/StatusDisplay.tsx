@@ -24,7 +24,7 @@ export const StatusDisplay: React.FC<StatusDisplayProps> = ({
   const settings = useSettings();
   const config = useConfig();
 
-  if (process.env['GEMINI_SYSTEM_MD']) {
+  if (process.env['CODEFLY_SYSTEM_MD']) {
     return <Text color={theme.status.error}>|⌐■_■|</Text>;
   }
 

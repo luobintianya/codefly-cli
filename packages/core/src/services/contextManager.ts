@@ -10,9 +10,9 @@ import {
   getGlobalMemoryPaths,
   getExtensionMemoryPaths,
   getEnvironmentMemoryPaths,
-  readGeminiMdFiles,
+  readCodeflyMdFiles,
   categorizeAndConcatenate,
-  type GeminiFileContent,
+  type CodeflyFileContent,
 } from '../utils/memoryDiscovery.js';
 import type { Config } from '../config/config.js';
 import { coreEvents, CoreEvent } from '../utils/events.js';
@@ -67,7 +67,7 @@ export class ContextManager {
       new Set([...paths.global, ...paths.extension, ...paths.project]),
     );
 
-    const allContents = await readGeminiMdFiles(
+    const allContents = await readCodeflyMdFiles(
       allPaths,
       debugMode,
       this.config.getImportFormat(),
@@ -82,7 +82,7 @@ export class ContextManager {
 
   private categorizeMemoryContents(
     paths: { global: string[]; extension: string[]; project: string[] },
-    contentsMap: Map<string, GeminiFileContent>,
+    contentsMap: Map<string, CodeflyFileContent>,
   ) {
     const workingDir = this.config.getWorkingDir();
     const hierarchicalMemory = categorizeAndConcatenate(

@@ -15,7 +15,7 @@ export interface TurnActivityStatus {
 }
 
 /**
- * Monitors the activity of a Gemini turn to detect when a new operation starts
+ * Monitors the activity of a Codefly turn to detect when a new operation starts
  * and whether it involves shell redirections that should suppress inactivity prompts.
  */
 export const useTurnActivityMonitor = (

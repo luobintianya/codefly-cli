@@ -1,22 +1,22 @@
-# Gemini CLI cheatsheet
+# Codefly CLI cheatsheet
 
-This page provides a reference for commonly used Gemini CLI commands, options,
+This page provides a reference for commonly used Codefly CLI commands, options,
 and parameters.
 
 ## CLI commands
 
 | Command                            | Description                        | Example                                             |
 | ---------------------------------- | ---------------------------------- | --------------------------------------------------- |
-| `gemini`                           | Start interactive REPL             | `gemini`                                            |
-| `gemini "query"`                   | Query non-interactively, then exit | `gemini "explain this project"`                     |
-| `cat file \| gemini`               | Process piped content              | `cat logs.txt \| gemini`                            |
-| `gemini -i "query"`                | Execute and continue interactively | `gemini -i "What is the purpose of this project?"`  |
-| `gemini -r "latest"`               | Continue most recent session       | `gemini -r "latest"`                                |
-| `gemini -r "latest" "query"`       | Continue session with a new prompt | `gemini -r "latest" "Check for type errors"`        |
-| `gemini -r "<session-id>" "query"` | Resume session by ID               | `gemini -r "abc123" "Finish this PR"`               |
-| `gemini update`                    | Update to latest version           | `gemini update`                                     |
-| `gemini extensions`                | Manage extensions                  | See [Extensions Management](#extensions-management) |
-| `gemini mcp`                       | Configure MCP servers              | See [MCP Server Management](#mcp-server-management) |
+| `codefly`                           | Start interactive REPL             | `codefly`                                            |
+| `codefly "query"`                   | Query non-interactively, then exit | `codefly "explain this project"`                     |
+| `cat file \| codefly`               | Process piped content              | `cat logs.txt \| codefly`                            |
+| `codefly -i "query"`                | Execute and continue interactively | `codefly -i "What is the purpose of this project?"`  |
+| `codefly -r "latest"`               | Continue most recent session       | `codefly -r "latest"`                                |
+| `codefly -r "latest" "query"`       | Continue session with a new prompt | `codefly -r "latest" "Check for type errors"`        |
+| `codefly -r "<session-id>" "query"` | Resume session by ID               | `codefly -r "abc123" "Finish this PR"`               |
+| `codefly update`                    | Update to latest version           | `codefly update`                                     |
+| `codefly extensions`                | Manage extensions                  | See [Extensions Management](#extensions-management) |
+| `codefly mcp`                       | Configure MCP servers              | See [MCP Server Management](#mcp-server-management) |
 
 ### Positional arguments
 
@@ -52,7 +52,7 @@ and parameters.
 
 ## Model selection
 
-The `--model` (or `-m`) flag lets you specify which Gemini model to use. You can
+The `--model` (or `-m`) flag lets you specify which Codefly model to use. You can
 use either model aliases (user-friendly names) or concrete model names.
 
 ### Model aliases
@@ -61,27 +61,27 @@ These are convenient shortcuts that map to specific models:
 
 | Alias        | Resolves To                                | Description                                                                                                               |
 | ------------ | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
-| `auto`       | `gemini-2.5-pro` or `gemini-3-pro-preview` | **Default.** Resolves to the preview model if preview features are enabled, otherwise resolves to the standard pro model. |
-| `pro`        | `gemini-2.5-pro` or `gemini-3-pro-preview` | For complex reasoning tasks. Uses preview model if enabled.                                                               |
-| `flash`      | `gemini-2.5-flash`                         | Fast, balanced model for most tasks.                                                                                      |
-| `flash-lite` | `gemini-2.5-flash-lite`                    | Fastest model for simple tasks.                                                                                           |
+| `auto`       | `codefly-2.5-pro` or `codefly-3-pro-preview` | **Default.** Resolves to the preview model if preview features are enabled, otherwise resolves to the standard pro model. |
+| `pro`        | `codefly-2.5-pro` or `codefly-3-pro-preview` | For complex reasoning tasks. Uses preview model if enabled.                                                               |
+| `flash`      | `codefly-2.5-flash`                         | Fast, balanced model for most tasks.                                                                                      |
+| `flash-lite` | `codefly-2.5-flash-lite`                    | Fastest model for simple tasks.                                                                                           |
 
 ## Extensions management
 
 | Command                                            | Description                                  | Example                                                                        |
 | -------------------------------------------------- | -------------------------------------------- | ------------------------------------------------------------------------------ |
-| `gemini extensions install <source>`               | Install extension from Git URL or local path | `gemini extensions install https://github.com/user/my-extension`               |
-| `gemini extensions install <source> --ref <ref>`   | Install from specific branch/tag/commit      | `gemini extensions install https://github.com/user/my-extension --ref develop` |
-| `gemini extensions install <source> --auto-update` | Install with auto-update enabled             | `gemini extensions install https://github.com/user/my-extension --auto-update` |
-| `gemini extensions uninstall <name>`               | Uninstall one or more extensions             | `gemini extensions uninstall my-extension`                                     |
-| `gemini extensions list`                           | List all installed extensions                | `gemini extensions list`                                                       |
-| `gemini extensions update <name>`                  | Update a specific extension                  | `gemini extensions update my-extension`                                        |
-| `gemini extensions update --all`                   | Update all extensions                        | `gemini extensions update --all`                                               |
-| `gemini extensions enable <name>`                  | Enable an extension                          | `gemini extensions enable my-extension`                                        |
-| `gemini extensions disable <name>`                 | Disable an extension                         | `gemini extensions disable my-extension`                                       |
-| `gemini extensions link <path>`                    | Link local extension for development         | `gemini extensions link /path/to/extension`                                    |
-| `gemini extensions new <path>`                     | Create new extension from template           | `gemini extensions new ./my-extension`                                         |
-| `gemini extensions validate <path>`                | Validate extension structure                 | `gemini extensions validate ./my-extension`                                    |
+| `codefly extensions install <source>`               | Install extension from Git URL or local path | `codefly extensions install https://github.com/user/my-extension`               |
+| `codefly extensions install <source> --ref <ref>`   | Install from specific branch/tag/commit      | `codefly extensions install https://github.com/user/my-extension --ref develop` |
+| `codefly extensions install <source> --auto-update` | Install with auto-update enabled             | `codefly extensions install https://github.com/user/my-extension --auto-update` |
+| `codefly extensions uninstall <name>`               | Uninstall one or more extensions             | `codefly extensions uninstall my-extension`                                     |
+| `codefly extensions list`                           | List all installed extensions                | `codefly extensions list`                                                       |
+| `codefly extensions update <name>`                  | Update a specific extension                  | `codefly extensions update my-extension`                                        |
+| `codefly extensions update --all`                   | Update all extensions                        | `codefly extensions update --all`                                               |
+| `codefly extensions enable <name>`                  | Enable an extension                          | `codefly extensions enable my-extension`                                        |
+| `codefly extensions disable <name>`                 | Disable an extension                         | `codefly extensions disable my-extension`                                       |
+| `codefly extensions link <path>`                    | Link local extension for development         | `codefly extensions link /path/to/extension`                                    |
+| `codefly extensions new <path>`                     | Create new extension from template           | `codefly extensions new ./my-extension`                                         |
+| `codefly extensions validate <path>`                | Validate extension structure                 | `codefly extensions validate ./my-extension`                                    |
 
 See [Extensions Documentation](../extensions/index.md) for more details.
 
@@ -89,13 +89,13 @@ See [Extensions Documentation](../extensions/index.md) for more details.
 
 | Command                                                       | Description                     | Example                                                                                              |
 | ------------------------------------------------------------- | ------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `gemini mcp add <name> <command>`                             | Add stdio-based MCP server      | `gemini mcp add github npx -y @modelcontextprotocol/server-github`                                   |
-| `gemini mcp add <name> <url> --transport http`                | Add HTTP-based MCP server       | `gemini mcp add api-server http://localhost:3000 --transport http`                                   |
-| `gemini mcp add <name> <command> --env KEY=value`             | Add with environment variables  | `gemini mcp add slack node server.js --env SLACK_TOKEN=xoxb-xxx`                                     |
-| `gemini mcp add <name> <command> --scope user`                | Add with user scope             | `gemini mcp add db node db-server.js --scope user`                                                   |
-| `gemini mcp add <name> <command> --include-tools tool1,tool2` | Add with specific tools         | `gemini mcp add github npx -y @modelcontextprotocol/server-github --include-tools list_repos,get_pr` |
-| `gemini mcp remove <name>`                                    | Remove an MCP server            | `gemini mcp remove github`                                                                           |
-| `gemini mcp list`                                             | List all configured MCP servers | `gemini mcp list`                                                                                    |
+| `codefly mcp add <name> <command>`                             | Add stdio-based MCP server      | `codefly mcp add github npx -y @modelcontextprotocol/server-github`                                   |
+| `codefly mcp add <name> <url> --transport http`                | Add HTTP-based MCP server       | `codefly mcp add api-server http://localhost:3000 --transport http`                                   |
+| `codefly mcp add <name> <command> --env KEY=value`             | Add with environment variables  | `codefly mcp add slack node server.js --env SLACK_TOKEN=xoxb-xxx`                                     |
+| `codefly mcp add <name> <command> --scope user`                | Add with user scope             | `codefly mcp add db node db-server.js --scope user`                                                   |
+| `codefly mcp add <name> <command> --include-tools tool1,tool2` | Add with specific tools         | `codefly mcp add github npx -y @modelcontextprotocol/server-github --include-tools list_repos,get_pr` |
+| `codefly mcp remove <name>`                                    | Remove an MCP server            | `codefly mcp remove github`                                                                           |
+| `codefly mcp list`                                             | List all configured MCP servers | `codefly mcp list`                                                                                    |
 
 See [MCP Server Integration](../tools/mcp-server.md) for more details.
 
@@ -103,13 +103,13 @@ See [MCP Server Integration](../tools/mcp-server.md) for more details.
 
 | Command                          | Description                           | Example                                           |
 | -------------------------------- | ------------------------------------- | ------------------------------------------------- |
-| `gemini skills list`             | List all discovered agent skills      | `gemini skills list`                              |
-| `gemini skills install <source>` | Install skill from Git, path, or file | `gemini skills install https://github.com/u/repo` |
-| `gemini skills link <path>`      | Link local agent skills via symlink   | `gemini skills link /path/to/my-skills`           |
-| `gemini skills uninstall <name>` | Uninstall an agent skill              | `gemini skills uninstall my-skill`                |
-| `gemini skills enable <name>`    | Enable an agent skill                 | `gemini skills enable my-skill`                   |
-| `gemini skills disable <name>`   | Disable an agent skill                | `gemini skills disable my-skill`                  |
-| `gemini skills enable --all`     | Enable all skills                     | `gemini skills enable --all`                      |
-| `gemini skills disable --all`    | Disable all skills                    | `gemini skills disable --all`                     |
+| `codefly skills list`             | List all discovered agent skills      | `codefly skills list`                              |
+| `codefly skills install <source>` | Install skill from Git, path, or file | `codefly skills install https://github.com/u/repo` |
+| `codefly skills link <path>`      | Link local agent skills via symlink   | `codefly skills link /path/to/my-skills`           |
+| `codefly skills uninstall <name>` | Uninstall an agent skill              | `codefly skills uninstall my-skill`                |
+| `codefly skills enable <name>`    | Enable an agent skill                 | `codefly skills enable my-skill`                   |
+| `codefly skills disable <name>`   | Disable an agent skill                | `codefly skills disable my-skill`                  |
+| `codefly skills enable --all`     | Enable all skills                     | `codefly skills enable --all`                      |
+| `codefly skills disable --all`    | Disable all skills                    | `codefly skills disable --all`                     |
 
 See [Agent Skills Documentation](./skills.md) for more details.

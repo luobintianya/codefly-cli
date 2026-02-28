@@ -1,7 +1,7 @@
 # Provide context with CODEFLY.md files
 
 Context files, which use the default name `CODEFLY.md`, are a powerful feature
-for providing instructional context to the Gemini model. You can use these files
+for providing instructional context to the Codefly model. You can use these files
 to give project-specific instructions, define a persona, or provide coding style
 guides to make the AI's responses more accurate and tailored to your needs.
 
@@ -110,7 +110,7 @@ While `CODEFLY.md` is the default filename, you can configure this in your
 
 ## Next steps
 
-- Learn about [Ignoring files](./gemini-ignore.md) to exclude content from the
+- Learn about [Ignoring files](./codefly-ignore.md) to exclude content from the
   context system.
 - Explore the [Memory tool](../tools/memory.md) to save persistent memories.
 - See how to use [Custom commands](./custom-commands.md) to automate common

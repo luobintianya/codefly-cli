@@ -11,7 +11,7 @@ import type { SecurityPolicy } from './types.js';
 import { getResponseText } from '../../utils/partUtils.js';
 import { safeTemplateReplace } from '../../utils/textUtils.js';
 
-import { DEFAULT_GEMINI_FLASH_MODEL } from '../../config/models.js';
+import { DEFAULT_CODEFLY_FLASH_MODEL } from '../../config/models.js';
 import { debugLogger } from '../../utils/debugLogger.js';
 
 import { LlmRole } from '../../telemetry/index.js';
@@ -55,7 +55,7 @@ export async function enforcePolicy(
   toolCall: FunctionCall,
   config: Config,
 ): Promise<SafetyCheckResult> {
-  const model = DEFAULT_GEMINI_FLASH_MODEL;
+  const model = DEFAULT_CODEFLY_FLASH_MODEL;
   const contentGenerator = config.getContentGenerator();
 
   if (!contentGenerator) {

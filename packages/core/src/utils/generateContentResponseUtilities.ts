@@ -15,7 +15,7 @@ import { supportsMultimodalFunctionResponse } from '../config/models.js';
 import { debugLogger } from './debugLogger.js';
 
 /**
- * Formats tool output for a Gemini FunctionResponse.
+ * Formats tool output for a Codefly FunctionResponse.
  */
 function createFunctionResponsePart(
   callId: string,

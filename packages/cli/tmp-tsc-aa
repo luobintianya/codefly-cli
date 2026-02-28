@@ -1,0 +1,100 @@
+src/codefly.tsx(607,51): error TS2345: Argument of type 'import("/Users/robinx/code/codefly-cli/packages/core/dist/src/config/storage", { with: { "resolution-mode": "import" } }).Storage' is not assignable to parameter of type 'Storage'.
+  Type 'Storage' is missing the following properties from type 'Storage': length, clear, getItem, key, and 2 more.
+src/codefly_cleanup.test.tsx(13,7): error TS6196: 'MockProcessExitError' is declared but never used.
+src/commands/openspec.ts(7,29): error TS2307: Cannot find module '@codeflyai/codefly-core/openspec' or its corresponding type declarations.
+src/config/auth.ts(11,3): error TS2554: Expected 2-3 arguments, but got 1.
+src/config/config.integration.test.ts(255,13): error TS2741: Property 'policy' is missing in type '{ query: undefined; model: undefined; sandbox: undefined; debug: undefined; prompt: undefined; promptInteractive: undefined; yolo: undefined; approvalMode: undefined; allowedMcpServerNames: undefined; ... 15 more ...; isCommand: undefined; }' but required in type 'CliArgs'.
+src/config/config.integration.test.ts(284,21): error TS2339: Property 'language' does not exist on type 'Config'.
+src/config/config.test.ts(1543,41): error TS2304: Cannot find name 'MCPServerConfig'.
+src/config/config.test.ts(1582,42): error TS2304: Cannot find name 'MCPServerConfig'.
+src/config/config.test.ts(1607,42): error TS2304: Cannot find name 'MCPServerConfig'.
+src/config/config.test.ts(1641,42): error TS2304: Cannot find name 'MCPServerConfig'.
+src/config/config.test.ts(1665,42): error TS2304: Cannot find name 'MCPServerConfig'.
+src/config/config.test.ts(1673,52): error TS2304: Cannot find name 'MCPServerConfig'.
+src/config/config.test.ts(1708,42): error TS2304: Cannot find name 'MCPServerConfig'.
+src/config/config.test.ts(1715,52): error TS2304: Cannot find name 'MCPServerConfig'.
+src/config/config.test.ts(2641,21): error TS2304: Cannot find name 'MergedSettings'.
+src/config/config.ts(796,5): error TS2353: Object literal may only specify known properties, and 'geminiMdFileCount' does not exist in type 'ConfigParameters'.
+src/config/extension-manager.ts(153,31): error TS2339: Property 'allowedExtensions' does not exist on type 'InferMergedSettings<{ readonly disableYoloMode: { readonly type: "boolean"; readonly label: "Disable YOLO Mode"; readonly category: "Security"; readonly requiresRestart: true; readonly default: false; readonly description: "Disable YOLO mode, even if enabled by a flag."; readonly showInDialog: true; }; ... 5 more .....'.
+src/config/extension-manager.ts(154,31): error TS2339: Property 'allowedExtensions' does not exist on type 'InferMergedSettings<{ readonly disableYoloMode: { readonly type: "boolean"; readonly label: "Disable YOLO Mode"; readonly category: "Security"; readonly requiresRestart: true; readonly default: false; readonly description: "Disable YOLO mode, even if enabled by a flag."; readonly showInDialog: true; }; ... 5 more .....'.
+src/config/extension-manager.ts(156,56): error TS2339: Property 'allowedExtensions' does not exist on type 'InferMergedSettings<{ readonly disableYoloMode: { readonly type: "boolean"; readonly label: "Disable YOLO Mode"; readonly category: "Security"; readonly requiresRestart: true; readonly default: false; readonly description: "Disable YOLO mode, even if enabled by a flag."; readonly showInDialog: true; }; ... 5 more .....'.
+src/config/extension-manager.ts(157,10): error TS7006: Parameter 'pattern' implicitly has an 'any' type.
+src/config/extension-manager.ts(553,31): error TS2339: Property 'allowedExtensions' does not exist on type 'InferMergedSettings<{ readonly disableYoloMode: { readonly type: "boolean"; readonly label: "Disable YOLO Mode"; readonly category: "Security"; readonly requiresRestart: true; readonly default: false; readonly description: "Disable YOLO mode, even if enabled by a flag."; readonly showInDialog: true; }; ... 5 more .....'.
+src/config/extension-manager.ts(554,31): error TS2339: Property 'allowedExtensions' does not exist on type 'InferMergedSettings<{ readonly disableYoloMode: { readonly type: "boolean"; readonly label: "Disable YOLO Mode"; readonly category: "Security"; readonly requiresRestart: true; readonly default: false; readonly description: "Disable YOLO mode, even if enabled by a flag."; readonly showInDialog: true; }; ... 5 more .....'.
+src/config/extension-manager.ts(561,56): error TS2339: Property 'allowedExtensions' does not exist on type 'InferMergedSettings<{ readonly disableYoloMode: { readonly type: "boolean"; readonly label: "Disable YOLO Mode"; readonly category: "Security"; readonly requiresRestart: true; readonly default: false; readonly description: "Disable YOLO mode, even if enabled by a flag."; readonly showInDialog: true; }; ... 5 more .....'.
+src/config/extension-manager.ts(562,10): error TS7006: Parameter 'pattern' implicitly has an 'any' type.
+src/config/extension.test.ts(674,11): error TS2353: Object literal may only specify known properties, and 'allowedExtensions' does not exist in type 'InferSettings<{ readonly disableYoloMode: { readonly type: "boolean"; readonly label: "Disable YOLO Mode"; readonly category: "Security"; readonly requiresRestart: true; readonly default: false; readonly description: "Disable YOLO mode, even if enabled by a flag."; readonly showInDialog: true; }; ... 5 more ...; rea...'.
+src/config/extension.test.ts(702,11): error TS2353: Object literal may only specify known properties, and 'allowedExtensions' does not exist in type 'InferSettings<{ readonly disableYoloMode: { readonly type: "boolean"; readonly label: "Disable YOLO Mode"; readonly category: "Security"; readonly requiresRestart: true; readonly default: false; readonly description: "Disable YOLO mode, even if enabled by a flag."; readonly showInDialog: true; }; ... 5 more ...; rea...'.
+src/config/extension.test.ts(1197,11): error TS2353: Object literal may only specify known properties, and 'allowedExtensions' does not exist in type 'InferSettings<{ readonly disableYoloMode: { readonly type: "boolean"; readonly label: "Disable YOLO Mode"; readonly category: "Security"; readonly requiresRestart: true; readonly default: false; readonly description: "Disable YOLO mode, even if enabled by a flag."; readonly showInDialog: true; }; ... 5 more ...; rea...'.
+src/config/extension.ts(34,12): error TS2304: Cannot find name 'CustomTheme'.
+src/config/extensions/extensionUpdates.test.ts(148,5): error TS2304: Cannot find name 'tempHomeDir'.
+src/config/extensions/extensionUpdates.test.ts(149,7): error TS2304: Cannot find name 'path'.
+src/config/extensions/extensionUpdates.test.ts(149,17): error TS2304: Cannot find name 'os'.
+src/config/extensions/extensionUpdates.test.ts(152,7): error TS2304: Cannot find name 'path'.
+src/config/extensions/extensionUpdates.test.ts(152,17): error TS2304: Cannot find name 'os'.
+src/config/extensions/extensionUpdates.test.ts(154,5): error TS2304: Cannot find name 'extensionDir'.
+src/config/extensions/extensionUpdates.test.ts(154,20): error TS2304: Cannot find name 'path'.
+src/config/extensions/extensionUpdates.test.ts(154,30): error TS2304: Cannot find name 'tempHomeDir'.
+src/config/extensions/extensionUpdates.test.ts(157,14): error TS2304: Cannot find name 'ExtensionStorage'.
+src/config/extensions/extensionUpdates.test.ts(158,7): error TS2304: Cannot find name 'extensionDir'.
+src/config/extensions/extensionUpdates.test.ts(165,18): error TS2304: Cannot find name 'extensionDir'.
+src/config/extensions/extensionUpdates.test.ts(166,15): error TS2304: Cannot find name 'os'.
+src/config/extensions/extensionUpdates.test.ts(166,43): error TS2304: Cannot find name 'tempHomeDir'.
+src/config/extensions/extensionUpdates.test.ts(187,27): error TS2304: Cannot find name 'path'.
+src/config/extensions/extensionUpdates.test.ts(187,37): error TS2304: Cannot find name 'extensionDir'.
+src/config/extensions/extensionUpdates.test.ts(191,32): error TS2304: Cannot find name 'KeychainTokenStorage'.
+src/config/extensions/extensionUpdates.test.ts(249,32): error TS2304: Cannot find name 'path'.
+src/config/extensions/extensionUpdates.test.ts(283,19): error TS2304: Cannot find name 'extensionDir'.
+src/config/extensions/extensionUpdates.test.ts(306,19): error TS2304: Cannot find name 'extensionDir'.
+src/config/mcp/mcpServerEnablement.ts(218,30): error TS2339: Property 'getGlobalCodeflyDir' does not exist on type 'typeof Storage'.
+src/config/policy.ts(41,60): error TS2345: Argument of type 'Storage' is not assignable to parameter of type 'import("/Users/robinx/code/codefly-cli/packages/core/dist/src/config/storage", { with: { "resolution-mode": "import" } }).Storage'.
+  Type 'Storage' is missing the following properties from type 'Storage': targetDir, sessionId, projectIdentifier, initPromise, and 30 more.
+src/config/policy.ts(46,37): error TS2304: Cannot find name 'PolicyUpdateConfirmationRequest'.
+src/config/policy.ts(61,7): error TS2304: Cannot find name 'PolicyUpdateConfirmationRequest'.
+src/config/policy.ts(65,33): error TS2554: Expected 0 arguments, but got 1.
+src/config/policy.ts(69,17): error TS4111: Property 'isWorkspaceHomeDir' comes from an index signature, so it must be accessed with ['isWorkspaceHomeDir'].
+src/config/policy.ts(73,51): error TS4111: Property 'getWorkspacePoliciesDir' comes from an index signature, so it must be accessed with ['getWorkspacePoliciesDir'].
+src/config/policy.ts(74,34): error TS2304: Cannot find name 'PolicyIntegrityManager'.
+src/config/policy.ts(81,36): error TS2304: Cannot find name 'IntegrityStatus'.
+src/config/policy.ts(84,34): error TS2304: Cannot find name 'IntegrityStatus'.
+src/config/policy.ts(106,7): error TS2304: Cannot find name 'writeToStderr'.
+src/config/settings.ts(21,8): error TS6133: 'FetchAdminControlsResponse' is declared but its value is never read.
+src/config/settings.ts(470,42): error TS2304: Cannot find name 'AdminControlsSettings'.
+src/config/settings_validation_warning.test.ts(36,23): error TS4113: This member cannot have an 'override' modifier because it is not declared in the base class 'Storage'.
+src/config/skills-backward-compatibility.test.ts(42,9): error TS2559: Type 'string' has no properties in common with type 'HierarchicalMemory'.
+src/config/skills-backward-compatibility.test.ts(63,9): error TS2559: Type 'string' has no properties in common with type 'HierarchicalMemory'.
+src/config/skills-backward-compatibility.test.ts(87,9): error TS2559: Type 'string' has no properties in common with type 'HierarchicalMemory'.
+src/config/skills-backward-compatibility.test.ts(111,9): error TS2559: Type 'string' has no properties in common with type 'HierarchicalMemory'.
+src/config/skills-backward-compatibility.test.ts(136,9): error TS2559: Type 'string' has no properties in common with type 'HierarchicalMemory'.
+src/config/trustedFolders.test.ts(7,1): error TS6133: 'osActual' is declared but its value is never read.
+src/config/trustedFolders.test.ts(8,10): error TS2300: Duplicate identifier 'FatalConfigError'.
+src/config/trustedFolders.test.ts(8,28): error TS2300: Duplicate identifier 'ideContextStore'.
+src/config/trustedFolders.test.ts(16,8): error TS6133: 'Mocked' is declared but its value is never read.
+src/config/trustedFolders.test.ts(17,8): error TS6133: 'Mock' is declared but its value is never read.
+src/config/trustedFolders.test.ts(23,3): error TS2300: Duplicate identifier 'FatalConfigError'.
+src/config/trustedFolders.test.ts(24,3): error TS2300: Duplicate identifier 'ideContextStore'.
+src/config/trustedFolders.ts(10,22): error TS2307: Cannot find module 'proper-lockfile' or its corresponding type declarations.
+src/config/trustedFolders.ts(129,23): error TS2304: Cannot find name 'HeadlessModeOptions'.
+src/config/trustedFolders.ts(131,9): error TS2304: Cannot find name 'isHeadlessMode'.
+src/config/trustedFolders.ts(206,9): error TS2552: Cannot find name 'coreEvents'. Did you mean 'CloseEvent'?
+src/config/trustedFolders.ts(338,21): error TS2304: Cannot find name 'HeadlessModeOptions'.
+src/config/trustedFolders.ts(367,21): error TS2304: Cannot find name 'HeadlessModeOptions'.
+src/config/trustedFolders.ts(369,7): error TS2304: Cannot find name 'isHeadlessMode'.
+src/core/auth.test.ts(40,16): error TS2339: Property 'LOGIN_WITH_GOOGLE' does not exist on type '{ readonly OAUTH: "oauth"; }'.
+src/core/auth.test.ts(44,16): error TS2339: Property 'LOGIN_WITH_GOOGLE' does not exist on type '{ readonly OAUTH: "oauth"; }'.
+src/core/auth.test.ts(53,16): error TS2339: Property 'LOGIN_WITH_GOOGLE' does not exist on type '{ readonly OAUTH: "oauth"; }'.
+src/core/auth.test.ts(57,16): error TS2339: Property 'LOGIN_WITH_GOOGLE' does not exist on type '{ readonly OAUTH: "oauth"; }'.
+src/core/auth.test.ts(63,11): error TS2304: Cannot find name 'ValidationRequiredError'.
+src/core/auth.test.ts(67,16): error TS2339: Property 'LOGIN_WITH_GOOGLE' does not exist on type '{ readonly OAUTH: "oauth"; }'.
+src/core/auth.test.ts(71,16): error TS2339: Property 'LOGIN_WITH_GOOGLE' does not exist on type '{ readonly OAUTH: "oauth"; }'.
+src/core/auth.ts(32,22): error TS2304: Cannot find name 'ValidationRequiredError'.
+src/deferred.ts(7,10): error TS6133: 'debugLogger' is declared but its value is never read.
+src/deferred.ts(33,5): error TS2304: Cannot find name 'coreEvents'.
+src/deferred.ts(35,7): error TS2304: Cannot find name 'getAdminErrorMessage'.
+src/deferred.ts(45,5): error TS2304: Cannot find name 'coreEvents'.
+src/deferred.ts(47,7): error TS2304: Cannot find name 'getAdminErrorMessage'.
+src/deferred.ts(54,5): error TS2304: Cannot find name 'coreEvents'.
+src/deferred.ts(56,7): error TS2304: Cannot find name 'getAdminErrorMessage'.
+src/nonInteractiveCli.test.ts(69,18): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(131,5): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(269,15): error TS2304: Cannot find name 'GeminiEventType'.

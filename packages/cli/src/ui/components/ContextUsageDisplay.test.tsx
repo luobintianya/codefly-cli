@@ -31,7 +31,7 @@ describe('ContextUsageDisplay', () => {
     const { lastFrame, waitUntilReady, unmount } = render(
       <ContextUsageDisplay
         promptTokenCount={5000}
-        model="gemini-pro"
+        model="codefly-pro"
         terminalWidth={120}
       />,
     );
@@ -45,7 +45,7 @@ describe('ContextUsageDisplay', () => {
     const { lastFrame, waitUntilReady, unmount } = render(
       <ContextUsageDisplay
         promptTokenCount={2000}
-        model="gemini-pro"
+        model="codefly-pro"
         terminalWidth={80}
       />,
     );
@@ -60,7 +60,7 @@ describe('ContextUsageDisplay', () => {
     const { lastFrame, waitUntilReady, unmount } = render(
       <ContextUsageDisplay
         promptTokenCount={10000}
-        model="gemini-pro"
+        model="codefly-pro"
         terminalWidth={120}
       />,
     );

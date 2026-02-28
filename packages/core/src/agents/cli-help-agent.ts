@@ -97,9 +97,6 @@ export const CliHelpAgent = (
       '2. **Be Precise**: Use the provided runtime context and documentation to give exact answers.\n' +
       '3. **Cite Sources**: Always include the specific documentation files you used in your final report.\n' +
       '4. **Non-Interactive**: You operate in a loop and cannot ask the user for more info. If the question is ambiguous, answer as best as you can with the information available.\n\n' +
-      (config.language && config.language !== 'auto'
-        ? `CRITICAL: You MUST respond in ${config.language}.\n`
-        : '') +
       'You MUST call `complete_task` with a JSON report containing your `answer` and the `sources` you used.',
   },
 });

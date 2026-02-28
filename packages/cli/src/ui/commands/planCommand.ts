@@ -11,7 +11,7 @@ import {
   debugLogger,
   processSingleFileContent,
   partToString,
-} from '@google/gemini-cli-core';
+} from '@codeflyai/codefly-core';
 import { MessageType } from '../types.js';
 import * as path from 'node:path';
 
@@ -51,7 +51,7 @@ export const planCommand: SlashCommand = {
       coreEvents.emitFeedback('info', `Approved Plan: ${fileName}`);
 
       context.ui.addItem({
-        type: MessageType.GEMINI,
+        type: MessageType.CODEFLY,
         text: partToString(content.llmContent),
       });
     } catch (error) {

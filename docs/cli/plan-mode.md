@@ -12,9 +12,9 @@ implementation. It allows you to:
 > feedback is invaluable as we refine this feature. If you have ideas,
 > suggestions, or encounter issues:
 >
-> - [Open an issue](https://github.com/google-gemini/gemini-cli/issues) on
+> - [Open an issue](https://github.com/google-codefly/codefly-cli/issues) on
 >   GitHub.
-> - Use the **/bug** command within Gemini CLI to file an issue.
+> - Use the **/bug** command within Codefly CLI to file an issue.
 
 - [Enabling Plan Mode](#enabling-plan-mode)
 - [How to use Plan Mode](#how-to-use-plan-mode)
@@ -46,16 +46,16 @@ following to your `settings.json`:
 
 ### Entering Plan Mode
 
-You can configure Gemini CLI to start in Plan Mode by default or enter it
+You can configure Codefly CLI to start in Plan Mode by default or enter it
 manually during a session.
 
-- **Configuration:** Configure Gemini CLI to start directly in Plan Mode by
+- **Configuration:** Configure Codefly CLI to start directly in Plan Mode by
   default:
   1.  Type `/settings` in the CLI.
   2.  Search for **Default Approval Mode**.
   3.  Set the value to **Plan**.
 
-  Alternatively, use the `gemini --approval-mode=plan` CLI flag or manually
+  Alternatively, use the `codefly --approval-mode=plan` CLI flag or manually
   update:
 
   ```json
@@ -69,14 +69,14 @@ manually during a session.
 - **Keyboard Shortcut:** Press `Shift+Tab` to cycle through approval modes
   (`Default` -> `Auto-Edit` -> `Plan`).
 
-  > **Note:** Plan Mode is automatically removed from the rotation when Gemini
+  > **Note:** Plan Mode is automatically removed from the rotation when Codefly
   > CLI is actively processing or showing confirmation dialogs.
 
 - **Command:** Type `/plan` in the input box.
 
-- **Natural Language:** Ask Gemini CLI to "start a plan for...". Gemini CLI then
+- **Natural Language:** Ask Codefly CLI to "start a plan for...". Codefly CLI then
   calls the [`enter_plan_mode`] tool to switch modes.
-  > **Note:** This tool is not available when Gemini CLI is in [YOLO mode].
+  > **Note:** This tool is not available when Codefly CLI is in [YOLO mode].
 
 ### Planning Workflow
 
@@ -102,7 +102,7 @@ To exit Plan Mode, you can:
 
 - **Keyboard Shortcut:** Press `Shift+Tab` to cycle to the desired mode.
 
-- **Tool:** Gemini CLI calls the [`exit_plan_mode`] tool to present the
+- **Tool:** Codefly CLI calls the [`exit_plan_mode`] tool to present the
   finalized plan for your approval.
 
 ## Tool Restrictions
@@ -117,14 +117,14 @@ These are the only allowed tools:
 - **MCP Tools (Read):** Read-only [MCP tools] (e.g., `github_read_issue`,
   `postgres_read_schema`) are allowed.
 - **Planning (Write):** [`write_file`] and [`replace`] only allowed for `.md`
-  files in the `~/.gemini/tmp/<project>/<session-id>/plans/` directory or your
+  files in the `~/.codefly/tmp/<project>/<session-id>/plans/` directory or your
   [custom plans directory](#custom-plan-directory-and-policies).
 - **Skills:** [`activate_skill`] (allows loading specialized instructions and
   resources in a read-only manner)
 
 ### Customizing Planning with Skills
 
-You can use [Agent Skills](./skills.md) to customize how Gemini CLI approaches
+You can use [Agent Skills](./skills.md) to customize how Codefly CLI approaches
 planning for specific types of tasks. When a skill is activated during Plan
 Mode, its specialized instructions and procedural workflows will guide the
 research, design and planning phases.
@@ -133,13 +133,13 @@ For example:
 
 - A **"Database Migration"** skill could ensure the plan includes data safety
   checks and rollback strategies.
-- A **"Security Audit"** skill could prompt Gemini CLI to look for specific
+- A **"Security Audit"** skill could prompt Codefly CLI to look for specific
   vulnerabilities during codebase exploration.
-- A **"Frontend Design"** skill could guide Gemini CLI to use specific UI
+- A **"Frontend Design"** skill could guide Codefly CLI to use specific UI
   components and accessibility standards in its proposal.
 
-To use a skill in Plan Mode, you can explicitly ask Gemini CLI to "use the
-`<skill-name>` skill to plan..." or Gemini CLI may autonomously activate it
+To use a skill in Plan Mode, you can explicitly ask Codefly CLI to "use the
+`<skill-name>` skill to plan..." or Codefly CLI may autonomously activate it
 based on the task description.
 
 ### Customizing Policies
@@ -147,7 +147,7 @@ based on the task description.
 Plan Mode's default tool restrictions are managed by the [policy engine] and
 defined in the built-in [`plan.toml`] file. The built-in policy (Tier 1)
 enforces the read-only state, but you can customize these rules by creating your
-own policies in your `~/.gemini/policies/` directory (Tier 2).
+own policies in your `~/.codefly/policies/` directory (Tier 2).
 
 #### Example: Automatically approve read-only MCP tools
 
@@ -155,7 +155,7 @@ By default, read-only MCP tools require user confirmation in Plan Mode. You can
 use `toolAnnotations` and the `mcpName` wildcard to customize this behavior for
 your specific environment.
 
-`~/.gemini/policies/mcp-read-only.toml`
+`~/.codefly/policies/mcp-read-only.toml`
 
 ```toml
 [[rule]]
@@ -171,7 +171,7 @@ modes = ["plan"]
 This rule allows you to check the repository status and see changes while in
 Plan Mode.
 
-`~/.gemini/policies/git-research.toml`
+`~/.codefly/policies/git-research.toml`
 
 ```toml
 [[rule]]
@@ -187,7 +187,7 @@ modes = ["plan"]
 You can enable experimental research [subagents] like `codebase_investigator` to
 help gather architecture details during the planning phase.
 
-`~/.gemini/policies/research-subagents.toml`
+`~/.codefly/policies/research-subagents.toml`
 
 ```toml
 [[rule]]
@@ -197,7 +197,7 @@ priority = 100
 modes = ["plan"]
 ```
 
-Tell Gemini CLI it can use these tools in your prompt, for example: _"You can
+Tell Codefly CLI it can use these tools in your prompt, for example: _"You can
 check ongoing changes in git."_
 
 For more information on how the policy engine works, see the [policy engine]
@@ -206,16 +206,16 @@ docs.
 ### Custom Plan Directory and Policies
 
 By default, planning artifacts are stored in a managed temporary directory
-outside your project: `~/.gemini/tmp/<project>/<session-id>/plans/`.
+outside your project: `~/.codefly/tmp/<project>/<session-id>/plans/`.
 
 You can configure a custom directory for plans in your `settings.json`. For
-example, to store plans in a `.gemini/plans` directory within your project:
+example, to store plans in a `.codefly/plans` directory within your project:
 
 ```json
 {
   "general": {
     "plan": {
-      "directory": ".gemini/plans"
+      "directory": ".codefly/plans"
     }
   }
 }
@@ -229,8 +229,8 @@ within the project boundary.
 
 Using a custom directory requires updating your [policy engine] configurations
 to allow `write_file` and `replace` in that specific location. For example, to
-allow writing to the `.gemini/plans` directory within your project, create a
-policy file at `~/.gemini/policies/plan-custom-directory.toml`:
+allow writing to the `.codefly/plans` directory within your project, create a
+policy file at `~/.codefly/policies/plan-custom-directory.toml`:
 
 ```toml
 [[rule]]
@@ -239,13 +239,13 @@ decision = "allow"
 priority = 100
 modes = ["plan"]
 # Adjust the pattern to match your custom directory.
-# This example matches any .md file in a .gemini/plans directory within the project.
-argsPattern = "\"file_path\":\"[^\"]+[\\\\/]+\\.gemini[\\\\/]+plans[\\\\/]+[\\w-]+\\.md\""
+# This example matches any .md file in a .codefly/plans directory within the project.
+argsPattern = "\"file_path\":\"[^\"]+[\\\\/]+\\.codefly[\\\\/]+plans[\\\\/]+[\\w-]+\\.md\""
 ```
 
 ## Automatic Model Routing
 
-When using an [**auto model**], Gemini CLI automatically optimizes [**model
+When using an [**auto model**], Codefly CLI automatically optimizes [**model
 routing**] based on the current phase of your task:
 
 1.  **Planning Phase:** While in Plan Mode, the CLI routes requests to a
@@ -285,6 +285,6 @@ performance. You can disable this automatic switching in your settings:
 [`ask_user`]: /docs/tools/ask-user.md
 [YOLO mode]: /docs/reference/configuration.md#command-line-arguments
 [`plan.toml`]:
-  https://github.com/google-gemini/gemini-cli/blob/main/packages/core/src/policy/policies/plan.toml
+  https://github.com/google-codefly/codefly-cli/blob/main/packages/core/src/policy/policies/plan.toml
 [auto model]: /docs/reference/configuration.md#model-settings
 [model routing]: /docs/cli/telemetry.md#model-routing

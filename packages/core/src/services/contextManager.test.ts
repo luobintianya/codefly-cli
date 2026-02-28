@@ -19,7 +19,7 @@ vi.mock('../utils/memoryDiscovery.js', async (importOriginal) => {
     getGlobalMemoryPaths: vi.fn(),
     getExtensionMemoryPaths: vi.fn(),
     getEnvironmentMemoryPaths: vi.fn(),
-    readGeminiMdFiles: vi.fn(),
+    readCodeflyMdFiles: vi.fn(),
     loadJitSubdirectoryMemory: vi.fn(),
     concatenateInstructions: vi
       .fn()
@@ -124,10 +124,10 @@ describe('ContextManager', () => {
     it('should not load environment memory if folder is not trusted', async () => {
       vi.mocked(mockConfig.isTrustedFolder).mockReturnValue(false);
       vi.mocked(memoryDiscovery.getGlobalMemoryPaths).mockResolvedValue([
-        '/home/user/.gemini/GEMINI.md',
+        '/home/user/.codefly/CODEFLY.md',
       ]);
-      vi.mocked(memoryDiscovery.readGeminiMdFiles).mockResolvedValue([
-        { filePath: '/home/user/.gemini/GEMINI.md', content: 'Global Content' },
+      vi.mocked(memoryDiscovery.readCodeflyMdFiles).mockResolvedValue([
+        { filePath: '/home/user/.codefly/CODEFLY.md', content: 'Global Content' },
       ]);
 
       await contextManager.refresh();

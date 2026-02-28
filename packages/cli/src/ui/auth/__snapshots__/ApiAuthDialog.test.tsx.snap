@@ -3,9 +3,9 @@
 exports[`ApiAuthDialog > renders correctly 1`] = `
 "╭──────────────────────────────────────────────────────────────────────────────────────────────────╮
 │                                                                                                  │
-│ Enter Gemini Configuration                                                                       │
+│ Enter Codefly Configuration                                                                       │
 │                                                                                                  │
-│ Please enter your Gemini API key and Base URL (optional).                                        │
+│ Please enter your Codefly API key and Base URL (optional).                                        │
 │ You can get an API key from https://aistudio.google.com/app/apikey                               │
 │                                                                                                  │
 │ API Key:                                                                                         │

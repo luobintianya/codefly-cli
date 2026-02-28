@@ -82,7 +82,7 @@ describe('handleAtCommand with Agents', () => {
         getDirectories: () => [testRootDir],
       }),
       storage: {
-        getProjectTempDir: () => path.join(os.tmpdir(), 'gemini-cli-temp'),
+        getProjectTempDir: () => path.join(os.tmpdir(), 'codefly-cli-temp'),
       },
       isPathAllowed(this: Config, absolutePath: string): boolean {
         if (this.interactive && path.isAbsolute(absolutePath)) {

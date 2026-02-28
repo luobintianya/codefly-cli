@@ -6,7 +6,13 @@
 
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
-import { debugLogger, type Config } from '@codeflyai/codefly-core';
+import {
+  TOOL_OUTPUTS_DIR,
+  debugLogger,
+  sanitizeFilenamePart,
+  type Config,
+  Storage as CoreStorage,
+} from '@codeflyai/codefly-core';
 import type { Settings, SessionRetentionSettings } from '../config/settings.js';
 import { getAllSessionFiles, type SessionFileEntry } from './sessionUtils.js';
 
@@ -363,7 +369,7 @@ export async function cleanupToolOutputFiles(
     const retentionConfig = settings.general.sessionRetention;
     let tempDir = projectTempDir;
     if (!tempDir) {
-      const storage = new Storage(process.cwd());
+      const storage = new CoreStorage(process.cwd());
       await storage.initialize();
       tempDir = storage.getProjectTempDir();
     }

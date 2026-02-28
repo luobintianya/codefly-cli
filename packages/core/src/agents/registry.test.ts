@@ -13,7 +13,7 @@ import { debugLogger } from '../utils/debugLogger.js';
 import { coreEvents, CoreEvent } from '../utils/events.js';
 import { A2AClientManager } from './a2a-client-manager.js';
 import {
-  DEFAULT_GEMINI_FLASH_LITE_MODEL,
+  DEFAULT_CODEFLY_FLASH_LITE_MODEL,
   PREVIEW_CODEFLY_FLASH_MODEL,
   PREVIEW_CODEFLY_MODEL,
   PREVIEW_CODEFLY_MODEL_AUTO,
@@ -130,7 +130,7 @@ describe('AgentRegistry', () => {
 
     it('should use default model for codebase investigator for non-preview models', async () => {
       const nonPreviewConfig = makeMockedConfig({
-        model: 'gemini-2.5-pro',
+        model: 'codefly-2.5-pro',
       });
       const nonPreviewRegistry = new TestableAgentRegistry(nonPreviewConfig);
 
@@ -140,7 +140,7 @@ describe('AgentRegistry', () => {
         'codebase_investigator',
       ) as LocalAgentDefinition;
       expect(investigatorDef).toBeDefined();
-      expect(investigatorDef?.modelConfig.model).toBe('gemini-3-pro-preview');
+      expect(investigatorDef?.modelConfig.model).toBe('codefly-3-pro-preview');
       expect(
         investigatorDef?.modelConfig.generateContentConfig?.thinkingConfig,
       ).toStrictEqual({
@@ -194,7 +194,7 @@ describe('AgentRegistry', () => {
           overrides: {
             codebase_investigator: {
               enabled: true,
-              modelConfig: { model: DEFAULT_GEMINI_FLASH_LITE_MODEL },
+              modelConfig: { model: DEFAULT_CODEFLY_FLASH_LITE_MODEL },
             },
           },
         },
@@ -208,7 +208,7 @@ describe('AgentRegistry', () => {
       ) as LocalAgentDefinition;
       expect(investigatorDef).toBeDefined();
       expect(investigatorDef?.modelConfig.model).toBe(
-        DEFAULT_GEMINI_FLASH_LITE_MODEL,
+        DEFAULT_CODEFLY_FLASH_LITE_MODEL,
       );
     });
 

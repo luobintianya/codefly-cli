@@ -31,7 +31,7 @@ describe('classifyGoogleError', () => {
     const complexError = {
       error: {
         message:
-          '{"error": {"code": 429, "status": 429, "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 2\nPlease retry in 44.097740004s.", "details": [{"detail": "??? to (unknown) : APP_ERROR(8) You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 2\nPlease retry in 44.097740004s."}]}}',
+          '{"error": {"code": 429, "status": 429, "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/codefly-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 2\nPlease retry in 44.097740004s.", "details": [{"detail": "??? to (unknown) : APP_ERROR(8) You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/codefly-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 2\nPlease retry in 44.097740004s."}]}}',
         code: 429,
         status: 'Too Many Requests',
       },
@@ -50,7 +50,7 @@ describe('classifyGoogleError', () => {
     const complexErrorString = JSON.stringify({
       error: {
         message:
-          '{"error": {"code": 429, "status": 429, "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 2\nPlease retry in 900.2ms.", "details": [{"detail": "??? to (unknown) : APP_ERROR(8) You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 2\nPlease retry in 900.2ms."}]}}',
+          '{"error": {"code": 429, "status": 429, "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/codefly-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 2\nPlease retry in 900.2ms.", "details": [{"detail": "??? to (unknown) : APP_ERROR(8) You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/codefly-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 2\nPlease retry in 900.2ms."}]}}',
         code: 429,
         status: 'Too Many Requests',
       },
@@ -200,7 +200,7 @@ describe('classifyGoogleError', () => {
     const apiError: GoogleApiError = {
       code: 429,
       message:
-        'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits.\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 2\nPlease retry in 56.185908122s.',
+        'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/codefly-api/docs/rate-limits.\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 2\nPlease retry in 56.185908122s.',
       details: [
         {
           '@type': 'type.googleapis.com/google.rpc.QuotaFailure',
@@ -211,7 +211,7 @@ describe('classifyGoogleError', () => {
               quotaId: 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier',
               quotaDimensions: {
                 location: 'global',
-                model: 'gemini-2.5-pro',
+                model: 'codefly-2.5-pro',
               },
               quotaValue: '2',
             },
@@ -221,8 +221,8 @@ describe('classifyGoogleError', () => {
           '@type': 'type.googleapis.com/google.rpc.Help',
           links: [
             {
-              description: 'Learn more about Gemini API quotas',
-              url: 'https://ai.google.dev/gemini-api/docs/rate-limits',
+              description: 'Learn more about Codefly API quotas',
+              url: 'https://ai.google.dev/codefly-api/docs/rate-limits',
             },
           ],
         },
@@ -250,7 +250,7 @@ describe('classifyGoogleError', () => {
           domain: 'cloudcode-pa.googleapis.com',
           metadata: {
             uiMessage: 'true',
-            model: 'gemini-2.5-pro',
+            model: 'codefly-2.5-pro',
             quotaResetDelay: '539.477544ms',
             quotaResetTimeStamp: '2025-10-20T19:14:08Z',
           },
@@ -281,7 +281,7 @@ describe('classifyGoogleError', () => {
           domain: 'cloudcode-pa.googleapis.com',
           metadata: {
             uiMessage: 'true',
-            model: 'gemini-2.5-pro',
+            model: 'codefly-2.5-pro',
             quotaResetDelay: '539.477544ms',
             quotaResetTimeStamp: '2025-10-20T19:14:08Z',
           },

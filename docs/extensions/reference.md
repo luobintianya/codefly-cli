@@ -1,14 +1,14 @@
 # Extension reference
 
-This guide covers the `gemini extensions` commands and the structure of the
-`gemini-extension.json` configuration file.
+This guide covers the `codefly extensions` commands and the structure of the
+`codefly-extension.json` configuration file.
 
 ## Manage extensions
 
-Use the `gemini extensions` command group to manage your extensions from the
+Use the `codefly extensions` command group to manage your extensions from the
 terminal.
 
-Note that commands like `gemini extensions install` are not supported within the
+Note that commands like `codefly extensions install` are not supported within the
 CLI's interactive mode. However, you can use the `/extensions list` command to
 view installed extensions. All management operations, including updates to slash
 commands, take effect only after you restart the CLI session.
@@ -18,12 +18,12 @@ commands, take effect only after you restart the CLI session.
 Install an extension by providing its GitHub repository URL or a local file
 path.
 
-Gemini CLI creates a copy of the extension during installation. You must run
-`gemini extensions update` to pull changes from the source. To install from
+Codefly CLI creates a copy of the extension during installation. You must run
+`codefly extensions update` to pull changes from the source. To install from
 GitHub, you must have `git` installed on your machine.
 
 ```bash
-gemini extensions install <source> [--ref <ref>] [--auto-update] [--pre-release] [--consent]
+codefly extensions install <source> [--ref <ref>] [--auto-update] [--pre-release] [--consent]
 ```
 
 - `<source>`: The GitHub URL or local path of the extension.
@@ -37,7 +37,7 @@ gemini extensions install <source> [--ref <ref>] [--auto-update] [--pre-release]
 To uninstall one or more extensions, use the `uninstall` command:
 
 ```bash
-gemini extensions uninstall <name...>
+codefly extensions uninstall <name...>
 ```
 
 ### Disable an extension
@@ -46,7 +46,7 @@ Extensions are enabled globally by default. You can disable an extension
 entirely or for a specific workspace.
 
 ```bash
-gemini extensions disable <name> [--scope <scope>]
+codefly extensions disable <name> [--scope <scope>]
 ```
 
 - `<name>`: The name of the extension to disable.
@@ -57,7 +57,7 @@ gemini extensions disable <name> [--scope <scope>]
 Re-enable a disabled extension using the `enable` command:
 
 ```bash
-gemini extensions enable <name> [--scope <scope>]
+codefly extensions enable <name> [--scope <scope>]
 ```
 
 - `<name>`: The name of the extension to enable.
@@ -65,17 +65,17 @@ gemini extensions enable <name> [--scope <scope>]
 
 ### Update an extension
 
-Update an extension to the version specified in its `gemini-extension.json`
+Update an extension to the version specified in its `codefly-extension.json`
 file.
 
 ```bash
-gemini extensions update <name>
+codefly extensions update <name>
 ```
 
 To update all installed extensions at once:
 
 ```bash
-gemini extensions update --all
+codefly extensions update --all
 ```
 
 ### Create an extension from a template
@@ -83,7 +83,7 @@ gemini extensions update --all
 Create a new extension directory using a built-in template.
 
 ```bash
-gemini extensions new <path> [template]
+codefly extensions new <path> [template]
 ```
 
 - `<path>`: The directory to create.
@@ -92,20 +92,20 @@ gemini extensions new <path> [template]
 
 ### Link a local extension
 
-Create a symbolic link between your development directory and the Gemini CLI
+Create a symbolic link between your development directory and the Codefly CLI
 extensions directory. This lets you test changes immediately without
 reinstalling.
 
 ```bash
-gemini extensions link <path>
+codefly extensions link <path>
 ```
 
 ## Extension format
 
-Gemini CLI loads extensions from `<home>/.gemini/extensions`. Each extension
-must have a `gemini-extension.json` file in its root directory.
+Codefly CLI loads extensions from `<home>/.codefly/extensions`. Each extension
+must have a `codefly-extension.json` file in its root directory.
 
-### `gemini-extension.json`
+### `codefly-extension.json`
 
 The manifest file defines the extension's behavior and configuration.
 
@@ -121,7 +121,7 @@ The manifest file defines the extension's behavior and configuration.
       "cwd": "${extensionPath}"
     }
   },
-  "contextFileName": "GEMINI.md",
+  "contextFileName": "CODEFLY.md",
   "excludeTools": ["run_shell_command"]
 }
 ```
@@ -134,7 +134,7 @@ The manifest file defines the extension's behavior and configuration.
   extension directory name.
 - `version`: The version of the extension.
 - `description`: A short description of the extension. This will be displayed on
-  [geminicli.com/extensions](https://geminicli.com/extensions).
+  [codeflycli.com/extensions](https://codeflycli.com/extensions).
 - `mcpServers`: A map of MCP servers to settings. The key is the name of the
   server, and the value is the server configuration. These servers will be
   loaded on startup just like MCP servers defined in a
@@ -149,7 +149,7 @@ The manifest file defines the extension's behavior and configuration.
     instead of putting them both in `command`.
 - `contextFileName`: The name of the file that contains the context for the
   extension. This will be used to load the context from the extension directory.
-  If this property is not used but a `GEMINI.md` file is present in your
+  If this property is not used but a `CODEFLY.md` file is present in your
   extension directory, then that file will be loaded.
 - `excludeTools`: An array of tool names to exclude from the model. You can also
   specify command-specific restrictions for tools that support it, like the
@@ -158,7 +158,7 @@ The manifest file defines the extension's behavior and configuration.
   command. Note that this differs from the MCP server `excludeTools`
   functionality, which can be listed in the MCP server config.
 
-When Gemini CLI starts, it loads all the extensions and merges their
+When Codefly CLI starts, it loads all the extensions and merges their
 configurations. If there are any conflicts, the workspace configuration takes
 precedence.
 
@@ -194,13 +194,13 @@ To define settings, add a `settings` array to your manifest:
 To update an extension's settings:
 
 ```bash
-gemini extensions config <name> [setting] [--scope <scope>]
+codefly extensions config <name> [setting] [--scope <scope>]
 ```
 
 ### Custom commands
 
 Provide [custom commands](../cli/custom-commands.md) by placing TOML files in a
-`commands/` subdirectory. Gemini CLI uses the directory structure to determine
+`commands/` subdirectory. Codefly CLI uses the directory structure to determine
 the command name.
 
 For an extension named `gcp`:
@@ -212,7 +212,7 @@ For an extension named `gcp`:
 
 Intercept and customize CLI behavior using [hooks](../hooks/index.md). Define
 hooks in a `hooks/hooks.json` file within your extension directory. Note that
-hooks are not defined in the `gemini-extension.json` manifest.
+hooks are not defined in the `codefly-extension.json` manifest.
 
 ### Agent skills
 
@@ -230,7 +230,7 @@ agent definition files (`.md`) to an `agents/` directory in your extension root.
 ### Themes
 
 Extensions can provide custom themes to personalize the CLI UI. Themes are
-defined in the `themes` array in `gemini-extension.json`.
+defined in the `themes` array in `codefly-extension.json`.
 
 **Example**
 
@@ -279,7 +279,7 @@ the extension name (e.g., `/gcp.deploy`) using a dot separator.
 
 ## Variables
 
-Gemini CLI supports variable substitution in `gemini-extension.json` and
+Codefly CLI supports variable substitution in `codefly-extension.json` and
 `hooks/hooks.json`.
 
 | Variable           | Description                                     |

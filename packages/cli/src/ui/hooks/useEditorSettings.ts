@@ -12,9 +12,11 @@ import type {
 import { MessageType } from '../types.js';
 import type { EditorType } from '@codeflyai/codefly-core';
 import {
+  CoreEvent,
   allowEditorTypeInSandbox,
-  hasValidEditorCommand,
+  coreEvents,
   getEditorDisplayName,
+  hasValidEditorCommand,
 } from '@codeflyai/codefly-core';
 import type { UseHistoryManagerReturn } from './useHistoryManager.js';
 
@@ -66,7 +68,9 @@ export const useEditorSettings = (
         );
         setEditorError(null);
         setIsEditorDialogOpen(false);
-        coreEvents.emit(CoreEvent.EditorSelected, { editor: editorType });
+        coreEvents.emit(CoreEvent.EditorSelected, {
+          editor: editorType ?? null,
+        });
       } catch (error) {
         setEditorError(`Failed to set editor preference: ${error}`);
       }
@@ -76,7 +80,7 @@ export const useEditorSettings = (
 
   const exitEditorDialog = useCallback(() => {
     setIsEditorDialogOpen(false);
-    coreEvents.emit(CoreEvent.EditorSelected, { editor: undefined });
+    coreEvents.emit(CoreEvent.EditorSelected, { editor: null });
   }, []);
 
   return {

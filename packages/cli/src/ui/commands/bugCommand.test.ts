@@ -69,7 +69,7 @@ describe('bugCommand', () => {
   beforeEach(() => {
     vi.mocked(getVersion).mockResolvedValue('0.1.0');
     vi.mocked(formatBytes).mockReturnValue('100 MB');
-    vi.stubEnv('SANDBOX', 'gemini-test');
+    vi.stubEnv('SANDBOX', 'codefly-test');
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2024-01-01T00:00:00Z'));
   });
@@ -84,7 +84,7 @@ describe('bugCommand', () => {
     const mockContext = createMockCommandContext({
       services: {
         config: {
-          getModel: () => 'gemini-pro',
+          getModel: () => 'codefly-pro',
           getBugCommand: () => undefined,
           getIdeMode: () => true,
           getCodeflyClient: () => ({
@@ -106,7 +106,7 @@ describe('bugCommand', () => {
 * **Session ID:** test-session-id
 * **Operating System:** test-platform v20.0.0
 * **Sandbox Environment:** test
-* **Model Version:** gemini-pro
+* **Model Version:** codefly-pro
 * **Auth Type:** oauth-personal
 * **Memory Usage:** 100 MB
 * **Terminal Name:** Test Terminal
@@ -114,7 +114,7 @@ describe('bugCommand', () => {
 * **Kitty Keyboard Protocol:** Supported
 * **IDE Client:** VSCode
 `;
-    const expectedUrl = `https://github.com/google-gemini/gemini-cli/issues/new?template=bug_report.yml&title=A%20test%20bug&info=${encodeURIComponent(expectedInfo)}&problem=A%20test%20bug`;
+    const expectedUrl = `https://github.com/google-codefly/codefly-cli/issues/new?template=bug_report.yml&title=A%20test%20bug&info=${encodeURIComponent(expectedInfo)}&problem=A%20test%20bug`;
 
     expect(open).toHaveBeenCalledWith(expectedUrl);
   });
@@ -127,7 +127,7 @@ describe('bugCommand', () => {
     const mockContext = createMockCommandContext({
       services: {
         config: {
-          getModel: () => 'gemini-pro',
+          getModel: () => 'codefly-pro',
           getBugCommand: () => undefined,
           getIdeMode: () => true,
           getCodeflyClient: () => ({
@@ -137,7 +137,7 @@ describe('bugCommand', () => {
           }),
           getContentGeneratorConfig: () => ({ authType: 'vertex-ai' }),
           storage: {
-            getProjectTempDir: () => '/tmp/gemini',
+            getProjectTempDir: () => '/tmp/codefly',
           },
         },
       },
@@ -147,7 +147,7 @@ describe('bugCommand', () => {
     await bugCommand.action(mockContext, 'Bug with history');
 
     const expectedPath = path.join(
-      '/tmp/gemini',
+      '/tmp/codefly',
       'bug-report-history-1704067200000.json',
     );
     expect(exportHistoryToFile).toHaveBeenCalledWith({
@@ -173,7 +173,7 @@ describe('bugCommand', () => {
     const mockContext = createMockCommandContext({
       services: {
         config: {
-          getModel: () => 'gemini-pro',
+          getModel: () => 'codefly-pro',
           getBugCommand: () => ({ urlTemplate: customTemplate }),
           getIdeMode: () => true,
           getCodeflyClient: () => ({
@@ -195,7 +195,7 @@ describe('bugCommand', () => {
 * **Session ID:** test-session-id
 * **Operating System:** test-platform v20.0.0
 * **Sandbox Environment:** test
-* **Model Version:** gemini-pro
+* **Model Version:** codefly-pro
 * **Auth Type:** vertex-ai
 * **Memory Usage:** 100 MB
 * **Terminal Name:** Test Terminal

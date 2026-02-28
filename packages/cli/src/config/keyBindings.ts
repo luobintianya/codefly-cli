@@ -513,15 +513,15 @@ export const commandDescriptions: Readonly<Record<Command, string>> = {
   [Command.TOGGLE_BACKGROUND_SHELL_LIST]: 'Toggle background shell list.',
   [Command.KILL_BACKGROUND_SHELL]: 'Kill the active background shell.',
   [Command.UNFOCUS_BACKGROUND_SHELL]:
-    'Move focus from background shell to Gemini.',
+    'Move focus from background shell to Codefly.',
   [Command.UNFOCUS_BACKGROUND_SHELL_LIST]:
-    'Move focus from background shell list to Gemini.',
+    'Move focus from background shell list to Codefly.',
   [Command.SHOW_BACKGROUND_SHELL_UNFOCUS_WARNING]:
     'Show warning when trying to move focus away from background shell.',
   [Command.SHOW_SHELL_INPUT_UNFOCUS_WARNING]:
     'Show warning when trying to move focus away from shell input.',
-  [Command.FOCUS_SHELL_INPUT]: 'Move focus from Gemini to the active shell.',
-  [Command.UNFOCUS_SHELL_INPUT]: 'Move focus from the shell back to Gemini.',
+  [Command.FOCUS_SHELL_INPUT]: 'Move focus from Codefly to the active shell.',
+  [Command.UNFOCUS_SHELL_INPUT]: 'Move focus from the shell back to Codefly.',
   [Command.CLEAR_SCREEN]: 'Clear the terminal screen and redraw the UI.',
   [Command.RESTART_APP]: 'Restart the application.',
   [Command.SUSPEND_APP]: 'Suspend the CLI and move it to the background.',

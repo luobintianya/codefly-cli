@@ -1,13 +1,13 @@
 # Custom commands
 
 Custom commands let you save and reuse your favorite or most frequently used
-prompts as personal shortcuts within Gemini CLI. You can create commands that
+prompts as personal shortcuts within Codefly CLI. You can create commands that
 are specific to a single project or commands that are available globally across
 all your projects, streamlining your workflow and ensuring consistency.
 
 ## File locations and precedence
 
-Gemini CLI discovers commands from two locations, loaded in a specific order:
+Codefly CLI discovers commands from two locations, loaded in a specific order:
 
 1.  **User commands (global):** Located in `~/.codefly/commands/`. These
     commands are available in any project you are working on.
@@ -40,7 +40,7 @@ Your command definition files must be written in the TOML format and use the
 
 ### Required fields
 
-- `prompt` (String): The prompt that will be sent to the Gemini model when the
+- `prompt` (String): The prompt that will be sent to the Codefly model when the
   command is executed. This can be a single-line or multi-line string.
 
 ### Optional fields
@@ -166,7 +166,7 @@ your `prompt` and injecting their output. This is ideal for gathering context
 from your local environment, like reading file content or checking the status of
 Git.
 
-When a custom command attempts to execute a shell command, Gemini CLI will now
+When a custom command attempts to execute a shell command, Codefly CLI will now
 prompt you for confirmation before proceeding. This is a security measure to
 ensure that only intended commands can be run.
 
@@ -315,4 +315,4 @@ to the context, and then invoke your command:
 > /refactor:pure
 ```
 
-Gemini CLI will then execute the multi-line prompt defined in your TOML file.
+Codefly CLI will then execute the multi-line prompt defined in your TOML file.

@@ -1,0 +1,13 @@
+src/zed-integration/zedIntegration.test.ts(153,6): error TS2304: Cannot find name 'loadSettings'.
+src/zed-integration/zedIntegration.test.ts(259,6): error TS2304: Cannot find name 'loadSettings'.
+src/zed-integration/zedIntegration.test.ts(777,7): error TS2304: Cannot find name 'LlmRole'.
+src/zed-integration/zedIntegration.ts(251,27): error TS2304: Cannot find name 'convertSessionToClientHistory'.
+src/zed-integration/zedIntegration.ts(253,33): error TS2339: Property 'getGeminiClient' does not exist on type 'Config'.
+src/zed-integration/zedIntegration.ts(416,44): error TS2304: Cannot find name 'ApprovalMode'.
+src/zed-integration/zedIntegration.ts(420,33): error TS2304: Cannot find name 'ConversationRecord'.
+src/zed-integration/zedIntegration.ts(422,29): error TS2304: Cannot find name 'partListUnionToString'.
+src/zed-integration/zedIntegration.ts(520,11): error TS2304: Cannot find name 'LlmRole'.
+src/zed-integration/zedIntegration.ts(1319,11): error TS2304: Cannot find name 'ApprovalMode'.
+src/zed-integration/zedIntegration.ts(1324,11): error TS2304: Cannot find name 'ApprovalMode'.
+src/zed-integration/zedIntegration.ts(1329,11): error TS2304: Cannot find name 'ApprovalMode'.
+src/zed-integration/zedIntegration.ts(1337,11): error TS2304: Cannot find name 'ApprovalMode'.

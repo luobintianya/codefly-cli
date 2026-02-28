@@ -14,7 +14,7 @@ describe('Agent Language Support', () => {
   const createMockConfig = (language: string) =>
     ({
       language,
-      getModel: () => 'gemini-pro',
+      getModel: () => 'codefly-pro',
       getToolRegistry: () => ({
         getAllToolNames: () => [],
       }),

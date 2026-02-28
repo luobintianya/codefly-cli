@@ -11,7 +11,7 @@ import { renderHook } from '../../test-utils/render.js';
 import { waitFor } from '../../test-utils/async.js';
 import { useAtCompletion } from './useAtCompletion.js';
 import type { Config, FileSearch } from '@codeflyai/codefly-core';
-import { FileSearchFactory } from '@codeflyai/codefly-core';
+import { FileDiscoveryService, FileSearchFactory, escapePath } from '@codeflyai/codefly-core';
 import type { FileSystemStructure } from '@codeflyai/codefly-cli-test-utils';
 import { createTmpDir, cleanupTmpDir } from '@codeflyai/codefly-cli-test-utils';
 import type { Suggestion } from '../components/SuggestionsDisplay.js';
@@ -151,7 +151,7 @@ describe('useAtCompletion', () => {
         ignoreDirs: [],
         fileDiscoveryService: new FileDiscoveryService(testRootDir, {
           respectGitIgnore: false,
-          respectGeminiIgnore: false,
+          respectCodeflyIgnore: false,
         }),
         cache: false,
         cacheTtl: 0,
@@ -276,7 +276,7 @@ describe('useAtCompletion', () => {
         ignoreDirs: [],
         fileDiscoveryService: new FileDiscoveryService(testRootDir, {
           respectGitIgnore: true,
-          respectGeminiIgnore: true,
+          respectCodeflyIgnore: true,
         }),
         cache: false,
         cacheTtl: 0,

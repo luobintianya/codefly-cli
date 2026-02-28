@@ -94,33 +94,33 @@ describe('sandboxUtils', () => {
     });
 
     it('should generate default entrypoint', () => {
-      const args = entrypoint('/work', ['node', 'gemini', 'arg1']);
-      expect(args).toEqual(['bash', '-c', 'gemini arg1']);
+      const args = entrypoint('/work', ['node', 'codefly', 'arg1']);
+      expect(args).toEqual(['bash', '-c', 'codefly arg1']);
     });
 
     it('should include PATH and PYTHONPATH if set', () => {
       process.env['PATH'] = '/work/bin:/usr/bin';
       process.env['PYTHONPATH'] = '/work/lib';
-      const args = entrypoint('/work', ['node', 'gemini', 'arg1']);
+      const args = entrypoint('/work', ['node', 'codefly', 'arg1']);
       expect(args[2]).toContain('export PATH="$PATH:/work/bin"');
       expect(args[2]).toContain('export PYTHONPATH="$PYTHONPATH:/work/lib"');
     });
 
     it('should source sandbox.bashrc if exists', () => {
       vi.mocked(fs.existsSync).mockReturnValue(true);
-      const args = entrypoint('/work', ['node', 'gemini', 'arg1']);
+      const args = entrypoint('/work', ['node', 'codefly', 'arg1']);
       expect(args[2]).toContain('source .codefly/sandbox.bashrc');
     });
 
     it('should include socat commands for ports', () => {
       process.env['SANDBOX_PORTS'] = '8080';
-      const args = entrypoint('/work', ['node', 'gemini', 'arg1']);
+      const args = entrypoint('/work', ['node', 'codefly', 'arg1']);
       expect(args[2]).toContain('socat TCP4-LISTEN:8080');
     });
 
     it('should use development command if NODE_ENV is development', () => {
       process.env['NODE_ENV'] = 'development';
-      const args = entrypoint('/work', ['node', 'gemini', 'arg1']);
+      const args = entrypoint('/work', ['node', 'codefly', 'arg1']);
       expect(args[2]).toContain('npm rebuild && npm run start --');
     });
   });

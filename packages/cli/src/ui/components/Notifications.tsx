@@ -15,7 +15,7 @@ import { persistentState } from '../../utils/persistentState.js';
 import { useKeypress } from '../hooks/useKeypress.js';
 import { KeypressPriority } from '../contexts/KeypressContext.js';
 
-import { CODEFLY_DIR, Storage, homedir } from '@codeflyai/codefly-core';
+import { CODEFLY_DIR, Storage, WarningPriority, homedir } from '@codeflyai/codefly-core';
 
 import * as fs from 'node:fs/promises';
 import path from 'node:path';

@@ -10,8 +10,14 @@ import zlib from 'node:zlib';
 import fs from 'node:fs';
 import path from 'node:path';
 import { EventEmitter } from 'node:events';
-import { CoreEvent, coreEvents, debugLogger } from '@codeflyai/codefly-core';
-import type { Config } from '@codeflyai/codefly-core';
+import {
+  type ConsoleLogPayload,
+  type Config,
+  CoreEvent,
+  coreEvents,
+  debugLogger,
+} from '@codeflyai/codefly-core';
+import WebSocket from 'ws';
 
 const ACTIVITY_ID_HEADER = 'x-activity-request-id';
 const MAX_BUFFER_SIZE = 100;

@@ -81,7 +81,7 @@ describe('loadIgnoreRules', () => {
     });
     const service = new FileDiscoveryService(tmpDir, {
       respectGitIgnore: true,
-      respectGeminiIgnore: false,
+      respectCodeflyIgnore: false,
     });
     const ignore = loadIgnoreRules(service, []);
     const fileFilter = ignore.getFileFilter();
@@ -95,7 +95,7 @@ describe('loadIgnoreRules', () => {
     });
     const service = new FileDiscoveryService(tmpDir, {
       respectGitIgnore: false,
-      respectGeminiIgnore: true,
+      respectCodeflyIgnore: true,
     });
     const ignore = loadIgnoreRules(service, []);
     const fileFilter = ignore.getFileFilter();
@@ -111,7 +111,7 @@ describe('loadIgnoreRules', () => {
     });
     const service = new FileDiscoveryService(tmpDir, {
       respectGitIgnore: true,
-      respectGeminiIgnore: true,
+      respectCodeflyIgnore: true,
     });
     const ignore = loadIgnoreRules(service, []);
     const fileFilter = ignore.getFileFilter();
@@ -124,7 +124,7 @@ describe('loadIgnoreRules', () => {
     tmpDir = await createTmpDir({});
     const service = new FileDiscoveryService(tmpDir, {
       respectGitIgnore: false,
-      respectGeminiIgnore: false,
+      respectCodeflyIgnore: false,
     });
     const ignore = loadIgnoreRules(service, ['logs/']);
     const dirFilter = ignore.getDirectoryFilter();
@@ -136,7 +136,7 @@ describe('loadIgnoreRules', () => {
     tmpDir = await createTmpDir({});
     const service = new FileDiscoveryService(tmpDir, {
       respectGitIgnore: true,
-      respectGeminiIgnore: true,
+      respectCodeflyIgnore: true,
     });
     const ignore = loadIgnoreRules(service, []);
     const fileFilter = ignore.getFileFilter();
@@ -147,7 +147,7 @@ describe('loadIgnoreRules', () => {
     tmpDir = await createTmpDir({});
     const service = new FileDiscoveryService(tmpDir, {
       respectGitIgnore: false,
-      respectGeminiIgnore: false,
+      respectCodeflyIgnore: false,
     });
     const ignore = loadIgnoreRules(service, []);
     const dirFilter = ignore.getDirectoryFilter();

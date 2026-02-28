@@ -29,11 +29,11 @@ export type MarkToolsAsSubmittedFn = (callIds: string[]) => void;
 export type CancelAllFn = (signal: AbortSignal) => void;
 
 /**
- * The shape expected by useGeminiStream.
+ * The shape expected by useCodeflyStream.
  * It matches the Core ToolCall structure + the UI metadata flag.
  */
 export type TrackedToolCall = ToolCall & {
-  responseSubmittedToGemini?: boolean;
+  responseSubmittedToCodefly?: boolean;
 };
 
 /**
@@ -76,6 +76,7 @@ export function useToolExecutionScheduler(
         config,
         messageBus,
         getPreferredEditor: () => getPreferredEditorRef.current(),
+        schedulerId: 'ui-main',
       }),
     [config, messageBus],
   );
@@ -114,7 +115,7 @@ export function useToolExecutionScheduler(
       // 1. Await Core Scheduler directly
       const results = await scheduler.schedule(request, signal);
 
-      // 2. Trigger legacy reinjection logic (useGeminiStream loop)
+      // 2. Trigger legacy reinjection logic (useCodeflyStream loop)
       await onCompleteRef.current(results);
 
       return results;
@@ -134,7 +135,7 @@ export function useToolExecutionScheduler(
       setToolCalls((prevCalls) =>
         prevCalls.map((tc) =>
           callIdsToMark.includes(tc.request.callId)
-            ? { ...tc, responseSubmittedToGemini: true }
+            ? { ...tc, responseSubmittedToCodefly: true }
             : tc,
         ),
       );
@@ -164,7 +165,8 @@ function adaptToolCalls(
 
   return coreCalls.map((coreCall): TrackedToolCall => {
     const prev = prevMap.get(coreCall.request.callId);
-    const responseSubmittedToGemini = prev?.responseSubmittedToGemini ?? false;
+    const responseSubmittedToCodefly =
+      prev?.responseSubmittedToCodefly ?? false;
 
     // Inject onConfirm adapter for tools awaiting approval.
     // The Core provides data-only (serializable) confirmationDetails. We must
@@ -190,13 +192,13 @@ function adaptToolCalls(
             });
           },
         },
-        responseSubmittedToGemini,
+        responseSubmittedToCodefly,
       };
     }
 
     return {
       ...coreCall,
-      responseSubmittedToGemini,
+      responseSubmittedToCodefly,
     };
   });
 }

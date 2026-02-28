@@ -80,7 +80,7 @@ describe('<StatsDisplay />', () => {
   it('renders a table with two models correctly', async () => {
     const metrics = createTestMetrics({
       models: {
-        'gemini-2.5-pro': {
+        'codefly-2.5-pro': {
           api: { totalRequests: 3, totalErrors: 0, totalLatencyMs: 15000 },
           tokens: {
             input: 500,
@@ -93,7 +93,7 @@ describe('<StatsDisplay />', () => {
           },
           roles: {},
         },
-        'gemini-2.5-flash': {
+        'codefly-2.5-flash': {
           api: { totalRequests: 5, totalErrors: 1, totalLatencyMs: 4500 },
           tokens: {
             input: 15000,
@@ -113,8 +113,8 @@ describe('<StatsDisplay />', () => {
     await waitUntilReady();
     const output = lastFrame();
 
-    expect(output).toContain('gemini-2.5-pro');
-    expect(output).toContain('gemini-2.5-flash');
+    expect(output).toContain('codefly-2.5-pro');
+    expect(output).toContain('codefly-2.5-flash');
     expect(output).toContain('15,000');
     expect(output).toContain('10,000');
     expect(output).toMatchSnapshot();
@@ -123,7 +123,7 @@ describe('<StatsDisplay />', () => {
   it('renders all sections when all data is present', async () => {
     const metrics = createTestMetrics({
       models: {
-        'gemini-2.5-pro': {
+        'codefly-2.5-pro': {
           api: { totalRequests: 1, totalErrors: 0, totalLatencyMs: 100 },
           tokens: {
             input: 50,
@@ -172,7 +172,7 @@ describe('<StatsDisplay />', () => {
     expect(output).toContain('Performance');
     expect(output).toContain('Interaction Summary');
     expect(output).toContain('User Agreement');
-    expect(output).toContain('gemini-2.5-pro');
+    expect(output).toContain('codefly-2.5-pro');
     expect(output).toMatchSnapshot();
   });
 
@@ -220,7 +220,7 @@ describe('<StatsDisplay />', () => {
     it('hides Efficiency section when cache is not used', async () => {
       const metrics = createTestMetrics({
         models: {
-          'gemini-2.5-pro': {
+          'codefly-2.5-pro': {
             api: { totalRequests: 1, totalErrors: 0, totalLatencyMs: 100 },
             tokens: {
               input: 100,

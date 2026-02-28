@@ -13,6 +13,7 @@ import type {
   EmbedContentParameters,
 } from '@google/genai';
 import { appendFileSync } from 'node:fs';
+import type { LlmRole } from '../telemetry/llmRole.js';
 import type { ContentGenerator } from './contentGenerator.js';
 import type { FakeResponse } from './fakeContentGenerator.js';
 import { safeJsonStringify } from '../utils/safeJsonStringify.js';

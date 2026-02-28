@@ -80,10 +80,10 @@ class WebSearchToolInvocation extends BaseToolInvocation<
   }
 
   async execute(signal: AbortSignal): Promise<WebSearchToolResult> {
-    const geminiClient = this.config.getCodeflyClient();
+    const codeflyClient = this.config.getCodeflyClient();
 
     try {
-      const response = await geminiClient.generateContent(
+      const response = await codeflyClient.generateContent(
         { model: 'web-search' },
         [{ role: 'user', parts: [{ text: this.params.query }] }],
         signal,
@@ -187,7 +187,7 @@ class WebSearchToolInvocation extends BaseToolInvocation<
 }
 
 /**
- * A tool to perform web searches using Google Search via the Gemini API.
+ * A tool to perform web searches using Google Search via the Codefly API.
  */
 export class WebSearchTool extends BaseDeclarativeTool<
   WebSearchToolParams,

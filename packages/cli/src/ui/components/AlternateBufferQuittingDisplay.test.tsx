@@ -12,7 +12,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { AlternateBufferQuittingDisplay } from './AlternateBufferQuittingDisplay.js';
 import type { HistoryItem, HistoryItemWithoutId } from '../types.js';
 import { Text } from 'ink';
-import { CoreToolCallStatus } from '@google/gemini-cli-core';
+import { CoreToolCallStatus } from '@codeflyai/codefly-core';
 
 vi.mock('../utils/terminalSetup.js', () => ({
   getTerminalProgram: () => null,
@@ -38,8 +38,8 @@ vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
   };
 });
 
-vi.mock('../GeminiRespondingSpinner.js', () => ({
-  GeminiRespondingSpinner: () => <Text>Spinner</Text>,
+vi.mock('../CodeflyRespondingSpinner.js', () => ({
+  CodeflyRespondingSpinner: () => <Text>Spinner</Text>,
 }));
 
 const mockHistory: HistoryItem[] = [
@@ -214,11 +214,11 @@ describe('AlternateBufferQuittingDisplay', () => {
     unmount();
   });
 
-  it('renders with user and gemini messages', async () => {
+  it('renders with user and codefly messages', async () => {
     persistentStateMock.setData({ tipsShown: 0 });
     const history: HistoryItem[] = [
-      { id: 1, type: 'user', text: 'Hello Gemini' },
-      { id: 2, type: 'gemini', text: 'Hello User!' },
+      { id: 1, type: 'user', text: 'Hello Codefly' },
+      { id: 2, type: 'codefly', text: 'Hello User!' },
     ];
     const { lastFrame, waitUntilReady, unmount } = renderWithProviders(
       <AlternateBufferQuittingDisplay />,
@@ -231,7 +231,7 @@ describe('AlternateBufferQuittingDisplay', () => {
       },
     );
     await waitUntilReady();
-    expect(lastFrame()).toMatchSnapshot('with_user_gemini_messages');
+    expect(lastFrame()).toMatchSnapshot('with_user_codefly_messages');
     unmount();
   });
 });

@@ -12,6 +12,7 @@ import {
   getDisplayString,
   type RetryAttemptPayload,
 } from '@codeflyai/codefly-core';
+import type { LoadingPhrasesMode } from '../../config/settings.js';
 
 export interface UseLoadingIndicatorProps {
   streamingState: StreamingState;

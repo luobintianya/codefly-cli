@@ -23,7 +23,7 @@ export class DefaultStrategy implements TerminalStrategy {
   ): Promise<RoutingDecision> {
     const defaultModel = resolveModel(
       config.getModel(),
-      config.getGemini31LaunchedSync?.() ?? false,
+      config.getCodefly31LaunchedSync?.() ?? false,
     );
     return {
       model: defaultModel,

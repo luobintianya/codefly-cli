@@ -483,11 +483,11 @@ function getStringifiedResultForDisplay(rawResponse: Part[]): string {
 
 /** Visible for testing */
 export function generateValidName(name: string) {
-  // Replace invalid characters (based on 400 error message from Gemini API) with underscores
+  // Replace invalid characters (based on 400 error message from Codefly API) with underscores
   let validToolname = name.replace(/[^a-zA-Z0-9_.-]/g, '_');
 
   // If longer than 63 characters, replace middle with '___'
-  // (Gemini API says max length 64, but actual limit seems to be 63)
+  // (Codefly API says max length 64, but actual limit seems to be 63)
   if (validToolname.length > 63) {
     validToolname =
       validToolname.slice(0, 28) + '___' + validToolname.slice(-32);

@@ -83,6 +83,9 @@ export interface UIActions {
   setEmbeddedShellFocused: (value: boolean) => void;
   handleRestart: () => void;
   handleNewAgentsSelect: (choice: NewAgentsChoice) => Promise<void>;
+  dismissBackgroundShell: (pid: number) => void;
+  setActiveBackgroundShellPid: (pid: number | null) => void;
+  setIsBackgroundShellListOpen: (value: boolean) => void;
 }
 
 export const UIActionsContext = createContext<UIActions | null>(null);

@@ -4,13 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { promises as fs } from 'node:fs';
-import path from 'node:path';
+import path, { join } from 'node:path';
 import {
   getTaskProgressForChange,
   formatTaskStatus,
 } from '../utils/task-progress.js';
 import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
 import { MarkdownParser } from './parsers/markdown-parser.js';
 
 interface ChangeInfo {

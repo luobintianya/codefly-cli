@@ -74,8 +74,8 @@ jobs:
           GH_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
           REPOSITORY: '${{ github.repository }}'
         run: |-
-          git config user.name "gemini-cli-robot"
-          git config user.email "gemini-cli-robot@google.com"
+          git config user.name "codefly-cli-robot"
+          git config user.email "codefly-cli-robot@google.com"
           # Configure git to use GITHUB_TOKEN for remote operations (has actions:write for workflow files)
           git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${REPOSITORY}.git"
 
@@ -83,7 +83,7 @@ jobs:
         id: 'create_patch'
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
-          GH_TOKEN: '${{ secrets.GEMINI_CLI_ROBOT_GITHUB_PAT }}'
+          GH_TOKEN: '${{ secrets.CODEFLY_CLI_ROBOT_GITHUB_PAT }}'
           CLI_PACKAGE_NAME: '${{ vars.CLI_PACKAGE_NAME }}'
           PATCH_COMMIT: '${{ github.event.inputs.commit }}'
           PATCH_CHANNEL: '${{ github.event.inputs.channel }}'

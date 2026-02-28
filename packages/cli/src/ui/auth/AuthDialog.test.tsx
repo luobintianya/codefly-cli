@@ -4,7 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { act } from 'react';
+
+
 import { renderWithProviders } from '../../test-utils/render.js';
 import {
   describe,
@@ -73,9 +74,9 @@ describe('AuthDialog', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     vi.stubEnv('CLOUD_SHELL', undefined as unknown as string);
-    vi.stubEnv('GEMINI_CLI_USE_COMPUTE_ADC', undefined as unknown as string);
-    vi.stubEnv('GEMINI_DEFAULT_AUTH_TYPE', undefined as unknown as string);
-    vi.stubEnv('GEMINI_API_KEY', undefined as unknown as string);
+    vi.stubEnv('CODEFLY_CLI_USE_COMPUTE_ADC', undefined as unknown as string);
+    vi.stubEnv('CODEFLY_DEFAULT_AUTH_TYPE', undefined as unknown as string);
+    vi.stubEnv('CODEFLY_API_KEY', undefined as unknown as string);
 
     props = {
       config: {
@@ -117,10 +118,10 @@ describe('AuthDialog', () => {
         desc: 'in Cloud Shell',
       },
       {
-        env: { GEMINI_CLI_USE_COMPUTE_ADC: 'true' },
+        env: { CODEFLY_CLI_USE_COMPUTE_ADC: 'true' },
         shouldContain: [computeAdcItem(metadataServerLabel)],
         shouldNotContain: [computeAdcItem(cloudShellLabel)],
-        desc: 'with GEMINI_CLI_USE_COMPUTE_ADC',
+        desc: 'with CODEFLY_CLI_USE_COMPUTE_ADC',
       },
       {
         env: {},
@@ -154,19 +155,19 @@ describe('AuthDialog', () => {
   });
 
   it('filters auth types when enforcedType is set', async () => {
-    props.settings.merged.security.auth.enforcedType = AuthType.USE_GEMINI;
+    props.settings.merged.security.auth.enforcedType = AuthType.USE_CODEFLY;
     const { waitUntilReady, unmount } = renderWithProviders(
       <AuthDialog {...props} />,
     );
     await waitUntilReady();
     const items = mockedRadioButtonSelect.mock.calls[0][0].items;
     expect(items).toHaveLength(1);
-    expect(items[0].value).toBe(AuthType.USE_GEMINI);
+    expect(items[0].value).toBe(AuthType.USE_CODEFLY);
     unmount();
   });
 
   it('sets initial index to 0 when enforcedType is set', async () => {
-    props.settings.merged.security.auth.enforcedType = AuthType.USE_GEMINI;
+    props.settings.merged.security.auth.enforcedType = AuthType.USE_CODEFLY;
     const { waitUntilReady, unmount } = renderWithProviders(
       <AuthDialog {...props} />,
     );
@@ -188,17 +189,17 @@ describe('AuthDialog', () => {
       },
       {
         setup: () => {
-          vi.stubEnv('GEMINI_DEFAULT_AUTH_TYPE', AuthType.USE_GEMINI);
+          vi.stubEnv('CODEFLY_DEFAULT_AUTH_TYPE', AuthType.USE_CODEFLY);
         },
-        expected: AuthType.USE_GEMINI,
-        desc: 'from GEMINI_DEFAULT_AUTH_TYPE env var',
+        expected: AuthType.USE_CODEFLY,
+        desc: 'from CODEFLY_DEFAULT_AUTH_TYPE env var',
       },
       {
         setup: () => {
-          vi.stubEnv('GEMINI_API_KEY', 'test-key');
+          vi.stubEnv('CODEFLY_API_KEY', 'test-key');
         },
-        expected: AuthType.USE_GEMINI,
-        desc: 'from GEMINI_API_KEY env var',
+        expected: AuthType.USE_CODEFLY,
+        desc: 'from CODEFLY_API_KEY env var',
       },
       {
         setup: () => {},
@@ -220,16 +221,16 @@ describe('AuthDialog', () => {
   describe('handleAuthSelect', () => {
     it('calls onAuthError if validation fails', async () => {
       mockedValidateAuthMethod.mockReturnValue('Invalid method');
-      const { waitUntilReady, unmount } = renderWithProviders(
+      const { waitUntilReady } = renderWithProviders(
         <AuthDialog {...props} />,
       );
       await waitUntilReady();
       const { onSelect: handleAuthSelect } =
         mockedRadioButtonSelect.mock.calls[0][0];
-      handleAuthSelect(AuthType.USE_GEMINI);
+      handleAuthSelect(AuthType.USE_CODEFLY);
 
       expect(mockedValidateAuthMethod).toHaveBeenCalledWith(
-        AuthType.USE_GEMINI,
+        AuthType.USE_CODEFLY,
         props.settings,
       );
       expect(props.onAuthError).toHaveBeenCalledWith('Invalid method');
@@ -238,7 +239,7 @@ describe('AuthDialog', () => {
 
     it('calls onSelect with correct type', async () => {
       mockedValidateAuthMethod.mockReturnValue(null);
-      const { waitUntilReady, unmount } = renderWithProviders(
+      const { waitUntilReady } = renderWithProviders(
         <AuthDialog {...props} />,
       );
       await waitUntilReady();
@@ -249,19 +250,19 @@ describe('AuthDialog', () => {
       expect(props.onSelect).toHaveBeenCalledWith(AuthType.LOGIN_WITH_GOOGLE);
     });
 
-    it('calls onSelect for USE_GEMINI', async () => {
+    it('calls onSelect for USE_CODEFLY', async () => {
       mockedValidateAuthMethod.mockReturnValue(null);
-      vi.stubEnv('GEMINI_API_KEY', 'test-key-from-env');
+      vi.stubEnv('CODEFLY_API_KEY', 'test-key-from-env');
 
-      const { waitUntilReady, unmount } = renderWithProviders(
+      const { waitUntilReady } = renderWithProviders(
         <AuthDialog {...props} />,
       );
       await waitUntilReady();
       const { onSelect: handleAuthSelect } =
         mockedRadioButtonSelect.mock.calls[0][0];
-      await handleAuthSelect(AuthType.USE_GEMINI);
+      await handleAuthSelect(AuthType.USE_CODEFLY);
 
-      expect(props.onSelect).toHaveBeenCalledWith(AuthType.USE_GEMINI);
+      expect(props.onSelect).toHaveBeenCalledWith(AuthType.USE_CODEFLY);
     });
   });
 
@@ -302,7 +303,7 @@ describe('AuthDialog', () => {
         desc: 'calls onSelect(undefined) on escape if auth method is set',
         setup: () => {
           props.settings.merged.security.auth.selectedType =
-            AuthType.USE_GEMINI;
+            AuthType.USE_CODEFLY;
         },
         expectations: (p: typeof props) => {
           expect(p.onSelect).toHaveBeenCalledWith(undefined);
@@ -343,7 +344,7 @@ describe('AuthDialog', () => {
     });
 
     it('renders correctly with enforced auth type', async () => {
-      props.settings.merged.security.auth.enforcedType = AuthType.USE_GEMINI;
+      props.settings.merged.security.auth.enforcedType = AuthType.USE_CODEFLY;
       const { lastFrame, waitUntilReady, unmount } = renderWithProviders(
         <AuthDialog {...props} />,
       );

@@ -12,9 +12,9 @@ import { MessageType } from '../types.js';
 import { formatDuration } from '../utils/formatters.js';
 import type { Config } from '@codeflyai/codefly-core';
 
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
   const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+    await importOriginal<typeof import('@codeflyai/codefly-core')>();
   return {
     ...actual,
     UserAccountManager: vi.fn().mockImplementation(() => ({
@@ -64,7 +64,7 @@ describe('statsCommand', () => {
     const mockQuota = { buckets: [] };
     const mockRefreshUserQuota = vi.fn().mockResolvedValue(mockQuota);
     const mockGetUserTierName = vi.fn().mockReturnValue('Basic');
-    const mockGetModel = vi.fn().mockReturnValue('gemini-pro');
+    const mockGetModel = vi.fn().mockReturnValue('codefly-pro');
     const mockGetQuotaRemaining = vi.fn().mockReturnValue(85);
     const mockGetQuotaLimit = vi.fn().mockReturnValue(100);
     const mockGetQuotaResetTime = vi
@@ -87,7 +87,7 @@ describe('statsCommand', () => {
       expect.objectContaining({
         quotas: mockQuota,
         tier: 'Basic',
-        currentModel: 'gemini-pro',
+        currentModel: 'codefly-pro',
         pooledRemaining: 85,
         pooledLimit: 100,
         pooledResetTime: '2025-01-01T12:00:00Z',

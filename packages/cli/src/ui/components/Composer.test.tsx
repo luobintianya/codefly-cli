@@ -24,7 +24,8 @@ vi.mock('../contexts/VimModeContext.js', () => ({
     vimMode: 'INSERT',
   })),
 }));
-import { ApprovalMode } from '@codeflyai/codefly-core';
+import type { Config} from '@codeflyai/codefly-core';
+import { ApprovalMode, CoreToolCallStatus, tokenLimit } from '@codeflyai/codefly-core';
 import { StreamingState } from '../types.js';
 import { TransientMessageType } from '../../utils/events.js';
 import type { LoadedSettings } from '../../config/settings.js';
@@ -220,7 +221,7 @@ const createMockUIActions = (): UIActions =>
 
 const createMockConfig = (overrides = {}): Config =>
   ({
-    getModel: vi.fn(() => 'gemini-1.5-pro'),
+    getModel: vi.fn(() => 'codefly-1.5-pro'),
     getTargetDir: vi.fn(() => '/test/dir'),
     getDebugMode: vi.fn(() => false),
     getAccessibility: vi.fn(() => ({})),
@@ -310,7 +311,7 @@ describe('Composer', () => {
         },
       });
       const config = createMockConfig({
-        getModel: vi.fn(() => 'gemini-1.5-flash'),
+        getModel: vi.fn(() => 'codefly-1.5-flash'),
         getTargetDir: vi.fn(() => '/project/path'),
         getDebugMode: vi.fn(() => true),
       });
@@ -713,7 +714,7 @@ describe('Composer', () => {
     });
 
     it('shows context usage bleed-through when over 60%', async () => {
-      const model = 'gemini-2.5-pro';
+      const model = 'codefly-2.5-pro';
       const uiState = createMockUIState({
         cleanUiDetailsVisible: false,
         currentModel: model,

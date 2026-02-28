@@ -1,6 +1,6 @@
-# Gemini CLI installation, execution, and releases
+# Codefly CLI installation, execution, and releases
 
-This document provides an overview of Gemini CLI's sytem requriements,
+This document provides an overview of Codefly CLI's sytem requriements,
 installation methods, and release types.
 
 ## Recommended system specifications
@@ -15,12 +15,12 @@ installation methods, and release types.
 - **Runtime:** Node.js 20.0.0+
 - **Shell:** Bash or Zsh
 - **Location:**
-  [Gemini Code Assist supported locations](https://developers.google.com/gemini-code-assist/resources/available-locations#americas)
+  [Codefly Code Assist supported locations](https://developers.google.com/codefly-code-assist/resources/available-locations#americas)
 - **Internet connection required**
 
-## Install Gemini CLI
+## Install Codefly CLI
 
-We recommend most users install Gemini CLI using one of the following
+We recommend most users install Codefly CLI using one of the following
 installation methods:
 
 - npm
@@ -28,53 +28,53 @@ installation methods:
 - MacPorts
 - Anaconda
 
-Note that Gemini CLI comes pre-installed on
+Note that Codefly CLI comes pre-installed on
 [**Cloud Shell**](https://docs.cloud.google.com/shell/docs) and
 [**Cloud Workstations**](https://cloud.google.com/workstations).
 
 ### Install globally with npm
 
 ```bash
-npm install -g @google/gemini-cli
+npm install -g @codeflyai/codefly
 ```
 
 ### Install globally with Homebrew (macOS/Linux)
 
 ```bash
-brew install gemini-cli
+brew install codefly-cli
 ```
 
 ### Install globally with MacPorts (macOS)
 
 ```bash
-sudo port install gemini-cli
+sudo port install codefly-cli
 ```
 
 ### Install with Anaconda (for restricted environments)
 
 ```bash
 # Create and activate a new environment
-conda create -y -n gemini_env -c conda-forge nodejs
-conda activate gemini_env
+conda create -y -n codefly_env -c conda-forge nodejs
+conda activate codefly_env
 
-# Install Gemini CLI globally via npm (inside the environment)
-npm install -g @google/gemini-cli
+# Install Codefly CLI globally via npm (inside the environment)
+npm install -g @codeflyai/codefly
 ```
 
-## Run Gemini CLI
+## Run Codefly CLI
 
-For most users, we recommend running Gemini CLI with the `gemini` command:
+For most users, we recommend running Codefly CLI with the `codefly` command:
 
 ```bash
-gemini
+codefly
 ```
 
 For a list of options and additional commands, see the
 [CLI cheatsheet](/docs/cli/cli-reference.md).
 
-You can also run Gemini CLI using one of the following advanced methods:
+You can also run Codefly CLI using one of the following advanced methods:
 
-- Run instantly with npx. You can run Gemini CLI without permanent installation.
+- Run instantly with npx. You can run Codefly CLI without permanent installation.
 - In a sandbox. This method offers increased security and isolation.
 - From the source. This is recommended for contributors to the project.
 
@@ -82,19 +82,19 @@ You can also run Gemini CLI using one of the following advanced methods:
 
 ```bash
 # Using npx (no installation required)
-npx @google/gemini-cli
+npx @codeflyai/codefly
 ```
 
 You can also execute the CLI directly from the main branch on GitHub, which is
 helpful for testing features still in development:
 
 ```bash
-npx https://github.com/google-gemini/gemini-cli
+npx https://github.com/google-codefly/codefly-cli
 ```
 
 ### Run in a sandbox (Docker/Podman)
 
-For security and isolation, Gemini CLI can be run inside a container. This is
+For security and isolation, Codefly CLI can be run inside a container. This is
 the default way that the CLI executes tools that might have side effects.
 
 - **Directly from the registry:** You can run the published sandbox image
@@ -102,16 +102,16 @@ the default way that the CLI executes tools that might have side effects.
   to run the CLI.
   ```bash
   # Run the published sandbox image
-  docker run --rm -it us-docker.pkg.dev/gemini-code-dev/gemini-cli/sandbox:0.1.1
+  docker run --rm -it us-docker.pkg.dev/codefly-code-dev/codefly-cli/sandbox:0.1.1
   ```
-- **Using the `--sandbox` flag:** If you have Gemini CLI installed locally
+- **Using the `--sandbox` flag:** If you have Codefly CLI installed locally
   (using the standard installation described above), you can instruct it to run
   inside the sandbox container.
   ```bash
-  gemini --sandbox -y -p "your prompt here"
+  codefly --sandbox -y -p "your prompt here"
   ```
 
-### Run from source (recommended for Gemini CLI contributors)
+### Run from source (recommended for Codefly CLI contributors)
 
 Contributors to the project will want to run the CLI directly from the source
 code.
@@ -130,13 +130,13 @@ code.
   # Link the local cli package to your global node_modules
   npm link packages/cli
 
-  # Now you can run your local version using the `gemini` command
-  gemini
+  # Now you can run your local version using the `codefly` command
+  codefly
   ```
 
 ## Releases
 
-Gemini CLI has three release channels: nightly, preview, and stable. For most
+Codefly CLI has three release channels: nightly, preview, and stable. For most
 users, we recommend the stable release, which is the default installation.
 
 ### Stable
@@ -148,8 +148,8 @@ by default:
 
 ```bash
 # Both commands install the latest stable release.
-npm install -g @google/gemini-cli
-npm install -g @google/gemini-cli@latest
+npm install -g @codeflyai/codefly
+npm install -g @codeflyai/codefly@latest
 ```
 
 ### Preview
@@ -159,7 +159,7 @@ vetted and may contain regressions or other outstanding issues. Try out the
 preview release by using the `preview` tag:
 
 ```bash
-npm install -g @google/gemini-cli@preview
+npm install -g @codeflyai/codefly@preview
 ```
 
 ### Nightly
@@ -170,5 +170,5 @@ pending validations and issues. You can help test the latest changes by
 installing with the `nightly` tag:
 
 ```bash
-npm install -g @google/gemini-cli@nightly
+npm install -g @codeflyai/codefly@nightly
 ```

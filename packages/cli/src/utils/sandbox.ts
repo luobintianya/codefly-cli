@@ -129,8 +129,8 @@ export async function start_sandbox(
           ...finalArgv.map((arg) => quote([arg])),
         ].join(' '),
       );
-      // start and set up proxy if GEMINI_SANDBOX_PROXY_COMMAND is set
-      const proxyCommand = process.env['GEMINI_SANDBOX_PROXY_COMMAND'];
+      // start and set up proxy if CODEFLY_SANDBOX_PROXY_COMMAND is set
+      const proxyCommand = process.env['CODEFLY_SANDBOX_PROXY_COMMAND'];
       let proxyProcess: ChildProcess | undefined = undefined;
       let sandboxProcess: ChildProcess | undefined = undefined;
       const sandboxEnv = { ...process.env };
@@ -205,7 +205,7 @@ export async function start_sandbox(
 
     debugLogger.log(`hopping into sandbox (command: ${config.command}) ...`);
 
-    // determine full path for gemini-cli to distinguish linked vs installed setting
+    // determine full path for codefly-cli to distinguish linked vs installed setting
     const gcPath = process.argv[1] ? fs.realpathSync(process.argv[1]) : '';
 
     const projectSandboxDockerfile = path.join(
@@ -218,14 +218,14 @@ export async function start_sandbox(
     const workdir = path.resolve(process.cwd());
     const containerWorkdir = getContainerPath(workdir);
 
-    // if BUILD_SANDBOX is set, then call scripts/build_sandbox.js under gemini-cli repo
+    // if BUILD_SANDBOX is set, then call scripts/build_sandbox.js under codefly-cli repo
     //
-    // note this can only be done with binary linked from gemini-cli repo
+    // note this can only be done with binary linked from codefly-cli repo
     if (process.env['BUILD_SANDBOX']) {
-      if (!gcPath.includes('gemini-cli/packages/')) {
+      if (!gcPath.includes('codefly-cli/packages/')) {
         throw new FatalSandboxError(
-          'Cannot build sandbox using installed gemini binary; ' +
-            'run `npm link ./packages/cli` under gemini-cli repo to switch to linked binary.',
+          'Cannot build sandbox using installed codefly binary; ' +
+            'run `npm link ./packages/cli` under codefly-cli repo to switch to linked binary.',
         );
       } else {
         debugLogger.log('building sandbox ...');
@@ -246,7 +246,7 @@ export async function start_sandbox(
             stdio: 'inherit',
             env: {
               ...process.env,
-              GEMINI_SANDBOX: config.command, // in case sandbox is enabled via flags (see config.ts under cli package)
+              CODEFLY_SANDBOX: config.command, // in case sandbox is enabled via flags (see config.ts under cli package)
             },
           },
         );
@@ -259,8 +259,8 @@ export async function start_sandbox(
     ) {
       const remedy =
         image === LOCAL_DEV_SANDBOX_IMAGE_NAME
-          ? 'Try running `npm run build:all` or `npm run build:sandbox` under the gemini-cli repo to build it locally, or check the image name and your network connection.'
-          : 'Please check the image name, your network connection, or notify gemini-cli-dev@google.com if the issue persists.';
+          ? 'Try running `npm run build:all` or `npm run build:sandbox` under the codefly-cli repo to build it locally, or check the image name and your network connection.'
+          : 'Please check the image name, your network connection, or notify codefly-cli-dev@google.com if the issue persists.';
       throw new FatalSandboxError(
         `Sandbox image '${image}' is missing or could not be pulled. ${remedy}`,
       );
@@ -384,8 +384,8 @@ export async function start_sandbox(
 
     // copy proxy environment variables, replacing localhost with SANDBOX_PROXY_NAME
     // copy as both upper-case and lower-case as is required by some utilities
-    // GEMINI_SANDBOX_PROXY_COMMAND implies HTTPS_PROXY unless HTTP_PROXY is set
-    const proxyCommand = process.env['GEMINI_SANDBOX_PROXY_COMMAND'];
+    // CODEFLY_SANDBOX_PROXY_COMMAND implies HTTPS_PROXY unless HTTP_PROXY is set
+    const proxyCommand = process.env['CODEFLY_SANDBOX_PROXY_COMMAND'];
 
     if (proxyCommand) {
       let proxy =
@@ -427,10 +427,10 @@ export async function start_sandbox(
     // name container after image, plus random suffix to avoid conflicts
     const imageName = parseImageName(image);
     const isIntegrationTest =
-      process.env['GEMINI_CLI_INTEGRATION_TEST'] === 'true';
+      process.env['CODEFLY_CLI_INTEGRATION_TEST'] === 'true';
     let containerName;
     if (isIntegrationTest) {
-      containerName = `gemini-cli-integration-test-${randomBytes(4).toString(
+      containerName = `codefly-cli-integration-test-${randomBytes(4).toString(
         'hex',
       )}`;
       debugLogger.log(`ContainerName: ${containerName}`);
@@ -447,27 +447,27 @@ export async function start_sandbox(
     }
     args.push('--name', containerName, '--hostname', containerName);
 
-    // copy GEMINI_CLI_TEST_VAR for integration tests
-    if (process.env['GEMINI_CLI_TEST_VAR']) {
+    // copy CODEFLY_CLI_TEST_VAR for integration tests
+    if (process.env['CODEFLY_CLI_TEST_VAR']) {
       args.push(
         '--env',
-        `GEMINI_CLI_TEST_VAR=${process.env['GEMINI_CLI_TEST_VAR']}`,
+        `CODEFLY_CLI_TEST_VAR=${process.env['CODEFLY_CLI_TEST_VAR']}`,
       );
     }
 
-    // copy GEMINI_API_KEY(s)
-    if (process.env['GEMINI_API_KEY']) {
-      args.push('--env', `GEMINI_API_KEY=${process.env['GEMINI_API_KEY']}`);
+    // copy CODEFLY_API_KEY(s)
+    if (process.env['CODEFLY_API_KEY']) {
+      args.push('--env', `CODEFLY_API_KEY=${process.env['CODEFLY_API_KEY']}`);
     }
     if (process.env['GOOGLE_API_KEY']) {
       args.push('--env', `GOOGLE_API_KEY=${process.env['GOOGLE_API_KEY']}`);
     }
 
-    // copy GOOGLE_GEMINI_BASE_URL and GOOGLE_VERTEX_BASE_URL
-    if (process.env['GOOGLE_GEMINI_BASE_URL']) {
+    // copy GOOGLE_CODEFLY_BASE_URL and GOOGLE_VERTEX_BASE_URL
+    if (process.env['GOOGLE_CODEFLY_BASE_URL']) {
       args.push(
         '--env',
-        `GOOGLE_GEMINI_BASE_URL=${process.env['GOOGLE_GEMINI_BASE_URL']}`,
+        `GOOGLE_CODEFLY_BASE_URL=${process.env['GOOGLE_CODEFLY_BASE_URL']}`,
       );
     }
     if (process.env['GOOGLE_VERTEX_BASE_URL']) {
@@ -509,9 +509,9 @@ export async function start_sandbox(
       );
     }
 
-    // copy GEMINI_MODEL
-    if (process.env['GEMINI_MODEL']) {
-      args.push('--env', `GEMINI_MODEL=${process.env['GEMINI_MODEL']}`);
+    // copy CODEFLY_MODEL
+    if (process.env['CODEFLY_MODEL']) {
+      args.push('--env', `CODEFLY_MODEL=${process.env['CODEFLY_MODEL']}`);
     }
 
     // copy TERM and COLORTERM to try to maintain terminal setup
@@ -524,8 +524,8 @@ export async function start_sandbox(
 
     // Pass through IDE mode environment variables
     for (const envVar of [
-      'GEMINI_CLI_IDE_SERVER_PORT',
-      'GEMINI_CLI_IDE_WORKSPACE_PATH',
+      'CODEFLY_CLI_IDE_SERVER_PORT',
+      'CODEFLY_CLI_IDE_WORKSPACE_PATH',
       'TERM_PROGRAM',
     ]) {
       if (process.env[envVar]) {
@@ -598,7 +598,7 @@ export async function start_sandbox(
     let userFlag = '';
     const finalEntrypoint = entrypoint(workdir, cliArgs);
 
-    if (process.env['GEMINI_CLI_INTEGRATION_TEST'] === 'true') {
+    if (process.env['CODEFLY_CLI_INTEGRATION_TEST'] === 'true') {
       args.push('--user', 'root');
       userFlag = '--user root';
     } else if (await shouldUseCurrentUserInSandbox()) {
@@ -611,7 +611,7 @@ export async function start_sandbox(
 
       // Instead of passing --user to the main sandbox container, we let it
       // start as root, then create a user with the host's UID/GID, and
-      // finally switch to that user to run the gemini process. This is
+      // finally switch to that user to run the codefly process. This is
       // necessary on Linux to ensure the user exists within the
       // container's /etc/passwd file, which is required by os.userInfo().
       const username = 'codefly';
@@ -645,7 +645,7 @@ export async function start_sandbox(
     // push container entrypoint (including args)
     args.push(...finalEntrypoint);
 
-    // start and set up proxy if GEMINI_SANDBOX_PROXY_COMMAND is set
+    // start and set up proxy if CODEFLY_SANDBOX_PROXY_COMMAND is set
     let proxyProcess: ChildProcess | undefined = undefined;
     let sandboxProcess: ChildProcess | undefined = undefined;
 

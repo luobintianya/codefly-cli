@@ -18,12 +18,12 @@ import stripAnsi from 'strip-ansi';
 import * as os from 'node:os';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const BUNDLE_PATH = join(__dirname, '..', '..', '..', 'bundle/gemini.js');
+const BUNDLE_PATH = join(__dirname, '..', '..', '..', 'bundle/codefly.js');
 
 // Get timeout based on environment
 export function getDefaultTimeout() {
   if (env['CI']) return 60000; // 1 minute in CI
-  if (env['GEMINI_SANDBOX']) return 30000; // 30s in containers
+  if (env['CODEFLY_SANDBOX']) return 30000; // 30s in containers
   return 15000; // 15s locally
 }
 
@@ -359,7 +359,7 @@ export class TestRig {
     this.testName = testName;
     const sanitizedName = sanitizeTestName(testName);
     const testFileDir =
-      env['INTEGRATION_TEST_FILE_DIR'] || join(os.tmpdir(), 'gemini-cli-tests');
+      env['INTEGRATION_TEST_FILE_DIR'] || join(os.tmpdir(), 'codefly-cli-tests');
     this.testDir = join(testFileDir, sanitizedName);
     this.homeDir = join(testFileDir, sanitizedName + '-home');
 
@@ -415,11 +415,11 @@ export class TestRig {
   }
 
   private _createSettingsFile(overrideSettings?: Record<string, unknown>) {
-    const projectGeminiDir = join(this.testDir!, CODEFLY_DIR);
-    mkdirSync(projectGeminiDir, { recursive: true });
+    const projectCodeflyDir = join(this.testDir!, CODEFLY_DIR);
+    mkdirSync(projectCodeflyDir, { recursive: true });
 
-    const userGeminiDir = join(this.homeDir!, CODEFLY_DIR);
-    mkdirSync(userGeminiDir, { recursive: true });
+    const userCodeflyDir = join(this.homeDir!, CODEFLY_DIR);
+    mkdirSync(userCodeflyDir, { recursive: true });
 
     // In sandbox mode, use an absolute path for telemetry inside the container
     // The container mounts the test directory at the same path as the host
@@ -440,7 +440,7 @@ export class TestRig {
         },
         security: {
           auth: {
-            selectedType: 'gemini-api-key',
+            selectedType: 'codefly-api-key',
           },
           folderTrust: {
             enabled: false,
@@ -449,7 +449,7 @@ export class TestRig {
         ui: {
           useAlternateBuffer: true,
         },
-        ...(env['GEMINI_TEST_TYPE'] === 'integration'
+        ...(env['CODEFLY_TEST_TYPE'] === 'integration'
           ? {
               model: {
                 name: DEFAULT_CODEFLY_MODEL,
@@ -461,18 +461,18 @@ export class TestRig {
               },
             }),
         sandbox:
-          env['GEMINI_SANDBOX'] !== 'false' ? env['GEMINI_SANDBOX'] : false,
+          env['CODEFLY_SANDBOX'] !== 'false' ? env['CODEFLY_SANDBOX'] : false,
         // Don't show the IDE connection dialog when running from VsCode
         ide: { enabled: false, hasSeenNudge: true },
       },
       overrideSettings || {},
     );
     writeFileSync(
-      join(projectGeminiDir, 'settings.json'),
+      join(projectCodeflyDir, 'settings.json'),
       JSON.stringify(settings, null, 2),
     );
     writeFileSync(
-      join(userGeminiDir, 'settings.json'),
+      join(userCodeflyDir, 'settings.json'),
       JSON.stringify(settings, null, 2),
     );
   }
@@ -495,17 +495,17 @@ export class TestRig {
 
   /**
    * The command and args to use to invoke Codefly CLI. Allows us to switch
-   * between using the bundled gemini.js (the default) and using the installed
-   * 'gemini' (used to verify npm bundles).
+   * between using the bundled codefly.js (the default) and using the installed
+   * 'codefly' (used to verify npm bundles).
    */
   private _getCommandAndArgs(extraInitialArgs: string[] = []): {
     command: string;
     initialArgs: string[];
   } {
     const isNpmReleaseTest =
-      env['INTEGRATION_TEST_USE_INSTALLED_GEMINI'] === 'true';
-    const geminiCommand = os.platform() === 'win32' ? 'gemini.cmd' : 'gemini';
-    const command = isNpmReleaseTest ? geminiCommand : 'node';
+      env['INTEGRATION_TEST_USE_INSTALLED_CODEFLY'] === 'true';
+    const codeflyCommand = os.platform() === 'win32' ? 'codefly.cmd' : 'codefly';
+    const command = isNpmReleaseTest ? codeflyCommand : 'node';
     const initialArgs = isNpmReleaseTest
       ? extraInitialArgs
       : [BUNDLE_PATH, ...extraInitialArgs];
@@ -535,18 +535,18 @@ export class TestRig {
   ): Record<string, string | undefined> {
     const cleanEnv: Record<string, string | undefined> = { ...process.env };
 
-    // Clear all GEMINI_ environment variables that might interfere with tests
+    // Clear all CODEFLY_ environment variables that might interfere with tests
     // except for those we explicitly want to keep or set.
     for (const key of Object.keys(cleanEnv)) {
       if (
-        (key.startsWith('GEMINI_') || key.startsWith('GOOGLE_GEMINI_')) &&
-        key !== 'GEMINI_API_KEY' &&
+        (key.startsWith('CODEFLY_') || key.startsWith('GOOGLE_CODEFLY_')) &&
+        key !== 'CODEFLY_API_KEY' &&
         key !== 'GOOGLE_API_KEY' &&
-        key !== 'GEMINI_MODEL' &&
-        key !== 'GEMINI_DEBUG' &&
-        key !== 'GEMINI_CLI_TEST_VAR' &&
-        key !== 'GEMINI_CLI_INTEGRATION_TEST' &&
-        !key.startsWith('GEMINI_CLI_ACTIVITY_LOG')
+        key !== 'CODEFLY_MODEL' &&
+        key !== 'CODEFLY_DEBUG' &&
+        key !== 'CODEFLY_CLI_TEST_VAR' &&
+        key !== 'CODEFLY_CLI_INTEGRATION_TEST' &&
+        !key.startsWith('CODEFLY_CLI_ACTIVITY_LOG')
       ) {
         delete cleanEnv[key];
       }
@@ -554,8 +554,8 @@ export class TestRig {
 
     return {
       ...cleanEnv,
-      GEMINI_CLI_HOME: this.homeDir!,
-      GEMINI_PTY_INFO: 'child_process',
+      CODEFLY_CLI_HOME: this.homeDir!,
+      CODEFLY_PTY_INFO: 'child_process',
       ...extraEnv,
     };
   }
@@ -678,7 +678,7 @@ export class TestRig {
   }
 
   private _filterPodmanTelemetry(stdout: string): string {
-    if (env['GEMINI_SANDBOX'] !== 'podman') {
+    if (env['CODEFLY_SANDBOX'] !== 'podman') {
       return stdout;
     }
 
@@ -959,7 +959,7 @@ export class TestRig {
         return logs.some(
           (logData) =>
             logData.attributes &&
-            logData.attributes['event.name'] === `gemini_cli.${eventName}`,
+            logData.attributes['event.name'] === `codefly_cli.${eventName}`,
         );
       },
       timeout,
@@ -1159,7 +1159,7 @@ export class TestRig {
                 }
               } else if (
                 obj.attributes &&
-                obj.attributes['event.name'] === 'gemini_cli.tool_call'
+                obj.attributes['event.name'] === 'codefly_cli.tool_call'
               ) {
                 logs.push({
                   timestamp: obj.attributes['event.timestamp'],
@@ -1226,7 +1226,7 @@ export class TestRig {
   readToolLogs() {
     // For Podman, first check if telemetry file exists and has content
     // If not, fall back to parsing from stdout
-    if (env['GEMINI_SANDBOX'] === 'podman') {
+    if (env['CODEFLY_SANDBOX'] === 'podman') {
       // Try reading from file first
       const logFilePath = join(this.homeDir!, 'telemetry.log');
 
@@ -1269,7 +1269,7 @@ export class TestRig {
       // Look for tool call logs
       if (
         logData.attributes &&
-        logData.attributes['event.name'] === 'gemini_cli.tool_call'
+        logData.attributes['event.name'] === 'codefly_cli.tool_call'
       ) {
         const toolName = logData.attributes.function_name!;
         logs.push({
@@ -1294,7 +1294,7 @@ export class TestRig {
     const apiRequests = logs.filter(
       (logData) =>
         logData.attributes &&
-        logData.attributes['event.name'] === `gemini_cli.api_request`,
+        logData.attributes['event.name'] === `codefly_cli.api_request`,
     );
     return apiRequests;
   }
@@ -1304,7 +1304,7 @@ export class TestRig {
     const apiRequests = logs.filter(
       (logData) =>
         logData.attributes &&
-        logData.attributes['event.name'] === `gemini_cli.api_request`,
+        logData.attributes['event.name'] === `codefly_cli.api_request`,
     );
     return apiRequests.pop() || null;
   }
@@ -1312,9 +1312,9 @@ export class TestRig {
   async waitForMetric(metricName: string, timeout?: number) {
     await this.waitForTelemetryReady();
 
-    const fullName = metricName.startsWith('gemini_cli.')
+    const fullName = metricName.startsWith('codefly_cli.')
       ? metricName
-      : `gemini_cli.${metricName}`;
+      : `codefly_cli.${metricName}`;
 
     return poll(
       () => {
@@ -1343,7 +1343,7 @@ export class TestRig {
       if (logData.scopeMetrics) {
         for (const scopeMetric of logData.scopeMetrics) {
           for (const metric of scopeMetric.metrics) {
-            if (metric.descriptor.name === `gemini_cli.${metricName}`) {
+            if (metric.descriptor.name === `codefly_cli.${metricName}`) {
               return metric;
             }
           }
@@ -1424,7 +1424,7 @@ export class TestRig {
       // Look for tool call logs
       if (
         logData.attributes &&
-        logData.attributes['event.name'] === 'gemini_cli.hook_call'
+        logData.attributes['event.name'] === 'codefly_cli.hook_call'
       ) {
         logs.push({
           hookCall: {

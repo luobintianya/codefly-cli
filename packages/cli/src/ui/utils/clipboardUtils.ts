@@ -15,8 +15,8 @@ import {
 } from '@codeflyai/codefly-core';
 
 /**
- * Supported image file extensions based on Gemini API.
- * See: https://ai.google.dev/gemini-api/docs/image-understanding
+ * Supported image file extensions based on Codefly API.
+ * See: https://ai.google.dev/codefly-api/docs/image-understanding
  */
 export const IMAGE_EXTENSIONS = [
   '.png',

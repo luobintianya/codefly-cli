@@ -483,6 +483,8 @@ const configProxy = new Proxy({} as Config, {
   },
 });
 
+export { createMockSettings } from './settings.js';
+
 export const mockSettings = new LoadedSettings(
   { path: '', settings: {}, originalSettings: {} },
   { path: '', settings: {}, originalSettings: {} },
@@ -499,7 +501,7 @@ const baseMockUiState = {
   streamingState: StreamingState.Idle,
   terminalWidth: 100,
   terminalHeight: 40,
-  currentModel: 'gemini-pro',
+  currentModel: 'codefly-pro',
   terminalBackgroundColor: 'black',
   cleanUiDetailsVisible: false,
   allowPlanMode: true,
@@ -566,6 +568,9 @@ const mockUIActions: UIActions = {
   setEmbeddedShellFocused: vi.fn(),
   handleRestart: vi.fn(),
   handleNewAgentsSelect: vi.fn(),
+  dismissBackgroundShell: vi.fn(),
+  setActiveBackgroundShellPid: vi.fn(),
+  setIsBackgroundShellListOpen: vi.fn(),
 };
 
 let capturedOverflowState: OverflowState | undefined;

@@ -19,7 +19,7 @@ import type {
   ChatRecordingService,
   CodeflyClient,
 } from '@codeflyai/codefly-core';
-import { coreEvents, debugLogger } from '@codeflyai/codefly-core';
+import { checkExhaustive, convertSessionToClientHistory, coreEvents, debugLogger, logRewind, RewindEvent } from '@codeflyai/codefly-core';
 
 /**
  * Helper function to handle the core logic of rewinding a conversation.
@@ -27,7 +27,7 @@ import { coreEvents, debugLogger } from '@codeflyai/codefly-core';
  * update the client and UI history, and clear the component.
  *
  * @param context The command context.
- * @param client Gemini client
+ * @param client Codefly client
  * @param recordingService The chat recording service.
  * @param messageId The ID of the message to rewind to.
  * @param newText The new text for the input field after rewinding.

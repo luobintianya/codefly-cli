@@ -1,6 +1,6 @@
 # Subagents (experimental)
 
-Subagents are specialized agents that operate within your main Gemini CLI
+Subagents are specialized agents that operate within your main Codefly CLI
 session. They are designed to handle specific, complex tasks—like deep codebase
 analysis, documentation lookup, or domain-specific reasoning—without cluttering
 the main agent's context or toolset.
@@ -24,7 +24,7 @@ the main agent's context or toolset.
 
 ## What are subagents?
 
-Subagents are "specialists" that the main Gemini agent can hire for a specific
+Subagents are "specialists" that the main Codefly agent can hire for a specific
 job.
 
 - **Focused context:** Each subagent has its own system prompt and persona.
@@ -40,7 +40,7 @@ findings.
 
 ## Built-in subagents
 
-Gemini CLI comes with the following built-in subagents:
+Codefly CLI comes with the following built-in subagents:
 
 ### Codebase Investigator
 
@@ -57,7 +57,7 @@ Gemini CLI comes with the following built-in subagents:
       "codebaseInvestigatorSettings": {
         "enabled": true,
         "maxNumTurns": 20,
-        "model": "gemini-2.5-pro"
+        "model": "codefly-2.5-pro"
       }
     }
   }
@@ -66,7 +66,7 @@ Gemini CLI comes with the following built-in subagents:
 ### CLI Help Agent
 
 - **Name:** `cli_help`
-- **Purpose:** Get expert knowledge about Gemini CLI itself, its commands,
+- **Purpose:** Get expert knowledge about Codefly CLI itself, its commands,
   configuration, and documentation.
 - **When to use:** "How do I configure a proxy?", "What does the `/rewind`
   command do?"
@@ -141,7 +141,7 @@ The available modes are:
 
 | Mode         | Description                                                                                                                                                                                 |
 | :----------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `persistent` | **(Default)** Launches Chrome with a persistent profile stored at `~/.gemini/cli-browser-profile/`. Cookies, history, and settings are preserved between sessions.                          |
+| `persistent` | **(Default)** Launches Chrome with a persistent profile stored at `~/.codefly/cli-browser-profile/`. Cookies, history, and settings are preserved between sessions.                          |
 | `isolated`   | Launches Chrome with a temporary profile that is deleted after each session. Use this for clean-state automation.                                                                           |
 | `existing`   | Attaches to an already-running Chrome instance. You must enable remote debugging first by navigating to `chrome://inspect/#remote-debugging` in Chrome. No new browser process is launched. |
 
@@ -154,7 +154,7 @@ All browser-specific settings go under `agents.browser` in your `settings.json`.
 | `sessionMode` | `string`  | `"persistent"` | How Chrome is managed: `"persistent"`, `"isolated"`, or `"existing"`.                           |
 | `headless`    | `boolean` | `false`        | Run Chrome in headless mode (no visible window).                                                |
 | `profilePath` | `string`  | —              | Custom path to a browser profile directory.                                                     |
-| `visualModel` | `string`  | —              | Model override for the visual agent (for example, `"gemini-2.5-computer-use-preview-10-2025"`). |
+| `visualModel` | `string`  | —              | Model override for the visual agent (for example, `"codefly-2.5-computer-use-preview-10-2025"`). |
 
 #### Security
 
@@ -182,7 +182,7 @@ can enable the visual agent by setting a `visualModel`:
       }
     },
     "browser": {
-      "visualModel": "gemini-2.5-computer-use-preview-10-2025"
+      "visualModel": "codefly-2.5-computer-use-preview-10-2025"
     }
   }
 }
@@ -215,15 +215,15 @@ specific personas. To use custom subagents, you must enable them in your
 Custom agents are defined as Markdown files (`.md`) with YAML frontmatter. You
 can place them in:
 
-1.  **Project-level:** `.gemini/agents/*.md` (Shared with your team)
-2.  **User-level:** `~/.gemini/agents/*.md` (Personal agents)
+1.  **Project-level:** `.codefly/agents/*.md` (Shared with your team)
+2.  **User-level:** `~/.codefly/agents/*.md` (Personal agents)
 
 ### File format
 
 The file **MUST** start with YAML frontmatter enclosed in triple-dashes `---`.
 The body of the markdown file becomes the agent's **System Prompt**.
 
-**Example: `.gemini/agents/security-auditor.md`**
+**Example: `.codefly/agents/security-auditor.md`**
 
 ```markdown
 ---
@@ -233,7 +233,7 @@ kind: local
 tools:
   - read_file
   - grep_search
-model: gemini-2.5-pro
+model: codefly-2.5-pro
 temperature: 0.2
 max_turns: 10
 ---
@@ -260,7 +260,7 @@ it yourself; just report it.
 | `description`  | string | Yes      | Short description of what the agent does. This is visible to the main agent to help it decide when to call this subagent. |
 | `kind`         | string | No       | `local` (default) or `remote`.                                                                                            |
 | `tools`        | array  | No       | List of tool names this agent can use. If omitted, it may have access to a default set.                                   |
-| `model`        | string | No       | Specific model to use (e.g., `gemini-2.5-pro`). Defaults to `inherit` (uses the main session model).                      |
+| `model`        | string | No       | Specific model to use (e.g., `codefly-2.5-pro`). Defaults to `inherit` (uses the main session model).                      |
 | `temperature`  | number | No       | Model temperature (0.0 - 2.0).                                                                                            |
 | `max_turns`    | number | No       | Maximum number of conversation turns allowed for this agent before it must return. Defaults to `15`.                      |
 | `timeout_mins` | number | No       | Maximum execution time in minutes. Defaults to `5`.                                                                       |
@@ -292,7 +292,7 @@ that your subagent was called with a specific prompt and the given description.
 
 ## Remote subagents (Agent2Agent) (experimental)
 
-Gemini CLI can also delegate tasks to remote subagents using the Agent-to-Agent
+Codefly CLI can also delegate tasks to remote subagents using the Agent-to-Agent
 (A2A) protocol.
 
 > **Note: Remote subagents are currently an experimental feature.**

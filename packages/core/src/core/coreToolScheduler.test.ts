@@ -2026,7 +2026,7 @@ describe('CoreToolScheduler Sequential Execution', () => {
     let completionCallCount = 0;
     const onAllToolCallsComplete = vi.fn().mockImplementation(async () => {
       completionCallCount++;
-      // Simulate slow reporting (e.g. Gemini API call)
+      // Simulate slow reporting (e.g. Codefly API call)
       await new Promise((resolve) => setTimeout(resolve, 50));
     });
 

@@ -21,7 +21,7 @@ export const clearCommand: SlashCommand = {
   kind: CommandKind.BUILT_IN,
   autoExecute: true,
   action: async (context, _args) => {
-    const geminiClient = context.services.config?.getCodeflyClient();
+    const codeflyClient = context.services.config?.getCodeflyClient();
     const config = context.services.config;
     const chatRecordingService = context.services.config
       ?.getCodeflyClient()
@@ -34,11 +34,11 @@ export const clearCommand: SlashCommand = {
       await hookSystem.fireSessionEndEvent(SessionEndReason.Clear);
     }
 
-    if (geminiClient) {
+    if (codeflyClient) {
       context.ui.setDebugMessage('Clearing terminal and resetting chat.');
       // If resetChat fails, the exception will propagate and halt the command,
       // which is the correct behavior to signal a failure to the user.
-      await geminiClient.resetChat();
+      await codeflyClient.resetChat();
     } else {
       context.ui.setDebugMessage('Clearing terminal.');
     }

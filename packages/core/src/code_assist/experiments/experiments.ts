@@ -30,9 +30,9 @@ export async function getExperiments(
   }
 
   experimentsPromise = (async () => {
-    if (process.env['GEMINI_EXP']) {
+    if (process.env['CODEFLY_EXP']) {
       try {
-        const expPath = process.env['GEMINI_EXP'];
+        const expPath = process.env['CODEFLY_EXP'];
         debugLogger.debug('Reading experiments from', expPath);
         const content = await fs.promises.readFile(expPath, 'utf8');
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -47,7 +47,7 @@ export async function getExperiments(
         }
         return parseExperiments(response);
       } catch (e) {
-        debugLogger.debug('Failed to read experiments from GEMINI_EXP', e);
+        debugLogger.debug('Failed to read experiments from CODEFLY_EXP', e);
       }
     }
 

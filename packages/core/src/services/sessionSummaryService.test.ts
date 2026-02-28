@@ -54,7 +54,7 @@ describe('SessionSummaryService', () => {
         {
           id: '2',
           timestamp: '2025-12-03T00:01:00Z',
-          type: 'gemini',
+          type: 'codefly',
           content: [
             {
               text: 'To add dark mode, you need to create a theme provider and toggle state...',
@@ -103,7 +103,7 @@ describe('SessionSummaryService', () => {
         {
           id: '2',
           timestamp: '2025-12-03T00:01:00Z',
-          type: 'gemini',
+          type: 'codefly',
           content: [{ text: '' }],
         },
       ];
@@ -118,7 +118,7 @@ describe('SessionSummaryService', () => {
       const messages: MessageRecord[] = Array.from({ length: 30 }, (_, i) => ({
         id: `${i}`,
         timestamp: '2025-12-03T00:00:00Z',
-        type: i % 2 === 0 ? ('user' as const) : ('gemini' as const),
+        type: i % 2 === 0 ? ('user' as const) : ('codefly' as const),
         content: [{ text: `Message ${i}` }],
       }));
 
@@ -135,7 +135,7 @@ describe('SessionSummaryService', () => {
   });
 
   describe('Message Type Filtering', () => {
-    it('should include only user and gemini messages', async () => {
+    it('should include only user and codefly messages', async () => {
       const messages: MessageRecord[] = [
         {
           id: '1',
@@ -146,8 +146,8 @@ describe('SessionSummaryService', () => {
         {
           id: '2',
           timestamp: '2025-12-03T00:01:00Z',
-          type: 'gemini',
-          content: [{ text: 'Gemini response' }],
+          type: 'codefly',
+          content: [{ text: 'Codefly response' }],
         },
       ];
 
@@ -158,7 +158,7 @@ describe('SessionSummaryService', () => {
       const promptText = callArgs.contents[0].parts[0].text;
 
       expect(promptText).toContain('User: User message');
-      expect(promptText).toContain('Assistant: Gemini response');
+      expect(promptText).toContain('Assistant: Codefly response');
     });
 
     it('should exclude info messages', async () => {
@@ -178,8 +178,8 @@ describe('SessionSummaryService', () => {
         {
           id: '3',
           timestamp: '2025-12-03T00:02:00Z',
-          type: 'gemini',
-          content: [{ text: 'Gemini response' }],
+          type: 'codefly',
+          content: [{ text: 'Codefly response' }],
         },
       ];
 
@@ -190,7 +190,7 @@ describe('SessionSummaryService', () => {
       const promptText = callArgs.contents[0].parts[0].text;
 
       expect(promptText).toContain('User: User message');
-      expect(promptText).toContain('Assistant: Gemini response');
+      expect(promptText).toContain('Assistant: Codefly response');
       expect(promptText).not.toContain('Info message');
     });
 
@@ -211,8 +211,8 @@ describe('SessionSummaryService', () => {
         {
           id: '3',
           timestamp: '2025-12-03T00:02:00Z',
-          type: 'gemini',
-          content: [{ text: 'Gemini response' }],
+          type: 'codefly',
+          content: [{ text: 'Codefly response' }],
         },
       ];
 
@@ -242,8 +242,8 @@ describe('SessionSummaryService', () => {
         {
           id: '3',
           timestamp: '2025-12-03T00:02:00Z',
-          type: 'gemini',
-          content: [{ text: 'Gemini response' }],
+          type: 'codefly',
+          content: [{ text: 'Codefly response' }],
         },
       ];
 
@@ -279,8 +279,8 @@ describe('SessionSummaryService', () => {
         {
           id: '4',
           timestamp: '2025-12-03T00:03:00Z',
-          type: 'gemini',
-          content: [{ text: 'Gemini answer' }],
+          type: 'codefly',
+          content: [{ text: 'Codefly answer' }],
         },
         {
           id: '5',
@@ -297,7 +297,7 @@ describe('SessionSummaryService', () => {
       const promptText = callArgs.contents[0].parts[0].text;
 
       expect(promptText).toContain('User: User question');
-      expect(promptText).toContain('Assistant: Gemini answer');
+      expect(promptText).toContain('Assistant: Codefly answer');
       expect(promptText).not.toContain('System info');
       expect(promptText).not.toContain('Error occurred');
       expect(promptText).not.toContain('Warning message');
@@ -511,7 +511,7 @@ describe('SessionSummaryService', () => {
         {
           id: '2',
           timestamp: '2025-12-03T00:01:00Z',
-          type: 'gemini',
+          type: 'codefly',
           content: [{ text: 'Response' }],
         },
       ];
@@ -538,7 +538,7 @@ describe('SessionSummaryService', () => {
         {
           id: '2',
           timestamp: '2025-12-03T00:01:00Z',
-          type: 'gemini',
+          type: 'codefly',
           content: [
             {
               text: 'Here is a detailed explanation...',
@@ -564,7 +564,7 @@ describe('SessionSummaryService', () => {
       const messages = Array.from({ length: 5 }, (_, i) => ({
         id: `${i}`,
         timestamp: '2025-12-03T00:00:00Z',
-        type: i % 2 === 0 ? ('user' as const) : ('gemini' as const),
+        type: i % 2 === 0 ? ('user' as const) : ('codefly' as const),
         content: [{ text: `Message ${i}` }],
       }));
 
@@ -581,7 +581,7 @@ describe('SessionSummaryService', () => {
       const messages = Array.from({ length: 50 }, (_, i) => ({
         id: `${i}`,
         timestamp: '2025-12-03T00:00:00Z',
-        type: i % 2 === 0 ? ('user' as const) : ('gemini' as const),
+        type: i % 2 === 0 ? ('user' as const) : ('codefly' as const),
         content: [{ text: `Message ${i}` }],
       }));
 
@@ -609,7 +609,7 @@ describe('SessionSummaryService', () => {
       const messages = Array.from({ length: 20 }, (_, i) => ({
         id: `${i}`,
         timestamp: '2025-12-03T00:00:00Z',
-        type: i % 2 === 0 ? ('user' as const) : ('gemini' as const),
+        type: i % 2 === 0 ? ('user' as const) : ('codefly' as const),
         content: [{ text: `Message ${i}` }],
       }));
 
@@ -626,7 +626,7 @@ describe('SessionSummaryService', () => {
       const messages = Array.from({ length: 30 }, (_, i) => ({
         id: `${i}`,
         timestamp: '2025-12-03T00:00:00Z',
-        type: i % 2 === 0 ? ('user' as const) : ('gemini' as const),
+        type: i % 2 === 0 ? ('user' as const) : ('codefly' as const),
         content: [{ text: `Message ${i}` }],
       }));
 
@@ -646,11 +646,11 @@ describe('SessionSummaryService', () => {
 
     it('should not count system messages when calculating window', async () => {
       const messages: MessageRecord[] = [
-        // First 10 user/gemini messages
+        // First 10 user/codefly messages
         ...Array.from({ length: 10 }, (_, i) => ({
           id: `${i}`,
           timestamp: '2025-12-03T00:00:00Z',
-          type: i % 2 === 0 ? ('user' as const) : ('gemini' as const),
+          type: i % 2 === 0 ? ('user' as const) : ('codefly' as const),
           content: [{ text: `Message ${i}` }],
         })),
         // System messages (should be filtered out)
@@ -666,11 +666,11 @@ describe('SessionSummaryService', () => {
           type: 'warning' as const,
           content: [{ text: 'Warning' }],
         },
-        // Last 40 user/gemini messages
+        // Last 40 user/codefly messages
         ...Array.from({ length: 40 }, (_, i) => ({
           id: `${i + 10}`,
           timestamp: '2025-12-03T00:12:00Z',
-          type: i % 2 === 0 ? ('user' as const) : ('gemini' as const),
+          type: i % 2 === 0 ? ('user' as const) : ('codefly' as const),
           content: [{ text: `Message ${i + 10}` }],
         })),
       ];
@@ -717,18 +717,18 @@ describe('SessionSummaryService', () => {
       expect(mockGenerateContent).toHaveBeenCalledTimes(1);
     });
 
-    it('should handle conversation with only gemini messages', async () => {
+    it('should handle conversation with only codefly messages', async () => {
       const messages: MessageRecord[] = [
         {
           id: '1',
           timestamp: '2025-12-03T00:00:00Z',
-          type: 'gemini',
+          type: 'codefly',
           content: [{ text: 'First response' }],
         },
         {
           id: '2',
           timestamp: '2025-12-03T00:01:00Z',
-          type: 'gemini',
+          type: 'codefly',
           content: [{ text: 'Second response' }],
         },
       ];
@@ -794,7 +794,7 @@ describe('SessionSummaryService', () => {
         {
           id: '2',
           timestamp: '2025-12-03T00:01:00Z',
-          type: 'gemini',
+          type: 'codefly',
           content: [{ text: 'Valid response' }],
         },
       ];

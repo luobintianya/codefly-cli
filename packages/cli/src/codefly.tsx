@@ -68,7 +68,9 @@ import {
   SessionStartSource,
   SessionEndReason,
   getVersion,
-  type FetchAdminControlsResponse,
+  ValidationCancelledError,
+  ValidationRequiredError,
+  type AdminControlsSettings,
 } from '@codeflyai/codefly-core';
 import {
   initializeApp,
@@ -141,7 +143,7 @@ export function getNodeMemoryArgs(isDebugMode: boolean): string[] {
     );
   }
 
-  if (process.env['GEMINI_CLI_NO_RELAUNCH']) {
+  if (process.env['CODEFLY_CLI_NO_RELAUNCH']) {
     return [];
   }
 
@@ -381,7 +383,7 @@ export async function main() {
   ) {
     coreEvents.emitFeedback(
       'warning',
-      'Warning: --allowed-tools cli argument and tools.allowed in settings.json are deprecated and will be removed in 1.0: Migrate to Policy Engine: https://geminicli.com/docs/core/policy-engine/',
+      'Warning: --allowed-tools cli argument and tools.allowed in settings.json are deprecated and will be removed in 1.0: Migrate to Policy Engine: https://codeflycli.com/docs/core/policy-engine/',
     );
   }
 
@@ -391,7 +393,7 @@ export async function main() {
   ) {
     coreEvents.emitFeedback(
       'warning',
-      'Warning: tools.exclude in settings.json is deprecated and will be removed in 1.0. Migrate to Policy Engine: https://geminicli.com/docs/core/policy-engine/',
+      'Warning: tools.exclude in settings.json is deprecated and will be removed in 1.0. Migrate to Policy Engine: https://codeflycli.com/docs/core/policy-engine/',
     );
   }
 
@@ -432,7 +434,7 @@ export async function main() {
   ) {
     if (
       process.env['CLOUD_SHELL'] === 'true' ||
-      process.env['GEMINI_CLI_USE_COMPUTE_ADC'] === 'true'
+      process.env['CODEFLY_CLI_USE_COMPUTE_ADC'] === 'true'
     ) {
       settings.setValue(
         SettingScope.User,
@@ -463,8 +465,8 @@ export async function main() {
         let sessionAuthType = explicitAuthType;
 
         if (!explicitAuthType) {
-          if (process.env['GEMINI_API_KEY']) {
-            sessionAuthType = AuthType.USE_GEMINI;
+          if (process.env['CODEFLY_API_KEY']) {
+            sessionAuthType = AuthType.USE_CODEFLY;
           } else if (process.env['OPENAI_API_KEY']) {
             sessionAuthType = AuthType.OPENAI;
           }
@@ -785,7 +787,7 @@ export async function main() {
 
     if (!input) {
       debugLogger.error(
-        `No input provided via stdin. Input can be provided by piping data into gemini or using the --prompt option.`,
+        `No input provided via stdin. Input can be provided by piping data into codefly or using the --prompt option.`,
       );
       await runExitCleanup();
       process.exit(ExitCodes.FATAL_INPUT_ERROR);

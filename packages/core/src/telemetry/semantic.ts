@@ -5,7 +5,7 @@
  */
 
 /**
- * This file contains functions and types for converting Gemini API request/response
+ * This file contains functions and types for converting Codefly API request/response
  * formats to the OpenTelemetry semantic conventions for generative AI.
  *
  * @see https://github.com/open-telemetry/semantic-conventions/blob/8b4f210f43136e57c1f6f47292eb6d38e3bf30bb/docs/gen-ai/gen-ai-events.md

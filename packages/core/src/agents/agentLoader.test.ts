@@ -61,7 +61,7 @@ name: complex-agent
 description: A complex markdown agent
 tools:
   - run_shell_command
-model: gemini-pro
+model: codefly-pro
 temperature: 0.7
 ---
 System prompt content.`);
@@ -72,7 +72,7 @@ System prompt content.`);
         name: 'complex-agent',
         description: 'A complex markdown agent',
         tools: ['run_shell_command'],
-        model: 'gemini-pro',
+        model: 'codefly-pro',
         temperature: 0.7,
         system_prompt: 'System prompt content.',
       });

@@ -9,14 +9,14 @@ import { execSync } from 'node:child_process';
 function checkRelease() {
   try {
     // Step 1: Find the commit hash of the last release
-    const bucketUri = 'gs://gemini-cli-vscode-extension/release/1p/signed';
+    const bucketUri = 'gs://codefly-cli-vscode-extension/release/1p/signed';
     const gcloudOutput = execSync(
       `gcloud storage ls --recursive ${bucketUri}`,
       { encoding: 'utf-8' },
     );
     const files = gcloudOutput.trim().split('\n');
     const vsixFiles = files.filter((file) =>
-      /signed-gemini-cli-vscode-ide-companion-\d+\.\d+\.\d+-[a-f0-9]{7}\.vsix$/.test(
+      /signed-codefly-cli-vscode-ide-companion-\d+\.\d+\.\d+-[a-f0-9]{7}\.vsix$/.test(
         file,
       ),
     );
@@ -30,7 +30,7 @@ function checkRelease() {
     const latestFile = vsixFiles[vsixFiles.length - 1];
     const fileName = latestFile.split('/').pop();
     const match =
-      /signed-gemini-cli-vscode-ide-companion-(\d+\.\d+\.\d+)-([a-f0-9]{7})\.vsix$/.exec(
+      /signed-codefly-cli-vscode-ide-companion-(\d+\.\d+\.\d+)-([a-f0-9]{7})\.vsix$/.exec(
         fileName,
       );
 

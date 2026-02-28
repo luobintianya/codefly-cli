@@ -31,12 +31,12 @@ import { EditTool } from '../tools/edit.js';
 import { ShellTool } from '../tools/shell.js';
 import { WriteFileTool } from '../tools/write-file.js';
 import { WebFetchTool } from '../tools/web-fetch.js';
-import { MemoryTool, setGeminiMdFilename } from '../tools/memoryTool.js';
+import { MemoryTool, setCodeflyMdFilename } from '../tools/memoryTool.js';
 import { WebSearchTool } from '../tools/web-search.js';
 import { AskUserTool } from '../tools/ask-user.js';
 import { ExitPlanModeTool } from '../tools/exit-plan-mode.js';
 import { EnterPlanModeTool } from '../tools/enter-plan-mode.js';
-import { GeminiClient } from '../core/client.js';
+import { CodeflyClient } from '../core/client.js';
 import { BaseLlmClient } from '../core/baseLlmClient.js';
 import type { HookDefinition, HookEventName } from '../hooks/types.js';
 import { FileDiscoveryService } from '../services/fileDiscoveryService.js';
@@ -51,15 +51,15 @@ import {
 import { coreEvents, CoreEvent } from '../utils/events.js';
 import { tokenLimit } from '../core/tokenLimits.js';
 import {
-  DEFAULT_GEMINI_EMBEDDING_MODEL,
-  DEFAULT_GEMINI_FLASH_MODEL,
-  DEFAULT_GEMINI_MODEL,
-  DEFAULT_GEMINI_MODEL_AUTO,
+  DEFAULT_CODEFLY_EMBEDDING_MODEL,
+  DEFAULT_CODEFLY_FLASH_MODEL,
+  DEFAULT_CODEFLY_MODEL,
+  DEFAULT_CODEFLY_MODEL_AUTO,
   isAutoModel,
   isPreviewModel,
-  PREVIEW_GEMINI_FLASH_MODEL,
-  PREVIEW_GEMINI_MODEL,
-  PREVIEW_GEMINI_MODEL_AUTO,
+  PREVIEW_CODEFLY_FLASH_MODEL,
+  PREVIEW_CODEFLY_MODEL,
+  PREVIEW_CODEFLY_MODEL_AUTO,
   resolveModel,
 } from './models.js';
 import { shouldAttemptBrowserLaunch } from '../utils/browser.js';
@@ -295,7 +295,7 @@ export interface BrowserAgentCustomConfig {
  * around on the config object though Core does not use this information
  * directly.
  */
-export interface GeminiCLIExtension {
+export interface CodeflyCLIExtension {
   name: string;
   version: string;
   isActive: boolean;
@@ -385,7 +385,7 @@ export class MCPServerConfig {
     readonly description?: string,
     readonly includeTools?: string[],
     readonly excludeTools?: string[],
-    readonly extension?: GeminiCLIExtension,
+    readonly extension?: CodeflyCLIExtension,
     // OAuth configuration
     readonly oauth?: MCPOAuthConfig,
     readonly authProviderType?: AuthProviderType,
@@ -447,8 +447,8 @@ export interface ConfigParameters {
   mcpServers?: Record<string, MCPServerConfig>;
   mcpEnablementCallbacks?: McpEnablementCallbacks;
   userMemory?: string | HierarchicalMemory;
-  geminiMdFileCount?: number;
-  geminiMdFilePaths?: string[];
+  codeflyMdFileCount?: number;
+  codeflyMdFilePaths?: string[];
   approvalMode?: ApprovalMode;
   showMemoryUsage?: boolean;
   contextFileName?: string | string[];
@@ -457,7 +457,7 @@ export interface ConfigParameters {
   usageStatisticsEnabled?: boolean;
   fileFiltering?: {
     respectGitIgnore?: boolean;
-    respectGeminiIgnore?: boolean;
+    respectCodeflyIgnore?: boolean;
     enableRecursiveFileSearch?: boolean;
     enableFuzzySearch?: boolean;
     maxFileCount?: number;
@@ -549,6 +549,14 @@ export interface ConfigParameters {
     agents?: AgentSettings;
   }>;
   enableConseca?: boolean;
+  openaiConfig?: {
+    apiKey?: string;
+    baseUrl?: string;
+    models?: string;
+    model?: string;
+    contextWindowLimit?: number;
+  };
+  enableThink?: boolean;
 }
 
 export class Config {
@@ -577,6 +585,14 @@ export class Config {
   private readonly debugMode: boolean;
   private readonly question: string | undefined;
   readonly enableConseca: boolean;
+  openaiConfig?: {
+    apiKey?: string;
+    baseUrl?: string;
+    models?: string;
+    model?: string;
+    contextWindowLimit?: number;
+  };
+  private readonly enableThink: boolean;
 
   private readonly coreTools: string[] | undefined;
   /** @deprecated Use Policy Engine instead */
@@ -591,19 +607,19 @@ export class Config {
   private mcpServers: Record<string, MCPServerConfig> | undefined;
   private readonly mcpEnablementCallbacks?: McpEnablementCallbacks;
   private userMemory: string | HierarchicalMemory;
-  private geminiMdFileCount: number;
-  private geminiMdFilePaths: string[];
+  private codeflyMdFileCount: number;
+  private codeflyMdFilePaths: string[];
   private readonly showMemoryUsage: boolean;
   private readonly accessibility: AccessibilitySettings;
   private readonly telemetrySettings: TelemetrySettings;
   private readonly usageStatisticsEnabled: boolean;
-  private geminiClient!: GeminiClient;
+  private codeflyClient!: CodeflyClient;
   private baseLlmClient!: BaseLlmClient;
   private modelRouterService: ModelRouterService;
   private readonly modelAvailabilityService: ModelAvailabilityService;
   private readonly fileFiltering: {
     respectGitIgnore: boolean;
-    respectGeminiIgnore: boolean;
+    respectCodeflyIgnore: boolean;
     enableRecursiveFileSearch: boolean;
     enableFuzzySearch: boolean;
     maxFileCount: number;
@@ -750,7 +766,7 @@ export class Config {
     this.clientVersion = params.clientVersion ?? 'unknown';
     this.approvedPlanPath = undefined;
     this.embeddingModel =
-      params.embeddingModel ?? DEFAULT_GEMINI_EMBEDDING_MODEL;
+      params.embeddingModel ?? DEFAULT_CODEFLY_EMBEDDING_MODEL;
     this.fileSystemService = new StandardFileSystemService();
     this.sandbox = params.sandbox;
     this.targetDir = path.resolve(params.targetDir);
@@ -777,8 +793,8 @@ export class Config {
     this.enableEnvironmentVariableRedaction =
       params.enableEnvironmentVariableRedaction ?? false;
     this.userMemory = params.userMemory ?? '';
-    this.geminiMdFileCount = params.geminiMdFileCount ?? 0;
-    this.geminiMdFilePaths = params.geminiMdFilePaths ?? [];
+    this.codeflyMdFileCount = params.codeflyMdFileCount ?? 0;
+    this.codeflyMdFilePaths = params.codeflyMdFilePaths ?? [];
     this.showMemoryUsage = params.showMemoryUsage ?? false;
     this.accessibility = params.accessibility ?? {};
     this.telemetrySettings = {
@@ -797,9 +813,9 @@ export class Config {
       respectGitIgnore:
         params.fileFiltering?.respectGitIgnore ??
         DEFAULT_FILE_FILTERING_OPTIONS.respectGitIgnore,
-      respectGeminiIgnore:
-        params.fileFiltering?.respectGeminiIgnore ??
-        DEFAULT_FILE_FILTERING_OPTIONS.respectGeminiIgnore,
+      respectCodeflyIgnore:
+        params.fileFiltering?.respectCodeflyIgnore ??
+        DEFAULT_FILE_FILTERING_OPTIONS.respectCodeflyIgnore,
       enableRecursiveFileSearch:
         params.fileFiltering?.enableRecursiveFileSearch ?? true,
       enableFuzzySearch: params.fileFiltering?.enableFuzzySearch ?? true,
@@ -848,6 +864,8 @@ export class Config {
         params.toolOutputMasking?.protectLatestTurn ??
         DEFAULT_PROTECT_LATEST_TURN,
     };
+    this.openaiConfig = params.openaiConfig;
+    this.enableThink = params.enableThink ?? false;
     this.maxSessionTurns = params.maxSessionTurns ?? -1;
     this.experimentalZedIntegration =
       params.experimentalZedIntegration ?? false;
@@ -963,7 +981,7 @@ export class Config {
     this.onReload = params.onReload;
 
     if (params.contextFileName) {
-      setGeminiMdFilename(params.contextFileName);
+      setCodeflyMdFilename(params.contextFileName);
     }
 
     if (this.telemetrySettings.enabled) {
@@ -983,7 +1001,7 @@ export class Config {
         );
       }
     }
-    this.geminiClient = new GeminiClient(this);
+    this.codeflyClient = new CodeflyClient(this);
     this.modelRouterService = new ModelRouterService(this);
 
     // HACK: The settings loading logic doesn't currently merge the default
@@ -1117,7 +1135,7 @@ export class Config {
       await this.contextManager.refresh();
     }
 
-    await this.geminiClient.initialize();
+    await this.codeflyClient.initialize();
     this.syncPlanModeTools();
     this.initialized = true;
   }
@@ -1133,17 +1151,17 @@ export class Config {
     // Vertex and Genai have incompatible encryption and sending history with
     // thoughtSignature from Genai to Vertex will fail, we need to strip them
     if (
-      this.contentGeneratorConfig?.authType === AuthType.USE_GEMINI &&
-      authMethod !== AuthType.USE_GEMINI
+      this.contentGeneratorConfig?.authType === AuthType.USE_CODEFLY &&
+      authMethod !== AuthType.USE_CODEFLY
     ) {
       // Restore the conversation history to the new client
-      this.geminiClient.stripThoughtsFromHistory();
+      this.codeflyClient.stripThoughtsFromHistory();
     }
 
     // Reset availability status when switching auth (e.g. from limited key to OAuth)
     this.modelAvailabilityService.reset();
 
-    // Clear stale authType to ensure getGemini31LaunchedSync doesn't return stale results
+    // Clear stale authType to ensure getCodefly31LaunchedSync doesn't return stale results
     // during the transition.
     if (this.contentGeneratorConfig) {
       this.contentGeneratorConfig.authType = undefined;
@@ -1179,7 +1197,7 @@ export class Config {
 
     const authType = this.contentGeneratorConfig.authType;
     if (
-      authType === AuthType.USE_GEMINI ||
+      authType === AuthType.USE_CODEFLY ||
       authType === AuthType.USE_VERTEX_AI
     ) {
       this.setHasAccessToPreviewModel(true);
@@ -1188,7 +1206,7 @@ export class Config {
     // Only reset when we have explicit "no access" (hasAccessToPreviewModel === false).
     // When null (quota not fetched) or true, we preserve the saved model.
     if (isPreviewModel(this.model) && this.hasAccessToPreviewModel === false) {
-      this.setModel(DEFAULT_GEMINI_MODEL_AUTO);
+      this.setModel(DEFAULT_CODEFLY_MODEL_AUTO);
     }
 
     // Fetch admin controls
@@ -1397,12 +1415,12 @@ export class Config {
     }
 
     const isPreview =
-      model === PREVIEW_GEMINI_MODEL_AUTO ||
+      model === PREVIEW_CODEFLY_MODEL_AUTO ||
       isPreviewModel(this.getActiveModel());
-    const proModel = isPreview ? PREVIEW_GEMINI_MODEL : DEFAULT_GEMINI_MODEL;
+    const proModel = isPreview ? PREVIEW_CODEFLY_MODEL : DEFAULT_CODEFLY_MODEL;
     const flashModel = isPreview
-      ? PREVIEW_GEMINI_FLASH_MODEL
-      : DEFAULT_GEMINI_FLASH_MODEL;
+      ? PREVIEW_CODEFLY_FLASH_MODEL
+      : DEFAULT_CODEFLY_FLASH_MODEL;
 
     const proQuota = this.modelQuotas.get(proModel);
     const flashQuota = this.modelQuotas.get(flashModel);
@@ -1431,7 +1449,7 @@ export class Config {
     }
     const primaryModel = resolveModel(
       this.getModel(),
-      this.getGemini31LaunchedSync(),
+      this.getCodefly31LaunchedSync(),
     );
     return this.modelQuotas.get(primaryModel)?.remaining;
   }
@@ -1443,7 +1461,7 @@ export class Config {
     }
     const primaryModel = resolveModel(
       this.getModel(),
-      this.getGemini31LaunchedSync(),
+      this.getCodefly31LaunchedSync(),
     );
     return this.modelQuotas.get(primaryModel)?.limit;
   }
@@ -1455,7 +1473,7 @@ export class Config {
     }
     const primaryModel = resolveModel(
       this.getModel(),
-      this.getGemini31LaunchedSync(),
+      this.getCodefly31LaunchedSync(),
     );
     return this.modelQuotas.get(primaryModel)?.resetTime;
   }
@@ -1490,6 +1508,14 @@ export class Config {
 
   getWorkspaceContext(): WorkspaceContext {
     return this.workspaceContext;
+  }
+
+  getEnableThink(): boolean {
+    return this.enableThink;
+  }
+
+  getOpenaiContextWindowLimit(): number | undefined {
+    return this.openaiConfig?.contextWindowLimit;
   }
 
   getAgentRegistry(): AgentRegistry {
@@ -1668,7 +1694,7 @@ export class Config {
   }
 
   /**
-   * The user configured MCP servers (via gemini settings files).
+   * The user configured MCP servers (via codefly settings files).
    *
    * Does NOT include mcp servers configured by extensions.
    */
@@ -1736,9 +1762,9 @@ export class Config {
       );
       await refreshServerHierarchicalMemory(this);
     }
-    if (this.geminiClient?.isInitialized()) {
-      await this.geminiClient.setTools();
-      this.geminiClient.updateSystemInstruction();
+    if (this.codeflyClient?.isInitialized()) {
+      await this.codeflyClient.setTools();
+      this.codeflyClient.updateSystemInstruction();
     }
   }
 
@@ -1805,26 +1831,26 @@ export class Config {
     };
   }
 
-  getGeminiMdFileCount(): number {
+  getCodeflyMdFileCount(): number {
     if (this.experimentalJitContext && this.contextManager) {
       return this.contextManager.getLoadedPaths().size;
     }
-    return this.geminiMdFileCount;
+    return this.codeflyMdFileCount;
   }
 
-  setGeminiMdFileCount(count: number): void {
-    this.geminiMdFileCount = count;
+  setCodeflyMdFileCount(count: number): void {
+    this.codeflyMdFileCount = count;
   }
 
-  getGeminiMdFilePaths(): string[] {
+  getCodeflyMdFilePaths(): string[] {
     if (this.experimentalJitContext && this.contextManager) {
       return Array.from(this.contextManager.getLoadedPaths());
     }
-    return this.geminiMdFilePaths;
+    return this.codeflyMdFilePaths;
   }
 
-  setGeminiMdFilePaths(paths: string[]): void {
-    this.geminiMdFilePaths = paths;
+  setCodeflyMdFilePaths(paths: string[]): void {
+    this.codeflyMdFilePaths = paths;
   }
 
   getApprovalMode(): ApprovalMode {
@@ -1931,8 +1957,8 @@ export class Config {
       }
     }
 
-    if (this.geminiClient?.isInitialized()) {
-      this.geminiClient.setTools().catch((err) => {
+    if (this.codeflyClient?.isInitialized()) {
+      this.codeflyClient.setTools().catch((err) => {
         debugLogger.error('Failed to update tools', err);
       });
     }
@@ -2013,18 +2039,18 @@ export class Config {
     return this.telemetrySettings.useCliAuth ?? false;
   }
 
-  getGeminiClient(): GeminiClient {
-    return this.geminiClient;
+  getCodeflyClient(): CodeflyClient {
+    return this.codeflyClient;
   }
 
   /**
    * Updates the system instruction with the latest user memory.
-   * Whenever the user memory (GEMINI.md files) is updated.
+   * Whenever the user memory (CODEFLY.md files) is updated.
    */
   updateSystemInstructionIfInitialized(): void {
-    const geminiClient = this.getGeminiClient();
-    if (geminiClient?.isInitialized()) {
-      geminiClient.updateSystemInstruction();
+    const codeflyClient = this.getCodeflyClient();
+    if (codeflyClient?.isInitialized()) {
+      codeflyClient.updateSystemInstruction();
     }
   }
 
@@ -2048,8 +2074,8 @@ export class Config {
     return this.fileFiltering.respectGitIgnore;
   }
 
-  getFileFilteringRespectGeminiIgnore(): boolean {
-    return this.fileFiltering.respectGeminiIgnore;
+  getFileFilteringRespectCodeflyIgnore(): boolean {
+    return this.fileFiltering.respectCodeflyIgnore;
   }
 
   getCustomIgnoreFilePaths(): string[] {
@@ -2059,7 +2085,7 @@ export class Config {
   getFileFilteringOptions(): FileFilteringOptions {
     return {
       respectGitIgnore: this.fileFiltering.respectGitIgnore,
-      respectGeminiIgnore: this.fileFiltering.respectGeminiIgnore,
+      respectCodeflyIgnore: this.fileFiltering.respectCodeflyIgnore,
       maxFileCount: this.fileFiltering.maxFileCount,
       searchTimeout: this.fileFiltering.searchTimeout,
       customIgnoreFilePaths: this.fileFiltering.customIgnoreFilePaths,
@@ -2101,7 +2127,7 @@ export class Config {
     if (!this.fileDiscoveryService) {
       this.fileDiscoveryService = new FileDiscoveryService(this.targetDir, {
         respectGitIgnore: this.fileFiltering.respectGitIgnore,
-        respectGeminiIgnore: this.fileFiltering.respectGeminiIgnore,
+        respectCodeflyIgnore: this.fileFiltering.respectCodeflyIgnore,
         customIgnoreFilePaths: this.fileFiltering.customIgnoreFilePaths,
       });
     }
@@ -2132,7 +2158,7 @@ export class Config {
     return this.extensionManagement;
   }
 
-  getExtensions(): GeminiCLIExtension[] {
+  getExtensions(): CodeflyCLIExtension[] {
     return this._extensionLoader.getExtensions();
   }
 
@@ -2359,31 +2385,31 @@ export class Config {
   }
 
   /**
-   * Returns whether Gemini 3.1 has been launched.
+   * Returns whether Codefly 3.1 has been launched.
    * This method is async and ensures that experiments are loaded before returning the result.
    */
-  async getGemini31Launched(): Promise<boolean> {
+  async getCodefly31Launched(): Promise<boolean> {
     await this.ensureExperimentsLoaded();
-    return this.getGemini31LaunchedSync();
+    return this.getCodefly31LaunchedSync();
   }
 
   /**
-   * Returns whether Gemini 3.1 has been launched.
+   * Returns whether Codefly 3.1 has been launched.
    *
    * Note: This method should only be called after startup, once experiments have been loaded.
    * If you need to call this during startup or from an async context, use
-   * getGemini31Launched instead.
+   * getCodefly31Launched instead.
    */
-  getGemini31LaunchedSync(): boolean {
+  getCodefly31LaunchedSync(): boolean {
     const authType = this.contentGeneratorConfig?.authType;
     if (
-      authType === AuthType.USE_GEMINI ||
+      authType === AuthType.USE_CODEFLY ||
       authType === AuthType.USE_VERTEX_AI
     ) {
       return true;
     }
     return (
-      this.experiments?.flags[ExperimentFlags.GEMINI_3_1_PRO_LAUNCHED]
+      this.experiments?.flags[ExperimentFlags.CODEFLY_3_1_PRO_LAUNCHED]
         ?.boolValue ?? false
     );
   }
@@ -2838,13 +2864,13 @@ export class Config {
       this.registerSubAgentTools(this.toolRegistry);
     }
     // Propagate updates to the active chat session
-    const client = this.getGeminiClient();
+    const client = this.getCodeflyClient();
     if (client?.isInitialized()) {
       await client.setTools();
       client.updateSystemInstruction();
     } else {
       debugLogger.debug(
-        '[Config] GeminiClient not initialized; skipping live prompt/tool refresh.',
+        '[Config] CodeflyClient not initialized; skipping live prompt/tool refresh.',
       );
     }
   };
@@ -2856,11 +2882,11 @@ export class Config {
     this.logCurrentModeDuration(this.getApprovalMode());
     coreEvents.off(CoreEvent.AgentsRefreshed, this.onAgentsRefreshed);
     this.agentRegistry?.dispose();
-    this.geminiClient?.dispose();
+    this.codeflyClient?.dispose();
     if (this.mcpClientManager) {
       await this.mcpClientManager.stop();
     }
   }
 }
 // Export model constants for use in CLI
-export { DEFAULT_GEMINI_FLASH_MODEL };
+export { DEFAULT_CODEFLY_FLASH_MODEL };

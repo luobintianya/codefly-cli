@@ -57,7 +57,7 @@ describe('rewindFileOps', () => {
       const conversation = {
         messages: [
           userMsg,
-          { type: 'gemini', text: 'Hello' } as unknown as MessageRecord,
+          { type: 'codefly', text: 'Hello' } as unknown as MessageRecord,
         ],
       };
       const result = calculateTurnStats(
@@ -68,7 +68,7 @@ describe('rewindFileOps', () => {
     });
 
     it('calculates stats for single turn correctly', async () => {
-      const { getFileDiffFromResultDisplay, computeAddedAndRemovedLines } =
+      const { getFileDiffFromResultDisplay, computeModelAddedAndRemovedLines } =
         await import('@codeflyai/codefly-core');
       vi.mocked(getFileDiffFromResultDisplay).mockReturnValue({
         filePath: 'test.ts',
@@ -98,7 +98,7 @@ describe('rewindFileOps', () => {
         messages: [
           userMsg,
           {
-            type: 'gemini',
+            type: 'codefly',
             toolCalls: [
               {
                 name: 'replace',
@@ -124,7 +124,7 @@ describe('rewindFileOps', () => {
 
   describe('calculateRewindImpact', () => {
     it('calculates cumulative stats across multiple turns', async () => {
-      const { getFileDiffFromResultDisplay, computeAddedAndRemovedLines } =
+      const { getFileDiffFromResultDisplay, computeModelAddedAndRemovedLines } =
         await import('@codeflyai/codefly-core');
       vi.mocked(getFileDiffFromResultDisplay)
         .mockReturnValueOnce({
@@ -173,7 +173,7 @@ describe('rewindFileOps', () => {
         messages: [
           userMsg,
           {
-            type: 'gemini',
+            type: 'codefly',
             toolCalls: [
               {
                 resultDisplay: 'd1',
@@ -184,7 +184,7 @@ describe('rewindFileOps', () => {
             type: 'user',
           } as unknown as MessageRecord,
           {
-            type: 'gemini',
+            type: 'codefly',
             toolCalls: [
               {
                 resultDisplay: 'd2',
@@ -250,7 +250,7 @@ describe('rewindFileOps', () => {
         messages: [
           userMsg,
           {
-            type: 'gemini',
+            type: 'codefly',
             toolCalls: [{ resultDisplay: 'diff' } as unknown as ToolCallRecord],
           } as unknown as MessageRecord,
         ],
@@ -300,7 +300,7 @@ describe('rewindFileOps', () => {
         messages: [
           userMsg,
           {
-            type: 'gemini',
+            type: 'codefly',
             toolCalls: [{ resultDisplay: 'diff' } as unknown as ToolCallRecord],
           } as unknown as MessageRecord,
         ],
@@ -347,7 +347,7 @@ describe('rewindFileOps', () => {
         messages: [
           userMsg,
           {
-            type: 'gemini',
+            type: 'codefly',
             toolCalls: [{ resultDisplay: 'diff' } as unknown as ToolCallRecord],
           } as unknown as MessageRecord,
         ],
@@ -399,7 +399,7 @@ describe('rewindFileOps', () => {
         messages: [
           userMsg,
           {
-            type: 'gemini',
+            type: 'codefly',
             toolCalls: [{ resultDisplay: 'diff' } as unknown as ToolCallRecord],
           } as unknown as MessageRecord,
         ],
@@ -451,7 +451,7 @@ describe('rewindFileOps', () => {
         messages: [
           userMsg,
           {
-            type: 'gemini',
+            type: 'codefly',
             toolCalls: [{ resultDisplay: 'diff' } as unknown as ToolCallRecord],
           } as unknown as MessageRecord,
         ],

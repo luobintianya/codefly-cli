@@ -7,7 +7,12 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
-import { homedir } from '@codeflyai/codefly-core';
+import {
+  homedir,
+  WarningPriority,
+  type StartupWarning,
+  getCompatibilityWarnings,
+} from '@codeflyai/codefly-core';
 import type { Settings } from '../config/settingsSchema.js';
 import {
   isFolderTrustEnabled,

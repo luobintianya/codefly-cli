@@ -26,7 +26,7 @@ vi.mock('./apiKeyCredentialStorage.js', () => ({
 vi.mock('./fakeContentGenerator.js');
 
 const mockConfig = {
-  getModel: vi.fn().mockReturnValue('gemini-pro'),
+  getModel: vi.fn().mockReturnValue('codefly-pro'),
   getProxy: vi.fn().mockReturnValue(undefined),
   getUsageStatisticsEnabled: vi.fn().mockReturnValue(true),
   getPreviewFeatures: vi.fn().mockReturnValue(false),
@@ -54,7 +54,7 @@ describe('createContentGenerator', () => {
     } as unknown as Config;
     const generator = await createContentGenerator(
       {
-        authType: AuthType.USE_GEMINI,
+        authType: AuthType.USE_CODEFLY,
       },
       mockConfigWithFake,
     );
@@ -75,16 +75,16 @@ describe('createContentGenerator', () => {
     } as unknown as Config;
     const generator = await createContentGenerator(
       {
-        authType: AuthType.USE_GEMINI,
+        authType: AuthType.USE_CODEFLY,
       },
       mockConfigWithRecordResponses,
     );
     expect(generator).toBeInstanceOf(RecordingContentGenerator);
   });
 
-  it('should include custom headers from GEMINI_CLI_CUSTOM_HEADERS for GoogleGenAI requests without inferring auth mechanism', async () => {
+  it('should include custom headers from CODEFLY_CLI_CUSTOM_HEADERS for GoogleGenAI requests without inferring auth mechanism', async () => {
     const mockConfig = {
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
+      getModel: vi.fn().mockReturnValue('codefly-pro'),
       getProxy: vi.fn().mockReturnValue(undefined),
       getUsageStatisticsEnabled: () => false,
       getPreviewFeatures: vi.fn().mockReturnValue(false),
@@ -96,14 +96,14 @@ describe('createContentGenerator', () => {
     } as unknown as GoogleGenAI;
     vi.mocked(GoogleGenAI).mockImplementation(() => mockGenerator as never);
     vi.stubEnv(
-      'GEMINI_CLI_CUSTOM_HEADERS',
+      'CODEFLY_CLI_CUSTOM_HEADERS',
       'X-Test-Header: test, Another: value',
     );
 
     await createContentGenerator(
       {
         apiKey: 'test-api-key',
-        authType: AuthType.USE_GEMINI,
+        authType: AuthType.USE_CODEFLY,
       },
       mockConfig,
     );
@@ -130,9 +130,9 @@ describe('createContentGenerator', () => {
     );
   });
 
-  it('should pass api key as Authorization Header when GEMINI_API_KEY_AUTH_MECHANISM is set to bearer', async () => {
+  it('should pass api key as Authorization Header when CODEFLY_API_KEY_AUTH_MECHANISM is set to bearer', async () => {
     const mockConfig = {
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
+      getModel: vi.fn().mockReturnValue('codefly-pro'),
       getProxy: vi.fn().mockReturnValue(undefined),
       getUsageStatisticsEnabled: () => false,
       getPreviewFeatures: vi.fn().mockReturnValue(false),
@@ -143,12 +143,12 @@ describe('createContentGenerator', () => {
       models: {},
     } as unknown as GoogleGenAI;
     vi.mocked(GoogleGenAI).mockImplementation(() => mockGenerator as never);
-    vi.stubEnv('GEMINI_API_KEY_AUTH_MECHANISM', 'bearer');
+    vi.stubEnv('CODEFLY_API_KEY_AUTH_MECHANISM', 'bearer');
 
     await createContentGenerator(
       {
         apiKey: 'test-api-key',
-        authType: AuthType.USE_GEMINI,
+        authType: AuthType.USE_CODEFLY,
       },
       mockConfig,
     );
@@ -165,9 +165,9 @@ describe('createContentGenerator', () => {
     });
   });
 
-  it('should not pass api key as Authorization Header when GEMINI_API_KEY_AUTH_MECHANISM is not set (default behavior)', async () => {
+  it('should not pass api key as Authorization Header when CODEFLY_API_KEY_AUTH_MECHANISM is not set (default behavior)', async () => {
     const mockConfig = {
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
+      getModel: vi.fn().mockReturnValue('codefly-pro'),
       getProxy: vi.fn().mockReturnValue(undefined),
       getUsageStatisticsEnabled: () => false,
       getPreviewFeatures: vi.fn().mockReturnValue(false),
@@ -178,12 +178,12 @@ describe('createContentGenerator', () => {
       models: {},
     } as unknown as GoogleGenAI;
     vi.mocked(GoogleGenAI).mockImplementation(() => mockGenerator as never);
-    // GEMINI_API_KEY_AUTH_MECHANISM is not stubbed, so it will be undefined, triggering default 'x-goog-api-key'
+    // CODEFLY_API_KEY_AUTH_MECHANISM is not stubbed, so it will be undefined, triggering default 'x-goog-api-key'
 
     await createContentGenerator(
       {
         apiKey: 'test-api-key',
-        authType: AuthType.USE_GEMINI,
+        authType: AuthType.USE_CODEFLY,
       },
       mockConfig,
     );
@@ -211,7 +211,7 @@ describe('createContentGenerator', () => {
 
   it('should create a GoogleGenAI content generator with client install id logging disabled', async () => {
     const mockConfig = {
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
+      getModel: vi.fn().mockReturnValue('codefly-pro'),
       getUsageStatisticsEnabled: () => false,
       getPreviewFeatures: vi.fn().mockReturnValue(false),
       getEnableThink: vi.fn().mockReturnValue(false),
@@ -223,7 +223,7 @@ describe('createContentGenerator', () => {
     const generator = await createContentGenerator(
       {
         apiKey: 'test-api-key',
-        authType: AuthType.USE_GEMINI,
+        authType: AuthType.USE_CODEFLY,
       },
       mockConfig,
     );
@@ -269,7 +269,7 @@ describe('createContentGenerator', () => {
 
 describe('createContentGeneratorConfig', () => {
   const mockConfig = {
-    getModel: vi.fn().mockReturnValue('gemini-pro'),
+    getModel: vi.fn().mockReturnValue('codefly-pro'),
     setModel: vi.fn(),
     flashFallbackHandler: vi.fn(),
     getProxy: vi.fn(),
@@ -284,32 +284,32 @@ describe('createContentGeneratorConfig', () => {
     vi.unstubAllEnvs();
   });
 
-  it('should configure for Gemini using GEMINI_API_KEY when set', async () => {
-    vi.stubEnv('GEMINI_API_KEY', 'env-gemini-key');
+  it('should configure for Codefly using CODEFLY_API_KEY when set', async () => {
+    vi.stubEnv('CODEFLY_API_KEY', 'env-codefly-key');
     const config = await createContentGeneratorConfig(
       mockConfig,
-      AuthType.USE_GEMINI,
+      AuthType.USE_CODEFLY,
     );
-    expect(config.apiKey).toBe('env-gemini-key');
+    expect(config.apiKey).toBe('env-codefly-key');
     expect(config.vertexai).toBe(false);
   });
 
-  it('should not configure for Gemini if GEMINI_API_KEY is empty', async () => {
-    vi.stubEnv('GEMINI_API_KEY', '');
+  it('should not configure for Codefly if CODEFLY_API_KEY is empty', async () => {
+    vi.stubEnv('CODEFLY_API_KEY', '');
     const config = await createContentGeneratorConfig(
       mockConfig,
-      AuthType.USE_GEMINI,
+      AuthType.USE_CODEFLY,
     );
     expect(config.apiKey).toBeUndefined();
     expect(config.vertexai).toBeUndefined();
   });
 
-  it('should not configure for Gemini if GEMINI_API_KEY is not set and storage is empty', async () => {
-    vi.stubEnv('GEMINI_API_KEY', '');
+  it('should not configure for Codefly if CODEFLY_API_KEY is not set and storage is empty', async () => {
+    vi.stubEnv('CODEFLY_API_KEY', '');
     vi.mocked(loadApiKey).mockResolvedValue(null);
     const config = await createContentGeneratorConfig(
       mockConfig,
-      AuthType.USE_GEMINI,
+      AuthType.USE_CODEFLY,
     );
     expect(config.apiKey).toBeUndefined();
     expect(config.vertexai).toBeUndefined();

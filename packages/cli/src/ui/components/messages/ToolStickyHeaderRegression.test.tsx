@@ -15,7 +15,7 @@ import { Box, Text } from 'ink';
 import { act, useRef, useEffect } from 'react';
 import { waitFor } from '../../../test-utils/async.js';
 import { SHELL_COMMAND_NAME } from '../../constants.js';
-import { CoreToolCallStatus } from '@google/gemini-cli-core';
+import { CoreToolCallStatus } from '@codeflyai/codefly-core';
 
 // Mock child components that might be complex
 vi.mock('../TerminalOutput.js', () => ({
@@ -26,8 +26,8 @@ vi.mock('../AnsiOutput.js', () => ({
   AnsiOutputText: () => <Text>MockAnsiOutput</Text>,
 }));
 
-vi.mock('../GeminiRespondingSpinner.js', () => ({
-  GeminiRespondingSpinner: () => <Text>MockRespondingSpinner</Text>,
+vi.mock('../CodeflyRespondingSpinner.js', () => ({
+  CodeflyRespondingSpinner: () => <Text>MockRespondingSpinner</Text>,
 }));
 
 vi.mock('./DiffRenderer.js', () => ({

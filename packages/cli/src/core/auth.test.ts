@@ -6,18 +6,20 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { performInitialAuth } from './auth.js';
-import { type Config } from '@codeflyai/codefly-core';
+import {
+  ValidationRequiredError,
+  type Config,
+  AuthType,
+} from '@codeflyai/codefly-core';
 
-vi.mock('@codeflyai/codefly-core', () => ({
-  AuthType: {
-    OAUTH: 'oauth',
-  },
-  getErrorMessage: (e: unknown) => (e as Error).message,
-}));
-
-const AuthType = {
-  OAUTH: 'oauth',
-} as const;
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import('@codeflyai/codefly-core')>();
+  return {
+    ...actual,
+    getErrorMessage: (e: unknown) => (e as Error).message,
+  };
+});
 
 describe('auth', () => {
   let mockConfig: Config;

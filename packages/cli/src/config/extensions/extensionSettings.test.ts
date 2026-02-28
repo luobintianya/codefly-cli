@@ -78,10 +78,10 @@ describe('extensionSettings', () => {
         } as unknown as KeychainTokenStorage;
       },
     );
-    tempHomeDir = os.tmpdir() + path.sep + `gemini-cli-test-home-${Date.now()}`;
+    tempHomeDir = os.tmpdir() + path.sep + `codefly-cli-test-home-${Date.now()}`;
     tempWorkspaceDir = path.join(
       os.tmpdir(),
-      `gemini-cli-test-workspace-${Date.now()}`,
+      `codefly-cli-test-workspace-${Date.now()}`,
     );
     extensionDir = path.join(tempHomeDir, '.codefly', 'extensions', 'test-ext');
     // Spy and mock the method, but also create the directory so we can write to it.
@@ -422,7 +422,7 @@ describe('extensionSettings', () => {
       );
 
       const userKeychain = new KeychainTokenStorage(
-        `Gemini CLI Extensions test-ext 12345`,
+        `Codefly CLI Extensions test-ext 12345`,
       );
       expect(await userKeychain.getSecret('SENSITIVE_VAR')).toBeNull();
     });
@@ -598,7 +598,7 @@ describe('extensionSettings', () => {
       );
       fs.mkdirSync(workspaceEnvPath);
       const workspaceKeychain = new KeychainTokenStorage(
-        `Gemini CLI Extensions test-ext 12345 ${tempWorkspaceDir}`,
+        `Codefly CLI Extensions test-ext 12345 ${tempWorkspaceDir}`,
       );
       await workspaceKeychain.setSecret('SENSITIVE_VAR', 'workspace-secret');
 
@@ -824,7 +824,7 @@ describe('extensionSettings', () => {
       );
 
       const userKeychain = new KeychainTokenStorage(
-        `Gemini CLI Extensions test-ext 12345`,
+        `Codefly CLI Extensions test-ext 12345`,
       );
       expect(await userKeychain.getSecret('VAR2')).toBeNull();
     });
@@ -850,7 +850,7 @@ describe('extensionSettings', () => {
       mockRequestSetting.mockResolvedValue('');
       // Ensure it doesn't exist first
       const userKeychain = new KeychainTokenStorage(
-        `Gemini CLI Extensions test-ext 12345`,
+        `Codefly CLI Extensions test-ext 12345`,
       );
       await userKeychain.deleteSecret('VAR2');
 

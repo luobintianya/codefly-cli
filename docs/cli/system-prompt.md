@@ -1,12 +1,12 @@
-# System Prompt Override (GEMINI_SYSTEM_MD)
+# System Prompt Override (CODEFLY_SYSTEM_MD)
 
-The core system instructions that guide Gemini CLI can be completely replaced
+The core system instructions that guide Codefly CLI can be completely replaced
 with your own Markdown file. This feature is controlled via the
-`GEMINI_SYSTEM_MD` environment variable.
+`CODEFLY_SYSTEM_MD` environment variable.
 
 ## Overview
 
-The `GEMINI_SYSTEM_MD` variable instructs the CLI to use an external Markdown
+The `CODEFLY_SYSTEM_MD` variable instructs the CLI to use an external Markdown
 file for its system prompt, completely overriding the built-in default. This is
 a full replacement, not a merge. If you use a custom file, none of the original
 core instructions will apply unless you include them yourself.
@@ -25,18 +25,18 @@ via a `.codefly/.env` file. See
 [Persisting Environment Variables](../get-started/authentication.md#persisting-environment-variables).
 
 - Use the project default path (`.codefly/system.md`):
-  - `GEMINI_SYSTEM_MD=true` or `GEMINI_SYSTEM_MD=1`
+  - `CODEFLY_SYSTEM_MD=true` or `CODEFLY_SYSTEM_MD=1`
   - The CLI reads `./.codefly/system.md` (relative to your current project
     directory).
 
 - Use a custom file path:
-  - `GEMINI_SYSTEM_MD=/absolute/path/to/my-system.md`
+  - `CODEFLY_SYSTEM_MD=/absolute/path/to/my-system.md`
   - Relative paths are supported and resolved from the current working
     directory.
   - Tilde expansion is supported (e.g., `~/my-system.md`).
 
 - Disable the override (use built‑in prompt):
-  - `GEMINI_SYSTEM_MD=false` or `GEMINI_SYSTEM_MD=0` or unset the variable.
+  - `CODEFLY_SYSTEM_MD=false` or `CODEFLY_SYSTEM_MD=0` or unset the variable.
 
 If the override is enabled but the target file does not exist, the CLI will
 error with: `missing system prompt file '<path>'`.
@@ -44,16 +44,16 @@ error with: `missing system prompt file '<path>'`.
 ## Quick examples
 
 - One‑off session using a project file:
-  - `GEMINI_SYSTEM_MD=1 gemini`
+  - `CODEFLY_SYSTEM_MD=1 codefly`
 - Persist for a project using `.codefly/.env`:
   - Create `.codefly/system.md`, then add to `.codefly/.env`:
-    - `GEMINI_SYSTEM_MD=1`
+    - `CODEFLY_SYSTEM_MD=1`
 - Use a custom file under your home directory:
-  - `GEMINI_SYSTEM_MD=~/prompts/SYSTEM.md gemini`
+  - `CODEFLY_SYSTEM_MD=~/prompts/SYSTEM.md codefly`
 
 ## UI indicator
 
-When `GEMINI_SYSTEM_MD` is active, the CLI shows a `|⌐■_■|` indicator in the UI
+When `CODEFLY_SYSTEM_MD` is active, the CLI shows a `|⌐■_■|` indicator in the UI
 to signal custom system‑prompt mode.
 
 ## Variable Substitution
@@ -94,9 +94,9 @@ Before overriding, export the current default prompt so you can review required
 safety and workflow rules.
 
 - Write the built‑in prompt to the project default path:
-  - `GEMINI_WRITE_SYSTEM_MD=1 gemini`
+  - `CODEFLY_WRITE_SYSTEM_MD=1 codefly`
 - Or write to a custom path:
-  - `GEMINI_WRITE_SYSTEM_MD=~/prompts/DEFAULT_SYSTEM.md gemini`
+  - `CODEFLY_WRITE_SYSTEM_MD=~/prompts/DEFAULT_SYSTEM.md codefly`
 
 This creates the file and writes the current built‑in system prompt to it.
 
@@ -117,11 +117,11 @@ CODEFLY.md focused on high‑level guidance and project specifics.
 
 - Error: `missing system prompt file '…'`
   - Ensure the referenced path exists and is readable.
-  - For `GEMINI_SYSTEM_MD=1|true`, create `./.codefly/system.md` in your
+  - For `CODEFLY_SYSTEM_MD=1|true`, create `./.codefly/system.md` in your
     project.
 - Override not taking effect
   - Confirm the variable is loaded (use `.codefly/.env` or export in your
     shell).
   - Paths are resolved from the current working directory; try an absolute path.
 - Restore defaults
-  - Unset `GEMINI_SYSTEM_MD` or set it to `0`/`false`.
+  - Unset `CODEFLY_SYSTEM_MD` or set it to `0`/`false`.

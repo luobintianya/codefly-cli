@@ -65,13 +65,13 @@ export function applySubstitutions(
   prompt: string,
   config: Config,
   skillsPrompt: string,
-  isGemini3: boolean = false,
+  isCodefly3: boolean = false,
 ): string {
   let result = prompt;
 
   result = result.replace(/\${AgentSkills}/g, skillsPrompt);
 
-  const activeSnippets = isGemini3 ? snippets : legacySnippets;
+  const activeSnippets = isCodefly3 ? snippets : legacySnippets;
   const subAgentsContent = activeSnippets.renderSubAgents(
     config
       .getAgentRegistry()
@@ -107,7 +107,7 @@ export function applySubstitutions(
  * Checks if a specific prompt section is enabled via environment variables.
  */
 export function isSectionEnabled(key: string): boolean {
-  const envVar = process.env[`GEMINI_PROMPT_${key.toUpperCase()}`];
+  const envVar = process.env[`CODEFLY_PROMPT_${key.toUpperCase()}`];
   const lowerEnvVar = envVar?.trim().toLowerCase();
   return lowerEnvVar !== '0' && lowerEnvVar !== 'false';
 }

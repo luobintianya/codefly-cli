@@ -13,7 +13,7 @@ import {
   type AnsiOutput,
   type AnsiLine,
   type AnsiToken,
-} from '@google/gemini-cli-core';
+} from '@codeflyai/codefly-core';
 import { cpLen, cpSlice, getCachedStringWidth } from '../utils/textUtils.js';
 import { type BackgroundShell } from '../hooks/shellCommandProcessor.js';
 import { Command, keyMatchers } from '../keyMatchers.js';

@@ -4,12 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type { Config } from '@codeflyai/codefly-core';
-import {
-  debugLogger,
-  OutputFormat,
-  ExitCodes,
-} from '@codeflyai/codefly-core';
+import type { Config , AuthType} from '@codeflyai/codefly-core';
+import { ExitCodes, OutputFormat, debugLogger, getAuthTypeFromEnv } from '@codeflyai/codefly-core';
 import { USER_SETTINGS_PATH } from './config/settings.js';
 import { validateAuthMethod } from './config/auth.js';
 import { type LoadedSettings } from './config/settings.js';
@@ -34,7 +30,7 @@ export async function validateNonInteractiveAuth(
     }
 
     if (!effectiveAuthType) {
-      const message = `Please set an Auth method in your ${USER_SETTINGS_PATH} or specify one of the following environment variables before running: GEMINI_API_KEY, GOOGLE_GENAI_USE_VERTEXAI`;
+      const message = `Please set an Auth method in your ${USER_SETTINGS_PATH} or specify one of the following environment variables before running: CODEFLY_API_KEY, GOOGLE_GENAI_USE_VERTEXAI`;
       throw new Error(message);
     }
 

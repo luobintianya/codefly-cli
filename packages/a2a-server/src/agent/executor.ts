@@ -128,7 +128,7 @@ export class CoderAgentExecutor implements AgentExecutor {
       agentSettings.autoExecute,
     );
     runtimeTask.taskState = persistedState._taskState;
-    await runtimeTask.geminiClient.initialize();
+    await runtimeTask.codeflyClient.initialize();
 
     const wrapper = new TaskWrapper(runtimeTask, agentSettings);
     this.tasks.set(sdkTask.id, wrapper);
@@ -154,7 +154,7 @@ export class CoderAgentExecutor implements AgentExecutor {
       eventBus,
       agentSettings.autoExecute,
     );
-    await runtimeTask.geminiClient.initialize();
+    await runtimeTask.codeflyClient.initialize();
 
     const wrapper = new TaskWrapper(runtimeTask, agentSettings);
     this.tasks.set(taskId, wrapper);

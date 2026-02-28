@@ -1,6 +1,6 @@
 # Get started with Agent Skills
 
-Agent Skills extend Gemini CLI with specialized expertise. In this guide, you'll
+Agent Skills extend Codefly CLI with specialized expertise. In this guide, you'll
 learn how to create your first skill, bundle custom scripts, and activate them
 during a session.
 
@@ -15,12 +15,12 @@ responding correctly.
 1.  Run the following command to create the folders:
 
     ```bash
-    mkdir -p .gemini/skills/api-auditor/scripts
+    mkdir -p .codefly/skills/api-auditor/scripts
     ```
 
 ### Create the definition
 
-1.  Create a file at `.gemini/skills/api-auditor/SKILL.md`. This tells the agent
+1.  Create a file at `.codefly/skills/api-auditor/SKILL.md`. This tells the agent
     _when_ to use the skill and _how_ to behave.
 
     ```markdown
@@ -48,11 +48,11 @@ responding correctly.
 
 Skills can bundle resources like scripts.
 
-1.  Create a file at `.gemini/skills/api-auditor/scripts/audit.js`. This is the
+1.  Create a file at `.codefly/skills/api-auditor/scripts/audit.js`. This is the
     code the agent will run.
 
     ```javascript
-    // .gemini/skills/api-auditor/scripts/audit.js
+    // .codefly/skills/api-auditor/scripts/audit.js
     const url = process.argv[2];
 
     if (!url) {
@@ -68,7 +68,7 @@ Skills can bundle resources like scripts.
 
 ## How to verify discovery
 
-Gemini CLI automatically discovers skills in the `.gemini/skills` directory. You
+Codefly CLI automatically discovers skills in the `.codefly/skills` directory. You
 can also use `.agents/skills` as a more generic alternative. Check that it found
 your new skill.
 
@@ -81,18 +81,18 @@ You should see `api-auditor` in the list of available skills.
 Now, try it out. Start a new session and ask a question that triggers the
 skill's description.
 
-**User:** "Can you audit http://geminicli.com"
+**User:** "Can you audit http://codeflycli.com"
 
-Gemini recognizes the request matches the `api-auditor` description and asks for
+Codefly recognizes the request matches the `api-auditor` description and asks for
 permission to activate it.
 
 **Model:** (After calling `activate_skill`) "I've activated the **api-auditor**
 skill. I'll run the audit script now..."
 
-Gemini then uses the `run_shell_command` tool to execute your bundled Node
+Codefly then uses the `run_shell_command` tool to execute your bundled Node
 script:
 
-`node .gemini/skills/api-auditor/scripts/audit.js http://geminili.com`
+`node .codefly/skills/api-auditor/scripts/audit.js http://codeflyli.com`
 
 ## Next steps
 

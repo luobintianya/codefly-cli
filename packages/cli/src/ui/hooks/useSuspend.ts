@@ -13,7 +13,7 @@ import {
   exitAlternateScreen,
   enableLineWrapping,
   disableLineWrapping,
-} from '@google/gemini-cli-core';
+} from '@codeflyai/codefly-core';
 import process from 'node:process';
 import {
   cleanupTerminalOnExit,

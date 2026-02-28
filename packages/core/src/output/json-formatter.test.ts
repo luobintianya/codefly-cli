@@ -64,7 +64,7 @@ describe('JsonFormatter', () => {
     const response = 'This is a test response.';
     const stats: SessionMetrics = {
       models: {
-        'gemini-2.5-pro': {
+        'codefly-2.5-pro': {
           api: {
             totalRequests: 2,
             totalErrors: 0,
@@ -81,7 +81,7 @@ describe('JsonFormatter', () => {
           },
           roles: {},
         },
-        'gemini-2.5-flash': {
+        'codefly-2.5-flash': {
           api: {
             totalRequests: 2,
             totalErrors: 0,

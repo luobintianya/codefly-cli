@@ -7,8 +7,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Box, Text } from 'ink';
 import Spinner from 'ink-spinner';
-import type { Config } from '@google/gemini-cli-core';
-import { debugLogger, spawnAsync, LlmRole } from '@google/gemini-cli-core';
+import type { Config } from '@codeflyai/codefly-core';
+import { debugLogger, spawnAsync, LlmRole } from '@codeflyai/codefly-core';
 import { useKeypress } from '../../hooks/useKeypress.js';
 import { keyMatchers, Command } from '../../keyMatchers.js';
 
@@ -37,7 +37,7 @@ interface RankedCandidateInfo {
   reason: string;
 }
 
-interface GeminiRecommendation {
+interface CodeflyRecommendation {
   recommendation: 'duplicate' | 'canonical' | 'not-duplicate' | 'skip';
   canonical_issue_number?: number;
   reason?: string;
@@ -48,7 +48,7 @@ interface GeminiRecommendation {
 interface AnalysisResult {
   candidates: Candidate[];
   canonicalIssue?: Candidate;
-  recommendation: GeminiRecommendation;
+  recommendation: CodeflyRecommendation;
 }
 
 interface ProcessedIssue {
@@ -251,7 +251,7 @@ Return a JSON object with:
 `;
       const response = await client.generateJson({
         modelConfigKey: {
-          model: 'gemini-3-pro-preview',
+          model: 'codefly-3-pro-preview',
         },
         contents: [{ role: 'user', parts: [{ text: prompt }] }],
         schema: {
@@ -283,7 +283,7 @@ Return a JSON object with:
       });
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-      const rec = response as unknown as GeminiRecommendation;
+      const rec = response as unknown as CodeflyRecommendation;
 
       let canonical: Candidate | undefined;
       if (rec.canonical_issue_number) {
@@ -530,7 +530,7 @@ Return a JSON object with:
           'api',
           '-X',
           'PATCH',
-          `repos/google-gemini/gemini-cli/issues/${String(state.currentIssue.number).replace(/[^a-zA-Z0-9-]/g, '')}`, // Sanitize issue number
+          `repos/google-codefly/codefly-cli/issues/${String(state.currentIssue.number).replace(/[^a-zA-Z0-9-]/g, '')}`, // Sanitize issue number
           '-f',
           'state=closed',
           '-f',

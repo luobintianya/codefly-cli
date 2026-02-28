@@ -13,7 +13,7 @@ import {
 } from './test-helper.js';
 import fs from 'node:fs';
 import path from 'node:path';
-import { DEFAULT_GEMINI_MODEL } from '@google/gemini-cli-core';
+import { DEFAULT_CODEFLY_MODEL } from '@codeflyai/codefly-core';
 
 export interface AppEvalCase {
   name: string;
@@ -33,7 +33,7 @@ export function appEvalTest(policy: EvalPolicy, evalCase: AppEvalCase) {
   const fn = async () => {
     const rig = new AppRig({
       configOverrides: {
-        model: DEFAULT_GEMINI_MODEL,
+        model: DEFAULT_CODEFLY_MODEL,
         ...evalCase.configOverrides,
       },
     });

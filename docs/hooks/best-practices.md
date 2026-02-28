@@ -1,8 +1,8 @@
-# Hooks on Gemini CLI: Best practices
+# Hooks on Codefly CLI: Best practices
 
 This guide covers security considerations, performance optimization, debugging
 techniques, and privacy considerations for developing and deploying hooks in
-Gemini CLI.
+Codefly CLI.
 
 ## Performance
 
@@ -323,7 +323,7 @@ Add descriptions to help others understand your hooks:
           {
             "name": "secret-scanner",
             "type": "command",
-            "command": "$GEMINI_PROJECT_DIR/.codefly/hooks/block-secrets.sh",
+            "command": "$CODEFLY_PROJECT_DIR/.codefly/hooks/block-secrets.sh",
             "description": "Scans code changes for API keys, passwords, and other secrets before writing"
           }
         ]
@@ -389,10 +389,10 @@ chmod +x .codefly/hooks/my-hook.sh
 
 ```bash
 # Check path expansion
-echo "$GEMINI_PROJECT_DIR/.codefly/hooks/my-hook.sh"
+echo "$CODEFLY_PROJECT_DIR/.codefly/hooks/my-hook.sh"
 
 # Verify file exists
-test -f "$GEMINI_PROJECT_DIR/.codefly/hooks/my-hook.sh" && echo "File exists"
+test -f "$CODEFLY_PROJECT_DIR/.codefly/hooks/my-hook.sh" && echo "File exists"
 ```
 
 ### Hook timing out
@@ -559,8 +559,8 @@ trap cleanup EXIT
 ```bash
 #!/usr/bin/env bash
 
-if [ -z "$GEMINI_PROJECT_DIR" ]; then
-  echo "GEMINI_PROJECT_DIR not set" >&2
+if [ -z "$CODEFLY_PROJECT_DIR" ]; then
+  echo "CODEFLY_PROJECT_DIR not set" >&2
   exit 1
 fi
 
@@ -579,9 +579,9 @@ fi
 env > .codefly/hook-env.log
 
 # Check specific variables
-echo "GEMINI_PROJECT_DIR: $GEMINI_PROJECT_DIR" >> .codefly/hook-env.log
-echo "GEMINI_SESSION_ID: $GEMINI_SESSION_ID" >> .codefly/hook-env.log
-echo "GEMINI_API_KEY: ${GEMINI_API_KEY:+<set>}" >> .codefly/hook-env.log
+echo "CODEFLY_PROJECT_DIR: $CODEFLY_PROJECT_DIR" >> .codefly/hook-env.log
+echo "CODEFLY_SESSION_ID: $CODEFLY_SESSION_ID" >> .codefly/hook-env.log
+echo "CODEFLY_API_KEY: ${CODEFLY_API_KEY:+<set>}" >> .codefly/hook-env.log
 ```
 
 **Use .env files:**
@@ -590,8 +590,8 @@ echo "GEMINI_API_KEY: ${GEMINI_API_KEY:+<set>}" >> .codefly/hook-env.log
 #!/usr/bin/env bash
 
 # Load .env file if it exists
-if [ -f "$GEMINI_PROJECT_DIR/.env" ]; then
-  source "$GEMINI_PROJECT_DIR/.env"
+if [ -f "$CODEFLY_PROJECT_DIR/.env" ]; then
+  source "$CODEFLY_PROJECT_DIR/.env"
 fi
 ```
 
@@ -604,7 +604,7 @@ usage.
 
 | Hook Source                    | Description                                                                                                                |
 | :----------------------------- | :------------------------------------------------------------------------------------------------------------------------- |
-| **System**                     | Configured by system administrators (e.g., `/etc/gemini-cli/settings.json`, `/Library/...`). Assumed to be the **safest**. |
+| **System**                     | Configured by system administrators (e.g., `/etc/codefly-cli/settings.json`, `/Library/...`). Assumed to be the **safest**. |
 | **User** (`~/.codefly/...`)    | Configured by you. You are responsible for ensuring they are safe.                                                         |
 | **Extensions**                 | You explicitly approve and install these. Security depends on the extension source (integrity).                            |
 | **Project** (`./.codefly/...`) | **Untrusted by default.** Safest in trusted internal repos; higher risk in third-party/public repos.                       |
@@ -613,7 +613,7 @@ usage.
 
 When you open a project with hooks defined in `.codefly/settings.json`:
 
-1. **Detection**: Gemini CLI detects the hooks.
+1. **Detection**: Codefly CLI detects the hooks.
 2. **Identification**: A unique identity is generated for each hook based on its
    `name` and `command`.
 3. **Warning**: If this specific hook identity has not been seen before, a
@@ -623,7 +623,7 @@ When you open a project with hooks defined in `.codefly/settings.json`:
 5. **Trust**: The hook is marked as "trusted" for this project.
 
 > [!IMPORTANT] **Modification Detection**: If the `command` string of a project
-> hook is changed (e.g., by a `git pull`), its identity changes. Gemini CLI will
+> hook is changed (e.g., by a `git pull`), its identity changes. Codefly CLI will
 > treat it as a **new, untrusted hook** and warn you again. This prevents
 > malicious actors from silently swapping a verified command for a malicious
 > one.
@@ -633,7 +633,7 @@ When you open a project with hooks defined in `.codefly/settings.json`:
 | Risk                         | Description                                                                                                                          |
 | :--------------------------- | :----------------------------------------------------------------------------------------------------------------------------------- |
 | **Arbitrary Code Execution** | Hooks run as your user. They can do anything you can do (delete files, install software).                                            |
-| **Data Exfiltration**        | A hook could read your input (prompts), output (code), or environment variables (`GEMINI_API_KEY`) and send them to a remote server. |
+| **Data Exfiltration**        | A hook could read your input (prompts), output (code), or environment variables (`CODEFLY_API_KEY`) and send them to a remote server. |
 | **Prompt Injection**         | Malicious content in a file or web page could trick an LLM into running a tool that triggers a hook in an unexpected way.            |
 
 ### Mitigation Strategies
@@ -649,8 +649,8 @@ When you open a project with hooks defined in `.codefly/settings.json`:
 
 #### Sanitize Environment
 
-Hooks inherit the environment of the Gemini CLI process, which may include
-sensitive API keys. Gemini CLI attempts to sanitize sensitive variables, but you
+Hooks inherit the environment of the Codefly CLI process, which may include
+sensitive API keys. Codefly CLI attempts to sanitize sensitive variables, but you
 should be cautious.
 
 - **Avoid printing environment variables** to stdout/stderr unless necessary.
@@ -658,7 +658,7 @@ should be cautious.
   excluded from version control.
 
 **System Administrators:** You can enforce environment variable redaction by
-default in the system configuration (e.g., `/etc/gemini-cli/settings.json`):
+default in the system configuration (e.g., `/etc/codefly-cli/settings.json`):
 
 ```json
 {
@@ -702,7 +702,7 @@ fi
 
 ### Use timeouts
 
-Prevent denial-of-service (hanging agents) by enforcing timeouts. Gemini CLI
+Prevent denial-of-service (hanging agents) by enforcing timeouts. Codefly CLI
 defaults to 60 seconds, but you should set stricter limits for fast hooks.
 
 ```json
@@ -768,7 +768,7 @@ function containsSecret(content) {
 
 ## Privacy considerations
 
-Hook inputs and outputs may contain sensitive information. Gemini CLI respects
+Hook inputs and outputs may contain sensitive information. Codefly CLI respects
 the `telemetry.logPrompts` setting for hook data logging.
 
 ### What data is collected
@@ -814,7 +814,7 @@ outputs are excluded. Use this when:
 **Disable via environment variable:**
 
 ```bash
-export GEMINI_TELEMETRY_LOG_PROMPTS=false
+export CODEFLY_TELEMETRY_LOG_PROMPTS=false
 ```
 
 ### Sensitive data in hooks
@@ -854,5 +854,5 @@ console.log(JSON.stringify(sanitizeOutput(hookOutput)));
 
 - [Hooks Reference](index.md) - Complete API reference
 - [Writing Hooks](writing-hooks.md) - Tutorial and examples
-- [Configuration](../cli/configuration.md) - Gemini CLI settings
+- [Configuration](../cli/configuration.md) - Codefly CLI settings
 - [Hooks Design Document](../hooks-design.md) - Technical architecture

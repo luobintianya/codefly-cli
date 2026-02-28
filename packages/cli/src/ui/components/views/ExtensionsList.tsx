@@ -70,7 +70,7 @@ export const ExtensionsList: React.FC<ExtensionsList> = ({ extensions }) => {
                   <Text>settings:</Text>
                   {ext.resolvedSettings.map((setting) => (
                     <Text key={setting.name}>
-                      - {setting.name}: {getFormattedSettingValue(setting)}
+                      - {setting.name}: {JSON.stringify(setting.value)}
                       {setting.scope && (
                         <Text color="gray">
                           {' '}

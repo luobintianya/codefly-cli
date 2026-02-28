@@ -15,7 +15,7 @@ import { FileDiscoveryService } from '../services/fileDiscoveryService.js';
 import { ToolErrorType } from './tool-error.js';
 import { WorkspaceContext } from '../utils/workspaceContext.js';
 import { createMockMessageBus } from '../test-utils/mock-message-bus.js';
-import { GEMINI_IGNORE_FILE_NAME } from '../config/constants.js';
+import { CODEFLY_IGNORE_FILE_NAME } from '../config/constants.js';
 
 describe('LSTool', () => {
   let lsTool: LSTool;
@@ -180,7 +180,7 @@ describe('LSTool', () => {
       expect(result.returnDisplay).toBe('Listed 2 item(s). (2 ignored)');
     });
 
-    it('should respect geminiignore patterns', async () => {
+    it('should respect codeflyignore patterns', async () => {
       await fs.writeFile(path.join(tempRootDir, 'file1.txt'), 'content1');
       await fs.writeFile(path.join(tempRootDir, 'file2.log'), 'content1');
       await fs.writeFile(path.join(tempRootDir, '.codeflyignore'), '*.log');

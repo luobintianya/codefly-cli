@@ -14,19 +14,19 @@ import { ValidationRequiredError } from '../utils/googleQuotaErrors.js';
 import { ChangeAuthRequestedError } from '../utils/errors.js';
 import { CodeAssistServer } from '../code_assist/server.js';
 import type { OAuth2Client } from 'google-auth-library';
-import type { GeminiUserTier } from './types.js';
+import type { CodeflyUserTier } from './types.js';
 import { UserTierId } from './types.js';
 
 vi.mock('../code_assist/server.js');
 
-const mockPaidTier: GeminiUserTier = {
+const mockPaidTier: CodeflyUserTier = {
   id: UserTierId.STANDARD,
   name: 'paid',
   description: 'Paid tier',
   isDefault: true,
 };
 
-const mockFreeTier: GeminiUserTier = {
+const mockFreeTier: CodeflyUserTier = {
   id: UserTierId.FREE,
   name: 'free',
   description: 'Free tier',
@@ -84,7 +84,7 @@ describe('setupUser for existing user', () => {
     });
     const httpOptions = {
       headers: {
-        'User-Agent': 'GeminiCLI/1.0.0/gemini-2.0-flash (darwin; arm64)',
+        'User-Agent': 'CodeflyCLI/1.0.0/codefly-2.0-flash (darwin; arm64)',
       },
     };
     await setupUser({} as OAuth2Client, undefined, httpOptions);
@@ -187,7 +187,7 @@ describe('setupUser for new user', () => {
       metadata: {
         ideType: 'IDE_UNSPECIFIED',
         platform: 'PLATFORM_UNSPECIFIED',
-        pluginType: 'GEMINI',
+        pluginType: 'CODEFLY',
         duetProject: 'test-project',
       },
     });
@@ -219,7 +219,7 @@ describe('setupUser for new user', () => {
       metadata: {
         ideType: 'IDE_UNSPECIFIED',
         platform: 'PLATFORM_UNSPECIFIED',
-        pluginType: 'GEMINI',
+        pluginType: 'CODEFLY',
       },
     });
     expect(userData).toEqual({
@@ -342,9 +342,9 @@ describe('setupUser for new user', () => {
         {
           reasonCode: 'UNSUPPORTED_LOCATION',
           reasonMessage:
-            'Your current account is not eligible for Gemini Code Assist for individuals because it is not currently available in your location.',
+            'Your current account is not eligible for Codefly Code Assist for individuals because it is not currently available in your location.',
           tierId: 'free-tier',
-          tierName: 'Gemini Code Assist for individuals',
+          tierName: 'Codefly Code Assist for individuals',
         },
       ],
     });
@@ -356,7 +356,7 @@ describe('setupUser for new user', () => {
     });
 
     await expect(setupUser({} as OAuth2Client)).rejects.toThrow(
-      'Your current account is not eligible for Gemini Code Assist for individuals because it is not currently available in your location.',
+      'Your current account is not eligible for Codefly Code Assist for individuals because it is not currently available in your location.',
     );
   });
 });

@@ -4,14 +4,17 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-// File for 'gemini mcp list' command
+// File for 'codefly mcp list' command
 import type { CommandModule } from 'yargs';
+import type { MergedSettings } from '../../config/settings.js';
 import { loadSettings } from '../../config/settings.js';
 import type { MCPServerConfig } from '@codeflyai/codefly-core';
 import {
   MCPServerStatus,
   createTransport,
   debugLogger,
+  applyAdminAllowlist,
+  getAdminBlockedMcpServersMessage,
 } from '@codeflyai/codefly-core';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { ExtensionManager } from '../../config/extension-manager.js';

@@ -47,6 +47,7 @@ export class SkillManager {
   async discoverSkills(
     storage: Storage,
     extensions: CodeflyCLIExtension[] = [],
+    isTrusted: boolean = false,
   ): Promise<void> {
     this.clearSkills();
 

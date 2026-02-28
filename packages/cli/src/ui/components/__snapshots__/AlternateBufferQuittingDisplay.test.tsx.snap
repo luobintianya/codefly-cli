@@ -113,7 +113,7 @@ Tips for getting started:
 4. /help for more information."
 `;
 
-exports[`AlternateBufferQuittingDisplay > renders with user and gemini messages > with_user_gemini_messages 1`] = `
+exports[`AlternateBufferQuittingDisplay > renders with user and codefly messages > with_user_codefly_messages 1`] = `
 "
   ████████
  ███░░░░███
@@ -130,7 +130,7 @@ Tips for getting started:
 3. Create CODEFLY.md files to customize your interactions with Codefly.
 4. /help for more information.
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
- > Hello Gemini
+ > Hello Codefly
 ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
 ✦  Hello User!
 "

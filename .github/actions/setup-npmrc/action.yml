@@ -17,6 +17,6 @@ runs:
     - name: 'Configure .npmrc'
       shell: 'bash'
       run: |-
-        echo ""@google-gemini:registry=https://npm.pkg.github.com"" > ~/.npmrc
+        echo ""@google-codefly:registry=https://npm.pkg.github.com"" > ~/.npmrc
         echo ""//npm.pkg.github.com/:_authToken=${{ inputs.github-token }}"" >> ~/.npmrc
         echo ""@google:registry=https://wombat-dressing-room.appspot.com"" >> ~/.npmrc

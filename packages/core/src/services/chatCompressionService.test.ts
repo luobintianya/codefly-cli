@@ -110,22 +110,22 @@ describe('findCompressSplitPoint', () => {
 
 describe('modelStringToModelConfigAlias', () => {
   it('should return the default model for unexpected aliases', () => {
-    expect(modelStringToModelConfigAlias('gemini-flash-flash')).toBe(
+    expect(modelStringToModelConfigAlias('codefly-flash-flash')).toBe(
       'chat-compression-default',
     );
   });
 
   it('should handle valid names', () => {
-    expect(modelStringToModelConfigAlias('gemini-3-pro-preview')).toBe(
+    expect(modelStringToModelConfigAlias('codefly-3-pro-preview')).toBe(
       'chat-compression-3-pro',
     );
-    expect(modelStringToModelConfigAlias('gemini-2.5-pro')).toBe(
+    expect(modelStringToModelConfigAlias('codefly-2.5-pro')).toBe(
       'chat-compression-2.5-pro',
     );
-    expect(modelStringToModelConfigAlias('gemini-2.5-flash')).toBe(
+    expect(modelStringToModelConfigAlias('codefly-2.5-flash')).toBe(
       'chat-compression-2.5-flash',
     );
-    expect(modelStringToModelConfigAlias('gemini-2.5-flash-lite')).toBe(
+    expect(modelStringToModelConfigAlias('codefly-2.5-flash-lite')).toBe(
       'chat-compression-2.5-flash-lite',
     );
   });
@@ -136,7 +136,7 @@ describe('ChatCompressionService', () => {
   let mockChat: CodeflyChat;
   let mockConfig: Config;
   let testTempDir: string;
-  const mockModel = 'gemini-2.5-pro';
+  const mockModel = 'codefly-2.5-pro';
   const mockPromptId = 'test-prompt-id';
 
   beforeEach(() => {

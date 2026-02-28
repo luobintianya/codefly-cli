@@ -9,13 +9,6 @@ import { main } from './codefly.js';
 import { debugLogger } from '@codeflyai/codefly-core';
 import { type Config } from '@codeflyai/codefly-core';
 
-// Custom error to identify mock process.exit calls
-class MockProcessExitError extends Error {
-  constructor(readonly code?: string | number | null | undefined) {
-    super('PROCESS_EXIT_MOCKED');
-    this.name = 'MockProcessExitError';
-  }
-}
 
 vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
   const actual =
@@ -129,7 +122,7 @@ vi.mock('./core/initializer.js', () => ({
     authError: null,
     themeError: null,
     shouldOpenAuthDialog: false,
-    geminiMdFileCount: 0,
+    codeflyMdFileCount: 0,
   }),
 }));
 
@@ -179,11 +172,11 @@ vi.mock('./utils/sessionCleanup.js', async (importOriginal) => {
 describe('codefly.tsx main function cleanup', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    process.env['GEMINI_CLI_NO_RELAUNCH'] = 'true';
+    process.env['CODEFLY_CLI_NO_RELAUNCH'] = 'true';
   });
 
   afterEach(() => {
-    delete process.env['GEMINI_CLI_NO_RELAUNCH'];
+    delete process.env['CODEFLY_CLI_NO_RELAUNCH'];
     vi.restoreAllMocks();
   });
 
@@ -233,7 +226,7 @@ describe('codefly.tsx main function cleanup', () => {
       getDeleteSession: vi.fn(() => undefined),
       getToolRegistry: vi.fn(),
       getExtensions: vi.fn(() => []),
-      getModel: vi.fn(() => 'gemini-pro'),
+      getModel: vi.fn(() => 'codefly-pro'),
       getEmbeddingModel: vi.fn(() => 'embedding-001'),
       getApprovalMode: vi.fn(() => 'default'),
       getCoreTools: vi.fn(() => []),

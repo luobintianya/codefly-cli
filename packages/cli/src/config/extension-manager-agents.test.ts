@@ -44,7 +44,7 @@ describe('ExtensionManager agents loading', () => {
     vi.clearAllMocks();
     vi.spyOn(debugLogger, 'warn').mockImplementation(() => {});
 
-    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'gemini-test-agents-'));
+    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'codefly-test-agents-'));
     mockHomedir.mockReturnValue(tempDir);
 
     // Create the extensions directory that ExtensionManager expects

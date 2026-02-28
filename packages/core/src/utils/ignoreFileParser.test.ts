@@ -9,9 +9,9 @@ import { IgnoreFileParser } from './ignoreFileParser.js';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import * as os from 'node:os';
-import { GEMINI_IGNORE_FILE_NAME } from '../config/constants.js';
+import { CODEFLY_IGNORE_FILE_NAME } from '../config/constants.js';
 
-describe('GeminiIgnoreParser', () => {
+describe('CodeflyIgnoreParser', () => {
   let projectRoot: string;
 
   async function createTestFile(filePath: string, content = '') {
@@ -22,7 +22,7 @@ describe('GeminiIgnoreParser', () => {
 
   beforeEach(async () => {
     projectRoot = await fs.mkdtemp(
-      path.join(os.tmpdir(), 'geminiignore-test-'),
+      path.join(os.tmpdir(), 'codeflyignore-test-'),
     );
   });
 
@@ -31,10 +31,10 @@ describe('GeminiIgnoreParser', () => {
     vi.restoreAllMocks();
   });
 
-  describe('when .geminiignore exists', () => {
+  describe('when .codeflyignore exists', () => {
     beforeEach(async () => {
       await createTestFile(
-        GEMINI_IGNORE_FILE_NAME,
+        CODEFLY_IGNORE_FILE_NAME,
         'ignored.txt\n# A comment\n/ignored_dir/\n',
       );
       await createTestFile('ignored.txt', 'ignored');
@@ -49,8 +49,8 @@ describe('GeminiIgnoreParser', () => {
       );
     });
 
-    it('should ignore files specified in .geminiignore', () => {
-      const parser = new IgnoreFileParser(projectRoot, GEMINI_IGNORE_FILE_NAME);
+    it('should ignore files specified in .codeflyignore', () => {
+      const parser = new IgnoreFileParser(projectRoot, CODEFLY_IGNORE_FILE_NAME);
       expect(parser.getPatterns()).toEqual(['ignored.txt', '/ignored_dir/']);
       expect(parser.isIgnored('ignored.txt')).toBe(true);
       expect(parser.isIgnored('not_ignored.txt')).toBe(false);
@@ -61,78 +61,78 @@ describe('GeminiIgnoreParser', () => {
     });
 
     it('should return ignore file path when patterns exist', () => {
-      const parser = new IgnoreFileParser(projectRoot, GEMINI_IGNORE_FILE_NAME);
+      const parser = new IgnoreFileParser(projectRoot, CODEFLY_IGNORE_FILE_NAME);
       expect(parser.getIgnoreFilePaths()).toEqual([
-        path.join(projectRoot, GEMINI_IGNORE_FILE_NAME),
+        path.join(projectRoot, CODEFLY_IGNORE_FILE_NAME),
       ]);
     });
 
     it('should return true for hasPatterns when patterns exist', () => {
-      const parser = new IgnoreFileParser(projectRoot, GEMINI_IGNORE_FILE_NAME);
+      const parser = new IgnoreFileParser(projectRoot, CODEFLY_IGNORE_FILE_NAME);
       expect(parser.hasPatterns()).toBe(true);
     });
 
-    it('should maintain patterns in memory when .geminiignore is deleted', async () => {
-      const parser = new IgnoreFileParser(projectRoot, GEMINI_IGNORE_FILE_NAME);
-      await fs.rm(path.join(projectRoot, GEMINI_IGNORE_FILE_NAME));
+    it('should maintain patterns in memory when .codeflyignore is deleted', async () => {
+      const parser = new IgnoreFileParser(projectRoot, CODEFLY_IGNORE_FILE_NAME);
+      await fs.rm(path.join(projectRoot, CODEFLY_IGNORE_FILE_NAME));
       expect(parser.hasPatterns()).toBe(true);
       expect(parser.getIgnoreFilePaths()).toEqual([]);
     });
   });
 
-  describe('when .geminiignore does not exist', () => {
+  describe('when .codeflyignore does not exist', () => {
     it('should not load any patterns and not ignore any files', () => {
-      const parser = new IgnoreFileParser(projectRoot, GEMINI_IGNORE_FILE_NAME);
+      const parser = new IgnoreFileParser(projectRoot, CODEFLY_IGNORE_FILE_NAME);
       expect(parser.getPatterns()).toEqual([]);
       expect(parser.isIgnored('any_file.txt')).toBe(false);
     });
 
     it('should return empty array for getIgnoreFilePaths when no patterns exist', () => {
-      const parser = new IgnoreFileParser(projectRoot, GEMINI_IGNORE_FILE_NAME);
+      const parser = new IgnoreFileParser(projectRoot, CODEFLY_IGNORE_FILE_NAME);
       expect(parser.getIgnoreFilePaths()).toEqual([]);
     });
 
     it('should return false for hasPatterns when no patterns exist', () => {
-      const parser = new IgnoreFileParser(projectRoot, GEMINI_IGNORE_FILE_NAME);
+      const parser = new IgnoreFileParser(projectRoot, CODEFLY_IGNORE_FILE_NAME);
       expect(parser.hasPatterns()).toBe(false);
     });
   });
 
-  describe('when .geminiignore is empty', () => {
+  describe('when .codeflyignore is empty', () => {
     beforeEach(async () => {
-      await createTestFile(GEMINI_IGNORE_FILE_NAME, '');
+      await createTestFile(CODEFLY_IGNORE_FILE_NAME, '');
     });
 
     it('should return file path for getIgnoreFilePaths', () => {
-      const parser = new IgnoreFileParser(projectRoot, GEMINI_IGNORE_FILE_NAME);
+      const parser = new IgnoreFileParser(projectRoot, CODEFLY_IGNORE_FILE_NAME);
       expect(parser.getIgnoreFilePaths()).toEqual([
-        path.join(projectRoot, GEMINI_IGNORE_FILE_NAME),
+        path.join(projectRoot, CODEFLY_IGNORE_FILE_NAME),
       ]);
     });
 
     it('should return false for hasPatterns', () => {
-      const parser = new IgnoreFileParser(projectRoot, GEMINI_IGNORE_FILE_NAME);
+      const parser = new IgnoreFileParser(projectRoot, CODEFLY_IGNORE_FILE_NAME);
       expect(parser.hasPatterns()).toBe(false);
     });
   });
 
-  describe('when .geminiignore only has comments', () => {
+  describe('when .codeflyignore only has comments', () => {
     beforeEach(async () => {
       await createTestFile(
-        GEMINI_IGNORE_FILE_NAME,
+        CODEFLY_IGNORE_FILE_NAME,
         '# This is a comment\n# Another comment\n',
       );
     });
 
     it('should return file path for getIgnoreFilePaths', () => {
-      const parser = new IgnoreFileParser(projectRoot, GEMINI_IGNORE_FILE_NAME);
+      const parser = new IgnoreFileParser(projectRoot, CODEFLY_IGNORE_FILE_NAME);
       expect(parser.getIgnoreFilePaths()).toEqual([
-        path.join(projectRoot, GEMINI_IGNORE_FILE_NAME),
+        path.join(projectRoot, CODEFLY_IGNORE_FILE_NAME),
       ]);
     });
 
     it('should return false for hasPatterns', () => {
-      const parser = new IgnoreFileParser(projectRoot, GEMINI_IGNORE_FILE_NAME);
+      const parser = new IgnoreFileParser(projectRoot, CODEFLY_IGNORE_FILE_NAME);
       expect(parser.hasPatterns()).toBe(false);
     });
   });

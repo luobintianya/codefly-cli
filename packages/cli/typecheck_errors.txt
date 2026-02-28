@@ -1,0 +1,603 @@
+
+> @codeflyai/codefly@0.27.0-nightly.20260124.37be16243 typecheck
+> tsc --noEmit
+
+src/codefly_cleanup.test.tsx(13,7): error TS6196: 'MockProcessExitError' is declared but never used.
+src/commands/openspec.ts(7,29): error TS2307: Cannot find module '@codeflyai/codefly-core/openspec' or its corresponding type declarations.
+src/config/auth.ts(11,3): error TS2554: Expected 2-3 arguments, but got 1.
+src/config/config.integration.test.ts(255,13): error TS2741: Property 'policy' is missing in type '{ query: undefined; model: undefined; sandbox: undefined; debug: undefined; prompt: undefined; promptInteractive: undefined; yolo: undefined; approvalMode: undefined; allowedMcpServerNames: undefined; ... 15 more ...; isCommand: undefined; }' but required in type 'CliArgs'.
+src/config/config.integration.test.ts(284,21): error TS2339: Property 'language' does not exist on type 'Config'.
+src/config/config.test.ts(2630,21): error TS2304: Cannot find name 'MergedSettings'.
+src/config/extension-manager.ts(153,31): error TS2339: Property 'allowedExtensions' does not exist on type 'InferMergedSettings<{ readonly disableYoloMode: { readonly type: "boolean"; readonly label: "Disable YOLO Mode"; readonly category: "Security"; readonly requiresRestart: true; readonly default: false; readonly description: "Disable YOLO mode, even if enabled by a flag."; readonly showInDialog: true; }; ... 5 more .....'.
+src/config/extension-manager.ts(154,31): error TS2339: Property 'allowedExtensions' does not exist on type 'InferMergedSettings<{ readonly disableYoloMode: { readonly type: "boolean"; readonly label: "Disable YOLO Mode"; readonly category: "Security"; readonly requiresRestart: true; readonly default: false; readonly description: "Disable YOLO mode, even if enabled by a flag."; readonly showInDialog: true; }; ... 5 more .....'.
+src/config/extension-manager.ts(156,56): error TS2339: Property 'allowedExtensions' does not exist on type 'InferMergedSettings<{ readonly disableYoloMode: { readonly type: "boolean"; readonly label: "Disable YOLO Mode"; readonly category: "Security"; readonly requiresRestart: true; readonly default: false; readonly description: "Disable YOLO mode, even if enabled by a flag."; readonly showInDialog: true; }; ... 5 more .....'.
+src/config/extension-manager.ts(157,10): error TS7006: Parameter 'pattern' implicitly has an 'any' type.
+src/config/extension-manager.ts(553,31): error TS2339: Property 'allowedExtensions' does not exist on type 'InferMergedSettings<{ readonly disableYoloMode: { readonly type: "boolean"; readonly label: "Disable YOLO Mode"; readonly category: "Security"; readonly requiresRestart: true; readonly default: false; readonly description: "Disable YOLO mode, even if enabled by a flag."; readonly showInDialog: true; }; ... 5 more .....'.
+src/config/extension-manager.ts(554,31): error TS2339: Property 'allowedExtensions' does not exist on type 'InferMergedSettings<{ readonly disableYoloMode: { readonly type: "boolean"; readonly label: "Disable YOLO Mode"; readonly category: "Security"; readonly requiresRestart: true; readonly default: false; readonly description: "Disable YOLO mode, even if enabled by a flag."; readonly showInDialog: true; }; ... 5 more .....'.
+src/config/extension-manager.ts(561,56): error TS2339: Property 'allowedExtensions' does not exist on type 'InferMergedSettings<{ readonly disableYoloMode: { readonly type: "boolean"; readonly label: "Disable YOLO Mode"; readonly category: "Security"; readonly requiresRestart: true; readonly default: false; readonly description: "Disable YOLO mode, even if enabled by a flag."; readonly showInDialog: true; }; ... 5 more .....'.
+src/config/extension-manager.ts(562,10): error TS7006: Parameter 'pattern' implicitly has an 'any' type.
+src/config/extension.test.ts(674,11): error TS2353: Object literal may only specify known properties, and 'allowedExtensions' does not exist in type 'InferSettings<{ readonly disableYoloMode: { readonly type: "boolean"; readonly label: "Disable YOLO Mode"; readonly category: "Security"; readonly requiresRestart: true; readonly default: false; readonly description: "Disable YOLO mode, even if enabled by a flag."; readonly showInDialog: true; }; ... 5 more ...; rea...'.
+src/config/extension.test.ts(702,11): error TS2353: Object literal may only specify known properties, and 'allowedExtensions' does not exist in type 'InferSettings<{ readonly disableYoloMode: { readonly type: "boolean"; readonly label: "Disable YOLO Mode"; readonly category: "Security"; readonly requiresRestart: true; readonly default: false; readonly description: "Disable YOLO mode, even if enabled by a flag."; readonly showInDialog: true; }; ... 5 more ...; rea...'.
+src/config/extension.test.ts(1197,11): error TS2353: Object literal may only specify known properties, and 'allowedExtensions' does not exist in type 'InferSettings<{ readonly disableYoloMode: { readonly type: "boolean"; readonly label: "Disable YOLO Mode"; readonly category: "Security"; readonly requiresRestart: true; readonly default: false; readonly description: "Disable YOLO mode, even if enabled by a flag."; readonly showInDialog: true; }; ... 5 more ...; rea...'.
+src/config/extensions/extensionUpdates.test.ts(148,5): error TS2304: Cannot find name 'tempHomeDir'.
+src/config/extensions/extensionUpdates.test.ts(149,7): error TS2304: Cannot find name 'path'.
+src/config/extensions/extensionUpdates.test.ts(149,17): error TS2304: Cannot find name 'os'.
+src/config/extensions/extensionUpdates.test.ts(152,7): error TS2304: Cannot find name 'path'.
+src/config/extensions/extensionUpdates.test.ts(152,17): error TS2304: Cannot find name 'os'.
+src/config/extensions/extensionUpdates.test.ts(154,5): error TS2304: Cannot find name 'extensionDir'.
+src/config/extensions/extensionUpdates.test.ts(154,20): error TS2304: Cannot find name 'path'.
+src/config/extensions/extensionUpdates.test.ts(154,30): error TS2304: Cannot find name 'tempHomeDir'.
+src/config/extensions/extensionUpdates.test.ts(157,14): error TS2304: Cannot find name 'ExtensionStorage'.
+src/config/extensions/extensionUpdates.test.ts(158,7): error TS2304: Cannot find name 'extensionDir'.
+src/config/extensions/extensionUpdates.test.ts(165,18): error TS2304: Cannot find name 'extensionDir'.
+src/config/extensions/extensionUpdates.test.ts(166,15): error TS2304: Cannot find name 'os'.
+src/config/extensions/extensionUpdates.test.ts(166,43): error TS2304: Cannot find name 'tempHomeDir'.
+src/config/extensions/extensionUpdates.test.ts(187,27): error TS2304: Cannot find name 'path'.
+src/config/extensions/extensionUpdates.test.ts(187,37): error TS2304: Cannot find name 'extensionDir'.
+src/config/extensions/extensionUpdates.test.ts(191,32): error TS2304: Cannot find name 'KeychainTokenStorage'.
+src/config/extensions/extensionUpdates.test.ts(249,32): error TS2304: Cannot find name 'path'.
+src/config/extensions/extensionUpdates.test.ts(283,19): error TS2304: Cannot find name 'extensionDir'.
+src/config/extensions/extensionUpdates.test.ts(306,19): error TS2304: Cannot find name 'extensionDir'.
+src/config/settings.ts(22,8): error TS6133: 'FetchAdminControlsResponse' is declared but its value is never read.
+src/config/skills-backward-compatibility.test.ts(42,9): error TS2559: Type 'string' has no properties in common with type 'HierarchicalMemory'.
+src/config/skills-backward-compatibility.test.ts(63,9): error TS2559: Type 'string' has no properties in common with type 'HierarchicalMemory'.
+src/config/skills-backward-compatibility.test.ts(87,9): error TS2559: Type 'string' has no properties in common with type 'HierarchicalMemory'.
+src/config/skills-backward-compatibility.test.ts(111,9): error TS2559: Type 'string' has no properties in common with type 'HierarchicalMemory'.
+src/config/skills-backward-compatibility.test.ts(136,9): error TS2559: Type 'string' has no properties in common with type 'HierarchicalMemory'.
+src/config/trustedFolders.test.ts(7,1): error TS6133: 'osActual' is declared but its value is never read.
+src/config/trustedFolders.test.ts(8,10): error TS2300: Duplicate identifier 'FatalConfigError'.
+src/config/trustedFolders.test.ts(8,28): error TS2300: Duplicate identifier 'ideContextStore'.
+src/config/trustedFolders.test.ts(16,8): error TS6133: 'Mocked' is declared but its value is never read.
+src/config/trustedFolders.test.ts(17,8): error TS6133: 'Mock' is declared but its value is never read.
+src/config/trustedFolders.test.ts(23,3): error TS2300: Duplicate identifier 'FatalConfigError'.
+src/config/trustedFolders.test.ts(24,3): error TS2300: Duplicate identifier 'ideContextStore'.
+src/config/trustedFolders.ts(11,41): error TS1484: 'HeadlessModeOptions' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/core/auth.test.ts(40,16): error TS2339: Property 'LOGIN_WITH_GOOGLE' does not exist on type '{ readonly OAUTH: "oauth"; }'.
+src/core/auth.test.ts(44,16): error TS2339: Property 'LOGIN_WITH_GOOGLE' does not exist on type '{ readonly OAUTH: "oauth"; }'.
+src/core/auth.test.ts(53,16): error TS2339: Property 'LOGIN_WITH_GOOGLE' does not exist on type '{ readonly OAUTH: "oauth"; }'.
+src/core/auth.test.ts(57,16): error TS2339: Property 'LOGIN_WITH_GOOGLE' does not exist on type '{ readonly OAUTH: "oauth"; }'.
+src/core/auth.test.ts(67,16): error TS2339: Property 'LOGIN_WITH_GOOGLE' does not exist on type '{ readonly OAUTH: "oauth"; }'.
+src/core/auth.test.ts(71,16): error TS2339: Property 'LOGIN_WITH_GOOGLE' does not exist on type '{ readonly OAUTH: "oauth"; }'.
+src/deferred.ts(7,33): error TS6133: 'debugLogger' is declared but its value is never read.
+src/nonInteractiveCli.test.ts(62,18): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(124,5): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(316,5): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(359,12): error TS2304: Cannot find name 'mockCoreExecuteToolCall'.
+src/nonInteractiveCli.test.ts(393,5): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(445,12): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(459,5): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(510,12): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(563,5): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(605,12): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(738,5): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(794,12): error TS2304: Cannot find name 'mockCoreExecuteToolCall'.
+src/nonInteractiveCli.test.ts(1335,5): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(1377,12): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(1534,5): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(1726,5): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(1809,5): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(1844,12): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(1871,5): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(1935,5): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(2178,7): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.ts(20,3): error TS2724: '"@codeflyai/codefly-core"' has no exported member named 'executeToolCall'. Did you mean 'ExecutingToolCall'?
+src/nonInteractiveCli.ts(20,3): error TS6133: 'executeToolCall' is declared but its value is never read.
+src/nonInteractiveCli.ts(439,38): error TS2345: Argument of type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part' is not assignable to parameter of type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part'.
+  Types of property 'mediaResolution' are incompatible.
+    Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution | undefined' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution | undefined'.
+      Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution'.
+        Types of property 'level' are incompatible.
+          Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolutionLevel | undefined' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolutionLevel | undefined'.
+            Type 'PartMediaResolutionLevel.MEDIA_RESOLUTION_UNSPECIFIED' is not assignable to type 'PartMediaResolutionLevel | undefined'.
+src/nonInteractiveCliCommands.ts(92,13): error TS2322: Type 'PartListUnion' is not assignable to type 'PartListUnion | undefined'.
+  Type 'Part' is not assignable to type 'PartListUnion | undefined'.
+    Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part'.
+      Types of property 'mediaResolution' are incompatible.
+        Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution | undefined' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution | undefined'.
+          Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution'.
+            Types of property 'level' are incompatible.
+              Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolutionLevel | undefined' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolutionLevel | undefined'.
+                Type 'PartMediaResolutionLevel.MEDIA_RESOLUTION_UNSPECIFIED' is not assignable to type 'PartMediaResolutionLevel | undefined'.
+src/services/BuiltinCommandLoader.ts(26,1): error TS6133: 'commandsCommand' is declared but its value is never read.
+src/services/BuiltinCommandLoader.ts(35,1): error TS6133: 'shortcutsCommand' is declared but its value is never read.
+src/services/BuiltinCommandLoader.ts(43,1): error TS6133: 'oncallCommand' is declared but its value is never read.
+src/services/BuiltinCommandLoader.ts(46,10): error TS2300: Duplicate identifier 'privacyCommand'.
+src/services/BuiltinCommandLoader.ts(48,10): error TS2300: Duplicate identifier 'privacyCommand'.
+src/services/BuiltinCommandLoader.ts(58,1): error TS6133: 'shellsCommand' is declared but its value is never read.
+src/services/prompt-processors/argumentProcessor.ts(23,7): error TS2322: Type 'PartUnion[]' is not assignable to type 'PromptPipelineContent'.
+  Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartUnion' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartUnion'.
+    Type 'Part' is not assignable to type 'PartUnion'.
+      Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part'.
+        Types of property 'mediaResolution' are incompatible.
+          Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution | undefined' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution | undefined'.
+            Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution'.
+              Types of property 'level' are incompatible.
+                Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolutionLevel | undefined' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolutionLevel | undefined'.
+                  Type 'PartMediaResolutionLevel.MEDIA_RESOLUTION_UNSPECIFIED' is not assignable to type 'PartMediaResolutionLevel | undefined'.
+src/services/prompt-processors/atFileProcessor.ts(33,5): error TS2322: Type 'PartUnion[]' is not assignable to type 'PromptPipelineContent'.
+  Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartUnion' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartUnion'.
+    Type 'Part' is not assignable to type 'PartUnion'.
+      Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part'.
+        Types of property 'mediaResolution' are incompatible.
+          Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution | undefined' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution | undefined'.
+            Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution'.
+              Types of property 'level' are incompatible.
+                Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolutionLevel | undefined' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolutionLevel | undefined'.
+                  Type 'PartMediaResolutionLevel.MEDIA_RESOLUTION_UNSPECIFIED' is not assignable to type 'PartMediaResolutionLevel | undefined'.
+src/services/prompt-processors/atFileProcessor.ts(66,23): error TS2345: Argument of type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartUnion' is not assignable to parameter of type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartUnion'.
+  Type 'Part' is not assignable to type 'PartUnion'.
+    Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part'.
+      Types of property 'mediaResolution' are incompatible.
+        Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution | undefined' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution | undefined'.
+          Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution'.
+            Types of property 'level' are incompatible.
+              Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolutionLevel | undefined' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolutionLevel | undefined'.
+                Type 'PartMediaResolutionLevel.MEDIA_RESOLUTION_UNSPECIFIED' is not assignable to type 'PartMediaResolutionLevel | undefined'.
+src/services/prompt-processors/shellProcessor.ts(60,5): error TS2322: Type 'PartUnion[]' is not assignable to type 'PromptPipelineContent'.
+  Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartUnion' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartUnion'.
+    Type 'Part' is not assignable to type 'PartUnion'.
+      Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part'.
+        Types of property 'mediaResolution' are incompatible.
+          Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution | undefined' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution | undefined'.
+            Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution'.
+              Types of property 'level' are incompatible.
+                Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolutionLevel | undefined' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolutionLevel | undefined'.
+                  Type 'PartMediaResolutionLevel.MEDIA_RESOLUTION_UNSPECIFIED' is not assignable to type 'PartMediaResolutionLevel | undefined'.
+src/test-utils/createExtension.ts(9,10): error TS1484: 'CustomTheme' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/test-utils/createExtension.ts(9,23): error TS1484: 'ExtensionSetting' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/ui/App.test.tsx(11,10): error TS2300: Duplicate identifier 'CoreToolCallStatus'.
+src/ui/App.test.tsx(11,35): error TS6133: 'Config' is declared but its value is never read.
+src/ui/App.test.tsx(14,26): error TS6133: 'ToolCallStatus' is declared but its value is never read.
+src/ui/App.test.tsx(15,10): error TS2300: Duplicate identifier 'CoreToolCallStatus'.
+src/ui/AppContainer.test.tsx(23,31): error TS2300: Duplicate identifier 'CoreToolCallStatus'.
+src/ui/AppContainer.test.tsx(221,10): error TS2300: Duplicate identifier 'CoreToolCallStatus'.
+src/ui/AppContainer.test.tsx(3408,32): error TS2339: Property 'showIsExpandableHint' does not exist on type 'UIState'.
+src/ui/AppContainer.test.tsx(3415,30): error TS2339: Property 'showIsExpandableHint' does not exist on type 'UIState'.
+src/ui/AppContainer.test.tsx(3422,32): error TS2339: Property 'showIsExpandableHint' does not exist on type 'UIState'.
+src/ui/AppContainer.test.tsx(3447,32): error TS2339: Property 'showIsExpandableHint' does not exist on type 'UIState'.
+src/ui/AppContainer.test.tsx(3454,30): error TS2339: Property 'showIsExpandableHint' does not exist on type 'UIState'.
+src/ui/AppContainer.test.tsx(3472,30): error TS2339: Property 'showIsExpandableHint' does not exist on type 'UIState'.
+src/ui/AppContainer.test.tsx(3480,32): error TS2339: Property 'showIsExpandableHint' does not exist on type 'UIState'.
+src/ui/AppContainer.test.tsx(3505,32): error TS2339: Property 'showIsExpandableHint' does not exist on type 'UIState'.
+src/ui/AppContainer.test.tsx(3512,30): error TS2339: Property 'showIsExpandableHint' does not exist on type 'UIState'.
+src/ui/AppContainer.test.tsx(3526,30): error TS2339: Property 'showIsExpandableHint' does not exist on type 'UIState'.
+src/ui/AppContainer.test.tsx(3540,30): error TS2339: Property 'showIsExpandableHint' does not exist on type 'UIState'.
+src/ui/AppContainer.test.tsx(3555,30): error TS2339: Property 'showIsExpandableHint' does not exist on type 'UIState'.
+src/ui/AppContainer.test.tsx(3563,32): error TS2339: Property 'showIsExpandableHint' does not exist on type 'UIState'.
+src/ui/AppContainer.test.tsx(3596,30): error TS2339: Property 'showIsExpandableHint' does not exist on type 'UIState'.
+src/ui/AppContainer.test.tsx(3618,30): error TS2339: Property 'permissionConfirmationRequest' does not exist on type 'UIState'.
+src/ui/AppContainer.test.tsx(3619,30): error TS2339: Property 'permissionConfirmationRequest' does not exist on type 'UIState'.
+src/ui/AppContainer.test.tsx(3648,27): error TS2339: Property 'permissionConfirmationRequest' does not exist on type 'UIState'.
+src/ui/AppContainer.test.tsx(3659,32): error TS2339: Property 'permissionConfirmationRequest' does not exist on type 'UIState'.
+src/ui/AppContainer.tsx(43,10): error TS1484: 'AgentsDiscoveredPayload' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/ui/AppContainer.tsx(43,71): error TS1484: 'ConsentRequestPayload' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/ui/AppContainer.tsx(229,10): error TS6133: 'showIsExpandableHint' is declared but its value is never read.
+src/ui/AppContainer.tsx(526,14): error TS2540: Cannot assign to 'openaiConfig' because it is a read-only property.
+src/ui/AppContainer.tsx(794,18): error TS2540: Cannot assign to 'openaiConfig' because it is a read-only property.
+src/ui/AppContainer.tsx(1116,5): error TS6133: 'dismissBackgroundShell' is declared but its value is never read.
+src/ui/AppContainer.tsx(1148,5): error TS6133: 'setActiveBackgroundShellPid' is declared but its value is never read.
+src/ui/AppContainer.tsx(2157,10): error TS2304: Cannot find name 'generateSteeringAckMessage'.
+src/ui/AppContainer.tsx(2160,13): error TS7006: Parameter 'ackText' implicitly has an 'any' type.
+src/ui/AppContainer.tsx(2533,45): error TS2304: Cannot find name 'NewAgentsChoice'.
+src/ui/AppContainer.tsx(2534,37): error TS2304: Cannot find name 'NewAgentsChoice'.
+src/ui/auth/ApiAuthDialog.tsx(70,5): error TS2353: Object literal may only specify known properties, and 'isValidPath' does not exist in type 'UseTextBufferProps'.
+src/ui/auth/ApiAuthDialog.tsx(82,5): error TS2353: Object literal may only specify known properties, and 'isValidPath' does not exist in type 'UseTextBufferProps'.
+src/ui/auth/ApiAuthDialog.tsx(94,5): error TS2353: Object literal may only specify known properties, and 'isValidPath' does not exist in type 'UseTextBufferProps'.
+src/ui/auth/ApiAuthDialog.tsx(132,5): error TS7030: Not all code paths return a value.
+src/ui/auth/AuthDialog.test.tsx(7,1): error TS6133: 'act' is declared but its value is never read.
+src/ui/auth/AuthDialog.test.tsx(223,31): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/auth/AuthDialog.test.tsx(241,31): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/auth/AuthDialog.test.tsx(256,31): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/commands/bugCommand.ts(87,39): error TS2322: Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Content[]' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Content[]'.
+  Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Content' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Content'.
+    Types of property 'parts' are incompatible.
+      Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part[] | undefined' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part[] | undefined'.
+        Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part[]' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part[]'.
+          Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part'.
+            Types of property 'mediaResolution' are incompatible.
+              Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution | undefined' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution | undefined'.
+                Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution'.
+                  Types of property 'level' are incompatible.
+                    Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolutionLevel | undefined' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolutionLevel | undefined'.
+                      Type 'PartMediaResolutionLevel.MEDIA_RESOLUTION_UNSPECIFIED' is not assignable to type 'PartMediaResolutionLevel | undefined'.
+src/ui/commands/chatCommand.ts(322,35): error TS2322: Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Content[]' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Content[]'.
+  Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Content' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Content'.
+    Types of property 'parts' are incompatible.
+      Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part[] | undefined' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part[] | undefined'.
+        Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part[]' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part[]'.
+          Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part'.
+            Types of property 'mediaResolution' are incompatible.
+              Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution | undefined' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution | undefined'.
+                Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution'.
+                  Types of property 'level' are incompatible.
+                    Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolutionLevel | undefined' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolutionLevel | undefined'.
+                      Type 'PartMediaResolutionLevel.MEDIA_RESOLUTION_UNSPECIFIED' is not assignable to type 'PartMediaResolutionLevel | undefined'.
+src/ui/commands/hooksCommand.ts(78,18): error TS2304: Cannot find name 'enableHook'.
+src/ui/commands/hooksCommand.ts(84,20): error TS2304: Cannot find name 'renderHookActionFeedback'.
+src/ui/commands/hooksCommand.ts(86,6): error TS7006: Parameter 'label' implicitly has an 'any' type.
+src/ui/commands/hooksCommand.ts(86,13): error TS7006: Parameter 'path' implicitly has an 'any' type.
+src/ui/commands/hooksCommand.ts(133,18): error TS2304: Cannot find name 'disableHook'.
+src/ui/commands/hooksCommand.ts(139,20): error TS2304: Cannot find name 'renderHookActionFeedback'.
+src/ui/commands/hooksCommand.ts(141,6): error TS7006: Parameter 'label' implicitly has an 'any' type.
+src/ui/commands/hooksCommand.ts(141,13): error TS7006: Parameter 'path' implicitly has an 'any' type.
+src/ui/commands/hooksCommand.ts(245,11): error TS2304: Cannot find name 'isLoadableSettingScope'.
+src/ui/commands/hooksCommand.ts(246,27): error TS2345: Argument of type 'SettingScope' is not assignable to parameter of type 'LoadableSettingScope'.
+src/ui/commands/memoryCommand.test.ts(91,27): error TS2339: Property 'length' does not exist on type 'string | HierarchicalMemory'.
+  Property 'length' does not exist on type 'HierarchicalMemory'.
+src/ui/commands/modelCommand.test.ts(107,17): error TS2304: Cannot find name 'MessageType'.
+src/ui/commands/modelCommand.test.ts(139,17): error TS2304: Cannot find name 'MessageType'.
+src/ui/commands/modelCommand.test.ts(153,17): error TS2304: Cannot find name 'MessageType'.
+src/ui/commands/rewindCommand.tsx(145,15): error TS2304: Cannot find name 'logRewind'.
+src/ui/commands/rewindCommand.tsx(145,37): error TS2304: Cannot find name 'RewindEvent'.
+src/ui/components/AboutBox.tsx(38,52): error TS2339: Property 'showUserIdentity' does not exist on type 'InferMergedSettings<{ readonly language: { readonly type: "string"; readonly label: "Language"; readonly category: "General"; readonly requiresRestart: true; readonly default: "en"; readonly description: "The language for the CLI interface."; readonly showInDialog: true; }; ... 13 more ...; readonly sessionRetention...'.
+src/ui/components/AskUserDialog.test.tsx(1105,33): error TS2304: Cannot find name 'chalk'.
+src/ui/components/AskUserDialog.test.tsx(1137,33): error TS2304: Cannot find name 'chalk'.
+src/ui/components/AskUserDialog.test.tsx(1168,33): error TS2304: Cannot find name 'chalk'.
+src/ui/components/AskUserDialog.test.tsx(1221,10): error TS2304: Cannot find name 'UIState'.
+src/ui/components/AskUserDialog.test.tsx(1224,8): error TS2304: Cannot find name 'UIStateContext'.
+src/ui/components/AskUserDialog.test.tsx(1231,9): error TS2304: Cannot find name 'UIStateContext'.
+src/ui/components/AskUserDialog.test.tsx(1257,10): error TS2304: Cannot find name 'UIState'.
+src/ui/components/AskUserDialog.test.tsx(1260,8): error TS2304: Cannot find name 'UIStateContext'.
+src/ui/components/AskUserDialog.test.tsx(1267,9): error TS2304: Cannot find name 'UIStateContext'.
+src/ui/components/BackgroundShellDisplay.tsx(64,5): error TS2339: Property 'dismissBackgroundShell' does not exist on type 'UIActions'.
+src/ui/components/BackgroundShellDisplay.tsx(65,5): error TS2339: Property 'setActiveBackgroundShellPid' does not exist on type 'UIActions'.
+src/ui/components/BackgroundShellDisplay.tsx(66,5): error TS2339: Property 'setIsBackgroundShellListOpen' does not exist on type 'UIActions'.
+src/ui/components/Composer.test.tsx(62,21): error TS2339: Property 'transientMessage' does not exist on type 'UIState'.
+src/ui/components/Composer.test.tsx(554,9): error TS2353: Object literal may only specify known properties, and 'transientMessage' does not exist in type 'Partial<UIState>'.
+src/ui/components/Composer.tsx(10,3): error TS2300: Duplicate identifier 'ApprovalMode'.
+src/ui/components/Composer.tsx(37,10): error TS2300: Duplicate identifier 'ApprovalMode'.
+src/ui/components/Composer.tsx(69,27): error TS2304: Cannot find name 'HistoryItemToolGroup'.
+src/ui/components/Composer.tsx(73,14): error TS7006: Parameter 'tool' implicitly has an 'any' type.
+src/ui/components/ContextUsageDisplay.tsx(9,1): error TS6133: 'tokenLimit' is declared but its value is never read.
+src/ui/components/ContextUsageDisplay.tsx(20,22): error TS2304: Cannot find name 'getContextUsagePercentage'.
+src/ui/components/DialogManager.tsx(31,10): error TS2300: Duplicate identifier 'SettingScope'.
+src/ui/components/DialogManager.tsx(40,10): error TS2300: Duplicate identifier 'SettingScope'.
+src/ui/components/DialogManager.tsx(119,15): error TS2339: Property 'newAgents' does not exist on type 'UIState'.
+src/ui/components/DialogManager.tsx(122,25): error TS2339: Property 'newAgents' does not exist on type 'UIState'.
+src/ui/components/DialogManager.tsx(189,15): error TS2339: Property 'permissionConfirmationRequest' does not exist on type 'UIState'.
+src/ui/components/DialogManager.tsx(190,27): error TS2339: Property 'permissionConfirmationRequest' does not exist on type 'UIState'.
+src/ui/components/DialogManager.tsx(191,34): error TS7006: Parameter 'f' implicitly has an 'any' type.
+src/ui/components/DialogManager.tsx(196,19): error TS2339: Property 'permissionConfirmationRequest' does not exist on type 'UIState'.
+src/ui/components/FolderTrustDialog.test.tsx(238,40): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/components/FolderTrustDialog.tsx(21,21): error TS1484: 'FolderDiscoveryResults' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/ui/components/FolderTrustDialog.tsx(41,62): error TS2304: Cannot find name 'useUIState'.
+src/ui/components/FolderTrustDialog.tsx(42,29): error TS2304: Cannot find name 'useAlternateBuffer'.
+src/ui/components/FolderTrustDialog.tsx(210,12): error TS2304: Cannot find name 'StickyHeader'.
+src/ui/components/FolderTrustDialog.tsx(217,13): error TS2304: Cannot find name 'StickyHeader'.
+src/ui/components/FolderTrustDialog.tsx(287,10): error TS2304: Cannot find name 'ShowMoreLines'.
+src/ui/components/FolderTrustDialog.tsx(309,6): error TS2304: Cannot find name 'OverflowProvider'.
+src/ui/components/FolderTrustDialog.tsx(309,34): error TS2304: Cannot find name 'OverflowProvider'.
+src/ui/components/HistoryItemDisplay.test.tsx(150,24): error TS6133: 'waitUntilReady' is declared but its value is never read.
+src/ui/components/HistoryItemDisplay.test.tsx(150,40): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/components/HistoryItemDisplay.test.tsx(239,19): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/HistoryItemDisplay.tsx(23,1): error TS6133: 'ModelStatsDisplay' is declared but its value is never read.
+src/ui/components/IdeTrustChangeDialog.test.tsx(20,40): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/components/IdeTrustChangeDialog.test.tsx(33,40): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/components/messages/ShellToolMessage.test.tsx(12,26): error TS6133: 'ToolCallStatus' is declared but its value is never read.
+src/ui/components/messages/ShellToolMessage.test.tsx(218,9): error TS2304: Cannot find name 'ACTIVE_SHELL_MAX_LINES'.
+src/ui/components/messages/ShellToolMessage.test.tsx(230,9): error TS2304: Cannot find name 'ACTIVE_SHELL_MAX_LINES'.
+src/ui/components/messages/ShellToolMessage.tsx(66,7): error TS2304: Cannot find name 'useUIState'.
+src/ui/components/messages/ShellToolMessage.tsx(67,29): error TS2552: Cannot find name 'useAlternateBuffer'. Did you mean 'isAlternateBuffer'?
+src/ui/components/messages/ShellToolMessage.tsx(161,21): error TS2304: Cannot find name 'calculateShellMaxLines'.
+src/ui/components/messages/ShellToolMessage.tsx(174,56): error TS2304: Cannot find name 'ACTIVE_SHELL_MAX_LINES'.
+src/ui/components/messages/Todo.tsx(8,1): error TS6192: All imports in import declaration are unused.
+src/ui/components/messages/Todo.tsx(10,8): error TS6133: 'Todo' is declared but its value is never read.
+src/ui/components/messages/Todo.tsx(12,8): error TS6133: 'TodoStatus' is declared but its value is never read.
+src/ui/components/messages/Todo.tsx(14,1): error TS6133: 'theme' is declared but its value is never read.
+src/ui/components/messages/ToolConfirmationMessage.test.tsx(16,3): error TS2724: '"../../../test-utils/render.js"' has no exported member named 'createMockSettings'. Did you mean 'mockSettings'?
+src/ui/components/messages/ToolGroupMessage.test.tsx(17,52): error TS6196: 'Config' is declared but never used.
+src/ui/components/messages/ToolGroupMessage.test.tsx(31,13): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(49,26): error TS2304: Cannot find name 'makeFakeConfig'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(51,16): error TS2304: Cannot find name 'os'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(85,19): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(112,19): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(118,19): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(124,19): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(159,19): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(165,19): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(171,19): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(340,19): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(424,19): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(449,34): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(453,19): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(522,17): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(527,17): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(532,17): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(537,17): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(541,17): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(543,17): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(553,19): error TS1361: 'ASK_USER_DISPLAY_NAME' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(580,19): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(584,17): error TS1361: 'ASK_USER_DISPLAY_NAME' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(585,19): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(607,17): error TS1361: 'ASK_USER_DISPLAY_NAME' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(608,19): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(632,15): error TS1361: 'WRITE_FILE_DISPLAY_NAME' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(633,15): error TS1361: 'ApprovalMode' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(636,15): error TS1361: 'EDIT_DISPLAY_NAME' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(636,40): error TS1361: 'ApprovalMode' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(638,15): error TS1361: 'WRITE_FILE_DISPLAY_NAME' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(639,15): error TS1361: 'ApprovalMode' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(642,15): error TS1361: 'READ_FILE_DISPLAY_NAME' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(642,45): error TS1361: 'ApprovalMode' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(643,15): error TS1361: 'GLOB_DISPLAY_NAME' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(643,40): error TS1361: 'ApprovalMode' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(738,19): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolMessage.test.tsx(12,1): error TS6133: 'StreamingContext' is declared but its value is never read.
+src/ui/components/messages/ToolMessage.test.tsx(41,13): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolMessage.test.tsx(225,45): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolMessage.test.tsx(235,45): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolMessage.test.tsx(247,19): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolMessage.test.tsx(258,45): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolMessage.test.tsx(268,45): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolMessage.test.tsx(278,45): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolMessage.test.tsx(288,45): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolMessage.test.tsx(298,45): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolMessage.test.tsx(383,17): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolMessage.test.tsx(405,17): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolMessage.test.tsx(425,17): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolMessageFocusHint.test.tsx(37,13): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/messages/ToolResultDisplay.test.tsx(10,1): error TS6192: All imports in import declaration are unused.
+src/ui/components/ModelDialog.test.tsx(114,24): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/components/ModelDialog.test.tsx(129,47): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/components/ModelDialog.test.tsx(172,36): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/components/ModelDialog.test.tsx(188,20): error TS6133: 'waitUntilReady' is declared but its value is never read.
+src/ui/components/ModelDialog.test.tsx(207,47): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/components/ModelDialog.test.tsx(250,47): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/components/ModelDialog.tsx(48,9): error TS6133: '_useCustomToolModel' is declared but its value is never read.
+src/ui/components/SessionSummaryDisplay.tsx(20,5): error TS2322: Type '{ title: string; duration: string; footer: string; }' is not assignable to type 'IntrinsicAttributes & StatsDisplayProps'.
+  Property 'footer' does not exist on type 'IntrinsicAttributes & StatsDisplayProps'.
+src/ui/components/SettingsDialog.tsx(42,1): error TS6133: 'useUIState' is declared but its value is never read.
+src/ui/components/SettingsDialog.tsx(43,1): error TS6133: 'useTextBuffer' is declared but its value is never read.
+src/ui/components/SettingsDialog.tsx(212,24): error TS2552: Cannot find name 'useSearchBuffer'. Did you mean 'searchBuffer'?
+src/ui/components/ShellInputPrompt.test.tsx(38,15): error TS2304: Cannot find name 'useUIActions'.
+src/ui/components/ShellInputPrompt.test.tsx(40,18): error TS2304: Cannot find name 'UIActions'.
+src/ui/components/ShellInputPrompt.test.tsx(40,32): error TS2304: Cannot find name 'UIActions'.
+src/ui/components/ShellInputPrompt.test.tsx(60,11): error TS2304: Cannot find name 'act'.
+src/ui/components/ShellInputPrompt.test.tsx(89,11): error TS2304: Cannot find name 'act'.
+src/ui/components/ShellInputPrompt.test.tsx(116,11): error TS2304: Cannot find name 'act'.
+src/ui/components/ShellInputPrompt.test.tsx(138,13): error TS2304: Cannot find name 'act'.
+src/ui/components/ShellInputPrompt.test.tsx(167,11): error TS2304: Cannot find name 'act'.
+src/ui/components/ShellInputPrompt.test.tsx(180,11): error TS2304: Cannot find name 'act'.
+src/ui/components/ShellInputPrompt.test.tsx(202,11): error TS2304: Cannot find name 'act'.
+src/ui/components/ShellInputPrompt.test.tsx(226,11): error TS2304: Cannot find name 'act'.
+src/ui/components/ShellInputPrompt.test.tsx(251,11): error TS2304: Cannot find name 'act'.
+src/ui/components/StatsDisplay.tsx(11,26): error TS6133: 'formatResetTime' is declared but its value is never read.
+src/ui/components/StatsDisplay.tsx(117,18): error TS2304: Cannot find name 'currentModel'.
+src/ui/components/StatsDisplay.tsx(117,46): error TS2304: Cannot find name 'currentModel'.
+src/ui/components/StatsDisplay.tsx(119,27): error TS2304: Cannot find name 'currentModel'.
+src/ui/components/StatsDisplay.tsx(134,9): error TS2304: Cannot find name 'showQuotaColumn'.
+src/ui/components/StatsDisplay.tsx(135,9): error TS2304: Cannot find name 'pooledRemaining'.
+src/ui/components/StatsDisplay.tsx(136,9): error TS2304: Cannot find name 'pooledLimit'.
+src/ui/components/StatsDisplay.tsx(137,9): error TS2304: Cannot find name 'pooledLimit'.
+src/ui/components/StatsDisplay.tsx(139,14): error TS2304: Cannot find name 'QuotaStatsInfo'.
+src/ui/components/StatsDisplay.tsx(140,26): error TS2304: Cannot find name 'pooledRemaining'.
+src/ui/components/StatsDisplay.tsx(141,22): error TS2304: Cannot find name 'pooledLimit'.
+src/ui/components/StatsDisplay.tsx(142,26): error TS2304: Cannot find name 'pooledResetTime'.
+src/ui/components/StatsDisplay.tsx(297,20): error TS2304: Cannot find name 'useSettings'.
+src/ui/components/StatsDisplay.tsx(298,18): error TS2304: Cannot find name 'useConfig'.
+src/ui/components/StatsDisplay.tsx(303,27): error TS2304: Cannot find name 'quotaStats'.
+src/ui/components/StatsDisplay.tsx(304,23): error TS2304: Cannot find name 'quotaStats'.
+src/ui/components/StatsDisplay.tsx(305,27): error TS2304: Cannot find name 'quotaStats'.
+src/ui/components/StatsDisplay.tsx(335,10): error TS2304: Cannot find name 'footer'.
+src/ui/components/StatsDisplay.tsx(338,34): error TS2304: Cannot find name 'footer'.
+src/ui/components/StatsDisplay.tsx(357,30): error TS2304: Cannot find name 'selectedAuthType'.
+src/ui/components/StatsDisplay.tsx(360,16): error TS2304: Cannot find name 'selectedAuthType'.
+src/ui/components/StatsDisplay.tsx(361,19): error TS2304: Cannot find name 'userEmail'.
+src/ui/components/StatsDisplay.tsx(362,47): error TS2304: Cannot find name 'userEmail'.
+src/ui/components/StatsDisplay.tsx(364,19): error TS2304: Cannot find name 'selectedAuthType'.
+src/ui/components/StatsDisplay.tsx(368,30): error TS2304: Cannot find name 'tier'.
+src/ui/components/StatsDisplay.tsx(370,47): error TS2304: Cannot find name 'tier'.
+src/ui/components/StatsDisplay.tsx(438,9): error TS2322: Type '{ models: Record<string, ModelMetrics>; cacheEfficiency: number; totalCachedTokens: number; currentModel: any; pooledRemaining: any; pooledLimit: any; pooledResetTime: any; useCodefly3_1: any; useCustomToolModel: any; }' is not assignable to type 'IntrinsicAttributes & { models: Record<string, ModelMetrics>; cacheEfficiency: number; totalCachedTokens: number; }'.
+  Property 'currentModel' does not exist on type 'IntrinsicAttributes & { models: Record<string, ModelMetrics>; cacheEfficiency: number; totalCachedTokens: number; }'.
+src/ui/components/StatsDisplay.tsx(438,23): error TS2304: Cannot find name 'currentModel'.
+src/ui/components/Tips.test.tsx(24,7): error TS1308: 'await' expressions are only allowed within async functions and at the top levels of modules.
+src/ui/components/ToastDisplay.test.tsx(32,7): error TS2353: Object literal may only specify known properties, and 'transientMessage' does not exist in type 'Partial<UIState>'.
+src/ui/components/ToastDisplay.test.tsx(130,7): error TS2353: Object literal may only specify known properties, and 'transientMessage' does not exist in type 'Partial<UIState>'.
+src/ui/components/ToastDisplay.test.tsx(141,7): error TS2353: Object literal may only specify known properties, and 'transientMessage' does not exist in type 'Partial<UIState>'.
+src/ui/components/ToastDisplay.test.tsx(186,7): error TS2353: Object literal may only specify known properties, and 'showIsExpandableHint' does not exist in type 'Partial<UIState>'.
+src/ui/components/ToastDisplay.test.tsx(195,7): error TS2353: Object literal may only specify known properties, and 'showIsExpandableHint' does not exist in type 'Partial<UIState>'.
+src/ui/components/ToastDisplay.tsx(16,21): error TS2339: Property 'transientMessage' does not exist on type 'UIState'.
+src/ui/components/ToastDisplay.tsx(21,13): error TS2339: Property 'showIsExpandableHint' does not exist on type 'UIState'.
+src/ui/components/ToastDisplay.tsx(35,13): error TS2339: Property 'transientMessage' does not exist on type 'UIState'.
+src/ui/components/ToastDisplay.tsx(36,13): error TS2339: Property 'transientMessage' does not exist on type 'UIState'.
+src/ui/components/ToastDisplay.tsx(39,51): error TS2339: Property 'transientMessage' does not exist on type 'UIState'.
+src/ui/components/ToastDisplay.tsx(65,13): error TS2339: Property 'transientMessage' does not exist on type 'UIState'.
+src/ui/components/ToastDisplay.tsx(66,13): error TS2339: Property 'transientMessage' does not exist on type 'UIState'.
+src/ui/components/ToastDisplay.tsx(69,51): error TS2339: Property 'transientMessage' does not exist on type 'UIState'.
+src/ui/components/ToastDisplay.tsx(77,15): error TS2339: Property 'showIsExpandableHint' does not exist on type 'UIState'.
+src/ui/components/ToolConfirmationQueue.test.tsx(65,17): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/ToolConfirmationQueue.test.tsx(109,17): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/ToolConfirmationQueue.test.tsx(140,17): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/ToolConfirmationQueue.test.tsx(174,11): error TS2304: Cannot find name 'waitFor'.
+src/ui/components/ToolConfirmationQueue.test.tsx(190,17): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/ToolConfirmationQueue.test.tsx(229,11): error TS2304: Cannot find name 'waitFor'.
+src/ui/components/ToolConfirmationQueue.test.tsx(240,17): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/ToolConfirmationQueue.test.tsx(280,11): error TS2304: Cannot find name 'waitFor'.
+src/ui/components/ToolConfirmationQueue.test.tsx(295,17): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/ToolConfirmationQueue.test.tsx(338,17): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/ToolConfirmationQueue.test.tsx(376,17): error TS1361: 'CoreToolCallStatus' cannot be used as a value because it was imported using 'import type'.
+src/ui/components/ToolConfirmationQueue.test.tsx(399,11): error TS2304: Cannot find name 'waitFor'.
+src/ui/components/views/ExtensionsList.tsx(73,42): error TS2304: Cannot find name 'getFormattedSettingValue'.
+src/ui/contexts/TerminalContext.tsx(68,35): error TS2339: Property 'queryBackgroundColor' does not exist on type 'typeof TerminalCapabilityManager'.
+src/ui/contexts/ToolActionsContext.test.tsx(12,57): error TS1484: 'SerializableConfirmationDetails' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/ui/contexts/ToolActionsContext.test.tsx(12,133): error TS6133: 'ToolCallConfirmationDetails' is declared but its value is never read.
+src/ui/contexts/ToolActionsContext.test.tsx(13,10): error TS6133: 'ToolCallStatus' is declared but its value is never read.
+src/ui/contexts/UIStateContext.tsx(18,3): error TS6196: 'PermissionConfirmationRequest' is declared but never used.
+src/ui/hooks/atCommandProcessor.test.ts(118,38): error TS2304: Cannot find name 'COMMON_IGNORE_PATTERNS'.
+src/ui/hooks/atCommandProcessor.test.ts(134,7): error TS1117: An object literal cannot have multiple properties with the same name.
+src/ui/hooks/atCommandProcessor.ts(13,3): error TS6196: 'DiscoveredMCPResource' is declared but never used.
+src/ui/hooks/atCommandProcessor.ts(547,22): error TS2345: Argument of type 'Part' is not assignable to parameter of type 'PartUnion'.
+  Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part'.
+    Types of property 'mediaResolution' are incompatible.
+      Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution | undefined' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution | undefined'.
+        Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution'.
+          Types of property 'level' are incompatible.
+            Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolutionLevel | undefined' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolutionLevel | undefined'.
+              Type 'PartMediaResolutionLevel.MEDIA_RESOLUTION_UNSPECIFIED' is not assignable to type 'PartMediaResolutionLevel | undefined'.
+src/ui/hooks/shellCommandProcessor.test.tsx(29,13): error TS2304: Cannot find name 'mockShellKill'.
+src/ui/hooks/shellCommandProcessor.test.tsx(30,19): error TS2304: Cannot find name 'mockShellBackground'.
+src/ui/hooks/shellCommandProcessor.test.tsx(31,18): error TS2304: Cannot find name 'mockShellSubscribe'.
+src/ui/hooks/shellCommandProcessor.test.tsx(32,15): error TS2304: Cannot find name 'mockShellOnExit'.
+src/ui/hooks/shellCommandProcessor.test.tsx(759,14): error TS2304: Cannot find name 'mockShellOnExit'.
+src/ui/hooks/shellCommandProcessor.test.tsx(760,14): error TS2304: Cannot find name 'mockShellSubscribe'.
+src/ui/hooks/shellCommandProcessor.test.tsx(816,14): error TS2304: Cannot find name 'mockShellKill'.
+src/ui/hooks/shellCommandProcessor.test.tsx(845,14): error TS2304: Cannot find name 'mockShellBackground'.
+src/ui/hooks/shellCommandProcessor.test.tsx(874,28): error TS2304: Cannot find name 'mockShellOnExit'.
+src/ui/hooks/shellCommandProcessor.test.tsx(875,10): error TS7006: Parameter 'call' implicitly has an 'any' type.
+src/ui/hooks/shellCommandProcessor.test.tsx(900,28): error TS2304: Cannot find name 'mockShellOnExit'.
+src/ui/hooks/shellCommandProcessor.test.tsx(901,10): error TS7006: Parameter 'call' implicitly has an 'any' type.
+src/ui/hooks/shellCommandProcessor.test.tsx(938,33): error TS2304: Cannot find name 'mockShellSubscribe'.
+src/ui/hooks/shellCommandProcessor.test.tsx(939,10): error TS7006: Parameter 'call' implicitly has an 'any' type.
+src/ui/hooks/shellCommandProcessor.test.tsx(964,33): error TS2304: Cannot find name 'mockShellSubscribe'.
+src/ui/hooks/shellCommandProcessor.test.tsx(965,10): error TS7006: Parameter 'call' implicitly has an 'any' type.
+src/ui/hooks/shellCommandProcessor.test.tsx(994,33): error TS2304: Cannot find name 'mockShellSubscribe'.
+src/ui/hooks/shellCommandProcessor.test.tsx(995,10): error TS7006: Parameter 'call' implicitly has an 'any' type.
+src/ui/hooks/shellCommandProcessor.ts(11,1): error TS6133: 'ToolCallStatus' is declared but its value is never read.
+src/ui/hooks/shellCommandProcessor.ts(12,23): error TS6133: 'useState' is declared but its value is never read.
+src/ui/hooks/shellCommandProcessor.ts(17,3): error TS6196: 'ShellExecutionResult' is declared but never used.
+src/ui/hooks/shellCommandProcessor.ts(88,29): error TS2304: Cannot find name 'useReducer'.
+src/ui/hooks/shellCommandProcessor.ts(91,19): error TS2304: Cannot find name 'useRef'.
+src/ui/hooks/shellCommandProcessor.ts(110,3): error TS2304: Cannot find name 'useEffect'.
+src/ui/hooks/shellCommandProcessor.ts(146,3): error TS2304: Cannot find name 'useEffect'.
+src/ui/hooks/shellCommandProcessor.ts(541,12): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(predicate: (value: unknown, index: number, array: unknown[]) => value is unknown, thisArg?: any): unknown[]', gave the following error.
+    Argument of type '(s: BackgroundShell) => boolean' is not assignable to parameter of type '(value: unknown, index: number, array: unknown[]) => value is unknown'.
+      Types of parameters 's' and 'value' are incompatible.
+        Type 'unknown' is not assignable to type 'BackgroundShell'.
+  Overload 2 of 2, '(predicate: (value: unknown, index: number, array: unknown[]) => unknown, thisArg?: any): unknown[]', gave the following error.
+    Argument of type '(s: BackgroundShell) => boolean' is not assignable to parameter of type '(value: unknown, index: number, array: unknown[]) => unknown'.
+      Types of parameters 's' and 'value' are incompatible.
+        Type 'unknown' is not assignable to type 'BackgroundShell'.
+src/ui/hooks/slashCommandProcessor.test.tsx(19,60): error TS1484: 'UserFeedbackPayload' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/ui/hooks/slashCommandProcessor.test.tsx(180,33): error TS2304: Cannot find name 'SlashCommandConflictHandler'.
+src/ui/hooks/slashCommandProcessor.ts(540,21): error TS2322: Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartListUnion' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartListUnion'.
+  Type 'Part' is not assignable to type 'PartListUnion'.
+    Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part'.
+      Types of property 'mediaResolution' are incompatible.
+        Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution | undefined' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution | undefined'.
+          Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution'.
+            Types of property 'level' are incompatible.
+              Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolutionLevel | undefined' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolutionLevel | undefined'.
+                Type 'PartMediaResolutionLevel.MEDIA_RESOLUTION_UNSPECIFIED' is not assignable to type 'PartMediaResolutionLevel | undefined'.
+src/ui/hooks/toolMapping.test.ts(38,14): error TS2304: Cannot find name 'mapCoreStatusToDisplayStatus'.
+src/ui/hooks/toolMapping.test.ts(45,9): error TS2304: Cannot find name 'mapCoreStatusToDisplayStatus'.
+src/ui/hooks/useAtCompletion.ts(275,11): error TS2353: Object literal may only specify known properties, and 'useGitignore' does not exist in type 'FileSearchOptions'.
+src/ui/hooks/useAtCompletion.ts(288,9): error TS2552: Cannot find name 'fileSearch'. Did you mean 'fileSearchMap'?
+src/ui/hooks/useAtCompletion.ts(348,49): error TS2304: Cannot find name 'path'.
+src/ui/hooks/useBanner.test.ts(18,1): error TS6133: 'Config' is declared but its value is never read.
+src/ui/hooks/useBanner.ts(9,1): error TS6133: 'Config' is declared but its value is never read.
+src/ui/hooks/useCodeflyStream.ts(918,13): error TS2554: Expected 1-4 arguments, but got 5.
+src/ui/hooks/useCodeflyStream.ts(974,23): error TS2339: Property 'IMAGE_RECITATION' does not exist on type 'typeof FinishReason'.
+src/ui/hooks/useCodeflyStream.ts(976,23): error TS2339: Property 'IMAGE_OTHER' does not exist on type 'typeof FinishReason'.
+src/ui/hooks/useCodeflyStream.ts(980,23): error TS7053: Element implicitly has an 'any' type because expression of type 'FinishReason' can't be used to index type 'Record<FinishReason, string | undefined>'.
+  Property '[FinishReason.IMAGE_RECITATION]' does not exist on type 'Record<FinishReason, string | undefined>'.
+src/ui/hooks/useCodeflyStream.ts(1408,23): error TS2554: Expected 1-4 arguments, but got 5.
+src/ui/hooks/useCodeflyStream.ts(1644,13): error TS2322: Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part[]' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part[]'.
+  Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part'.
+    Types of property 'mediaResolution' are incompatible.
+      Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution | undefined' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution | undefined'.
+        Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution'.
+          Types of property 'level' are incompatible.
+            Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolutionLevel | undefined' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolutionLevel | undefined'.
+              Type 'PartMediaResolutionLevel.MEDIA_RESOLUTION_UNSPECIFIED' is not assignable to type 'PartMediaResolutionLevel | undefined'.
+src/ui/hooks/useEditorSettings.ts(65,53): error TS2322: Type '"vscode" | "vscodium" | "windsurf" | "cursor" | "zed" | "antigravity" | "vim" | "neovim" | "emacs" | "hx" | undefined' is not assignable to type '"vscode" | "vscodium" | "windsurf" | "cursor" | "zed" | "antigravity" | "vim" | "neovim" | "emacs" | "hx" | null'.
+  Type 'undefined' is not assignable to type '"vscode" | "vscodium" | "windsurf" | "cursor" | "zed" | "antigravity" | "vim" | "neovim" | "emacs" | "hx" | null'.
+src/ui/hooks/useEditorSettings.ts(75,49): error TS2322: Type 'undefined' is not assignable to type '"vscode" | "vscodium" | "windsurf" | "cursor" | "zed" | "antigravity" | "vim" | "neovim" | "emacs" | "hx" | null'.
+src/ui/hooks/useFolderTrust.test.ts(377,17): error TS2304: Cannot find name 'MessageType'.
+src/ui/hooks/useFolderTrust.ts(17,21): error TS1484: 'FolderDiscoveryResults' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/ui/hooks/useLoadingIndicator.test.tsx(36,25): error TS2304: Cannot find name 'LoadingPhrasesMode'.
+src/ui/hooks/useLoadingIndicator.test.tsx(48,14): error TS2304: Cannot find name 'LoadingPhrasesMode'.
+src/ui/hooks/useLoadingIndicator.test.tsx(76,16): error TS2304: Cannot find name 'LoadingPhrasesMode'.
+src/ui/hooks/useLoadingIndicator.ts(20,24): error TS2304: Cannot find name 'LoadingPhrasesMode'.
+src/ui/hooks/useSessionBrowser.ts(16,15): error TS2300: Duplicate identifier 'Part'.
+src/ui/hooks/useSessionBrowser.ts(17,53): error TS6133: 'partListUnionToString' is declared but its value is never read.
+src/ui/hooks/useSessionBrowser.ts(20,15): error TS2300: Duplicate identifier 'Part'.
+src/ui/hooks/useSessionBrowser.ts(82,13): error TS2345: Argument of type '{ role: "user" | "model"; parts: import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part[]; }[]' is not assignable to parameter of type '{ role: "user" | "model"; parts: import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part[]; }[]'.
+  Type '{ role: "user" | "model"; parts: import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part[]; }' is not assignable to type '{ role: "user" | "model"; parts: import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part[]; }'.
+    Types of property 'parts' are incompatible.
+      Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part[]' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part[]'.
+        Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part'.
+          Types of property 'mediaResolution' are incompatible.
+            Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution | undefined' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution | undefined'.
+              Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution'.
+                Types of property 'level' are incompatible.
+                  Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolutionLevel | undefined' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolutionLevel | undefined'.
+                    Type 'PartMediaResolutionLevel.MEDIA_RESOLUTION_UNSPECIFIED' is not assignable to type 'PartMediaResolutionLevel | undefined'.
+src/ui/hooks/useSessionResume.ts(96,9): error TS1361: 'convertSessionToClientHistory' cannot be used as a value because it was imported using 'import type'.
+src/ui/hooks/useSessionResume.ts(96,9): error TS2345: Argument of type '{ role: "user" | "model"; parts: import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part[]; }[]' is not assignable to parameter of type '{ role: "user" | "model"; parts: import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part[]; }[]'.
+  Type '{ role: "user" | "model"; parts: import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part[]; }' is not assignable to type '{ role: "user" | "model"; parts: import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part[]; }'.
+    Types of property 'parts' are incompatible.
+      Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part[]' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part[]'.
+        Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part'.
+          Types of property 'mediaResolution' are incompatible.
+            Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution | undefined' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution | undefined'.
+              Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution'.
+                Types of property 'level' are incompatible.
+                  Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolutionLevel | undefined' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolutionLevel | undefined'.
+                    Type 'PartMediaResolutionLevel.MEDIA_RESOLUTION_UNSPECIFIED' is not assignable to type 'PartMediaResolutionLevel | undefined'.
+src/ui/hooks/useShowMemoryCommand.ts(42,105): error TS2339: Property 'substring' does not exist on type 'string | HierarchicalMemory'.
+  Property 'substring' does not exist on type 'HierarchicalMemory'.
+src/ui/hooks/useShowMemoryCommand.ts(59,40): error TS2339: Property 'trim' does not exist on type 'string | HierarchicalMemory'.
+  Property 'trim' does not exist on type 'HierarchicalMemory'.
+src/ui/hooks/useToolExecutionScheduler.test.ts(275,35): error TS2352: Conversion of type '{ type: MessageBusType.TOOL_CALLS_UPDATE; toolCalls: { status: "success"; request: { callId: string; name: string; args: {}; isClientInitiated: boolean; prompt_id: string; }; tool: AnyDeclarativeTool; invocation: AnyToolInvocation; response: { ...; }; }[]; }' to type 'ToolCallsUpdateMessage' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Property 'schedulerId' is missing in type '{ type: MessageBusType.TOOL_CALLS_UPDATE; toolCalls: { status: "success"; request: { callId: string; name: string; args: {}; isClientInitiated: boolean; prompt_id: string; }; tool: AnyDeclarativeTool; invocation: AnyToolInvocation; response: { ...; }; }[]; }' but required in type 'ToolCallsUpdateMessage'.
+src/ui/hooks/useToolExecutionScheduler.test.ts(291,35): error TS2352: Conversion of type '{ type: MessageBusType.TOOL_CALLS_UPDATE; toolCalls: { status: "success"; request: { callId: string; name: string; args: {}; isClientInitiated: boolean; prompt_id: string; }; tool: AnyDeclarativeTool; invocation: AnyToolInvocation; response: { ...; }; }[]; }' to type 'ToolCallsUpdateMessage' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Property 'schedulerId' is missing in type '{ type: MessageBusType.TOOL_CALLS_UPDATE; toolCalls: { status: "success"; request: { callId: string; name: string; args: {}; isClientInitiated: boolean; prompt_id: string; }; tool: AnyDeclarativeTool; invocation: AnyToolInvocation; response: { ...; }; }[]; }' but required in type 'ToolCallsUpdateMessage'.
+src/ui/hooks/vim.ts(384,11): error TS2304: Cannot find name 'keyMatchers'.
+src/ui/hooks/vim.ts(384,23): error TS2304: Cannot find name 'Command'.
+src/ui/hooks/vim.ts(585,11): error TS2304: Cannot find name 'keyMatchers'.
+src/ui/hooks/vim.ts(585,23): error TS2304: Cannot find name 'Command'.
+src/ui/hooks/vim.ts(596,13): error TS2304: Cannot find name 'keyMatchers'.
+src/ui/hooks/vim.ts(596,25): error TS2304: Cannot find name 'Command'.
+src/ui/types.ts(12,3): error TS6196: 'ToolCallConfirmationDetails' is declared but never used.
+src/ui/utils/CodeColorizer.tsx(25,1): error TS6133: 'isAlternateBufferEnabled' is declared but its value is never read.
+src/ui/utils/highlight.ts(14,1): error TS6133: 'AT_COMMAND_PATH_REGEX_SOURCE' is declared but its value is never read.
+src/ui/utils/InlineMarkdownRenderer.tsx(10,1): error TS6133: 'stringWidth' is declared but its value is never read.
+src/ui/utils/InlineMarkdownRenderer.tsx(30,16): error TS2304: Cannot find name 'stripUnsafeCharacters'.
+src/ui/utils/rewindFileOps.test.ts(66,45): error TS2339: Property 'computeAddedAndRemovedLines' does not exist on type 'typeof import("/Users/robinx/code/codefly-cli/packages/core/dist/index", { with: { "resolution-mode": "import" } })'.
+src/ui/utils/rewindFileOps.test.ts(66,45): error TS6133: 'computeAddedAndRemovedLines' is declared but its value is never read.
+src/ui/utils/rewindFileOps.test.ts(122,45): error TS2339: Property 'computeAddedAndRemovedLines' does not exist on type 'typeof import("/Users/robinx/code/codefly-cli/packages/core/dist/index", { with: { "resolution-mode": "import" } })'.
+src/ui/utils/rewindFileOps.test.ts(122,45): error TS6133: 'computeAddedAndRemovedLines' is declared but its value is never read.
+src/ui/utils/rewindFileOps.ts(13,10): error TS2724: '"@codeflyai/codefly-core"' has no exported member named 'computeAddedAndRemovedLines'. Did you mean 'computeModelAddedAndRemovedLines'?
+src/ui/utils/rewindFileOps.ts(13,10): error TS6133: 'computeAddedAndRemovedLines' is declared but its value is never read.
+src/ui/utils/terminalCapabilityManager.ts(136,44): error TS2304: Cannot find name 'parseColor'.
+src/ui/utils/terminalCapabilityManager.ts(192,37): error TS2339: Property 'HIDDEN_MODE' does not exist on type 'typeof TerminalCapabilityManager'.
+src/utils/activityLogger.ts(13,10): error TS1484: 'ConsoleLogPayload' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/utils/activityLogger.ts(732,10): error TS2339: Property 'on' does not exist on type 'WebSocket'.
+src/utils/activityLogger.ts(743,10): error TS2339: Property 'on' does not exist on type 'WebSocket'.
+src/utils/activityLogger.ts(765,10): error TS2339: Property 'on' does not exist on type 'WebSocket'.
+src/utils/activityLogger.ts(771,10): error TS2339: Property 'on' does not exist on type 'WebSocket'.
+src/utils/activityLogger.ts(771,23): error TS7006: Parameter 'err' implicitly has an 'any' type.
+src/utils/relaunch.ts(9,10): error TS1484: 'AdminControlsSettings' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/utils/relaunch.ts(9,38): error TS6133: 'FetchAdminControlsResponse' is declared but its value is never read.
+src/utils/sessionCleanup.ts(366,35): error TS2554: Expected 0 arguments, but got 1.
+src/utils/sessionCleanup.ts(367,21): error TS4111: Property 'initialize' comes from an index signature, so it must be accessed with ['initialize'].
+src/utils/sessionCleanup.ts(368,25): error TS4111: Property 'getProjectTempDir' comes from an index signature, so it must be accessed with ['getProjectTempDir'].
+src/utils/sessionCleanup.ts(370,37): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/zed-integration/zedIntegration.test.ts(144,6): error TS2304: Cannot find name 'loadSettings'.
+src/zed-integration/zedIntegration.test.ts(250,6): error TS2304: Cannot find name 'loadSettings'.
+src/zed-integration/zedIntegration.ts(14,34): error TS1484: 'ConversationRecord' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/zed-integration/zedIntegration.ts(771,7): error TS2322: Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part[]' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part[]'.
+  Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part'.
+    Types of property 'mediaResolution' are incompatible.
+      Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution | undefined' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution | undefined'.
+        Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution'.
+          Types of property 'level' are incompatible.
+            Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolutionLevel | undefined' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolutionLevel | undefined'.
+              Type 'PartMediaResolutionLevel.MEDIA_RESOLUTION_UNSPECIFIED' is not assignable to type 'PartMediaResolutionLevel | undefined'.
+src/zed-integration/zedIntegration.ts(1103,40): error TS2345: Argument of type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part' is not assignable to parameter of type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).Part'.
+  Types of property 'mediaResolution' are incompatible.
+    Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution | undefined' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution | undefined'.
+      Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolution'.
+        Types of property 'level' are incompatible.
+          Type 'import("/Users/robinx/code/codefly-cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolutionLevel | undefined' is not assignable to type 'import("/Users/robinx/code/codefly-cli/packages/cli/node_modules/@google/genai/dist/node/node", { with: { "resolution-mode": "import" } }).PartMediaResolutionLevel | undefined'.
+            Type 'PartMediaResolutionLevel.MEDIA_RESOLUTION_UNSPECIFIED' is not assignable to type 'PartMediaResolutionLevel | undefined'.
+npm error Lifecycle script `typecheck` failed with error:
+npm error code 2
+npm error path /Users/robinx/code/codefly-cli/packages/cli
+npm error workspace @codeflyai/codefly@0.27.0-nightly.20260124.37be16243
+npm error location /Users/robinx/code/codefly-cli/packages/cli
+npm error command failed
+npm error command sh -c tsc --noEmit

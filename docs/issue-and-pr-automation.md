@@ -29,10 +29,10 @@ repository.
 This is the first bot you will interact with when you create an issue. Its job
 is to perform an initial analysis and apply the correct labels.
 
-- **Workflow File**: `.github/workflows/gemini-automated-issue-triage.yml`
+- **Workflow File**: `.github/workflows/codefly-automated-issue-triage.yml`
 - **When it runs**: Immediately after an issue is created or reopened.
 - **What it does**:
-  - It uses a Gemini model to analyze the issue's title and body against a
+  - It uses a Codefly model to analyze the issue's title and body against a
     detailed set of guidelines.
   - **Applies one `area/*` label**: Categorizes the issue into a functional area
     of the project (e.g., `area/ux`, `area/models`, `area/platform`).
@@ -78,7 +78,7 @@ can be merged.
 This workflow runs periodically to ensure all open PRs are correctly linked to
 issues and have consistent labels.
 
-- **Workflow File**: `.github/workflows/gemini-scheduled-pr-triage.yml`
+- **Workflow File**: `.github/workflows/codefly-scheduled-pr-triage.yml`
 - **When it runs**: Every 15 minutes on all open pull requests.
 - **What it does**:
   - **Checks for a linked issue**: The bot scans your PR description for a
@@ -101,12 +101,12 @@ issues and have consistent labels.
 This is a fallback workflow to ensure that no issue gets missed by the triage
 process.
 
-- **Workflow File**: `.github/workflows/gemini-scheduled-issue-triage.yml`
+- **Workflow File**: `.github/workflows/codefly-scheduled-issue-triage.yml`
 - **When it runs**: Every hour on all open issues.
 - **What it does**:
   - It actively seeks out issues that either have no labels at all or still have
     the `status/need-triage` label.
-  - It then triggers the same powerful Gemini-based analysis as the initial
+  - It then triggers the same powerful Codefly-based analysis as the initial
     triage bot to apply the correct labels.
 - **What you should do**:
   - You typically don't need to do anything. This workflow is a safety net to
@@ -116,7 +116,7 @@ process.
 ### 5. Release automation
 
 This workflow handles the process of packaging and publishing new versions of
-the Gemini CLI.
+the Codefly CLI.
 
 - **Workflow File**: `.github/workflows/release-manual.yml`
 - **When it runs**: On a daily schedule for "nightly" releases, and manually for

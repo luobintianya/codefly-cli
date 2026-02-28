@@ -40,8 +40,8 @@ vi.mock('../../config/auth.js', () => ({
 describe('useAuth', () => {
   beforeEach(() => {
     vi.resetAllMocks();
-    delete process.env['GEMINI_API_KEY'];
-    delete process.env['GEMINI_DEFAULT_AUTH_TYPE'];
+    delete process.env['CODEFLY_API_KEY'];
+    delete process.env['CODEFLY_DEFAULT_AUTH_TYPE'];
     mockValidateAuthMethod.mockReturnValue(null);
   });
 
@@ -55,14 +55,14 @@ describe('useAuth', () => {
         merged: {
           security: {
             auth: {
-              enforcedType: AuthType.USE_GEMINI,
+              enforcedType: AuthType.USE_CODEFLY,
             },
           },
         },
       } as LoadedSettings;
 
       const error = validateAuthMethodWithSettings(
-        AuthType.USE_GEMINI,
+        AuthType.USE_CODEFLY,
         settings,
       );
       expect(error).toBeNull(); // Changed expectation because enforced matches
@@ -73,20 +73,20 @@ describe('useAuth', () => {
         merged: {
           security: {
             auth: {
-              useExternal: true, // This branch might not be triggered if enforcedType is also set to USE_GEMINI, but keeping it simple
+              useExternal: true, // This branch might not be triggered if enforcedType is also set to USE_CODEFLY, but keeping it simple
             },
           },
         },
       } as LoadedSettings;
 
       const error = validateAuthMethodWithSettings(
-        AuthType.USE_GEMINI,
+        AuthType.USE_CODEFLY,
         settings,
       );
       expect(error).toBeNull();
     });
 
-    it('should return null if authType is USE_GEMINI', () => {
+    it('should return null if authType is USE_CODEFLY', () => {
       const settings = {
         merged: {
           security: {
@@ -96,7 +96,7 @@ describe('useAuth', () => {
       } as LoadedSettings;
 
       const error = validateAuthMethodWithSettings(
-        AuthType.USE_GEMINI,
+        AuthType.USE_CODEFLY,
         settings,
       );
       expect(error).toBeNull();
@@ -142,7 +142,7 @@ describe('useAuth', () => {
 
     it('should initialize with Unauthenticated state', async () => {
       const { result } = renderHook(() =>
-        useAuthCommand(createSettings(AuthType.USE_GEMINI), mockConfig),
+        useAuthCommand(createSettings(AuthType.USE_CODEFLY), mockConfig),
       );
       expect(result.current.authState).toBe(AuthState.Unauthenticated);
 
@@ -164,26 +164,26 @@ describe('useAuth', () => {
       });
     });
 
-    it('should auto-select USE_GEMINI if GEMINI_API_KEY exists', async () => {
+    it('should auto-select USE_CODEFLY if CODEFLY_API_KEY exists', async () => {
       mockLoadApiKey.mockResolvedValue(null);
-      process.env['GEMINI_API_KEY'] = 'env-key';
+      process.env['CODEFLY_API_KEY'] = 'env-key';
       const { result } = renderHook(() =>
         useAuthCommand(createSettings(undefined), mockConfig),
       );
 
       await waitFor(() => {
         expect(mockConfig.refreshAuth).toHaveBeenCalledWith(
-          AuthType.USE_GEMINI,
+          AuthType.USE_CODEFLY,
         );
         expect(result.current.authState).toBe(AuthState.Authenticated);
         expect(result.current.apiKeyDefaultValue).toBe('env-key');
       });
     });
 
-    it('should transition to AwaitingApiKeyInput if USE_GEMINI and no key found', async () => {
+    it('should transition to AwaitingApiKeyInput if USE_CODEFLY and no key found', async () => {
       mockLoadApiKey.mockResolvedValue(null);
       const { result } = renderHook(() =>
-        useAuthCommand(createSettings(AuthType.USE_GEMINI), mockConfig),
+        useAuthCommand(createSettings(AuthType.USE_CODEFLY), mockConfig),
       );
 
       await waitFor(() => {
@@ -191,31 +191,31 @@ describe('useAuth', () => {
       });
     });
 
-    it('should authenticate if USE_GEMINI and key is found', async () => {
+    it('should authenticate if USE_CODEFLY and key is found', async () => {
       mockLoadApiKey.mockResolvedValue('stored-key');
       const { result } = renderHook(() =>
-        useAuthCommand(createSettings(AuthType.USE_GEMINI), mockConfig),
+        useAuthCommand(createSettings(AuthType.USE_CODEFLY), mockConfig),
       );
 
       await waitFor(() => {
         expect(mockConfig.refreshAuth).toHaveBeenCalledWith(
-          AuthType.USE_GEMINI,
+          AuthType.USE_CODEFLY,
         );
         expect(result.current.authState).toBe(AuthState.Authenticated);
         expect(result.current.apiKeyDefaultValue).toBe('stored-key');
       });
     });
 
-    it('should authenticate if USE_GEMINI and env key is found', async () => {
+    it('should authenticate if USE_CODEFLY and env key is found', async () => {
       mockLoadApiKey.mockResolvedValue(null);
-      process.env['GEMINI_API_KEY'] = 'env-key';
+      process.env['CODEFLY_API_KEY'] = 'env-key';
       const { result } = renderHook(() =>
-        useAuthCommand(createSettings(AuthType.USE_GEMINI), mockConfig),
+        useAuthCommand(createSettings(AuthType.USE_CODEFLY), mockConfig),
       );
 
       await waitFor(() => {
         expect(mockConfig.refreshAuth).toHaveBeenCalledWith(
-          AuthType.USE_GEMINI,
+          AuthType.USE_CODEFLY,
         );
         expect(result.current.authState).toBe(AuthState.Authenticated);
         expect(result.current.apiKeyDefaultValue).toBe('env-key');
@@ -224,14 +224,14 @@ describe('useAuth', () => {
 
     it('should prioritize env key over stored key when both are present', async () => {
       mockLoadApiKey.mockResolvedValue('stored-key');
-      process.env['GEMINI_API_KEY'] = 'env-key';
+      process.env['CODEFLY_API_KEY'] = 'env-key';
       const { result } = renderHook(() =>
-        useAuthCommand(createSettings(AuthType.USE_GEMINI), mockConfig),
+        useAuthCommand(createSettings(AuthType.USE_CODEFLY), mockConfig),
       );
 
       await waitFor(() => {
         expect(mockConfig.refreshAuth).toHaveBeenCalledWith(
-          AuthType.USE_GEMINI,
+          AuthType.USE_CODEFLY,
         );
         expect(result.current.authState).toBe(AuthState.Authenticated);
         // The environment key should take precedence
@@ -251,16 +251,16 @@ describe('useAuth', () => {
       });
     });
 
-    it('should set error if GEMINI_DEFAULT_AUTH_TYPE is invalid', async () => {
+    it('should set error if CODEFLY_DEFAULT_AUTH_TYPE is invalid', async () => {
       mockLoadApiKey.mockResolvedValue('key');
-      process.env['GEMINI_DEFAULT_AUTH_TYPE'] = 'INVALID_TYPE';
+      process.env['CODEFLY_DEFAULT_AUTH_TYPE'] = 'INVALID_TYPE';
       const { result } = renderHook(() =>
-        useAuthCommand(createSettings(AuthType.USE_GEMINI), mockConfig),
+        useAuthCommand(createSettings(AuthType.USE_CODEFLY), mockConfig),
       );
 
       await waitFor(() => {
         expect(result.current.authError).toContain(
-          'Invalid value for GEMINI_DEFAULT_AUTH_TYPE',
+          'Invalid value for CODEFLY_DEFAULT_AUTH_TYPE',
         );
         expect(result.current.authState).toBe(AuthState.Updating);
       });
@@ -269,12 +269,12 @@ describe('useAuth', () => {
     it('should authenticate successfully for valid auth type', async () => {
       mockLoadApiKey.mockResolvedValue('key');
       const { result } = renderHook(() =>
-        useAuthCommand(createSettings(AuthType.USE_GEMINI), mockConfig),
+        useAuthCommand(createSettings(AuthType.USE_CODEFLY), mockConfig),
       );
 
       await waitFor(() => {
         expect(mockConfig.refreshAuth).toHaveBeenCalledWith(
-          AuthType.USE_GEMINI,
+          AuthType.USE_CODEFLY,
         );
         expect(result.current.authState).toBe(AuthState.Authenticated);
         expect(result.current.authError).toBeNull();
@@ -287,7 +287,7 @@ describe('useAuth', () => {
         new Error('Auth Failed'),
       );
       const { result } = renderHook(() =>
-        useAuthCommand(createSettings(AuthType.USE_GEMINI), mockConfig),
+        useAuthCommand(createSettings(AuthType.USE_CODEFLY), mockConfig),
       );
 
       await waitFor(() => {

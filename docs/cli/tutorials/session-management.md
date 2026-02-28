@@ -1,18 +1,18 @@
 # Manage sessions and history
 
-Resume, browse, and rewind your conversations with Gemini CLI. In this guide,
+Resume, browse, and rewind your conversations with Codefly CLI. In this guide,
 you'll learn how to switch between tasks, manage your session history, and undo
 mistakes using the rewind feature.
 
 ## Prerequisites
 
-- Gemini CLI installed and authenticated.
+- Codefly CLI installed and authenticated.
 - At least one active or past session.
 
 ## How to resume where you left off
 
 It's common to switch context—maybe you're waiting for a build and want to work
-on a different feature. Gemini makes it easy to jump back in.
+on a different feature. Codefly makes it easy to jump back in.
 
 ### Scenario: Resume the last session
 
@@ -20,7 +20,7 @@ The fastest way to pick up your most recent work is with the `--resume` flag (or
 `-r`).
 
 ```bash
-gemini -r
+codefly -r
 ```
 
 This restores your chat history and memory, so you can say "Continue with the
@@ -55,15 +55,15 @@ You can also manage sessions from the command line:
 
 ```bash
 # List all sessions with their IDs
-gemini --list-sessions
+codefly --list-sessions
 
 # Delete a specific session by ID or index
-gemini --delete-session 1
+codefly --delete-session 1
 ```
 
 ## How to rewind time (Undo mistakes)
 
-Gemini CLI's **Rewind** feature is like `Ctrl+Z` for your workflow.
+Codefly CLI's **Rewind** feature is like `Ctrl+Z` for your workflow.
 
 ### Scenario: Triggering rewind
 
@@ -76,7 +76,7 @@ undesired changes occurred.
 
 ### Scenario: Choosing what to revert
 
-Gemini gives you granular control over the undo process. You can choose to:
+Codefly gives you granular control over the undo process. You can choose to:
 
 1.  **Rewind conversation:** Only remove the chat history. The files stay
     changed. (Useful if the code is good but the chat got off track).

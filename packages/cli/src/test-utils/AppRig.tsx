@@ -29,7 +29,7 @@ import {
   createContentGenerator,
   IdeClient,
   debugLogger,
-} from '@google/gemini-cli-core';
+} from '@codeflyai/codefly-core';
 import {
   type MockShellCommand,
   MockShellExecutionService,
@@ -39,9 +39,9 @@ import { type LoadedSettings } from '../config/settings.js';
 import { AuthState } from '../ui/types.js';
 
 // Mock core functions globally for tests using AppRig.
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
   const original =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+    await importOriginal<typeof import('@codeflyai/codefly-core')>();
   const { MockShellExecutionService: MockService } = await import(
     './MockShellExecutionService.js'
   );
@@ -74,13 +74,13 @@ class MockExtensionManager extends ExtensionLoader {
   setRequestSetting = vi.fn();
 }
 
-// Mock GeminiRespondingSpinner to disable animations (avoiding 'act()' warnings) without triggering screen reader mode.
-vi.mock('../ui/components/GeminiRespondingSpinner.js', async () => {
+// Mock CodeflyRespondingSpinner to disable animations (avoiding 'act()' warnings) without triggering screen reader mode.
+vi.mock('../ui/components/CodeflyRespondingSpinner.js', async () => {
   const React = await import('react');
   const { Text } = await import('ink');
   return {
-    GeminiSpinner: () => React.createElement(Text, null, '...'),
-    GeminiRespondingSpinner: ({
+    CodeflySpinner: () => React.createElement(Text, null, '...'),
+    CodeflyRespondingSpinner: ({
       nonRespondingDisplay,
     }: {
       nonRespondingDisplay: string;
@@ -113,7 +113,7 @@ export class AppRig {
   private lastAwaitedConfirmation: PendingConfirmation | undefined;
 
   constructor(private options: AppRigOptions = {}) {
-    this.testDir = fs.mkdtempSync(path.join(os.tmpdir(), 'gemini-app-rig-'));
+    this.testDir = fs.mkdtempSync(path.join(os.tmpdir(), 'codefly-app-rig-'));
     this.sessionId = `test-session-${Math.random().toString(36).slice(2, 9)}`;
   }
 
@@ -155,36 +155,36 @@ export class AppRig {
       await this.config!.initialize();
       // Since we mocked useAuthCommand, we must manually trigger the first
       // refreshAuth to ensure contentGenerator is initialized.
-      await this.config!.refreshAuth(AuthType.USE_GEMINI);
+      await this.config!.refreshAuth(AuthType.USE_CODEFLY);
     });
   }
 
   private setupEnvironment() {
     // Stub environment variables to avoid interference from developer's machine
-    vi.stubEnv('GEMINI_CLI_HOME', this.testDir);
+    vi.stubEnv('CODEFLY_CLI_HOME', this.testDir);
     if (this.options.fakeResponsesPath) {
-      vi.stubEnv('GEMINI_API_KEY', 'test-api-key');
+      vi.stubEnv('CODEFLY_API_KEY', 'test-api-key');
       MockShellExecutionService.setPassthrough(false);
     } else {
-      if (!process.env['GEMINI_API_KEY']) {
+      if (!process.env['CODEFLY_API_KEY']) {
         throw new Error(
-          'GEMINI_API_KEY must be set in the environment for live model tests.',
+          'CODEFLY_API_KEY must be set in the environment for live model tests.',
         );
       }
       // For live tests, we allow falling through to the real shell service if no mock matches
       MockShellExecutionService.setPassthrough(true);
     }
-    vi.stubEnv('GEMINI_DEFAULT_AUTH_TYPE', AuthType.USE_GEMINI);
+    vi.stubEnv('CODEFLY_DEFAULT_AUTH_TYPE', AuthType.USE_CODEFLY);
   }
 
   private createRigSettings(): LoadedSettings {
     return createMockSettings({
       user: {
-        path: path.join(this.testDir, '.gemini', 'user_settings.json'),
+        path: path.join(this.testDir, '.codefly', 'user_settings.json'),
         settings: {
           security: {
             auth: {
-              selectedType: AuthType.USE_GEMINI,
+              selectedType: AuthType.USE_CODEFLY,
               useExternal: true,
             },
             folderTrust: {
@@ -201,7 +201,7 @@ export class AppRig {
       merged: {
         security: {
           auth: {
-            selectedType: AuthType.USE_GEMINI,
+            selectedType: AuthType.USE_CODEFLY,
             useExternal: true,
           },
           folderTrust: {
@@ -226,7 +226,7 @@ export class AppRig {
         authType: authMethod,
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         proxy: gcConfig.getProxy(),
-        apiKey: process.env['GEMINI_API_KEY'] || 'test-api-key',
+        apiKey: process.env['CODEFLY_API_KEY'] || 'test-api-key',
       };
 
       gcConfig.contentGenerator = await createContentGenerator(
@@ -237,7 +237,7 @@ export class AppRig {
       gcConfig.contentGeneratorConfig = newContentGeneratorConfig;
 
       // Initialize BaseLlmClient now that the ContentGenerator is available
-      const { BaseLlmClient } = await import('@google/gemini-cli-core');
+      const { BaseLlmClient } = await import('@codeflyai/codefly-core');
       gcConfig.baseLlmClient = new BaseLlmClient(
         gcConfig.contentGenerator,
         this.config!,
@@ -294,7 +294,7 @@ export class AppRig {
             authError: null,
             themeError: null,
             shouldOpenAuthDialog: false,
-            geminiMdFileCount: 0,
+            codeflyMdFileCount: 0,
           }}
         />,
         {
@@ -538,7 +538,7 @@ export class AppRig {
     // Poison the chat recording service to prevent late writes to the test directory
     if (this.config) {
       const recordingService = this.config
-        .getGeminiClient()
+        .getCodeflyClient()
         ?.getChatRecordingService();
       if (recordingService) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-type-assertion

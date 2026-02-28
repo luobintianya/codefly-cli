@@ -33,14 +33,9 @@ import {
 } from '../../utils/settingsUtils.js';
 import { useVimMode } from '../contexts/VimModeContext.js';
 import { getCachedStringWidth } from '../utils/textUtils.js';
-import {
-  type SettingsValue,
-  TOGGLE_TYPES,
-} from '../../config/settingsSchema.js';
-import { coreEvents, debugLogger } from '@codeflyai/codefly-core';
-import type { Config } from '@codeflyai/codefly-core';
-import { useUIState } from '../contexts/UIStateContext.js';
-import { useTextBuffer } from './shared/text-buffer.js';
+import type { SettingsValue } from '../../config/settingsSchema.js';
+import { coreEvents, debugLogger, type Config } from '@codeflyai/codefly-core';
+import { useSearchBuffer } from '../hooks/useSearchBuffer.js';
 import {
   BaseSettingsDialog,
   type SettingsDialogItem,
@@ -63,6 +58,7 @@ interface SettingsDialogProps {
 }
 
 const MAX_ITEMS_TO_SHOW = 8;
+const TOGGLE_TYPES = new Set(['boolean', 'enum']);
 
 export function SettingsDialog({
   settings,
@@ -208,7 +204,6 @@ export function SettingsDialog({
     return max;
   }, [selectedScope, settings]);
 
-  // Search input buffer
   const searchBuffer = useSearchBuffer({
     initialText: '',
     onChange: setSearchQuery,
@@ -270,7 +265,7 @@ export function SettingsDialog({
   const handleItemToggle = useCallback(
     (key: string, _item: SettingsDialogItem) => {
       const definition = getSettingDefinition(key);
-      if (!TOGGLE_TYPES.has(definition?.type)) {
+      if (!TOGGLE_TYPES.has(definition?.type || '')) {
         return;
       }
       const currentValue = getEffectiveValue(key, pendingSettings, {});

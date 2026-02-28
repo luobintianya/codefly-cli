@@ -25,7 +25,7 @@ describe('ContextBuilder', () => {
         getDirectories: vi.fn().mockReturnValue(mockWorkspaces),
       }),
       getQuestion: vi.fn().mockReturnValue('mock question'),
-      getGeminiClient: vi.fn().mockReturnValue({
+      getCodeflyClient: vi.fn().mockReturnValue({
         getHistory: vi.fn().mockImplementation(() => mockHistory),
       }),
     };

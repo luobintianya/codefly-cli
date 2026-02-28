@@ -14,7 +14,7 @@ the model decide to write to disk when asked to save code?").
 
 They are also distinct from broad **industry benchmarks** (like SWE-bench).
 While benchmarks measure general capabilities across complex challenges, our
-behavioral evals focus on specific, granular behaviors relevant to the Gemini
+behavioral evals focus on specific, granular behaviors relevant to the Codefly
 CLI's features.
 
 ### Key Characteristics
@@ -88,7 +88,7 @@ describe('my_feature', () => {
 
 ## Running Evaluations
 
-First, build the bundled Gemini CLI. You must do this after every code change.
+First, build the bundled Codefly CLI. You must do this after every code change.
 
 ```bash
 npm run build
@@ -119,10 +119,10 @@ This command sets the `RUN_EVALS` environment variable to `1`, which enables the
 Results for evaluations are available on GitHub Actions:
 
 - **CI Evals**: Included in the
-  [E2E (Chained)](https://github.com/google-gemini/gemini-cli/actions/workflows/chained_e2e.yml)
+  [E2E (Chained)](https://github.com/google-codefly/codefly-cli/actions/workflows/chained_e2e.yml)
   workflow. These must pass 100% for every PR.
 - **Nightly Evals**: Run daily via the
-  [Evals: Nightly](https://github.com/google-gemini/gemini-cli/actions/workflows/evals-nightly.yml)
+  [Evals: Nightly](https://github.com/google-codefly/codefly-cli/actions/workflows/evals-nightly.yml)
   workflow. These track the long-term health and stability of model steering.
 
 ### Nightly Report Format
@@ -147,7 +147,7 @@ tool definition has made the model's behavior less reliable.
 ## Fixing Evaluations
 
 If an evaluation is failing or has a regressed pass rate, you can use the
-`/fix-behavioral-eval` command within Gemini CLI to help investigate and fix the
+`/fix-behavioral-eval` command within Codefly CLI to help investigate and fix the
 issue.
 
 ### `/fix-behavioral-eval`
@@ -162,8 +162,8 @@ failing evaluations. It will:
     It prioritizes minimal changes to `prompt.ts`, tool instructions, and
     modules that contribute to the prompt. It generally tries to avoid changing
     the test itself.
-3.  **Verify**: Re-run the test 3 times across multiple models (e.g., Gemini
-    3.0, Gemini 3 Flash, Gemini 2.5 Pro) to ensure stability and calculate a
+3.  **Verify**: Re-run the test 3 times across multiple models (e.g., Codefly
+    3.0, Codefly 3 Flash, Codefly 2.5 Pro) to ensure stability and calculate a
     success rate.
 4.  **Report**: Provide a summary of the success rate for each model and details
     on the applied fixes.
@@ -171,21 +171,21 @@ failing evaluations. It will:
 To use it, run:
 
 ```bash
-gemini /fix-behavioral-eval
+codefly /fix-behavioral-eval
 ```
 
 You can also provide a link to a specific GitHub Action run or the name of a
 specific test to focus the investigation:
 
 ```bash
-gemini /fix-behavioral-eval https://github.com/google-gemini/gemini-cli/actions/runs/123456789
+codefly /fix-behavioral-eval https://github.com/google-codefly/codefly-cli/actions/runs/123456789
 ```
 
 When investigating failures manually, you can also enable verbose agent logs by
-setting the `GEMINI_DEBUG_LOG_FILE` environment variable.
+setting the `CODEFLY_DEBUG_LOG_FILE` environment variable.
 
 It's highly recommended to manually review and/or ask the agent to iterate on
 any prompt changes, even if they pass all evals. The prompt should prefer
 positive traits ('do X') and resort to negative traits ('do not do X') only when
-unable to accomplish the goal with positive traits. Gemini is quite good at
+unable to accomplish the goal with positive traits. Codefly is quite good at
 instrospecting on its prompt when asked the right questions.

@@ -27,7 +27,7 @@ describe('ModelConfigService Integration', () => {
       'default-text-model': {
         extends: 'base',
         modelConfig: {
-          model: 'gemini-1.5-pro-latest',
+          model: 'codefly-1.5-pro-latest',
           generateContentConfig: {
             topK: 40, // Override base
           },
@@ -45,7 +45,7 @@ describe('ModelConfigService Integration', () => {
       'fast-classifier': {
         extends: 'base',
         modelConfig: {
-          model: 'gemini-1.5-flash-latest',
+          model: 'codefly-1.5-flash-latest',
           generateContentConfig: {
             temperature: 0.1,
             candidateCount: 4,
@@ -56,7 +56,7 @@ describe('ModelConfigService Integration', () => {
     overrides: [
       // Broad override for all flash models
       {
-        match: { model: 'gemini-1.5-flash-latest' },
+        match: { model: 'codefly-1.5-flash-latest' },
         modelConfig: {
           generateContentConfig: {
             maxOutputTokens: 2048,
@@ -87,7 +87,7 @@ describe('ModelConfigService Integration', () => {
       {
         match: { model: 'base', overrideScope: 'core' },
         modelConfig: {
-          model: 'gemini-1.5-pro-latest',
+          model: 'codefly-1.5-pro-latest',
         },
       },
     ],
@@ -97,10 +97,10 @@ describe('ModelConfigService Integration', () => {
 
   it('should resolve a simple model, applying core agent defaults', () => {
     const resolved = service.getResolvedConfig({
-      model: 'gemini-test-model',
+      model: 'codefly-test-model',
     });
 
-    expect(resolved.model).toBe('gemini-test-model');
+    expect(resolved.model).toBe('codefly-test-model');
     expect(resolved.generateContentConfig).toEqual({
       temperature: 0.5, // from agent override
       stopSequences: ['AGENT_STOP'], // from agent override
@@ -112,7 +112,7 @@ describe('ModelConfigService Integration', () => {
       model: 'default-text-model',
     });
 
-    expect(resolved.model).toBe('gemini-1.5-pro-latest'); // from alias
+    expect(resolved.model).toBe('codefly-1.5-pro-latest'); // from alias
     expect(resolved.generateContentConfig).toEqual({
       temperature: 0.5, // from agent override
       topP: 0.95, // from base
@@ -126,7 +126,7 @@ describe('ModelConfigService Integration', () => {
       model: 'creative-writer',
     });
 
-    expect(resolved.model).toBe('gemini-1.5-pro-latest'); // from default-text-model
+    expect(resolved.model).toBe('codefly-1.5-pro-latest'); // from default-text-model
     expect(resolved.generateContentConfig).toEqual({
       temperature: 0.5, // from agent override
       topP: 0.95, // from base
@@ -141,7 +141,7 @@ describe('ModelConfigService Integration', () => {
       // No agent specified, so it should match core agent-specific rules
     });
 
-    expect(resolved.model).toBe('gemini-1.5-pro-latest'); // now overridden by 'base'
+    expect(resolved.model).toBe('codefly-1.5-pro-latest'); // now overridden by 'base'
     expect(resolved.generateContentConfig).toEqual({
       topP: 0.95, // from base
       topK: 64, // from base
@@ -154,11 +154,11 @@ describe('ModelConfigService Integration', () => {
 
   it('should apply settings for an unknown model but a known agent', () => {
     const resolved = service.getResolvedConfig({
-      model: 'gemini-test-model',
+      model: 'codefly-test-model',
       overrideScope: 'core',
     });
 
-    expect(resolved.model).toBe('gemini-test-model');
+    expect(resolved.model).toBe('codefly-test-model');
     expect(resolved.generateContentConfig).toEqual({
       temperature: 0.5, // from agent override
       stopSequences: ['AGENT_STOP'], // from agent override
@@ -171,7 +171,7 @@ describe('ModelConfigService Integration', () => {
       overrideScope: 'core',
     });
 
-    expect(resolved.model).toBe('gemini-1.5-pro-latest'); // now overridden by 'base'
+    expect(resolved.model).toBe('codefly-1.5-pro-latest'); // now overridden by 'base'
     expect(resolved.generateContentConfig).toEqual({
       // Inherited from 'base'
       topP: 0.95,
@@ -192,7 +192,7 @@ describe('ModelConfigService Integration', () => {
       overrideScope: 'core',
     });
 
-    expect(resolved.model).toBe('gemini-1.5-pro-latest'); // from default-text-model
+    expect(resolved.model).toBe('codefly-1.5-pro-latest'); // from default-text-model
     expect(resolved.generateContentConfig).toEqual({
       temperature: 0.5, // from agent override (wins over alias)
       topP: 0.95, // from base
@@ -207,7 +207,7 @@ describe('ModelConfigService Integration', () => {
       overrideScope: 'core',
     });
 
-    expect(resolved.model).toBe('gemini-1.5-pro-latest'); // from override
+    expect(resolved.model).toBe('codefly-1.5-pro-latest'); // from override
     expect(resolved.generateContentConfig).toEqual({
       temperature: 0.5, // from agent override
       topP: 0.95, // from base alias
@@ -222,7 +222,7 @@ describe('ModelConfigService Integration', () => {
       overrideScope: 'non-core-agent',
     });
 
-    expect(resolved.model).toBe('gemini-1.5-flash-latest');
+    expect(resolved.model).toBe('codefly-1.5-flash-latest');
     expect(resolved.generateContentConfig).toEqual({
       candidateCount: 4, // from alias
       maxOutputTokens: 2048, // from override of model
@@ -255,7 +255,7 @@ describe('ModelConfigService Integration', () => {
     });
 
     // Assert the final merged configuration.
-    expect(resolved.model).toBe('gemini-1.5-pro-latest'); // from 'default-text-model'
+    expect(resolved.model).toBe('codefly-1.5-pro-latest'); // from 'default-text-model'
     expect(resolved.generateContentConfig).toEqual({
       // from 'core' agent override, wins over runtime alias's 0.1 and creative-writer's 0.9
       temperature: 0.5,

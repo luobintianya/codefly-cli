@@ -10,15 +10,15 @@ import { platform } from 'node:os';
 import * as dotenv from 'dotenv';
 import process from 'node:process';
 import {
+  AuthType,
+  CODEFLY_DIR,
   CoreEvent,
   FatalConfigError,
-  CODEFLY_DIR,
-  getErrorMessage,
   Storage,
-  AuthType,
   coreEvents,
+  getErrorMessage,
   homedir,
-  type FetchAdminControlsResponse,
+  type AdminControlsSettings,
 } from '@codeflyai/codefly-core';
 import stripJsonComments from 'strip-json-comments';
 import { DefaultLight } from '../ui/themes/default-light.js';
@@ -80,7 +80,7 @@ export const USER_SETTINGS_DIR = path.dirname(USER_SETTINGS_PATH);
 export const DEFAULT_EXCLUDED_ENV_VARS = ['DEBUG', 'DEBUG_MODE'];
 
 const AUTH_ENV_VAR_WHITELIST = [
-  'GEMINI_API_KEY',
+  'CODEFLY_API_KEY',
   'GOOGLE_API_KEY',
   'GOOGLE_CLOUD_PROJECT',
   'GOOGLE_CLOUD_LOCATION',
@@ -95,21 +95,21 @@ export function sanitizeEnvVar(value: string): string {
 }
 
 export function getSystemSettingsPath(): string {
-  if (process.env['GEMINI_CLI_SYSTEM_SETTINGS_PATH']) {
-    return process.env['GEMINI_CLI_SYSTEM_SETTINGS_PATH'];
+  if (process.env['CODEFLY_CLI_SYSTEM_SETTINGS_PATH']) {
+    return process.env['CODEFLY_CLI_SYSTEM_SETTINGS_PATH'];
   }
   if (platform() === 'darwin') {
-    return '/Library/Application Support/GeminiCli/settings.json';
+    return '/Library/Application Support/CodeflyCli/settings.json';
   } else if (platform() === 'win32') {
-    return 'C:\\ProgramData\\gemini-cli\\settings.json';
+    return 'C:\\ProgramData\\codefly-cli\\settings.json';
   } else {
-    return '/etc/gemini-cli/settings.json';
+    return '/etc/codefly-cli/settings.json';
   }
 }
 
 export function getSystemDefaultsPath(): string {
-  if (process.env['GEMINI_CLI_SYSTEM_DEFAULTS_PATH']) {
-    return process.env['GEMINI_CLI_SYSTEM_DEFAULTS_PATH'];
+  if (process.env['CODEFLY_CLI_SYSTEM_DEFAULTS_PATH']) {
+    return process.env['CODEFLY_CLI_SYSTEM_DEFAULTS_PATH'];
   }
   return path.join(
     path.dirname(getSystemSettingsPath()),
@@ -498,10 +498,10 @@ export class LoadedSettings {
 function findEnvFile(startDir: string): string | null {
   let currentDir = path.resolve(startDir);
   while (true) {
-    // prefer gemini-specific .env under CODEFLY_DIR
-    const geminiEnvPath = path.join(currentDir, CODEFLY_DIR, '.env');
-    if (fs.existsSync(geminiEnvPath)) {
-      return geminiEnvPath;
+    // prefer codefly-specific .env under CODEFLY_DIR
+    const codeflyEnvPath = path.join(currentDir, CODEFLY_DIR, '.env');
+    if (fs.existsSync(codeflyEnvPath)) {
+      return codeflyEnvPath;
     }
     const envPath = path.join(currentDir, '.env');
     if (fs.existsSync(envPath)) {
@@ -509,10 +509,10 @@ function findEnvFile(startDir: string): string | null {
     }
     const parentDir = path.dirname(currentDir);
     if (parentDir === currentDir || !parentDir) {
-      // check .env under home as fallback, again preferring gemini-specific .env
-      const homeGeminiEnvPath = path.join(homedir(), CODEFLY_DIR, '.env');
-      if (fs.existsSync(homeGeminiEnvPath)) {
-        return homeGeminiEnvPath;
+      // check .env under home as fallback, again preferring codefly-specific .env
+      const homeCodeflyEnvPath = path.join(homedir(), CODEFLY_DIR, '.env');
+      if (fs.existsSync(homeCodeflyEnvPath)) {
+        return homeCodeflyEnvPath;
       }
       const homeEnvPath = path.join(homedir(), '.env');
       if (fs.existsSync(homeEnvPath)) {

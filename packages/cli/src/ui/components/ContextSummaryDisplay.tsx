@@ -56,7 +56,7 @@ export const ContextSummaryDisplay: React.FC<ContextSummaryDisplayProps> = ({
     } (ctrl+g to view)`;
   })();
 
-  const geminiMdText = (() => {
+  const codeflyMdText = (() => {
     if (codeflyMdFileCount === 0) {
       return '';
     }
@@ -107,7 +107,7 @@ export const ContextSummaryDisplay: React.FC<ContextSummaryDisplayProps> = ({
 
   const summaryParts = [
     openFilesText,
-    geminiMdText,
+    codeflyMdText,
     mcpText,
     skillText,
     backgroundText,

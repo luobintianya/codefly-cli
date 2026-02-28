@@ -155,8 +155,7 @@ describe('memoryDiscovery', () => {
           new FileDiscoveryService(projectRoot),
           new SimpleExtensionLoader([]),
           false, // untrusted
-        ),
-      );
+        );
 
       expect(fileCount).toEqual(1);
       expect(memoryContent).toContain(path.relative(cwd, filepath).toString());
@@ -319,12 +318,12 @@ Subdir custom memory
     });
   });
 
-  it('should load ORIGINAL_GEMINI_MD_FILENAME files by upward traversal from CWD to project root', async () => {
-    const projectRootGeminiFile = await createTestFile(
+  it('should load ORIGINAL_CODEFLY_MD_FILENAME files by upward traversal from CWD to project root', async () => {
+    const projectRootCodeflyFile = await createTestFile(
       path.join(projectRoot, DEFAULT_CONTEXT_FILENAME),
       'Project root memory',
     );
-    const srcGeminiFile = await createTestFile(
+    const srcCodeflyFile = await createTestFile(
       path.join(cwd, DEFAULT_CONTEXT_FILENAME),
       'Src directory memory',
     );
@@ -342,24 +341,24 @@ Subdir custom memory
 
     expect(result).toEqual({
       memoryContent: `--- Project ---
---- Context from: ${normMarker(path.relative(cwd, projectRootGeminiFile))} ---
+--- Context from: ${normMarker(path.relative(cwd, projectRootCodeflyFile))} ---
 Project root memory
---- End of Context from: ${normMarker(path.relative(cwd, projectRootGeminiFile))} ---
+--- End of Context from: ${normMarker(path.relative(cwd, projectRootCodeflyFile))} ---
 
---- Context from: ${normMarker(path.relative(cwd, srcGeminiFile))} ---
+--- Context from: ${normMarker(path.relative(cwd, srcCodeflyFile))} ---
 Src directory memory
---- End of Context from: ${normMarker(path.relative(cwd, srcGeminiFile))} ---`,
+--- End of Context from: ${normMarker(path.relative(cwd, srcCodeflyFile))} ---`,
       fileCount: 2,
-      filePaths: [projectRootGeminiFile, srcGeminiFile],
+      filePaths: [projectRootCodeflyFile, srcCodeflyFile],
     });
   });
 
-  it('should load ORIGINAL_GEMINI_MD_FILENAME files by downward traversal from CWD', async () => {
-    const subDirGeminiFile = await createTestFile(
+  it('should load ORIGINAL_CODEFLY_MD_FILENAME files by downward traversal from CWD', async () => {
+    const subDirCodeflyFile = await createTestFile(
       path.join(cwd, 'subdir', DEFAULT_CONTEXT_FILENAME),
       'Subdir memory',
     );
-    const cwdGeminiFile = await createTestFile(
+    const cwdCodeflyFile = await createTestFile(
       path.join(cwd, DEFAULT_CONTEXT_FILENAME),
       'CWD memory',
     );
@@ -385,28 +384,28 @@ CWD memory
 Subdir memory
 --- End of Context from: ${normMarker(path.join('subdir', DEFAULT_CONTEXT_FILENAME))} ---`,
       fileCount: 2,
-      filePaths: [cwdGeminiFile, subDirGeminiFile],
+      filePaths: [cwdCodeflyFile, subDirCodeflyFile],
     });
   });
 
-  it('should load and correctly order global, upward, and downward ORIGINAL_GEMINI_MD_FILENAME files', async () => {
+  it('should load and correctly order global, upward, and downward ORIGINAL_CODEFLY_MD_FILENAME files', async () => {
     const defaultContextFile = await createTestFile(
       path.join(homedir, CODEFLY_DIR, DEFAULT_CONTEXT_FILENAME),
       'default context content',
     );
-    const rootGeminiFile = await createTestFile(
+    const rootCodeflyFile = await createTestFile(
       path.join(testRootDir, DEFAULT_CONTEXT_FILENAME),
       'Project parent memory',
     );
-    const projectRootGeminiFile = await createTestFile(
+    const projectRootCodeflyFile = await createTestFile(
       path.join(projectRoot, DEFAULT_CONTEXT_FILENAME),
       'Project root memory',
     );
-    const cwdGeminiFile = await createTestFile(
+    const cwdCodeflyFile = await createTestFile(
       path.join(cwd, DEFAULT_CONTEXT_FILENAME),
       'CWD memory',
     );
-    const subDirGeminiFile = await createTestFile(
+    const subDirCodeflyFile = await createTestFile(
       path.join(cwd, 'sub', DEFAULT_CONTEXT_FILENAME),
       'Subdir memory',
     );
@@ -429,28 +428,28 @@ default context content
 --- End of Context from: ${normMarker(path.relative(cwd, defaultContextFile))} ---
 
 --- Project ---
---- Context from: ${normMarker(path.relative(cwd, rootGeminiFile))} ---
+--- Context from: ${normMarker(path.relative(cwd, rootCodeflyFile))} ---
 Project parent memory
---- End of Context from: ${normMarker(path.relative(cwd, rootGeminiFile))} ---
+--- End of Context from: ${normMarker(path.relative(cwd, rootCodeflyFile))} ---
 
---- Context from: ${normMarker(path.relative(cwd, projectRootGeminiFile))} ---
+--- Context from: ${normMarker(path.relative(cwd, projectRootCodeflyFile))} ---
 Project root memory
---- End of Context from: ${normMarker(path.relative(cwd, projectRootGeminiFile))} ---
+--- End of Context from: ${normMarker(path.relative(cwd, projectRootCodeflyFile))} ---
 
---- Context from: ${normMarker(path.relative(cwd, cwdGeminiFile))} ---
+--- Context from: ${normMarker(path.relative(cwd, cwdCodeflyFile))} ---
 CWD memory
---- End of Context from: ${normMarker(path.relative(cwd, cwdGeminiFile))} ---
+--- End of Context from: ${normMarker(path.relative(cwd, cwdCodeflyFile))} ---
 
---- Context from: ${normMarker(path.relative(cwd, subDirGeminiFile))} ---
+--- Context from: ${normMarker(path.relative(cwd, subDirCodeflyFile))} ---
 Subdir memory
---- End of Context from: ${normMarker(path.relative(cwd, subDirGeminiFile))} ---`,
+--- End of Context from: ${normMarker(path.relative(cwd, subDirCodeflyFile))} ---`,
       fileCount: 5,
       filePaths: [
         defaultContextFile,
-        rootGeminiFile,
-        projectRootGeminiFile,
-        cwdGeminiFile,
-        subDirGeminiFile,
+        rootCodeflyFile,
+        projectRootCodeflyFile,
+        cwdCodeflyFile,
+        subDirCodeflyFile,
       ],
     });
   });
@@ -463,7 +462,7 @@ Subdir memory
       path.join(cwd, 'node_modules', DEFAULT_CONTEXT_FILENAME),
       'Ignored memory',
     );
-    const regularSubDirGeminiFile = await createTestFile(
+    const regularSubDirCodeflyFile = await createTestFile(
       path.join(cwd, 'my_code', DEFAULT_CONTEXT_FILENAME),
       'My code memory',
     );
@@ -485,11 +484,11 @@ Subdir memory
 
     expect(result).toEqual({
       memoryContent: `--- Project ---
---- Context from: ${normMarker(path.relative(cwd, regularSubDirGeminiFile))} ---
+--- Context from: ${normMarker(path.relative(cwd, regularSubDirCodeflyFile))} ---
 My code memory
---- End of Context from: ${normMarker(path.relative(cwd, regularSubDirGeminiFile))} ---`,
+--- End of Context from: ${normMarker(path.relative(cwd, regularSubDirCodeflyFile))} ---`,
       fileCount: 1,
-      filePaths: [regularSubDirGeminiFile],
+      filePaths: [regularSubDirCodeflyFile],
     });
   });
 
@@ -728,14 +727,14 @@ included directory memory
 
     it('should ignore inactive extensions', async () => {
       const extFile = await createTestFile(
-        path.join(testRootDir, 'ext', 'GEMINI.md'),
+        path.join(testRootDir, 'ext', 'CODEFLY.md'),
         'Extension content',
       );
       const loader = new SimpleExtensionLoader([
         {
           isActive: false,
           contextFiles: [extFile],
-        } as GeminiCLIExtension,
+        } as CodeflyCLIExtension,
       ]);
 
       const result = getExtensionMemoryPaths(loader);

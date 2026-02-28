@@ -210,8 +210,10 @@ export async function resolveEditorAsync(
 
   return (
     once(coreEvents, CoreEvent.EditorSelected, { signal })
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-      .then(([payload]) => (payload as EditorSelectedPayload).editor)
+       
+      .then(
+        ([payload]) => (payload as EditorSelectedPayload).editor ?? undefined,
+      )
       .catch(() => undefined)
   );
 }

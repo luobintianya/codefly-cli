@@ -31,7 +31,7 @@ on:
 
 jobs:
   release:
-    if: "github.repository == 'google-gemini/gemini-cli'"
+    if: "github.repository == 'google-codefly/codefly-cli'"
     environment: "${{ github.event.inputs.environment || 'prod' }}"
     runs-on: 'ubuntu-latest'
     permissions:
@@ -84,7 +84,7 @@ jobs:
         if: "${{ github.event_name == 'schedule' || github.event.inputs.force_skip_tests == 'false' }}"
         uses: './.github/actions/run-tests'
         with:
-          gemini_api_key: '${{ secrets.GEMINI_API_KEY }}'
+          codefly_api_key: '${{ secrets.CODEFLY_API_KEY }}'
           working-directory: './release'
 
       - name: 'Get Nightly Version'
@@ -124,13 +124,13 @@ jobs:
           wombat-token-cli: '${{ secrets.WOMBAT_TOKEN_CLI }}'
           wombat-token-a2a-server: '${{ secrets.WOMBAT_TOKEN_A2A_SERVER }}'
           github-token: '${{ secrets.GITHUB_TOKEN }}'
-          github-release-token: '${{ secrets.GEMINI_CLI_ROBOT_GITHUB_PAT }}'
+          github-release-token: '${{ secrets.CODEFLY_CLI_ROBOT_GITHUB_PAT }}'
           dry-run: '${{ steps.vars.outputs.is_dry_run }}'
           previous-tag: '${{ steps.nightly_version.outputs.PREVIOUS_TAG }}'
           working-directory: './release'
           skip-branch-cleanup: true
           force-skip-tests: "${{ github.event_name != 'schedule' && github.event.inputs.force_skip_tests == 'true' }}"
-          gemini_api_key: '${{ secrets.GEMINI_API_KEY }}'
+          codefly_api_key: '${{ secrets.CODEFLY_API_KEY }}'
           npm-registry-publish-url: '${{ vars.NPM_REGISTRY_PUBLISH_URL }}'
           npm-registry-url: '${{ vars.NPM_REGISTRY_URL }}'
           npm-registry-scope: '${{ vars.NPM_REGISTRY_SCOPE }}'

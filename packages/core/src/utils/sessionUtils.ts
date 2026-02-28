@@ -6,7 +6,7 @@
 
 import { type Part, type PartListUnion } from '@google/genai';
 import { type ConversationRecord } from '../services/chatRecordingService.js';
-import { partListUnionToString } from '../core/geminiRequest.js';
+import { partListUnionToString } from '../core/codeflyRequest.js';
 
 /**
  * Converts a PartListUnion into a normalized array of Part objects.
@@ -25,7 +25,7 @@ function ensurePartArray(content: PartListUnion): Part[] {
 }
 
 /**
- * Converts session/conversation data into Gemini client history formats.
+ * Converts session/conversation data into Codefly client history formats.
  */
 export function convertSessionToClientHistory(
   messages: ConversationRecord['messages'],
@@ -50,7 +50,7 @@ export function convertSessionToClientHistory(
         role: 'user',
         parts: ensurePartArray(msg.content),
       });
-    } else if (msg.type === 'gemini') {
+    } else if (msg.type === 'codefly') {
       const hasToolCalls = msg.toolCalls && msg.toolCalls.length > 0;
 
       if (hasToolCalls) {

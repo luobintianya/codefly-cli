@@ -13,9 +13,9 @@ import { StreamingState } from '../types.js';
 import { vi } from 'vitest';
 import * as useTerminalSize from '../hooks/useTerminalSize.js';
 
-// Mock GeminiRespondingSpinner
-vi.mock('./GeminiRespondingSpinner.js', () => ({
-  GeminiRespondingSpinner: ({
+// Mock CodeflyRespondingSpinner
+vi.mock('./CodeflyRespondingSpinner.js', () => ({
+  CodeflyRespondingSpinner: ({
     nonRespondingDisplay,
   }: {
     nonRespondingDisplay?: string;

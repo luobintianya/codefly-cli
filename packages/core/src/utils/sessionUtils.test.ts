@@ -19,7 +19,7 @@ describe('convertSessionToClientHistory', () => {
       },
       {
         id: '2',
-        type: 'gemini',
+        type: 'codefly',
         timestamp: '2024-01-01T10:01:00Z',
         content: 'Hi there',
       },
@@ -78,7 +78,7 @@ describe('convertSessionToClientHistory', () => {
       },
       {
         id: 'msg2',
-        type: 'gemini',
+        type: 'codefly',
         timestamp: '2024-01-01T10:01:00Z',
         content: 'Let me check.',
         toolCalls: [

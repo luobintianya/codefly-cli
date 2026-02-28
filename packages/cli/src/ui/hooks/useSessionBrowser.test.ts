@@ -19,7 +19,7 @@ import type {
   ConversationRecord,
   MessageRecord,
 } from '@codeflyai/codefly-core';
-import { coreEvents } from '@codeflyai/codefly-core';
+import { CoreToolCallStatus, convertSessionToClientHistory, coreEvents } from '@codeflyai/codefly-core';
 
 // Mock modules
 vi.mock('fs/promises');
@@ -162,7 +162,7 @@ describe('convertSessionToHistoryFormats', () => {
   it('should convert basic user and model messages', () => {
     const messages: MessageRecord[] = [
       { type: 'user', content: 'Hello' } as MessageRecord,
-      { type: 'gemini', content: 'Hi there' } as MessageRecord,
+      { type: 'codefly', content: 'Hi there' } as MessageRecord,
     ];
 
     const result = convertSessionToHistoryFormats(messages);
@@ -170,7 +170,7 @@ describe('convertSessionToHistoryFormats', () => {
     expect(result.uiHistory).toHaveLength(2);
     expect(result.uiHistory[0]).toMatchObject({ type: 'user', text: 'Hello' });
     expect(result.uiHistory[1]).toMatchObject({
-      type: 'gemini',
+      type: 'codefly',
       text: 'Hi there',
     });
 
@@ -233,7 +233,7 @@ describe('convertSessionToHistoryFormats', () => {
     const messages: MessageRecord[] = [
       { type: 'user', content: 'What time is it?' } as MessageRecord,
       {
-        type: 'gemini',
+        type: 'codefly',
         content: '',
         toolCalls: [
           {

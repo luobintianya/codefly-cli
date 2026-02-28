@@ -24,7 +24,7 @@ export type ClientMetadataIdeType =
   | 'VSCODE_CLOUD_WORKSTATION'
   | 'INTELLIJ_CLOUD_WORKSTATION'
   | 'CLOUD_SHELL'
-  | 'GEMINI_CLI';
+  | 'CODEFLY_CLI';
 export type ClientMetadataPlatform =
   | 'PLATFORM_UNSPECIFIED'
   | 'DARWIN_AMD64'
@@ -35,7 +35,7 @@ export type ClientMetadataPlatform =
 export type ClientMetadataPluginType =
   | 'PLUGIN_UNSPECIFIED'
   | 'CLOUD_CODE'
-  | 'GEMINI'
+  | 'CODEFLY'
   | 'AIPLUGIN_INTELLIJ'
   | 'AIPLUGIN_STUDIO';
 
@@ -49,17 +49,17 @@ export interface LoadCodeAssistRequest {
  * http://google3/google/internal/cloud/code/v1internal/cloudcode.proto;l=224
  */
 export interface LoadCodeAssistResponse {
-  currentTier?: GeminiUserTier | null;
-  allowedTiers?: GeminiUserTier[] | null;
+  currentTier?: CodeflyUserTier | null;
+  allowedTiers?: CodeflyUserTier[] | null;
   ineligibleTiers?: IneligibleTier[] | null;
   cloudaicompanionProject?: string | null;
-  paidTier?: GeminiUserTier | null;
+  paidTier?: CodeflyUserTier | null;
 }
 
 /**
- * GeminiUserTier reflects the structure received from the CodeAssist when calling LoadCodeAssist.
+ * CodeflyUserTier reflects the structure received from the CodeAssist when calling LoadCodeAssist.
  */
-export interface GeminiUserTier {
+export interface CodeflyUserTier {
   id: UserTierId;
   name?: string;
   description?: string;
@@ -175,7 +175,7 @@ export enum OnboardUserStatusCode {
 }
 
 /**
- * Status of user onboarded to gemini
+ * Status of user onboarded to codefly
  */
 export interface OnboardUserStatus {
   statusCode: OnboardUserStatusCode;

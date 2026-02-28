@@ -9,7 +9,7 @@ import { act } from 'react';
 import path from 'node:path';
 import fs from 'node:fs';
 import { appEvalTest } from './app-test-helper.js';
-import { PolicyDecision } from '@google/gemini-cli-core';
+import { PolicyDecision } from '@codeflyai/codefly-core';
 
 describe('Model Steering Behavioral Evals', () => {
   appEvalTest('ALWAYS_PASSES', {
@@ -20,7 +20,7 @@ describe('Model Steering Behavioral Evals', () => {
     },
     files: {
       'README.md':
-        '# Gemini CLI\nThis is a tool for developers.\nLicense: Apache-2.0\nLine 4\nLine 5\nLine 6',
+        '# Codefly CLI\nThis is a tool for developers.\nLicense: Apache-2.0\nLine 4\nLine 5\nLine 6',
     },
     prompt: 'Find the first 5 lines of README.md',
     setup: async (rig) => {

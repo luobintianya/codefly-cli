@@ -1,0 +1,100 @@
+src/ui/hooks/atCommandProcessor.test.ts(18,3): error TS6133: 'GEMINI_IGNORE_FILE_NAME' is declared but its value is never read.
+src/ui/hooks/atCommandProcessor.test.ts(136,7): error TS1117: An object literal cannot have multiple properties with the same name.
+src/ui/hooks/atCommandProcessor.test.ts(216,45): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/atCommandProcessor.test.ts(320,45): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/atCommandProcessor.test.ts(1442,51): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/atCommandProcessor.ts(13,3): error TS6196: 'DiscoveredMCPResource' is declared but never used.
+src/ui/hooks/atCommandProcessor.ts(418,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/atCommandProcessor.ts(432,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/atCommandProcessor.ts(457,27): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/atCommandProcessor.ts(511,15): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/atCommandProcessor.ts(570,15): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/shellCommandProcessor.test.tsx(29,13): error TS2304: Cannot find name 'mockShellKill'.
+src/ui/hooks/shellCommandProcessor.test.tsx(30,19): error TS2304: Cannot find name 'mockShellBackground'.
+src/ui/hooks/shellCommandProcessor.test.tsx(31,18): error TS2304: Cannot find name 'mockShellSubscribe'.
+src/ui/hooks/shellCommandProcessor.test.tsx(32,15): error TS2304: Cannot find name 'mockShellOnExit'.
+src/ui/hooks/shellCommandProcessor.test.tsx(188,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/shellCommandProcessor.test.tsx(227,21): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/shellCommandProcessor.test.tsx(256,51): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/shellCommandProcessor.test.tsx(470,51): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/shellCommandProcessor.test.tsx(764,14): error TS2304: Cannot find name 'mockShellOnExit'.
+src/ui/hooks/shellCommandProcessor.test.tsx(765,14): error TS2304: Cannot find name 'mockShellSubscribe'.
+src/ui/hooks/shellCommandProcessor.test.tsx(821,14): error TS2304: Cannot find name 'mockShellKill'.
+src/ui/hooks/shellCommandProcessor.test.tsx(850,14): error TS2304: Cannot find name 'mockShellBackground'.
+src/ui/hooks/shellCommandProcessor.test.tsx(879,28): error TS2304: Cannot find name 'mockShellOnExit'.
+src/ui/hooks/shellCommandProcessor.test.tsx(880,10): error TS7006: Parameter 'call' implicitly has an 'any' type.
+src/ui/hooks/shellCommandProcessor.test.tsx(905,28): error TS2304: Cannot find name 'mockShellOnExit'.
+src/ui/hooks/shellCommandProcessor.test.tsx(906,10): error TS7006: Parameter 'call' implicitly has an 'any' type.
+src/ui/hooks/shellCommandProcessor.test.tsx(943,33): error TS2304: Cannot find name 'mockShellSubscribe'.
+src/ui/hooks/shellCommandProcessor.test.tsx(944,10): error TS7006: Parameter 'call' implicitly has an 'any' type.
+src/ui/hooks/shellCommandProcessor.test.tsx(969,33): error TS2304: Cannot find name 'mockShellSubscribe'.
+src/ui/hooks/shellCommandProcessor.test.tsx(970,10): error TS7006: Parameter 'call' implicitly has an 'any' type.
+src/ui/hooks/shellCommandProcessor.test.tsx(999,33): error TS2304: Cannot find name 'mockShellSubscribe'.
+src/ui/hooks/shellCommandProcessor.test.tsx(1000,10): error TS7006: Parameter 'call' implicitly has an 'any' type.
+src/ui/hooks/shellCommandProcessor.ts(11,1): error TS6133: 'ToolCallStatus' is declared but its value is never read.
+src/ui/hooks/shellCommandProcessor.ts(12,23): error TS6133: 'useState' is declared but its value is never read.
+src/ui/hooks/shellCommandProcessor.ts(17,3): error TS6196: 'ShellExecutionResult' is declared but never used.
+src/ui/hooks/shellCommandProcessor.ts(88,29): error TS2304: Cannot find name 'useReducer'.
+src/ui/hooks/shellCommandProcessor.ts(91,19): error TS2304: Cannot find name 'useRef'.
+src/ui/hooks/shellCommandProcessor.ts(110,3): error TS2304: Cannot find name 'useEffect'.
+src/ui/hooks/shellCommandProcessor.ts(146,3): error TS2304: Cannot find name 'useEffect'.
+src/ui/hooks/shellCommandProcessor.ts(309,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/shellCommandProcessor.ts(455,29): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/shellCommandProcessor.ts(458,27): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/shellCommandProcessor.ts(461,27): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/shellCommandProcessor.ts(464,27): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/shellCommandProcessor.ts(467,27): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/shellCommandProcessor.ts(470,27): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/shellCommandProcessor.ts(488,31): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/shellCommandProcessor.ts(541,12): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(predicate: (value: unknown, index: number, array: unknown[]) => value is unknown, thisArg?: any): unknown[]', gave the following error.
+    Argument of type '(s: BackgroundShell) => boolean' is not assignable to parameter of type '(value: unknown, index: number, array: unknown[]) => value is unknown'.
+      Types of parameters 's' and 'value' are incompatible.
+        Type 'unknown' is not assignable to type 'BackgroundShell'.
+  Overload 2 of 2, '(predicate: (value: unknown, index: number, array: unknown[]) => unknown, thisArg?: any): unknown[]', gave the following error.
+    Argument of type '(s: BackgroundShell) => boolean' is not assignable to parameter of type '(value: unknown, index: number, array: unknown[]) => unknown'.
+      Types of parameters 's' and 'value' are incompatible.
+        Type 'unknown' is not assignable to type 'BackgroundShell'.
+src/ui/hooks/slashCommandProcessor.test.tsx(186,33): error TS2304: Cannot find name 'SlashCommandConflictHandler'.
+src/ui/hooks/slashCommandProcessor.test.tsx(189,38): error TS2304: Cannot find name 'UserFeedbackPayload'.
+src/ui/hooks/slashCommandProcessor.test.tsx(204,19): error TS2304: Cannot find name 'CoreEvent'.
+src/ui/hooks/slashCommandProcessor.test.tsx(254,22): error TS2304: Cannot find name 'CoreEvent'.
+src/ui/hooks/slashCommandProcessor.ts(585,31): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(42,8): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(43,8): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(44,8): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(45,8): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(46,8): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(47,8): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(48,8): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(50,14): error TS2304: Cannot find name 'mapCoreStatusToDisplayStatus'.
+src/ui/hooks/toolMapping.test.ts(57,9): error TS2304: Cannot find name 'mapCoreStatusToDisplayStatus'.
+src/ui/hooks/toolMapping.test.ts(91,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(105,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(111,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(125,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(144,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(153,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(164,39): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(180,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(191,39): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(207,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(225,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(234,39): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(243,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(256,39): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(262,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(278,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(297,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(313,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(321,43): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(326,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.ts(41,25): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.ts(44,26): error TS2339: Property 'invocation' does not exist on type 'ToolCall'.
+  Property 'invocation' does not exist on type 'ErroredToolCall'.
+src/ui/hooks/toolMapping.ts(45,32): error TS18048: 'call.tool' is possibly 'undefined'.
+src/ui/hooks/toolMapping.ts(66,12): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.ts(67,30): error TS2339: Property 'response' does not exist on type 'ToolCall'.
+  Property 'response' does not exist on type 'ValidatingToolCall'.
+src/ui/hooks/toolMapping.ts(68,27): error TS2339: Property 'response' does not exist on type 'ToolCall'.
+  Property 'response' does not exist on type 'ValidatingToolCall'.

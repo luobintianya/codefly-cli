@@ -202,14 +202,14 @@ Sources:
                 },
                 {
                   web: {
-                    title: 'google-gemini/gemini-cli',
-                    uri: 'https://github.com/google-gemini/gemini-cli',
+                    title: 'google-codefly/codefly-cli',
+                    uri: 'https://github.com/google-codefly/codefly-cli',
                   },
                 },
                 {
                   web: {
                     title: 'Codefly CLI: your open-source AI agent',
-                    uri: 'https://blog.google/technology/developers/introducing-gemini-cli-open-source-ai-agent/',
+                    uri: 'https://blog.google/technology/developers/introducing-codefly-cli-open-source-ai-agent/',
                   },
                 },
               ],
@@ -245,8 +245,8 @@ Sources:
 
 Sources:
 [1] Japanese Greeting (https://example.test/japanese-greeting)
-[2] google-gemini/gemini-cli (https://github.com/google-gemini/gemini-cli)
-[3] Codefly CLI: your open-source AI agent (https://blog.google/technology/developers/introducing-gemini-cli-open-source-ai-agent/)`;
+[2] google-codefly/codefly-cli (https://github.com/google-codefly/codefly-cli)
+[3] Codefly CLI: your open-source AI agent (https://blog.google/technology/developers/introducing-codefly-cli-open-source-ai-agent/)`;
 
       expect(result.llmContent).toBe(expectedLlmContent);
       expect(result.returnDisplay).toBe(

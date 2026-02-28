@@ -79,13 +79,13 @@ describe('telemetry/config helpers', () => {
         useCollector: false,
       };
       const env = {
-        GEMINI_TELEMETRY_ENABLED: '1',
-        GEMINI_TELEMETRY_TARGET: 'gcp',
-        GEMINI_TELEMETRY_OTLP_ENDPOINT: 'http://env:4317',
-        GEMINI_TELEMETRY_OTLP_PROTOCOL: 'http',
-        GEMINI_TELEMETRY_LOG_PROMPTS: 'true',
-        GEMINI_TELEMETRY_OUTFILE: 'env.log',
-        GEMINI_TELEMETRY_USE_COLLECTOR: 'true',
+        CODEFLY_TELEMETRY_ENABLED: '1',
+        CODEFLY_TELEMETRY_TARGET: 'gcp',
+        CODEFLY_TELEMETRY_OTLP_ENDPOINT: 'http://env:4317',
+        CODEFLY_TELEMETRY_OTLP_PROTOCOL: 'http',
+        CODEFLY_TELEMETRY_LOG_PROMPTS: 'true',
+        CODEFLY_TELEMETRY_OUTFILE: 'env.log',
+        CODEFLY_TELEMETRY_USE_COLLECTOR: 'true',
       } as Record<string, string>;
       const argv = {
         telemetry: false,
@@ -134,7 +134,7 @@ describe('telemetry/config helpers', () => {
 
     it('resolves useCliAuth from env', async () => {
       const env = {
-        GEMINI_TELEMETRY_USE_CLI_AUTH: 'true',
+        CODEFLY_TELEMETRY_USE_CLI_AUTH: 'true',
       };
       const resolved = await resolveTelemetrySettings({ env });
       expect(resolved.useCliAuth).toBe(true);
@@ -145,13 +145,13 @@ describe('telemetry/config helpers', () => {
         useCliAuth: false,
       };
       const env = {
-        GEMINI_TELEMETRY_USE_CLI_AUTH: 'true',
+        CODEFLY_TELEMETRY_USE_CLI_AUTH: 'true',
       };
       const resolved = await resolveTelemetrySettings({ env, settings });
       expect(resolved.useCliAuth).toBe(true);
     });
 
-    it('falls back to OTEL_EXPORTER_OTLP_ENDPOINT when GEMINI var is missing', async () => {
+    it('falls back to OTEL_EXPORTER_OTLP_ENDPOINT when CODEFLY var is missing', async () => {
       const settings = {};
       const env = {
         OTEL_EXPORTER_OTLP_ENDPOINT: 'http://otel:4317',
@@ -161,7 +161,7 @@ describe('telemetry/config helpers', () => {
     });
 
     it('throws on unknown protocol values', async () => {
-      const env = { GEMINI_TELEMETRY_OTLP_PROTOCOL: 'unknown' } as Record<
+      const env = { CODEFLY_TELEMETRY_OTLP_PROTOCOL: 'unknown' } as Record<
         string,
         string
       >;
@@ -171,7 +171,7 @@ describe('telemetry/config helpers', () => {
     });
 
     it('throws on unknown target values', async () => {
-      const env = { GEMINI_TELEMETRY_TARGET: 'unknown' } as Record<
+      const env = { CODEFLY_TELEMETRY_TARGET: 'unknown' } as Record<
         string,
         string
       >;

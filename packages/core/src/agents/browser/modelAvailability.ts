@@ -17,7 +17,7 @@ import { debugLogger } from '../../utils/debugLogger.js';
 /**
  * Default model for the visual agent (Computer Use capable).
  */
-export const VISUAL_AGENT_MODEL = 'gemini-2.5-computer-use-preview-10-2025';
+export const VISUAL_AGENT_MODEL = 'codefly-2.5-computer-use-preview-10-2025';
 
 /**
  * Gets the visual agent model from config, falling back to default.

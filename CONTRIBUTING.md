@@ -4,13 +4,13 @@ We would love to accept your patches and contributions to this project. This
 document includes:
 
 - **[Before you begin](#before-you-begin):** Essential steps to take before
-  becoming a Gemini CLI contributor.
+  becoming a Codefly CLI contributor.
 - **[Code contribution process](#code-contribution-process):** How to contribute
-  code to Gemini CLI.
+  code to Codefly CLI.
 - **[Development setup and workflow](#development-setup-and-workflow):** How to
   set up your development environment and workflow.
 - **[Documentation contribution process](#documentation-contribution-process):**
-  How to contribute documentation to Gemini CLI.
+  How to contribute documentation to Codefly CLI.
 
 We're looking forward to seeing your contributions!
 
@@ -65,7 +65,7 @@ recommend running our automated frontend review tool. **Note: This tool is
 currently experimental.** It helps detect common React anti-patterns, testing
 issues, and other frontend-specific best practices that are easy to miss.
 
-To run the review tool, enter the following command from within Gemini CLI:
+To run the review tool, enter the following command from within Codefly CLI:
 
 ```text
 /review-frontend <PR_NUMBER>
@@ -156,7 +156,7 @@ If you are forking the repository you will be able to run the Build, Test and
 Integration test workflows. However in order to make the integration tests run
 you'll need to add a
 [GitHub Repository Secret](https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository)
-with a value of `GEMINI_API_KEY` and set that to a valid API key that you have
+with a value of `CODEFLY_API_KEY` and set that to a valid API key that you have
 available. Your key and secret are private to your repo; no one without access
 can see your key and you cannot see any secrets related to this repo.
 
@@ -186,8 +186,8 @@ development setup of this project.
 To clone the repository:
 
 ```bash
-git clone https://github.com/google-gemini/gemini-cli.git # Or your fork's URL
-cd gemini-cli
+git clone https://github.com/google-codefly/codefly-cli.git # Or your fork's URL
+cd codefly-cli
 ```
 
 To install dependencies defined in `package.json` as well as root dependencies:
@@ -209,11 +209,11 @@ prepares the packages for execution. Refer to `scripts/build.js` and
 ### Enabling sandboxing
 
 [Sandboxing](#sandboxing) is highly recommended and requires, at a minimum,
-setting `GEMINI_SANDBOX=true` in your `~/.env` and ensuring a sandboxing
+setting `CODEFLY_SANDBOX=true` in your `~/.env` and ensuring a sandboxing
 provider (e.g. `macOS Seatbelt`, `docker`, or `podman`) is available. See
 [Sandboxing](#sandboxing) for details.
 
-To build both the `gemini` CLI utility and the sandbox container, run
+To build both the `codefly` CLI utility and the sandbox container, run
 `build:all` from the root directory:
 
 ```bash
@@ -224,17 +224,17 @@ To skip building the sandbox container, you can use `npm run build` instead.
 
 ### Running the CLI
 
-To start the Gemini CLI from the source code (after building), run the following
+To start the Codefly CLI from the source code (after building), run the following
 command from the root directory:
 
 ```bash
 npm start
 ```
 
-If you'd like to run the source build outside of the gemini-cli folder, you can
-utilize `npm link path/to/gemini-cli/packages/cli` (see:
+If you'd like to run the source build outside of the codefly-cli folder, you can
+utilize `npm link path/to/codefly-cli/packages/cli` (see:
 [docs](https://docs.npmjs.com/cli/v9/commands/npm-link)) or
-`alias gemini="node path/to/gemini-cli/packages/cli"` to run with `gemini`
+`alias codefly="node path/to/codefly-cli/packages/cli"` to run with `codefly`
 
 ### Running tests
 
@@ -255,7 +255,7 @@ comprehensive check, it is recommended to run `npm run preflight`.
 #### Integration tests
 
 The integration tests are designed to validate the end-to-end functionality of
-the Gemini CLI. They are not run as part of the default `npm run test` command.
+the Codefly CLI. They are not run as part of the default `npm run test` command.
 
 To run the integration tests, use the following command:
 
@@ -318,7 +318,7 @@ npm run lint
 - Please adhere to the coding style, patterns, and conventions used throughout
   the existing codebase.
 - Consult
-  [CODEFLY.md](https://github.com/google-gemini/gemini-cli/blob/main/CODEFLY.md)
+  [CODEFLY.md](https://github.com/google-codefly/codefly-cli/blob/main/CODEFLY.md)
   (typically found in the project root) for specific instructions related to
   AI-assisted development, including conventions for React, comments, and Git
   usage.
@@ -328,13 +328,13 @@ npm run lint
 ### Project structure
 
 - `packages/`: Contains the individual sub-packages of the project.
-  - `a2a-server`: A2A server implementation for the Gemini CLI. (Experimental)
+  - `a2a-server`: A2A server implementation for the Codefly CLI. (Experimental)
   - `cli/`: The command-line interface.
-  - `core/`: The core backend logic for the Gemini CLI.
+  - `core/`: The core backend logic for the Codefly CLI.
   - `test-utils` Utilities for creating and cleaning temporary file systems for
     testing.
-  - `vscode-ide-companion/`: The Gemini CLI Companion extension pairs with
-    Gemini CLI.
+  - `vscode-ide-companion/`: The Codefly CLI Companion extension pairs with
+    Codefly CLI.
 - `docs/`: Contains all project documentation.
 - `scripts/`: Utility scripts for building, testing, and development tasks.
 
@@ -349,7 +349,7 @@ For more detailed architecture, see `docs/architecture.md`.
     ```bash
     npm run debug
     ```
-    This command runs `node --inspect-brk dist/gemini.js` within the
+    This command runs `node --inspect-brk dist/codefly.js` within the
     `packages/cli` directory, pausing execution until a debugger attaches. You
     can then open `chrome://inspect` in your Chrome browser to connect to the
     debugger.
@@ -363,18 +363,18 @@ recommended.
 To hit a breakpoint inside the sandbox container run:
 
 ```bash
-DEBUG=1 gemini
+DEBUG=1 codefly
 ```
 
 **Note:** If you have `DEBUG=true` in a project's `.env` file, it won't affect
-gemini-cli due to automatic exclusion. Use `.codefly/.env` files for gemini-cli
+codefly-cli due to automatic exclusion. Use `.codefly/.env` files for codefly-cli
 specific debug settings.
 
 ### React DevTools
 
 To debug the CLI's React-based UI, you can use React DevTools.
 
-1.  **Start the Gemini CLI in development mode:**
+1.  **Start the Codefly CLI in development mode:**
 
     ```bash
     DEV=true npm start
@@ -403,7 +403,7 @@ To debug the CLI's React-based UI, you can use React DevTools.
 
 #### macOS Seatbelt
 
-On macOS, `gemini` uses Seatbelt (`sandbox-exec`) under a `permissive-open`
+On macOS, `codefly` uses Seatbelt (`sandbox-exec`) under a `permissive-open`
 profile (see `packages/cli/src/utils/sandbox-macos-permissive-open.sb`) that
 restricts writes to the project folder but otherwise allows all other operations
 and outbound network traffic ("open") by default. You can switch to a
@@ -421,7 +421,7 @@ networking). You can also switch to a custom profile
 #### Container-based sandboxing (all platforms)
 
 For stronger container-based sandboxing on macOS or other platforms, you can set
-`GEMINI_SANDBOX=true|docker|podman|<command>` in your environment or `.env`
+`CODEFLY_SANDBOX=true|docker|podman|<command>` in your environment or `.env`
 file. The specified command (or if `true` then either `docker` or `podman`) must
 be installed on the host machine. Once enabled, `npm run build:all` will build a
 minimal container ("sandbox") image and `npm start` will launch inside a fresh
@@ -432,20 +432,20 @@ sandbox.
 
 Container-based sandboxing mounts the project directory (and system temp
 directory) with read-write access and is started/stopped/removed automatically
-as you start/stop Gemini CLI. Files created within the sandbox should be
+as you start/stop Codefly CLI. Files created within the sandbox should be
 automatically mapped to your user/group on host machine. You can easily specify
 additional mounts, ports, or environment variables by setting
 `SANDBOX_{MOUNTS,PORTS,ENV}` as needed. You can also fully customize the sandbox
 for your projects by creating the files `.codefly/sandbox.Dockerfile` and/or
 `.codefly/sandbox.bashrc` under your project settings directory (`.codefly`) and
-running `gemini` with `BUILD_SANDBOX=1` to trigger building of your custom
+running `codefly` with `BUILD_SANDBOX=1` to trigger building of your custom
 sandbox.
 
 #### Proxied networking
 
 All sandboxing methods, including macOS Seatbelt using `*-proxied` profiles,
 support restricting outbound network traffic through a custom proxy server that
-can be specified as `GEMINI_SANDBOX_PROXY_COMMAND=<command>`, where `<command>`
+can be specified as `CODEFLY_SANDBOX_PROXY_COMMAND=<command>`, where `<command>`
 must start a proxy server that listens on `:::8877` for relevant requests. See
 `docs/examples/proxy-script.md` for a minimal proxy that only allows `HTTPS`
 connections to `example.com:443` (e.g. `curl https://example.com`) and declines
@@ -474,7 +474,7 @@ our documentation to be clear, concise, and helpful to our users. We value:
 - **Accuracy:** Ensure all information is correct and up-to-date.
 - **Completeness:** Cover all aspects of a feature or topic.
 - **Examples:** Provide practical examples to help users understand how to use
-  Gemini CLI.
+  Codefly CLI.
 
 ### Getting started
 
@@ -547,8 +547,8 @@ If you have questions about contributing documentation:
 
 - Check our [FAQ](/docs/resources/faq.md).
 - Review existing documentation for examples.
-- Open [an issue](https://github.com/google-gemini/gemini-cli/issues) to discuss
+- Open [an issue](https://github.com/google-codefly/codefly-cli/issues) to discuss
   your proposed changes.
 - Reach out to the maintainers.
 
-We appreciate your contributions to making Gemini CLI documentation better!
+We appreciate your contributions to making Codefly CLI documentation better!

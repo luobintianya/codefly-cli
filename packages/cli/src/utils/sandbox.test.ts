@@ -374,12 +374,12 @@ describe('sandbox', () => {
       );
     });
 
-    it('should pass through GOOGLE_GEMINI_BASE_URL and GOOGLE_VERTEX_BASE_URL', async () => {
+    it('should pass through GOOGLE_CODEFLY_BASE_URL and GOOGLE_VERTEX_BASE_URL', async () => {
       const config: SandboxConfig = {
         command: 'docker',
-        image: 'gemini-cli-sandbox',
+        image: 'codefly-cli-sandbox',
       };
-      process.env['GOOGLE_GEMINI_BASE_URL'] = 'http://gemini.proxy';
+      process.env['GOOGLE_CODEFLY_BASE_URL'] = 'http://codefly.proxy';
       process.env['GOOGLE_VERTEX_BASE_URL'] = 'http://vertex.proxy';
 
       // Mock image check to return true
@@ -413,7 +413,7 @@ describe('sandbox', () => {
         'docker',
         expect.arrayContaining([
           '--env',
-          'GOOGLE_GEMINI_BASE_URL=http://gemini.proxy',
+          'GOOGLE_CODEFLY_BASE_URL=http://codefly.proxy',
           '--env',
           'GOOGLE_VERTEX_BASE_URL=http://vertex.proxy',
         ]),

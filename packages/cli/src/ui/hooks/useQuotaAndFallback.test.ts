@@ -113,11 +113,11 @@ describe('useQuotaAndFallback', () => {
     it('should return null and take no action if authType is not LOGIN_WITH_GOOGLE', async () => {
       // Override the default mock from beforeEach for this specific test
       vi.spyOn(mockConfig, 'getContentGeneratorConfig').mockReturnValue({
-        authType: AuthType.USE_GEMINI,
+        authType: AuthType.USE_CODEFLY,
       });
 
       const handler = getRegisteredHandler();
-      const result = await handler('gemini-pro', 'gemini-flash', new Error());
+      const result = await handler('codefly-pro', 'codefly-flash', new Error());
 
       expect(result).toBeNull();
       expect(mockHistoryManager.addItem).not.toHaveBeenCalled();
@@ -145,13 +145,13 @@ describe('useQuotaAndFallback', () => {
           1000 * 60 * 5,
         ); // 5 minutes
         act(() => {
-          promise = handler('gemini-pro', 'gemini-flash', error);
+          promise = handler('codefly-pro', 'codefly-flash', error);
         });
 
         // The hook should now have a pending request for the UI to handle
         const request = result.current.proQuotaRequest;
         expect(request).not.toBeNull();
-        expect(request?.failedModel).toBe('gemini-pro');
+        expect(request?.failedModel).toBe('codefly-pro');
         expect(request?.isTerminalQuotaError).toBe(true);
 
         const message = request!.message;
@@ -198,15 +198,15 @@ describe('useQuotaAndFallback', () => {
           1000 * 60 * 5,
         );
         act(() => {
-          promise = handler('gemini-flash', 'gemini-pro', error);
+          promise = handler('codefly-flash', 'codefly-pro', error);
         });
 
         const request = result.current.proQuotaRequest;
         expect(request).not.toBeNull();
-        expect(request?.failedModel).toBe('gemini-flash');
+        expect(request?.failedModel).toBe('codefly-flash');
 
         const message = request!.message;
-        expect(message).toContain('Usage limit reached for gemini-flash.');
+        expect(message).toContain('Usage limit reached for codefly-flash.');
         expect(message).not.toContain('all Pro models');
 
         act(() => {
@@ -233,7 +233,7 @@ describe('useQuotaAndFallback', () => {
         let promise: Promise<FallbackIntent | null>;
         const error = new TerminalQuotaError('no delay', mockGoogleApiError);
         act(() => {
-          promise = handler('gemini-pro', 'gemini-flash', error);
+          promise = handler('codefly-pro', 'codefly-flash', error);
         });
 
         const request = result.current.proQuotaRequest;
@@ -265,8 +265,8 @@ describe('useQuotaAndFallback', () => {
         let promise1: Promise<FallbackIntent | null>;
         act(() => {
           promise1 = handler(
-            'gemini-pro',
-            'gemini-flash',
+            'codefly-pro',
+            'codefly-flash',
             new TerminalQuotaError('pro quota 1', mockGoogleApiError),
           );
         });
@@ -277,8 +277,8 @@ describe('useQuotaAndFallback', () => {
         let result2: FallbackIntent | null;
         await act(async () => {
           result2 = await handler(
-            'gemini-pro',
-            'gemini-flash',
+            'codefly-pro',
+            'codefly-flash',
             new TerminalQuotaError('pro quota 2', mockGoogleApiError),
           );
         });
@@ -387,19 +387,19 @@ describe('useQuotaAndFallback', () => {
         const error = new ModelNotFoundError('model not found', 404);
 
         act(() => {
-          promise = handler('gemini-3-pro-preview', 'gemini-2.5-pro', error);
+          promise = handler('codefly-3-pro-preview', 'codefly-2.5-pro', error);
         });
 
         // The hook should now have a pending request for the UI to handle
         const request = result.current.proQuotaRequest;
         expect(request).not.toBeNull();
-        expect(request?.failedModel).toBe('gemini-3-pro-preview');
+        expect(request?.failedModel).toBe('codefly-3-pro-preview');
         expect(request?.isTerminalQuotaError).toBe(false);
         expect(request?.isModelNotFoundError).toBe(true);
 
         const message = request!.message;
         expect(message).toBe(
-          `It seems like you don't have access to gemini-3-pro-preview.
+          `It seems like you don't have access to codefly-3-pro-preview.
 Your admin might have disabled the access. Contact them to enable the Preview Release Channel.`,
         );
 
@@ -432,7 +432,7 @@ Your admin might have disabled the access. Contact them to enable the Preview Re
         const error = new ModelNotFoundError('model not found', 404);
 
         act(() => {
-          promise = handler('invalid-model', 'gemini-2.5-pro', error);
+          promise = handler('invalid-model', 'codefly-2.5-pro', error);
         });
 
         const request = result.current.proQuotaRequest;
@@ -491,8 +491,8 @@ Your admin might have disabled the access. Contact them to enable the Preview Re
       let promise: Promise<FallbackIntent | null>;
       act(() => {
         promise = handler(
-          'gemini-pro',
-          'gemini-flash',
+          'codefly-pro',
+          'codefly-flash',
           new TerminalQuotaError('pro quota', mockGoogleApiError),
         );
       });
@@ -523,8 +523,8 @@ Your admin might have disabled the access. Contact them to enable the Preview Re
       let promise: Promise<FallbackIntent | null>;
       act(() => {
         promise = handler(
-          'gemini-pro',
-          'gemini-flash',
+          'codefly-pro',
+          'codefly-flash',
           new TerminalQuotaError('pro quota', mockGoogleApiError),
         );
       });
@@ -546,7 +546,7 @@ Your admin might have disabled the access. Contact them to enable the Preview Re
       const lastCall = (mockHistoryManager.addItem as Mock).mock.calls[0][0];
       expect(lastCall.type).toBe(MessageType.INFO);
       expect(lastCall.text).toContain(
-        'Switched to fallback model gemini-flash',
+        'Switched to fallback model codefly-flash',
       );
     });
 

@@ -28,7 +28,7 @@ export function validateAuthMethodWithSettings(
     return null;
   }
   // If using API keys, we don't validate it here as we might need to prompt for it.
-  if (authType === AuthType.USE_GEMINI || authType === AuthType.OPENAI) {
+  if (authType === AuthType.USE_CODEFLY || authType === AuthType.OPENAI) {
     return null;
   }
   return validateAuthMethod(authType);
@@ -68,8 +68,8 @@ export const useAuthCommand = (
     async (type?: AuthType) => {
       const authType = type ?? settings.merged.security.auth.selectedType;
 
-      if (authType === AuthType.USE_GEMINI) {
-        const envKey = process.env['GEMINI_API_KEY'];
+      if (authType === AuthType.USE_CODEFLY) {
+        const envKey = process.env['CODEFLY_API_KEY'];
         if (envKey !== undefined) {
           setApiKeyDefaultValue(envKey);
           return envKey;
@@ -114,8 +114,8 @@ export const useAuthCommand = (
       let authType = settings.merged.security.auth.selectedType;
       if (!authType) {
         // Auto-select based on environment variables if possible
-        if (process.env['GEMINI_API_KEY']) {
-          authType = AuthType.USE_GEMINI;
+        if (process.env['CODEFLY_API_KEY']) {
+          authType = AuthType.USE_CODEFLY;
         } else if (process.env['OPENAI_API_KEY']) {
           authType = AuthType.OPENAI;
         } else if (
@@ -139,7 +139,7 @@ export const useAuthCommand = (
         }
       }
 
-      if (authType === AuthType.USE_GEMINI) {
+      if (authType === AuthType.USE_CODEFLY) {
         const key = await reloadApiKey(authType);
         if (!key) {
           setAuthState(AuthState.AwaitingApiKeyInput);
@@ -153,14 +153,14 @@ export const useAuthCommand = (
         return;
       }
 
-      const defaultAuthType = process.env['GEMINI_DEFAULT_AUTH_TYPE'];
+      const defaultAuthType = process.env['CODEFLY_DEFAULT_AUTH_TYPE'];
       if (
         defaultAuthType &&
         // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
         !Object.values(AuthType).includes(defaultAuthType as AuthType)
       ) {
         onAuthError(
-          `Invalid value for GEMINI_DEFAULT_AUTH_TYPE: "${defaultAuthType}". ` +
+          `Invalid value for CODEFLY_DEFAULT_AUTH_TYPE: "${defaultAuthType}". ` +
             `Valid values are: ${Object.values(AuthType).join(', ')}.`,
         );
         return;

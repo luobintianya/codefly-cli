@@ -12,17 +12,12 @@ import { useSlashCommandProcessor } from './slashCommandProcessor.js';
 import type { SlashCommand } from '../commands/types.js';
 import { CommandKind } from '../commands/types.js';
 import type { LoadedSettings } from '../../config/settings.js';
+import { SlashCommandConflictHandler } from '../../services/SlashCommandConflictHandler.js';
 import { MessageType } from '../types.js';
 import { BuiltinCommandLoader } from '../../services/BuiltinCommandLoader.js';
 import { FileCommandLoader } from '../../services/FileCommandLoader.js';
 import { McpPromptLoader } from '../../services/McpPromptLoader.js';
-import {
-  type CodeflyClient,
-  SlashCommandStatus,
-  MCPDiscoveryState,
-  makeFakeConfig,
-  coreEvents,
-} from '@codeflyai/codefly-core';
+import { CoreEvent, MCPDiscoveryState, SlashCommandStatus, coreEvents, makeFakeConfig, type CodeflyClient, type UserFeedbackPayload } from '@codeflyai/codefly-core';
 
 const {
   logSlashCommand,

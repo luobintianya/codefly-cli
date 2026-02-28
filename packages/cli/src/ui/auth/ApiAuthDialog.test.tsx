@@ -49,7 +49,7 @@ describe('ApiAuthDialog', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.stubEnv('GEMINI_API_KEY', '');
+    vi.stubEnv('CODEFLY_API_KEY', '');
     mockBuffer = {
       text: '',
       lines: [''],

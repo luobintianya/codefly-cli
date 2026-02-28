@@ -52,7 +52,7 @@ describe('NumericalClassifierStrategy', () => {
       getSessionId: vi.fn().mockReturnValue('control-group-id'), // Default to Control Group (Hash 71 >= 50)
       getNumericalRoutingEnabled: vi.fn().mockResolvedValue(true),
       getClassifierThreshold: vi.fn().mockResolvedValue(undefined),
-      getGemini31Launched: vi.fn().mockResolvedValue(false),
+      getCodefly31Launched: vi.fn().mockResolvedValue(false),
       getContentGeneratorConfig: vi.fn().mockReturnValue({
         authType: AuthType.LOGIN_WITH_GOOGLE,
       }),
@@ -81,8 +81,8 @@ describe('NumericalClassifierStrategy', () => {
     expect(mockBaseLlmClient.generateJson).not.toHaveBeenCalled();
   });
 
-  it('should return null if the model is not a Gemini 3 model', async () => {
-    vi.mocked(mockConfig.getModel).mockReturnValue(DEFAULT_GEMINI_MODEL_AUTO);
+  it('should return null if the model is not a Codefly 3 model', async () => {
+    vi.mocked(mockConfig.getModel).mockReturnValue(DEFAULT_CODEFLY_MODEL_AUTO);
 
     const decision = await strategy.route(
       mockContext,
@@ -94,8 +94,8 @@ describe('NumericalClassifierStrategy', () => {
     expect(mockBaseLlmClient.generateJson).not.toHaveBeenCalled();
   });
 
-  it('should return null if the model is explicitly a Gemini 2 model', async () => {
-    vi.mocked(mockConfig.getModel).mockReturnValue(DEFAULT_GEMINI_MODEL);
+  it('should return null if the model is explicitly a Codefly 2 model', async () => {
+    vi.mocked(mockConfig.getModel).mockReturnValue(DEFAULT_CODEFLY_MODEL);
 
     const decision = await strategy.route(
       mockContext,
@@ -540,9 +540,9 @@ describe('NumericalClassifierStrategy', () => {
     );
   });
 
-  describe('Gemini 3.1 and Custom Tools Routing', () => {
-    it('should route to PREVIEW_GEMINI_3_1_MODEL when Gemini 3.1 is launched', async () => {
-      vi.mocked(mockConfig.getGemini31Launched).mockResolvedValue(true);
+  describe('Codefly 3.1 and Custom Tools Routing', () => {
+    it('should route to PREVIEW_CODEFLY_3_1_MODEL when Codefly 3.1 is launched', async () => {
+      vi.mocked(mockConfig.getCodefly31Launched).mockResolvedValue(true);
       const mockApiResponse = {
         complexity_reasoning: 'Complex task',
         complexity_score: 80,
@@ -557,12 +557,12 @@ describe('NumericalClassifierStrategy', () => {
         mockBaseLlmClient,
       );
 
-      expect(decision?.model).toBe(PREVIEW_GEMINI_3_1_MODEL);
+      expect(decision?.model).toBe(PREVIEW_CODEFLY_3_1_MODEL);
     });
-    it('should route to PREVIEW_GEMINI_3_1_CUSTOM_TOOLS_MODEL when Gemini 3.1 is launched and auth is USE_GEMINI', async () => {
-      vi.mocked(mockConfig.getGemini31Launched).mockResolvedValue(true);
+    it('should route to PREVIEW_CODEFLY_3_1_CUSTOM_TOOLS_MODEL when Codefly 3.1 is launched and auth is USE_CODEFLY', async () => {
+      vi.mocked(mockConfig.getCodefly31Launched).mockResolvedValue(true);
       vi.mocked(mockConfig.getContentGeneratorConfig).mockReturnValue({
-        authType: AuthType.USE_GEMINI,
+        authType: AuthType.USE_CODEFLY,
       });
       const mockApiResponse = {
         complexity_reasoning: 'Complex task',
@@ -578,11 +578,11 @@ describe('NumericalClassifierStrategy', () => {
         mockBaseLlmClient,
       );
 
-      expect(decision?.model).toBe(PREVIEW_GEMINI_3_1_CUSTOM_TOOLS_MODEL);
+      expect(decision?.model).toBe(PREVIEW_CODEFLY_3_1_CUSTOM_TOOLS_MODEL);
     });
 
     it('should NOT route to custom tools model when auth is USE_VERTEX_AI', async () => {
-      vi.mocked(mockConfig.getGemini31Launched).mockResolvedValue(true);
+      vi.mocked(mockConfig.getCodefly31Launched).mockResolvedValue(true);
       vi.mocked(mockConfig.getContentGeneratorConfig).mockReturnValue({
         authType: AuthType.USE_VERTEX_AI,
       });
@@ -600,7 +600,7 @@ describe('NumericalClassifierStrategy', () => {
         mockBaseLlmClient,
       );
 
-      expect(decision?.model).toBe(PREVIEW_GEMINI_3_1_MODEL);
+      expect(decision?.model).toBe(PREVIEW_CODEFLY_3_1_MODEL);
     });
   });
 });

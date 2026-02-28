@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useStdin, useStdout } from 'ink';
+import { useStdin } from 'ink';
 import type React from 'react';
 import {
   createContext,
@@ -39,7 +39,6 @@ export function useTerminalContext() {
 
 export function TerminalProvider({ children }: { children: React.ReactNode }) {
   const { stdin } = useStdin();
-  const { stdout } = useStdout();
   const subscribers = useRef<Set<TerminalEventHandler>>(new Set()).current;
   const bufferRef = useRef('');
 
@@ -58,20 +57,10 @@ export function TerminalProvider({ children }: { children: React.ReactNode }) {
   );
 
   const queryTerminalBackground = useCallback(
-    async () =>
-      new Promise<void>((resolve) => {
-        const handler = () => {
-          unsubscribe(handler);
-          resolve();
-        };
-        subscribe(handler);
-        TerminalCapabilityManager.queryBackgroundColor(stdout);
-        setTimeout(() => {
-          unsubscribe(handler);
-          resolve();
-        }, 100);
-      }),
-    [stdout, subscribe, unsubscribe],
+    async () => {
+      // terminal background is detected at startup
+    },
+    [],
   );
 
   useEffect(() => {

@@ -1,10 +1,10 @@
 # Remote Subagents (experimental)
 
-Gemini CLI supports connecting to remote subagents using the Agent-to-Agent
-(A2A) protocol. This allows Gemini CLI to interact with other agents, expanding
+Codefly CLI supports connecting to remote subagents using the Agent-to-Agent
+(A2A) protocol. This allows Codefly CLI to interact with other agents, expanding
 its capabilities by delegating tasks to remote services.
 
-Gemini CLI can connect to any compliant A2A agent. You can find samples of A2A
+Codefly CLI can connect to any compliant A2A agent. You can find samples of A2A
 agents in the following repositories:
 
 - [ADK Samples (Python)](https://github.com/google/adk-samples/tree/main/python)
@@ -30,8 +30,8 @@ To use remote subagents, you must explicitly enable them in your
 Remote subagents are defined as Markdown files (`.md`) with YAML frontmatter.
 You can place them in:
 
-1.  **Project-level:** `.gemini/agents/*.md` (Shared with your team)
-2.  **User-level:** `~/.gemini/agents/*.md` (Personal agents)
+1.  **Project-level:** `.codefly/agents/*.md` (Shared with your team)
+2.  **User-level:** `~/.codefly/agents/*.md` (Personal agents)
 
 ### Configuration schema
 
@@ -72,7 +72,7 @@ Markdown file.
 
 ## Managing Subagents
 
-Users can manage subagents using the following commands within the Gemini CLI:
+Users can manage subagents using the following commands within the Codefly CLI:
 
 - `/agents list`: Displays all available local and remote subagents.
 - `/agents refresh`: Reloads the agent registry. Use this after adding or
@@ -80,5 +80,5 @@ Users can manage subagents using the following commands within the Gemini CLI:
 - `/agents enable <agent_name>`: Enables a specific subagent.
 - `/agents disable <agent_name>`: Disables a specific subagent.
 
-> **Tip:** You can use the `@cli_help` agent within Gemini CLI for assistance
+> **Tip:** You can use the `@cli_help` agent within Codefly CLI for assistance
 > with configuring subagents.

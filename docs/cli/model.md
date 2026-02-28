@@ -1,7 +1,7 @@
-# Gemini CLI model selection (`/model` command)
+# Codefly CLI model selection (`/model` command)
 
-Select your Gemini CLI model. The `/model` command lets you configure the model
-used by Gemini CLI, giving you more control over your results. Use **Pro**
+Select your Codefly CLI model. The `/model` command lets you configure the model
+used by Codefly CLI, giving you more control over your results. Use **Pro**
 models for complex tasks and reasoning, **Flash** models for high speed results,
 or the (recommended) **Auto** setting to choose the best model for your tasks.
 
@@ -11,7 +11,7 @@ or the (recommended) **Auto** setting to choose the best model for your tasks.
 
 ## How to use the `/model` command
 
-Use the following command in Gemini CLI:
+Use the following command in Codefly CLI:
 
 ```
 /model
@@ -21,28 +21,28 @@ Running this command will open a dialog with your options:
 
 | Option            | Description                                                    | Models                                                                 |
 | ----------------- | -------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| Auto (Gemini 3)   | Let the system choose the best Gemini 3 model for your task.   | gemini-3-pro-preview (if enabled), gemini-3-flash-preview (if enabled) |
-| Auto (Gemini 2.5) | Let the system choose the best Gemini 2.5 model for your task. | gemini-2.5-pro, gemini-2.5-flash                                       |
+| Auto (Codefly 3)   | Let the system choose the best Codefly 3 model for your task.   | codefly-3-pro-preview (if enabled), codefly-3-flash-preview (if enabled) |
+| Auto (Codefly 2.5) | Let the system choose the best Codefly 2.5 model for your task. | codefly-2.5-pro, codefly-2.5-flash                                       |
 | Manual            | Select a specific model.                                       | Any available model.                                                   |
 
 We recommend selecting one of the above **Auto** options. However, you can
 select **Manual** to select a specific model from those available.
 
-### Gemini 3 and preview features
+### Codefly 3 and preview features
 
-> **Note:** Gemini 3 is not currently available on all account types. To learn
-> more about Gemini 3 access, refer to
-> [Gemini 3 on Gemini CLI](../get-started/gemini-3.md).
+> **Note:** Codefly 3 is not currently available on all account types. To learn
+> more about Codefly 3 access, refer to
+> [Codefly 3 on Codefly CLI](../get-started/codefly-3.md).
 
-To enable Gemini 3 Pro and Gemini 3 Flash (if available), enable
+To enable Codefly 3 Pro and Codefly 3 Flash (if available), enable
 [**Preview Features** by using the `settings` command](../cli/settings.md).
 
-You can also use the `--model` flag to specify a particular Gemini model on
+You can also use the `--model` flag to specify a particular Codefly model on
 startup. For more details, refer to the
 [configuration documentation](../reference/configuration.md).
 
 Changes to these settings will be applied to all subsequent interactions with
-Gemini CLI.
+Codefly CLI.
 
 ## Best practices for model selection
 

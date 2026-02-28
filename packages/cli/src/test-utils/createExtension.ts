@@ -7,8 +7,10 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import {
-  type MCPServerConfig,
+  type CustomTheme,
+  type ExtensionSetting,
   type ExtensionInstallMetadata,
+  type MCPServerConfig,
 } from '@codeflyai/codefly-core';
 import {
   EXTENSIONS_CONFIG_FILENAME,

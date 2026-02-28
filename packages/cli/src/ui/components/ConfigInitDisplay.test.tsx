@@ -26,9 +26,9 @@ import {
 } from '@codeflyai/codefly-core';
 import { Text } from 'ink';
 
-// Mock GeminiSpinner
-vi.mock('./GeminiRespondingSpinner.js', () => ({
-  GeminiSpinner: () => <Text>Spinner</Text>,
+// Mock CodeflySpinner
+vi.mock('./CodeflyRespondingSpinner.js', () => ({
+  CodeflySpinner: () => <Text>Spinner</Text>,
 }));
 
 describe('ConfigInitDisplay', () => {

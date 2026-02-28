@@ -9,7 +9,7 @@ import * as os from 'node:os';
 import * as crypto from 'node:crypto';
 import * as fs from 'node:fs';
 import {
-  GEMINI_DIR,
+  CODEFLY_DIR,
   homedir,
   GOOGLE_ACCOUNTS_FILENAME,
   isSubpath,
@@ -42,12 +42,12 @@ export class Storage {
     this.customPlansDir = dir;
   }
 
-  static getGlobalGeminiDir(): string {
+  static getGlobalCodeflyDir(): string {
     const homeDir = homedir();
     if (!homeDir) {
-      return path.join(os.tmpdir(), GEMINI_DIR);
+      return path.join(os.tmpdir(), CODEFLY_DIR);
     }
-    return path.join(homeDir, GEMINI_DIR);
+    return path.join(homeDir, CODEFLY_DIR);
   }
 
   static getGlobalAgentsDir(): string {
@@ -59,27 +59,27 @@ export class Storage {
   }
 
   static getMcpOAuthTokensPath(): string {
-    return path.join(Storage.getGlobalGeminiDir(), 'mcp-oauth-tokens.json');
+    return path.join(Storage.getGlobalCodeflyDir(), 'mcp-oauth-tokens.json');
   }
 
   static getGlobalSettingsPath(): string {
-    return path.join(Storage.getGlobalGeminiDir(), 'settings.json');
+    return path.join(Storage.getGlobalCodeflyDir(), 'settings.json');
   }
 
   static getInstallationIdPath(): string {
-    return path.join(Storage.getGlobalGeminiDir(), 'installation_id');
+    return path.join(Storage.getGlobalCodeflyDir(), 'installation_id');
   }
 
   static getGoogleAccountsPath(): string {
-    return path.join(Storage.getGlobalGeminiDir(), GOOGLE_ACCOUNTS_FILENAME);
+    return path.join(Storage.getGlobalCodeflyDir(), GOOGLE_ACCOUNTS_FILENAME);
   }
 
   static getUserCommandsDir(): string {
-    return path.join(Storage.getGlobalGeminiDir(), 'commands');
+    return path.join(Storage.getGlobalCodeflyDir(), 'commands');
   }
 
   static getUserSkillsDir(): string {
-    return path.join(Storage.getGlobalGeminiDir(), 'skills');
+    return path.join(Storage.getGlobalCodeflyDir(), 'skills');
   }
 
   static getUserAgentSkillsDir(): string {
@@ -87,42 +87,42 @@ export class Storage {
   }
 
   static getGlobalMemoryFilePath(): string {
-    return path.join(Storage.getGlobalGeminiDir(), 'memory.md');
+    return path.join(Storage.getGlobalCodeflyDir(), 'memory.md');
   }
 
   static getUserPoliciesDir(): string {
-    return path.join(Storage.getGlobalGeminiDir(), 'policies');
+    return path.join(Storage.getGlobalCodeflyDir(), 'policies');
   }
 
   static getUserAgentsDir(): string {
-    return path.join(Storage.getGlobalGeminiDir(), 'agents');
+    return path.join(Storage.getGlobalCodeflyDir(), 'agents');
   }
 
   static getAcknowledgedAgentsPath(): string {
     return path.join(
-      Storage.getGlobalGeminiDir(),
+      Storage.getGlobalCodeflyDir(),
       'acknowledgments',
       'agents.json',
     );
   }
 
   static getPolicyIntegrityStoragePath(): string {
-    return path.join(Storage.getGlobalGeminiDir(), 'policy_integrity.json');
+    return path.join(Storage.getGlobalCodeflyDir(), 'policy_integrity.json');
   }
 
   private static getSystemConfigDir(): string {
     if (os.platform() === 'darwin') {
-      return '/Library/Application Support/GeminiCli';
+      return '/Library/Application Support/CodeflyCli';
     } else if (os.platform() === 'win32') {
-      return 'C:\\ProgramData\\gemini-cli';
+      return 'C:\\ProgramData\\codefly-cli';
     } else {
-      return '/etc/gemini-cli';
+      return '/etc/codefly-cli';
     }
   }
 
   static getSystemSettingsPath(): string {
-    if (process.env['GEMINI_CLI_SYSTEM_SETTINGS_PATH']) {
-      return process.env['GEMINI_CLI_SYSTEM_SETTINGS_PATH'];
+    if (process.env['CODEFLY_CLI_SYSTEM_SETTINGS_PATH']) {
+      return process.env['CODEFLY_CLI_SYSTEM_SETTINGS_PATH'];
     }
     return path.join(Storage.getSystemConfigDir(), 'settings.json');
   }
@@ -132,15 +132,15 @@ export class Storage {
   }
 
   static getGlobalTempDir(): string {
-    return path.join(Storage.getGlobalGeminiDir(), TMP_DIR_NAME);
+    return path.join(Storage.getGlobalCodeflyDir(), TMP_DIR_NAME);
   }
 
   static getGlobalBinDir(): string {
     return path.join(Storage.getGlobalTempDir(), BIN_DIR_NAME);
   }
 
-  getGeminiDir(): string {
-    return path.join(this.targetDir, GEMINI_DIR);
+  getCodeflyDir(): string {
+    return path.join(this.targetDir, CODEFLY_DIR);
   }
 
   /**
@@ -165,7 +165,7 @@ export class Storage {
   }
 
   getWorkspacePoliciesDir(): string {
-    return path.join(this.getGeminiDir(), 'policies');
+    return path.join(this.getCodeflyDir(), 'policies');
   }
 
   getAutoSavedPolicyPath(): string {
@@ -180,7 +180,7 @@ export class Storage {
   }
 
   static getOAuthCredsPath(): string {
-    return path.join(Storage.getGlobalGeminiDir(), OAUTH_FILE);
+    return path.join(Storage.getGlobalCodeflyDir(), OAUTH_FILE);
   }
 
   getProjectRoot(): string {
@@ -212,12 +212,12 @@ export class Storage {
       }
 
       const registryPath = path.join(
-        Storage.getGlobalGeminiDir(),
+        Storage.getGlobalCodeflyDir(),
         'projects.json',
       );
       const registry = new ProjectRegistry(registryPath, [
         Storage.getGlobalTempDir(),
-        path.join(Storage.getGlobalGeminiDir(), 'history'),
+        path.join(Storage.getGlobalCodeflyDir(), 'history'),
       ]);
       await registry.initialize();
 
@@ -242,7 +242,7 @@ export class Storage {
     await StorageMigration.migrateDirectory(oldTempDir, newTempDir);
 
     // Migrate History Dir
-    const historyDir = path.join(Storage.getGlobalGeminiDir(), 'history');
+    const historyDir = path.join(Storage.getGlobalCodeflyDir(), 'history');
     const newHistoryDir = path.join(historyDir, shortId);
     const oldHistoryDir = path.join(historyDir, oldHash);
     await StorageMigration.migrateDirectory(oldHistoryDir, newHistoryDir);
@@ -250,20 +250,20 @@ export class Storage {
 
   getHistoryDir(): string {
     const identifier = this.getProjectIdentifier();
-    const historyDir = path.join(Storage.getGlobalGeminiDir(), 'history');
+    const historyDir = path.join(Storage.getGlobalCodeflyDir(), 'history');
     return path.join(historyDir, identifier);
   }
 
   getWorkspaceSettingsPath(): string {
-    return path.join(this.getGeminiDir(), 'settings.json');
+    return path.join(this.getCodeflyDir(), 'settings.json');
   }
 
   getProjectCommandsDir(): string {
-    return path.join(this.getGeminiDir(), 'commands');
+    return path.join(this.getCodeflyDir(), 'commands');
   }
 
   getProjectSkillsDir(): string {
-    return path.join(this.getGeminiDir(), 'skills');
+    return path.join(this.getCodeflyDir(), 'skills');
   }
 
   getProjectAgentSkillsDir(): string {
@@ -271,7 +271,7 @@ export class Storage {
   }
 
   getProjectAgentsDir(): string {
-    return path.join(this.getGeminiDir(), 'agents');
+    return path.join(this.getCodeflyDir(), 'agents');
   }
 
   getProjectTempCheckpointsDir(): string {
@@ -374,11 +374,11 @@ export class Storage {
   }
 
   getExtensionsDir(): string {
-    return path.join(this.getGeminiDir(), 'extensions');
+    return path.join(this.getCodeflyDir(), 'extensions');
   }
 
   getExtensionsConfigPath(): string {
-    return path.join(this.getExtensionsDir(), 'gemini-extension.json');
+    return path.join(this.getExtensionsDir(), 'codefly-extension.json');
   }
 
   getHistoryFilePath(): string {

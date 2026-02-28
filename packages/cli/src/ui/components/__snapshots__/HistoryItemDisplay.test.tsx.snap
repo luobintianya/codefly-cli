@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`<HistoryItemDisplay /> > gemini items (alternateBuffer=false) > should render a full gemini item when using availableTerminalHeightGemini 1`] = `
+exports[`<HistoryItemDisplay /> > codefly items (alternateBuffer=false) > should render a full codefly item when using availableTerminalHeightCodefly 1`] = `
 "✦ Example code block:
     1 Line 1
     2 Line 2
@@ -55,7 +55,7 @@ exports[`<HistoryItemDisplay /> > gemini items (alternateBuffer=false) > should 
 "
 `;
 
-exports[`<HistoryItemDisplay /> > gemini items (alternateBuffer=false) > should render a full gemini_content item when using availableTerminalHeightGemini 1`] = `
+exports[`<HistoryItemDisplay /> > codefly items (alternateBuffer=false) > should render a full codefly_content item when using availableTerminalHeightCodefly 1`] = `
 "  Example code block:
     1 Line 1
     2 Line 2
@@ -110,7 +110,7 @@ exports[`<HistoryItemDisplay /> > gemini items (alternateBuffer=false) > should 
 "
 `;
 
-exports[`<HistoryItemDisplay /> > gemini items (alternateBuffer=false) > should render a truncated gemini item 1`] = `
+exports[`<HistoryItemDisplay /> > codefly items (alternateBuffer=false) > should render a truncated codefly item 1`] = `
 "✦ Example code block:
    ... first 42 lines hidden ...
    43 Line 43
@@ -124,7 +124,7 @@ exports[`<HistoryItemDisplay /> > gemini items (alternateBuffer=false) > should 
 "
 `;
 
-exports[`<HistoryItemDisplay /> > gemini items (alternateBuffer=false) > should render a truncated gemini_content item 1`] = `
+exports[`<HistoryItemDisplay /> > codefly items (alternateBuffer=false) > should render a truncated codefly_content item 1`] = `
 "  Example code block:
    ... first 42 lines hidden ...
    43 Line 43
@@ -138,7 +138,7 @@ exports[`<HistoryItemDisplay /> > gemini items (alternateBuffer=false) > should 
 "
 `;
 
-exports[`<HistoryItemDisplay /> > gemini items (alternateBuffer=true) > should render a full gemini item when using availableTerminalHeightGemini 1`] = `
+exports[`<HistoryItemDisplay /> > codefly items (alternateBuffer=true) > should render a full codefly item when using availableTerminalHeightCodefly 1`] = `
 "✦ Example code block:
     1 Line 1
     2 Line 2
@@ -193,7 +193,7 @@ exports[`<HistoryItemDisplay /> > gemini items (alternateBuffer=true) > should r
 "
 `;
 
-exports[`<HistoryItemDisplay /> > gemini items (alternateBuffer=true) > should render a full gemini_content item when using availableTerminalHeightGemini 1`] = `
+exports[`<HistoryItemDisplay /> > codefly items (alternateBuffer=true) > should render a full codefly_content item when using availableTerminalHeightCodefly 1`] = `
 "  Example code block:
     1 Line 1
     2 Line 2
@@ -248,7 +248,7 @@ exports[`<HistoryItemDisplay /> > gemini items (alternateBuffer=true) > should r
 "
 `;
 
-exports[`<HistoryItemDisplay /> > gemini items (alternateBuffer=true) > should render a truncated gemini item 1`] = `
+exports[`<HistoryItemDisplay /> > codefly items (alternateBuffer=true) > should render a truncated codefly item 1`] = `
 "✦ Example code block:
     1 Line 1
     2 Line 2
@@ -303,7 +303,7 @@ exports[`<HistoryItemDisplay /> > gemini items (alternateBuffer=true) > should r
 "
 `;
 
-exports[`<HistoryItemDisplay /> > gemini items (alternateBuffer=true) > should render a truncated gemini_content item 1`] = `
+exports[`<HistoryItemDisplay /> > codefly items (alternateBuffer=true) > should render a truncated codefly_content item 1`] = `
 "  Example code block:
     1 Line 1
     2 Line 2

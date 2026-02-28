@@ -1,9 +1,9 @@
-# Gemini CLI companion plugin: Interface specification
+# Codefly CLI companion plugin: Interface specification
 
 > Last Updated: September 15, 2025
 
 This document defines the contract for building a companion plugin to enable
-Gemini CLI's IDE mode. For VS Code, these features (native diffing, context
+Codefly CLI's IDE mode. For VS Code, these features (native diffing, context
 awareness) are provided by the official extension
 ([marketplace](https://marketplace.visualstudio.com/items?itemName=Google.codefly-cli-vscode-ide-companion)).
 This specification is for contributors who wish to bring similar functionality
@@ -11,7 +11,7 @@ to other editors like JetBrains IDEs, Sublime Text, etc.
 
 ## I. The communication interface
 
-Gemini CLI and the IDE plugin communicate through a local communication channel.
+Codefly CLI and the IDE plugin communicate through a local communication channel.
 
 ### 1. Transport layer: MCP over HTTP
 
@@ -27,7 +27,7 @@ Protocol (MCP)**.
 
 ### 2. Discovery mechanism: The port file
 
-For Gemini CLI to connect, it needs to discover which IDE instance it's running
+For Codefly CLI to connect, it needs to discover which IDE instance it's running
 in and what port your server is using. The plugin **MUST** facilitate this by
 creating a "discovery file."
 
@@ -35,10 +35,10 @@ creating a "discovery file."
   IDE it's running in by traversing the process tree. It then looks for a
   discovery file that contains this PID in its name.
 - **File location:** The file must be created in a specific directory:
-  `os.tmpdir()/gemini/ide/`. Your plugin must create this directory if it
+  `os.tmpdir()/codefly/ide/`. Your plugin must create this directory if it
   doesn't exist.
 - **File naming convention:** The filename is critical and **MUST** follow the
-  pattern: `gemini-ide-server-${PID}-${PORT}.json`
+  pattern: `codefly-ide-server-${PID}-${PORT}.json`
   - `${PID}`: The process ID of the parent IDE process. Your plugin must
     determine this PID and include it in the filename.
   - `${PORT}`: The port your MCP server is listening on.
@@ -81,11 +81,11 @@ creating a "discovery file."
   unauthorized.
 - **Tie-breaking with environment variables (recommended):** For the most
   reliable experience, your plugin **SHOULD** both create the discovery file and
-  set the `GEMINI_CLI_IDE_SERVER_PORT` environment variable in the integrated
+  set the `CODEFLY_CLI_IDE_SERVER_PORT` environment variable in the integrated
   terminal. The file serves as the primary discovery mechanism, but the
   environment variable is crucial for tie-breaking. If a user has multiple IDE
   windows open for the same workspace, the CLI uses the
-  `GEMINI_CLI_IDE_SERVER_PORT` variable to identify and connect to the correct
+  `CODEFLY_CLI_IDE_SERVER_PORT` variable to identify and connect to the correct
   window's server.
 
 ## II. The context interface

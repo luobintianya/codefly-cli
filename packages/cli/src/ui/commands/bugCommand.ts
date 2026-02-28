@@ -37,7 +37,7 @@ export const bugCommand: SlashCommand = {
     const osVersion = `${process.platform} ${process.version}`;
     let sandboxEnv = 'no sandbox';
     if (process.env['SANDBOX'] && process.env['SANDBOX'] !== 'sandbox-exec') {
-      sandboxEnv = process.env['SANDBOX'].replace(/^gemini-(?:code-)?/, '');
+      sandboxEnv = process.env['SANDBOX'].replace(/^codefly-(?:code-)?/, '');
     } else if (process.env['SANDBOX'] === 'sandbox-exec') {
       sandboxEnv = `sandbox-exec (${
         process.env['SEATBELT_PROFILE'] || 'unknown'
@@ -97,7 +97,7 @@ export const bugCommand: SlashCommand = {
     }
 
     let bugReportUrl =
-      'https://github.com/google-gemini/gemini-cli/issues/new?template=bug_report.yml&title={title}&info={info}&problem={problem}';
+      'https://github.com/google-codefly/codefly-cli/issues/new?template=bug_report.yml&title={title}&info={info}&problem={problem}';
 
     const bugCommandSettings = config?.getBugCommand();
     if (bugCommandSettings?.urlTemplate) {

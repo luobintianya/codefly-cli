@@ -24,7 +24,7 @@ describe('Linux Clipboard Integration', () => {
     // Create a dummy image file for testing
     dummyImagePath = path.join(
       os.tmpdir(),
-      `gemini-test-clipboard-${Date.now()}.png`,
+      `codefly-test-clipboard-${Date.now()}.png`,
     );
     fs.writeFileSync(dummyImagePath, Buffer.from(DUMMY_PNG_BASE64, 'base64'));
   });

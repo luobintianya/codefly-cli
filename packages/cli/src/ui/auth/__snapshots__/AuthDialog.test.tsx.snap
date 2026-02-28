@@ -7,15 +7,15 @@ exports[`AuthDialog > Snapshots > renders correctly with auth error 1`] = `
 │                                                                                                  │
 │   How would you like to authenticate for this project?                                           │
 │                                                                                                  │
-│   (selected) Login with Google(not selected) Use Gemini API Key(not selected) Vertex AI          │
+│   (selected) Login with Google(not selected) Use Codefly API Key(not selected) Vertex AI          │
 │                                                                                                  │
 │   Something went wrong                                                                           │
 │                                                                                                  │
 │   (Use Enter to select)                                                                          │
 │                                                                                                  │
-│   Terms of Services and Privacy Notice for Gemini CLI                                            │
+│   Terms of Services and Privacy Notice for Codefly CLI                                            │
 │                                                                                                  │
-│   https://geminicli.com/docs/resources/tos-privacy/                                              │
+│   https://codeflycli.com/docs/resources/tos-privacy/                                              │
 │                                                                                                  │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
 "
@@ -28,13 +28,13 @@ exports[`AuthDialog > Snapshots > renders correctly with default props 1`] = `
 │                                                                                                  │
 │   How would you like to authenticate for this project?                                           │
 │                                                                                                  │
-│   (selected) Login with Google(not selected) Use Gemini API Key(not selected) Vertex AI          │
+│   (selected) Login with Google(not selected) Use Codefly API Key(not selected) Vertex AI          │
 │                                                                                                  │
 │   (Use Enter to select)                                                                          │
 │                                                                                                  │
-│   Terms of Services and Privacy Notice for Gemini CLI                                            │
+│   Terms of Services and Privacy Notice for Codefly CLI                                            │
 │                                                                                                  │
-│   https://geminicli.com/docs/resources/tos-privacy/                                              │
+│   https://codeflycli.com/docs/resources/tos-privacy/                                              │
 │                                                                                                  │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
 "
@@ -47,13 +47,13 @@ exports[`AuthDialog > Snapshots > renders correctly with enforced auth type 1`] 
 │                                                                                                  │
 │   How would you like to authenticate for this project?                                           │
 │                                                                                                  │
-│   (selected) Use Gemini API Key                                                                  │
+│   (selected) Use Codefly API Key                                                                  │
 │                                                                                                  │
 │   (Use Enter to select)                                                                          │
 │                                                                                                  │
-│   Terms of Services and Privacy Notice for Gemini CLI                                            │
+│   Terms of Services and Privacy Notice for Codefly CLI                                            │
 │                                                                                                  │
-│   https://geminicli.com/docs/resources/tos-privacy/                                              │
+│   https://codeflycli.com/docs/resources/tos-privacy/                                              │
 │                                                                                                  │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
 "

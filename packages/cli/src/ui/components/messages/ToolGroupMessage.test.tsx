@@ -14,7 +14,8 @@ import type {
   IndividualToolCallDisplay,
 } from '../../types.js';
 import { Scrollable } from '../shared/Scrollable.js';
-import type { Config } from '@codeflyai/codefly-core';
+import { ASK_USER_DISPLAY_NAME, ApprovalMode, CoreToolCallStatus, EDIT_DISPLAY_NAME, GLOB_DISPLAY_NAME, READ_FILE_DISPLAY_NAME, WRITE_FILE_DISPLAY_NAME, makeFakeConfig } from '@codeflyai/codefly-core';
+import * as os from 'node:os';
 
 describe('<ToolGroupMessage />', () => {
   afterEach(() => {
@@ -47,7 +48,7 @@ describe('<ToolGroupMessage />', () => {
   });
 
   const baseMockConfig = makeFakeConfig({
-    model: 'gemini-pro',
+    model: 'codefly-pro',
     targetDir: os.tmpdir(),
     debugMode: false,
     folderTrust: false,

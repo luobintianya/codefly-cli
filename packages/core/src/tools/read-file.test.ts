@@ -19,7 +19,7 @@ import { StandardFileSystemService } from '../services/fileSystemService.js';
 import { createMockWorkspaceContext } from '../test-utils/mockWorkspaceContext.js';
 import { WorkspaceContext } from '../utils/workspaceContext.js';
 import { createMockMessageBus } from '../test-utils/mock-message-bus.js';
-import { GEMINI_IGNORE_FILE_NAME } from '../config/constants.js';
+import { CODEFLY_IGNORE_FILE_NAME } from '../config/constants.js';
 
 vi.mock('../telemetry/loggers.js', () => ({
   logFileOperation: vi.fn(),
@@ -518,7 +518,7 @@ describe('ReadFileTool', () => {
         expect(typeof invocation).not.toBe('string');
       });
 
-      it('should allow reading ignored files if respectGeminiIgnore is false', async () => {
+      it('should allow reading ignored files if respectCodeflyIgnore is false', async () => {
         const ignoredFilePath = path.join(tempRootDir, 'foo.bar');
         await fsp.writeFile(ignoredFilePath, 'content', 'utf-8');
 
@@ -529,7 +529,7 @@ describe('ReadFileTool', () => {
           getWorkspaceContext: () => new WorkspaceContext(tempRootDir),
           getFileFilteringOptions: () => ({
             respectGitIgnore: true,
-            respectGeminiIgnore: false,
+            respectCodeflyIgnore: false,
           }),
           storage: {
             getProjectTempDir: () => path.join(tempRootDir, '.temp'),
@@ -583,7 +583,7 @@ describe('ReadFileTool', () => {
     });
 
     it('should return the schema from the resolver when modelId is provided', () => {
-      const modelId = 'gemini-2.0-flash';
+      const modelId = 'codefly-2.0-flash';
       const schema = tool.getSchema(modelId);
       expect(schema.name).toBe(ReadFileTool.Name);
       expect(schema.description).toMatchSnapshot();

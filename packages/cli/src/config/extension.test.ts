@@ -18,7 +18,7 @@ import * as fs from 'node:fs';
 import * as os from 'node:os';
 import * as path from 'node:path';
 import {
-  type GeminiCLIExtension,
+  type CodeflyCLIExtension,
   ExtensionUninstallEvent,
   ExtensionDisableEvent,
   ExtensionEnableEvent,
@@ -26,7 +26,7 @@ import {
   loadAgentsFromDirectory,
   loadSkillsFromDir,
   getRealPath,
-} from '@google/gemini-cli-core';
+} from '@codeflyai/codefly-core';
 import {
   loadSettings,
   createTestMergedSettings,
@@ -102,9 +102,9 @@ const mockLogExtensionInstallEvent = vi.hoisted(() => vi.fn());
 const mockLogExtensionUninstall = vi.hoisted(() => vi.fn());
 const mockLogExtensionUpdateEvent = vi.hoisted(() => vi.fn());
 const mockLogExtensionDisable = vi.hoisted(() => vi.fn());
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
   const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+    await importOriginal<typeof import('@codeflyai/codefly-core')>();
   return {
     ...actual,
     logExtensionEnable: mockLogExtensionEnable,
@@ -188,10 +188,10 @@ describe('extension tests', () => {
     });
     vi.mocked(loadSkillsFromDir).mockResolvedValue([]);
     tempHomeDir = getRealPath(
-      fs.mkdtempSync(path.join(os.tmpdir(), 'gemini-cli-test-home-')),
+      fs.mkdtempSync(path.join(os.tmpdir(), 'codefly-cli-test-home-')),
     );
     tempWorkspaceDir = getRealPath(
-      fs.mkdtempSync(path.join(tempHomeDir, 'gemini-cli-test-workspace-')),
+      fs.mkdtempSync(path.join(tempHomeDir, 'codefly-cli-test-workspace-')),
     );
     userExtensionsDir = path.join(tempHomeDir, EXTENSIONS_DIRECTORY_NAME);
     mockRequestConsent = vi.fn();
@@ -239,7 +239,7 @@ describe('extension tests', () => {
       expect(extensions[0].name).toBe('test-extension');
     });
 
-    it('should load context file path when GEMINI.md is present', async () => {
+    it('should load context file path when CODEFLY.md is present', async () => {
       createExtension({
         extensionsDir: userExtensionsDir,
         name: 'ext1',
@@ -258,7 +258,7 @@ describe('extension tests', () => {
       const ext1 = extensions.find((e) => e.name === 'ext1');
       const ext2 = extensions.find((e) => e.name === 'ext2');
       expect(ext1?.contextFiles).toEqual([
-        path.join(userExtensionsDir, 'ext1', 'GEMINI.md'),
+        path.join(userExtensionsDir, 'ext1', 'CODEFLY.md'),
       ]);
       expect(ext2?.contextFiles).toEqual([]);
     });
@@ -979,7 +979,7 @@ describe('extension tests', () => {
         );
 
         fs.writeFileSync(
-          path.join(sourceExtDir, 'gemini-extension.json'),
+          path.join(sourceExtDir, 'codefly-extension.json'),
           JSON.stringify({
             name: 'hook-extension-install',
             version: '1.0.0',
@@ -1048,7 +1048,7 @@ describe('extension tests', () => {
       );
     });
 
-    it('should throw an error and cleanup if gemini-extension.json is missing', async () => {
+    it('should throw an error and cleanup if codefly-extension.json is missing', async () => {
       const sourceExtDir = getRealPath(path.join(tempHomeDir, 'bad-extension'));
       fs.mkdirSync(sourceExtDir, { recursive: true });
       const configPath = path.join(sourceExtDir, EXTENSIONS_CONFIG_FILENAME);
@@ -1064,7 +1064,7 @@ describe('extension tests', () => {
       expect(fs.existsSync(targetExtDir)).toBe(false);
     });
 
-    it('should throw an error for invalid JSON in gemini-extension.json', async () => {
+    it('should throw an error for invalid JSON in codefly-extension.json', async () => {
       const sourceExtDir = getRealPath(path.join(tempHomeDir, 'bad-json-ext'));
       fs.mkdirSync(sourceExtDir, { recursive: true });
       const configPath = path.join(sourceExtDir, EXTENSIONS_CONFIG_FILENAME);
@@ -1078,7 +1078,7 @@ describe('extension tests', () => {
       ).rejects.toThrow(`Failed to load extension config from ${configPath}`);
     });
 
-    it('should throw an error for missing name in gemini-extension.json', async () => {
+    it('should throw an error for missing name in codefly-extension.json', async () => {
       const sourceExtDir = getRealPath(
         createExtension({
           extensionsDir: tempHomeDir,
@@ -1271,7 +1271,7 @@ describe('extension tests', () => {
     it('should add the workspace to trusted folders if user consents', async () => {
       const trustedFoldersPath = path.join(
         tempHomeDir,
-        '.gemini',
+        '.codefly',
         'trustedFolders.json',
       );
       vi.mocked(isWorkspaceTrusted).mockReturnValue({
@@ -1701,8 +1701,8 @@ ${INSTALL_WARNING_MESSAGE}`,
     });
 
     describe('installing from github', () => {
-      const gitUrl = 'https://github.com/google/gemini-test-extension.git';
-      const extensionName = 'gemini-test-extension';
+      const gitUrl = 'https://github.com/google/codefly-test-extension.git';
+      const extensionName = 'codefly-test-extension';
 
       beforeEach(() => {
         // Mock the git clone behavior for github installs that fallback to it.
@@ -1832,7 +1832,7 @@ ${INSTALL_WARNING_MESSAGE}`,
         // has no github releases so it is the only install method.
         expect(mockRequestConsent).toHaveBeenCalledExactlyOnceWith(
           expect.stringContaining(
-            'Installing extension "gemini-test-extension"',
+            'Installing extension "codefly-test-extension"',
           ),
         );
         expect(mockGit.clone).toHaveBeenCalled();
@@ -1991,10 +1991,10 @@ ${INSTALL_WARNING_MESSAGE}`,
     });
 
     it('should uninstall an extension by its source URL', async () => {
-      const gitUrl = 'https://github.com/google/gemini-sql-extension.git';
+      const gitUrl = 'https://github.com/google/codefly-sql-extension.git';
       const sourceExtDir = createExtension({
         extensionsDir: userExtensionsDir,
-        name: 'gemini-sql-extension',
+        name: 'codefly-sql-extension',
         version: '1.0.0',
         installMetadata: {
           source: gitUrl,
@@ -2008,9 +2008,9 @@ ${INSTALL_WARNING_MESSAGE}`,
       expect(fs.existsSync(sourceExtDir)).toBe(false);
       expect(mockLogExtensionUninstall).toHaveBeenCalled();
       expect(ExtensionUninstallEvent).toHaveBeenCalledWith(
-        'gemini-sql-extension',
-        hashValue('gemini-sql-extension'),
-        hashValue('https://github.com/google/gemini-sql-extension'),
+        'codefly-sql-extension',
+        hashValue('codefly-sql-extension'),
+        hashValue('https://github.com/google/codefly-sql-extension'),
         'success',
       );
     });
@@ -2139,7 +2139,7 @@ ${INSTALL_WARNING_MESSAGE}`,
       vi.restoreAllMocks();
     });
 
-    const getActiveExtensions = (): GeminiCLIExtension[] => {
+    const getActiveExtensions = (): CodeflyCLIExtension[] => {
       const extensions = extensionManager.getExtensions();
       return extensions.filter((e) => e.isActive);
     };

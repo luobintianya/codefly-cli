@@ -30,23 +30,23 @@ export type MarkToolsAsSubmittedFn = (callIds: string[]) => void;
 export type CancelAllFn = (signal: AbortSignal) => void;
 
 export type TrackedScheduledToolCall = ScheduledToolCall & {
-  responseSubmittedToGemini?: boolean;
+  responseSubmittedToCodefly?: boolean;
 };
 export type TrackedValidatingToolCall = ValidatingToolCall & {
-  responseSubmittedToGemini?: boolean;
+  responseSubmittedToCodefly?: boolean;
 };
 export type TrackedWaitingToolCall = WaitingToolCall & {
-  responseSubmittedToGemini?: boolean;
+  responseSubmittedToCodefly?: boolean;
 };
 export type TrackedExecutingToolCall = ExecutingToolCall & {
-  responseSubmittedToGemini?: boolean;
+  responseSubmittedToCodefly?: boolean;
   pid?: number;
 };
 export type TrackedCompletedToolCall = CompletedToolCall & {
-  responseSubmittedToGemini?: boolean;
+  responseSubmittedToCodefly?: boolean;
 };
 export type TrackedCancelledToolCall = CancelledToolCall & {
-  responseSubmittedToGemini?: boolean;
+  responseSubmittedToCodefly?: boolean;
 };
 
 export type TrackedToolCall =
@@ -60,7 +60,7 @@ export type TrackedToolCall =
 /**
  * Legacy scheduler implementation based on CoreToolScheduler callbacks.
  *
- * This is currently the default implementation used by useGeminiStream.
+ * This is currently the default implementation used by useCodeflyStream.
  * It will be phased out once the event-driven scheduler migration is complete.
  */
 export function useReactToolScheduler(
@@ -124,22 +124,22 @@ export function useReactToolScheduler(
         return allCoreToolCalls.map((coreTc): TrackedToolCall => {
           const existingTrackedCall = prevCallsMap.get(coreTc.request.callId);
 
-          const responseSubmittedToGemini =
-            existingTrackedCall?.responseSubmittedToGemini ?? false;
+          const responseSubmittedToCodefly =
+            existingTrackedCall?.responseSubmittedToCodefly ?? false;
 
           if (coreTc.status === 'executing') {
             const liveOutput = (existingTrackedCall as TrackedExecutingToolCall)
               ?.liveOutput;
             return {
               ...coreTc,
-              responseSubmittedToGemini,
+              responseSubmittedToCodefly,
               liveOutput,
               pid: coreTc.pid,
             };
           } else {
             return {
               ...coreTc,
-              responseSubmittedToGemini,
+              responseSubmittedToCodefly,
             };
           }
         });
@@ -187,7 +187,7 @@ export function useReactToolScheduler(
       setToolCallsForDisplay((prevCalls) =>
         prevCalls.map((tc) =>
           callIdsToMark.includes(tc.request.callId)
-            ? { ...tc, responseSubmittedToGemini: true }
+            ? { ...tc, responseSubmittedToCodefly: true }
             : tc,
         ),
       );

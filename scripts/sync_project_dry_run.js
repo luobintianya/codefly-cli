@@ -7,9 +7,9 @@
 import { execSync } from 'node:child_process';
 
 const PROJECT_ID = 36;
-const ORG = 'google-gemini';
-const REPO = 'google-gemini/gemini-cli';
-const MAINTAINERS_REPO = 'google-gemini/maintainers-gemini-cli';
+const ORG = 'google-codefly';
+const REPO = 'google-codefly/codefly-cli';
+const MAINTAINERS_REPO = 'google-codefly/maintainers-codefly-cli';
 
 // Parent issues to recursively traverse
 const PARENT_ISSUES = [15374, 15456, 15324];
@@ -151,7 +151,7 @@ async function run() {
   const currentItems = getProjectItems();
 
   console.log(`
-Total Open Gemini Issues: ${issues.length}`);
+Total Open Codefly Issues: ${issues.length}`);
   console.log(`Total Current Project Items: ${currentItems.length}`);
 
   const currentUrlMap = new Set(currentItems.map((i) => i.content.url));
@@ -190,7 +190,7 @@ Total Open Gemini Issues: ${issues.length}`);
     // Protect Maintainers Repo
     if (
       item.content.repository === MAINTAINERS_REPO ||
-      (item.content.url && item.content.url.includes('maintainers-gemini-cli'))
+      (item.content.url && item.content.url.includes('maintainers-codefly-cli'))
     ) {
       continue;
     }

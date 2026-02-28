@@ -1,6 +1,6 @@
-# Gemini CLI keyboard shortcuts
+# Codefly CLI keyboard shortcuts
 
-Gemini CLI ships with a set of default keyboard shortcuts for editing input,
+Codefly CLI ships with a set of default keyboard shortcuts for editing input,
 navigating history, and controlling the UI. Use this reference to learn the
 available combinations.
 
@@ -112,12 +112,12 @@ available combinations.
 | Kill the active background shell.                                                                                                                  | `Ctrl + K`       |
 | Confirm selection in background shell list.                                                                                                        | `Enter`          |
 | Dismiss background shell list.                                                                                                                     | `Esc`            |
-| Move focus from background shell to Gemini.                                                                                                        | `Shift + Tab`    |
-| Move focus from background shell list to Gemini.                                                                                                   | `Tab (no Shift)` |
+| Move focus from background shell to Codefly.                                                                                                        | `Shift + Tab`    |
+| Move focus from background shell list to Codefly.                                                                                                   | `Tab (no Shift)` |
 | Show warning when trying to move focus away from background shell.                                                                                 | `Tab (no Shift)` |
 | Show warning when trying to move focus away from shell input.                                                                                      | `Tab (no Shift)` |
-| Move focus from Gemini to the active shell.                                                                                                        | `Tab (no Shift)` |
-| Move focus from the shell back to Gemini.                                                                                                          | `Shift + Tab`    |
+| Move focus from Codefly to the active shell.                                                                                                        | `Tab (no Shift)` |
+| Move focus from the shell back to Codefly.                                                                                                          | `Shift + Tab`    |
 | Clear the terminal screen and redraw the UI.                                                                                                       | `Ctrl + L`       |
 | Restart the application.                                                                                                                           | `R`              |
 | Suspend the CLI and move it to the background.                                                                                                     | `Ctrl + Z`       |

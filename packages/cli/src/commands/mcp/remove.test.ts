@@ -225,7 +225,7 @@ describe('mcp remove command', () => {
       // Note: "model" will be migrated to "model": { "name": ... } format
       const originalContent = `{
         "model": {
-          "name": "gemini-2.5-pro"
+          "name": "codefly-2.5-pro"
         },
         "mcpServers": {
           "server1": {
@@ -250,7 +250,7 @@ describe('mcp remove command', () => {
 
       const updatedContent = fs.readFileSync(settingsPath, 'utf-8');
       expect(updatedContent).toContain('"model"');
-      expect(updatedContent).toContain('"gemini-2.5-pro"');
+      expect(updatedContent).toContain('"codefly-2.5-pro"');
       expect(updatedContent).toContain('"server2"');
       expect(updatedContent).toContain('"ui"');
       expect(updatedContent).toContain('"theme": "dark"');

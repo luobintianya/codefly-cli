@@ -11,7 +11,7 @@ import { TokenStorageType } from './types.js';
 import { coreEvents } from '../../utils/events.js';
 import { TokenStorageInitializationEvent } from '../../telemetry/types.js';
 
-const FORCE_FILE_STORAGE_ENV_VAR = 'GEMINI_FORCE_FILE_STORAGE';
+const FORCE_FILE_STORAGE_ENV_VAR = 'CODEFLY_FORCE_FILE_STORAGE';
 
 export class HybridTokenStorage extends BaseTokenStorage {
   private storage: TokenStorage | null = null;

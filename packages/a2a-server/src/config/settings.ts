@@ -7,7 +7,6 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
-import type { MCPServerConfig } from '@codeflyai/codefly-core';
 import {
   type MCPServerConfig,
   debugLogger,
@@ -42,7 +41,7 @@ export interface Settings {
   // Git-aware file filtering settings
   fileFiltering?: {
     respectGitIgnore?: boolean;
-    respectGeminiIgnore?: boolean;
+    respectCodeflyIgnore?: boolean;
     enableRecursiveFileSearch?: boolean;
     customIgnoreFilePaths?: string[];
   };
@@ -61,7 +60,7 @@ export interface CheckpointingSettings {
  * Loads settings from user and workspace directories.
  * Project settings override user settings.
  *
- * How is it different to gemini-cli/cli: Returns already merged settings rather
+ * How is it different to codefly-cli/cli: Returns already merged settings rather
  * than `LoadedSettings` (unnecessary since we are not modifying users
  * settings.json).
  */

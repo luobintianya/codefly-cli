@@ -10,7 +10,7 @@ import {
   debugLogger,
   FolderTrustDiscoveryService,
   getRealPath,
-} from '@google/gemini-cli-core';
+} from '@codeflyai/codefly-core';
 import { getErrorMessage } from '../../utils/errors.js';
 import {
   INSTALL_WARNING_MESSAGE,
@@ -71,7 +71,7 @@ export async function handleInstall(args: InstallArgs) {
           '',
           `The extension source at "${resolvedPath}" is not trusted.`,
           '',
-          'Trusting a folder allows Gemini CLI to load its local configurations,',
+          'Trusting a folder allows Codefly CLI to load its local configurations,',
           'including custom commands, hooks, MCP servers, agent skills, and',
           'settings. These configurations could execute code on your behalf or',
           'change the behavior of the CLI.',

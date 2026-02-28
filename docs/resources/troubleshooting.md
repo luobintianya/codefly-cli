@@ -11,8 +11,8 @@ topics on:
 ## Authentication or login errors
 
 - **Error:
-  `You must be a named user on your organization's Gemini Code Assist Standard edition subscription to use this service. Please contact your administrator to request an entitlement to Gemini Code Assist Standard edition.`**
-  - **Cause:** This error might occur if Gemini CLI detects the
+  `You must be a named user on your organization's Codefly Code Assist Standard edition subscription to use this service. Please contact your administrator to request an entitlement to Codefly Code Assist Standard edition.`**
+  - **Cause:** This error might occur if Codefly CLI detects the
     `GOOGLE_CLOUD_PROJECT` or `GOOGLE_CLOUD_PROJECT_ID` environment variable is
     defined. Setting these variables forces an organization subscription check.
     This might be an issue if you are using an individual Google account not
@@ -26,14 +26,14 @@ topics on:
       using a different Google account.
 
     - **Organizational Users:** Contact your Google Cloud administrator to be
-      added to your organization's Gemini Code Assist subscription.
+      added to your organization's Codefly Code Assist subscription.
 
 - **Error:
   `Failed to login. Message: Your current account is not eligible... because it is not currently available in your location.`**
-  - **Cause:** Gemini CLI does not currently support your location. For a full
+  - **Cause:** Codefly CLI does not currently support your location. For a full
     list of supported locations, see the following pages:
-    - Gemini Code Assist for individuals:
-      [Available locations](https://developers.google.com/gemini-code-assist/resources/available-locations#americas)
+    - Codefly Code Assist for individuals:
+      [Available locations](https://developers.google.com/codefly-code-assist/resources/available-locations#americas)
 
 - **Error: `Failed to login. Message: Request contains an invalid argument`**
   - **Cause:** Users with Google Workspace accounts or Google Cloud accounts
@@ -41,7 +41,7 @@ topics on:
     tier of the Google Code Assist plan.
   - **Solution:** For Google Cloud accounts, you can work around this by setting
     `GOOGLE_CLOUD_PROJECT` to your project ID. Alternatively, you can obtain the
-    Gemini API key from
+    Codefly API key from
     [Google AI Studio](http://aistudio.google.com/app/apikey), which also
     includes a separate free tier.
 
@@ -68,17 +68,17 @@ topics on:
   - **Solution:** Either stop the other process that is using the port or
     configure the MCP server to use a different port.
 
-- **Error: Command not found (when attempting to run Gemini CLI with
-  `gemini`).**
-  - **Cause:** Gemini CLI is not correctly installed or it is not in your
+- **Error: Command not found (when attempting to run Codefly CLI with
+  `codefly`).**
+  - **Cause:** Codefly CLI is not correctly installed or it is not in your
     system's `PATH`.
-  - **Solution:** The update depends on how you installed Gemini CLI:
-    - If you installed `gemini` globally, check that your `npm` global binary
-      directory is in your `PATH`. You can update Gemini CLI using the command
-      `npm install -g @google/gemini-cli@latest`.
-    - If you are running `gemini` from source, ensure you are using the correct
+  - **Solution:** The update depends on how you installed Codefly CLI:
+    - If you installed `codefly` globally, check that your `npm` global binary
+      directory is in your `PATH`. You can update Codefly CLI using the command
+      `npm install -g @codeflyai/codefly@latest`.
+    - If you are running `codefly` from source, ensure you are using the correct
       command to invoke it (e.g., `node packages/cli/dist/index.js ...`). To
-      update Gemini CLI, pull the latest changes from the repository, and then
+      update Codefly CLI, pull the latest changes from the repository, and then
       rebuild using the command `npm run build`.
 
 - **Error: `MODULE_NOT_FOUND` or import errors.**
@@ -90,15 +90,15 @@ topics on:
     3.  Verify that the build completed successfully with `npm run start`.
 
 - **Error: "Operation not permitted", "Permission denied", or similar.**
-  - **Cause:** When sandboxing is enabled, Gemini CLI may attempt operations
+  - **Cause:** When sandboxing is enabled, Codefly CLI may attempt operations
     that are restricted by your sandbox configuration, such as writing outside
     the project directory or system temp directory.
   - **Solution:** Refer to the [Configuration: Sandboxing](../cli/sandbox.md)
     documentation for more information, including how to customize your sandbox
     configuration.
 
-- **Gemini CLI is not running in interactive mode in "CI" environments**
-  - **Issue:** The Gemini CLI does not enter interactive mode (no prompt
+- **Codefly CLI is not running in interactive mode in "CI" environments**
+  - **Issue:** The Codefly CLI does not enter interactive mode (no prompt
     appears) if an environment variable starting with `CI_` (e.g., `CI_TOKEN`)
     is set. This is because the `is-in-ci` package, used by the underlying UI
     framework, detects these variables and assumes a non-interactive CI
@@ -106,24 +106,24 @@ topics on:
   - **Cause:** The `is-in-ci` package checks for the presence of `CI`,
     `CONTINUOUS_INTEGRATION`, or any environment variable with a `CI_` prefix.
     When any of these are found, it signals that the environment is
-    non-interactive, which prevents the Gemini CLI from starting in its
+    non-interactive, which prevents the Codefly CLI from starting in its
     interactive mode.
   - **Solution:** If the `CI_` prefixed variable is not needed for the CLI to
     function, you can temporarily unset it for the command. e.g.,
-    `env -u CI_TOKEN gemini`
+    `env -u CI_TOKEN codefly`
 
 - **DEBUG mode not working from project .env file**
   - **Issue:** Setting `DEBUG=true` in a project's `.env` file doesn't enable
-    debug mode for gemini-cli.
+    debug mode for codefly-cli.
   - **Cause:** The `DEBUG` and `DEBUG_MODE` variables are automatically excluded
-    from project `.env` files to prevent interference with gemini-cli behavior.
+    from project `.env` files to prevent interference with codefly-cli behavior.
   - **Solution:** Use a `.codefly/.env` file instead, or configure the
     `advanced.excludedEnvVars` setting in your `settings.json` to exclude fewer
     variables.
 
 ## Exit codes
 
-The Gemini CLI uses specific exit codes to indicate the reason for termination.
+The Codefly CLI uses specific exit codes to indicate the reason for termination.
 This is especially useful for scripting and automation.
 
 | Exit Code | Error Type                 | Description                                                                                         |
@@ -164,8 +164,8 @@ This is especially useful for scripting and automation.
 ## Existing GitHub issues similar to yours or creating new issues
 
 If you encounter an issue that was not covered here in this _Troubleshooting
-guide_, consider searching the Gemini CLI
-[Issue tracker on GitHub](https://github.com/google-gemini/gemini-cli/issues).
+guide_, consider searching the Codefly CLI
+[Issue tracker on GitHub](https://github.com/google-codefly/codefly-cli/issues).
 If you can't find an issue similar to yours, consider creating a new GitHub
 Issue with a detailed description. Pull requests are also welcome!
 

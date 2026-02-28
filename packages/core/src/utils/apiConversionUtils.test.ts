@@ -17,7 +17,7 @@ describe('apiConversionUtils', () => {
   describe('convertToRestPayload', () => {
     it('handles minimal requests with no config', () => {
       const req: GenerateContentParameters = {
-        model: 'gemini-3-flash',
+        model: 'codefly-3-flash',
         contents: [{ role: 'user', parts: [{ text: 'Hello' }] }],
       };
 
@@ -31,7 +31,7 @@ describe('apiConversionUtils', () => {
 
     it('normalizes string systemInstruction to REST format', () => {
       const req: GenerateContentParameters = {
-        model: 'gemini-3-flash',
+        model: 'codefly-3-flash',
         contents: [{ role: 'user', parts: [{ text: 'Hello' }] }],
         config: {
           systemInstruction: 'You are a helpful assistant.',
@@ -49,7 +49,7 @@ describe('apiConversionUtils', () => {
     it('preserves object-based systemInstruction', () => {
       const sysInstruction = { parts: [{ text: 'Object instruction' }] };
       const req: GenerateContentParameters = {
-        model: 'gemini-3-flash',
+        model: 'codefly-3-flash',
         contents: [{ role: 'user', parts: [{ text: 'Hello' }] }],
         config: {
           systemInstruction: sysInstruction,
@@ -63,7 +63,7 @@ describe('apiConversionUtils', () => {
 
     it('hoists capabilities (tools, safety, cachedContent) to the root level', () => {
       const req: GenerateContentParameters = {
-        model: 'gemini-3-flash',
+        model: 'codefly-3-flash',
         contents: [{ role: 'user', parts: [{ text: 'Hello' }] }],
         config: {
           tools: [{ functionDeclarations: [{ name: 'myTool' }] }],
@@ -92,7 +92,7 @@ describe('apiConversionUtils', () => {
 
     it('retains pure hyperparameters in generationConfig', () => {
       const req: GenerateContentParameters = {
-        model: 'gemini-3-flash',
+        model: 'codefly-3-flash',
         contents: [{ role: 'user', parts: [{ text: 'Hello' }] }],
         config: {
           temperature: 0.7,
@@ -112,7 +112,7 @@ describe('apiConversionUtils', () => {
 
     it('strips JS-specific abortSignal from the final payload', () => {
       const req: GenerateContentParameters = {
-        model: 'gemini-3-flash',
+        model: 'codefly-3-flash',
         contents: [{ role: 'user', parts: [{ text: 'Hello' }] }],
         config: {
           temperature: 0.5,
@@ -132,7 +132,7 @@ describe('apiConversionUtils', () => {
 
     it('handles a complex kitchen-sink request correctly', () => {
       const req: GenerateContentParameters = {
-        model: 'gemini-3-flash',
+        model: 'codefly-3-flash',
         contents: [{ role: 'user', parts: [{ text: 'Kitchen sink' }] }],
         config: {
           systemInstruction: 'Be witty.',

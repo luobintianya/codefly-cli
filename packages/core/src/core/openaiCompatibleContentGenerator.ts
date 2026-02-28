@@ -640,16 +640,16 @@ export class OpenAICompatibleContentGenerator implements ContentGenerator {
 
   /**
    * Resolves the model name to use for the request.
-   * If a Gemini model name is requested (usually from an internal alias like 'classifier'),
+   * If a Codefly model name is requested (usually from an internal alias like 'classifier'),
    * but the provider is OpenAI-compatible, we redirect it to the configured OpenAI model
-   * unless the configured OpenAI model itself looks like a Gemini model (which might happen
-   * if the user is using a proxy specifically for Gemini).
+   * unless the configured OpenAI model itself looks like a Codefly model (which might happen
+   * if the user is using a proxy specifically for Codefly).
    */
   private resolveModelName(requestedModel: string | undefined): string {
     const model = requestedModel || this.config.model;
     if (
-      model.startsWith('gemini-') &&
-      !this.config.model.startsWith('gemini-')
+      model.startsWith('codefly-') &&
+      !this.config.model.startsWith('codefly-')
     ) {
       return this.config.model;
     }

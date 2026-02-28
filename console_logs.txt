@@ -1867,10 +1867,10 @@ packages/cli/dist/src/ui/components/messages/DiffRenderer.test.js: console.log('
 packages/cli/dist/src/ui/components/messages/DiffRenderer.test.js: console.log('end of second hunk');
 packages/cli/dist/src/ui/hooks/atCommandProcessor.test.js:            const validFile = await createTestFile(path.join(testRootDir, 'src', 'index.ts'), 'console.log("Hello world");');
 packages/cli/dist/src/ui/hooks/atCommandProcessor.test.js:                    { text: 'console.log("Hello world");' },
-packages/cli/dist/src/ui/hooks/atCommandProcessor.test.js:            const geminiIgnoredFile = await createTestFile(path.join(testRootDir, 'build', 'output.js'), 'console.log("Hello");');
+packages/cli/dist/src/ui/hooks/atCommandProcessor.test.js:            const codeflyIgnoredFile = await createTestFile(path.join(testRootDir, 'build', 'output.js'), 'console.log("Hello");');
 packages/cli/dist/src/ui/hooks/atCommandProcessor.test.js:        const validFile = await createTestFile(path.join(testRootDir, 'src', 'index.ts'), 'console.log("Hello world");');
 packages/cli/dist/src/ui/hooks/atCommandProcessor.test.js:                { text: 'console.log("Hello world");' },
-packages/cli/dist/src/ui/hooks/atCommandProcessor.test.js:        const geminiIgnoredFile = await createTestFile(path.join(testRootDir, 'dist', 'bundle.js'), 'console.log("bundle");');
+packages/cli/dist/src/ui/hooks/atCommandProcessor.test.js:        const codeflyIgnoredFile = await createTestFile(path.join(testRootDir, 'dist', 'bundle.js'), 'console.log("bundle");');
 packages/cli/dist/src/ui/hooks/atCommandProcessor.test.js:            const fileContent = 'console.log("This is an absolute path test");';
 packages/cli/dist/src/ui/commands/openspecCommand.js:            console.log(data.toString().trimEnd());
 packages/cli/dist/src/core/auth.js:        // The console.log is intentionally left out here.

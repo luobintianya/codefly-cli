@@ -8,7 +8,7 @@ import type { Config } from '../../config/config.js';
 import type { SecurityPolicy } from './types.js';
 import { getResponseText } from '../../utils/partUtils.js';
 import { safeTemplateReplace } from '../../utils/textUtils.js';
-import { DEFAULT_GEMINI_FLASH_MODEL } from '../../config/models.js';
+import { DEFAULT_CODEFLY_FLASH_MODEL } from '../../config/models.js';
 import { debugLogger } from '../../utils/debugLogger.js';
 import { SafetyCheckDecision } from '../protocol.js';
 
@@ -102,7 +102,7 @@ export async function generatePolicy(
   trustedContent: string,
   config: Config,
 ): Promise<PolicyGenerationResult> {
-  const model = DEFAULT_GEMINI_FLASH_MODEL;
+  const model = DEFAULT_CODEFLY_FLASH_MODEL;
   const contentGenerator = config.getContentGenerator();
 
   if (!contentGenerator) {

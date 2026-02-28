@@ -39,12 +39,12 @@ describe('Agent Skills Backward Compatibility', () => {
   describe('loadCliConfig', () => {
     it('should default skillsSupport to true when no settings are present', async () => {
       vi.mocked(loadServerHierarchicalMemory).mockResolvedValue({
-        memoryContent: '',
+        memoryContent: { global: '', extension: '', project: '' },
         fileCount: 0,
         filePaths: [],
       });
 
-      process.argv = ['node', 'gemini'];
+      process.argv = ['node', 'codefly'];
       const settings = createTestMergedSettings({});
       const config = await loadCliConfig(
         settings,
@@ -60,7 +60,7 @@ describe('Agent Skills Backward Compatibility', () => {
 
     it('should prioritize skills.enabled=false from settings', async () => {
       vi.mocked(loadServerHierarchicalMemory).mockResolvedValue({
-        memoryContent: '',
+        memoryContent: { global: '', extension: '', project: '' },
         fileCount: 0,
         filePaths: [],
       });
@@ -69,7 +69,7 @@ describe('Agent Skills Backward Compatibility', () => {
         skills: { enabled: false },
       } as unknown as Settings);
 
-      process.argv = ['node', 'gemini'];
+      process.argv = ['node', 'codefly'];
       const config = await loadCliConfig(
         settings,
         'test-session',
@@ -84,7 +84,7 @@ describe('Agent Skills Backward Compatibility', () => {
 
     it('should support legacy experimental.skills=true from settings', async () => {
       vi.mocked(loadServerHierarchicalMemory).mockResolvedValue({
-        memoryContent: '',
+        memoryContent: { global: '', extension: '', project: '' },
         fileCount: 0,
         filePaths: [],
       });
@@ -93,7 +93,7 @@ describe('Agent Skills Backward Compatibility', () => {
         experimental: { skills: true },
       } as unknown as Settings);
 
-      process.argv = ['node', 'gemini'];
+      process.argv = ['node', 'codefly'];
       const config = await loadCliConfig(
         settings,
         'test-session',
@@ -108,7 +108,7 @@ describe('Agent Skills Backward Compatibility', () => {
 
     it('should prioritize legacy experimental.skills=true over new skills.enabled=false', async () => {
       vi.mocked(loadServerHierarchicalMemory).mockResolvedValue({
-        memoryContent: '',
+        memoryContent: { global: '', extension: '', project: '' },
         fileCount: 0,
         filePaths: [],
       });
@@ -118,7 +118,7 @@ describe('Agent Skills Backward Compatibility', () => {
         experimental: { skills: true },
       } as unknown as Settings);
 
-      process.argv = ['node', 'gemini'];
+      process.argv = ['node', 'codefly'];
       const config = await loadCliConfig(
         settings,
         'test-session',
@@ -133,7 +133,7 @@ describe('Agent Skills Backward Compatibility', () => {
 
     it('should still be enabled by default if legacy experimental.skills is false (since new default is true)', async () => {
       vi.mocked(loadServerHierarchicalMemory).mockResolvedValue({
-        memoryContent: '',
+        memoryContent: { global: '', extension: '', project: '' },
         fileCount: 0,
         filePaths: [],
       });
@@ -142,7 +142,7 @@ describe('Agent Skills Backward Compatibility', () => {
         experimental: { skills: false },
       } as unknown as Settings);
 
-      process.argv = ['node', 'gemini'];
+      process.argv = ['node', 'codefly'];
       const config = await loadCliConfig(
         settings,
         'test-session',

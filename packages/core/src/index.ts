@@ -9,6 +9,7 @@ export * from './config/config.js';
 export * from './config/memory.js';
 export * from './config/defaultModelConfigs.js';
 export * from './config/models.js';
+export { AuthType } from './core/contentGenerator.js';
 export * from './config/constants.js';
 export * from './output/types.js';
 export * from './output/json-formatter.js';
@@ -38,11 +39,13 @@ export * from './core/logger.js';
 export * from './core/prompts.js';
 export * from './core/tokenLimits.js';
 export * from './core/turn.js';
-export * from './core/geminiRequest.js';
+export * from './telemetry/llmRole.js';
+export * from './core/codeflyRequest.js';
 export * from './core/coreToolScheduler.js';
 export * from './scheduler/scheduler.js';
 export * from './scheduler/types.js';
 export * from './scheduler/tool-executor.js';
+export * from './openspec/cli/index.js';
 export * from './core/recordingContentGenerator.js';
 
 export * from './fallback/types.js';
@@ -163,6 +166,9 @@ export * from './tools/ask-user.js';
 export * from './code_assist/oauth2.js';
 export { OAuthCredentialStorage } from './code_assist/oauth-credential-storage.js';
 export * from './code_assist/types.js';
+export * from './code_assist/codeAssist.js';
+export * from './code_assist/admin/admin_controls.js';
+export * from './code_assist/experiments/flagNames.js';
 
 // MCP OAuth
 export { MCPOAuthProvider } from './mcp/oauth-provider.js';
@@ -200,3 +206,12 @@ export * from './utils/terminal.js';
 
 // Export types from @google/genai
 export type { Content, Part, FunctionCall } from '@google/genai';
+export * from './code_assist/setup.js';
+export { applyAdminAllowlist } from './code_assist/admin/mcpUtils.js';
+// Backward compatibility exports
+export { CODEFLY_DIR as CODEFLY_DIR } from './utils/paths.js';
+export { CODEFLY_MODEL_ALIAS_AUTO as CODEFLY_MODEL_ALIAS_AUTO } from './config/models.js';
+export {
+  setCodeflyMdFilename as setCodeflyMdFilename,
+  getCurrentCodeflyMdFilename as getCurrentCodeflyMdFilename,
+} from './tools/memoryTool.js';

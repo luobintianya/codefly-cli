@@ -513,7 +513,7 @@ describe('retryWithBackoff', () => {
 
   describe('Flash model fallback for OAuth users', () => {
     it('should trigger fallback for OAuth personal users on TerminalQuotaError', async () => {
-      const fallbackCallback = vi.fn().mockResolvedValue('gemini-2.5-flash');
+      const fallbackCallback = vi.fn().mockResolvedValue('codefly-2.5-flash');
 
       let fallbackOccurred = false;
       const mockFn = vi.fn().mockImplementation(async () => {
@@ -569,7 +569,7 @@ describe('retryWithBackoff', () => {
       expect(calledDelayMs).toBeLessThanOrEqual(12345 * 1.2);
     });
 
-    it.each([[AuthType.USE_GEMINI], [AuthType.USE_VERTEX_AI], [undefined]])(
+    it.each([[AuthType.USE_CODEFLY], [AuthType.USE_VERTEX_AI], [undefined]])(
       'should invoke onPersistent429 callback (delegating decision) for non-Google auth users (authType: %s) on TerminalQuotaError',
       async (authType) => {
         const fallbackCallback = vi.fn();
@@ -611,7 +611,7 @@ describe('retryWithBackoff', () => {
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
   it('should trigger fallback for OAuth personal users on persistent 500 errors', async () => {
-    const fallbackCallback = vi.fn().mockResolvedValue('gemini-2.5-flash');
+    const fallbackCallback = vi.fn().mockResolvedValue('codefly-2.5-flash');
 
     let fallbackOccurred = false;
     const mockFn = vi.fn().mockImplementation(async () => {
@@ -630,14 +630,14 @@ describe('retryWithBackoff', () => {
         fallbackOccurred = true;
         return await fallbackCallback(authType, error);
       },
-      authType: AuthType.USE_GEMINI,
+      authType: AuthType.USE_CODEFLY,
     });
 
     await vi.runAllTimersAsync();
 
     await expect(promise).resolves.toBe('success');
     expect(fallbackCallback).toHaveBeenCalledWith(
-      AuthType.USE_GEMINI,
+      AuthType.USE_CODEFLY,
       expect.objectContaining({ status: 500 }),
     );
     // 3 attempts (initial + 2 retries) fail with 500, then fallback triggers, then 1 success
@@ -662,14 +662,14 @@ describe('retryWithBackoff', () => {
         fallbackOccurred = true;
         return await fallbackCallback(authType, error);
       },
-      authType: AuthType.USE_GEMINI,
+      authType: AuthType.USE_CODEFLY,
     });
 
     await vi.runAllTimersAsync();
 
     await expect(promise).resolves.toBe('success');
     expect(fallbackCallback).toHaveBeenCalledWith(
-      AuthType.USE_GEMINI,
+      AuthType.USE_CODEFLY,
       expect.any(ModelNotFoundError),
     );
     expect(mockFn).toHaveBeenCalledTimes(2);
@@ -730,7 +730,7 @@ describe('retryWithBackoff', () => {
           initialDelayMs: 1,
           getAvailabilityContext: getContext,
           onPersistent429,
-          authType: AuthType.USE_GEMINI,
+          authType: AuthType.USE_CODEFLY,
         }),
       ).rejects.toThrow(TerminalQuotaError);
 

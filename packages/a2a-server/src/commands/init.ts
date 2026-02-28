@@ -75,12 +75,12 @@ export class InitCommand implements Command {
   private async handleSubmitPromptResult(
     result: { content: unknown },
     context: CommandContext,
-    geminiMdPath: string,
+    codeflyMdPath: string,
     eventBus: ExecutionEventBus,
     taskId: string,
     contextId: string,
   ): Promise<CommandExecutionResponse> {
-    fs.writeFileSync(geminiMdPath, '', 'utf8');
+    fs.writeFileSync(codeflyMdPath, '', 'utf8');
 
     if (!context.agentExecutor) {
       throw new Error('Agent executor not found in context.');
@@ -120,7 +120,7 @@ export class InitCommand implements Command {
     await agentExecutor.execute(requestContext, eventBus);
     return {
       name: this.name,
-      data: geminiMdPath,
+      data: codeflyMdPath,
     };
   }
 
@@ -135,11 +135,11 @@ export class InitCommand implements Command {
       };
     }
 
-    const geminiMdPath = path.join(
+    const codeflyMdPath = path.join(
       process.env['CODER_AGENT_WORKSPACE_PATH']!,
       'CODEFLY.md',
     );
-    const result = performInit(fs.existsSync(geminiMdPath));
+    const result = performInit(fs.existsSync(codeflyMdPath));
 
     const taskId = uuidv4();
     const contextId = uuidv4();
@@ -157,7 +157,7 @@ export class InitCommand implements Command {
         return this.handleSubmitPromptResult(
           result,
           context,
-          geminiMdPath,
+          codeflyMdPath,
           context.eventBus,
           taskId,
           contextId,

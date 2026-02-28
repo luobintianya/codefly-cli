@@ -19,19 +19,12 @@ import type {
 } from '../types.js';
 import type { CommandContext, SlashCommand } from '../commands/types.js';
 import type { TextBuffer } from '../components/shared/text-buffer.js';
-import type {
-  IdeContext,
-  ApprovalMode,
-  UserTierId,
-  IdeInfo,
-  FallbackIntent,
-  ValidationIntent,
-  AgentDefinition,
-} from '@codeflyai/codefly-core';
+import type { AgentDefinition, ApprovalMode, FallbackIntent, FolderDiscoveryResults, IdeContext, IdeInfo, PolicyUpdateConfirmationRequest, UserTierId, ValidationIntent } from '@codeflyai/codefly-core';
 import type { DOMElement } from 'ink';
 import type { SessionStatsState } from '../contexts/SessionContext.js';
 import type { ExtensionUpdateState } from '../state/extensions.js';
 import type { UpdateObject } from '../utils/updateCheck.js';
+import type { TransientMessageType } from '../../utils/events.js';
 
 export interface ProQuotaDialogRequest {
   failedModel: string;
@@ -68,6 +61,8 @@ export interface UIState {
   shouldShowRetentionWarning: boolean;
   sessionsToDeleteCount: number;
   themeError: string | null;
+  transientMessage: { text: string; type: TransientMessageType } | null;
+  showIsExpandableHint: boolean;
   isAuthenticating: boolean;
   isConfigInitialized: boolean;
   authError: string | null;
@@ -96,12 +91,14 @@ export interface UIState {
   commandContext: CommandContext;
   commandConfirmationRequest: ConfirmationRequest | null;
   authConsentRequest: ConfirmationRequest | null;
+  permissionConfirmationRequest: PermissionConfirmationRequest | null;
+  newAgents: AgentDefinition[] | null;
   confirmUpdateExtensionRequests: ConfirmationRequest[];
   loopDetectionConfirmationRequest: LoopDetectionConfirmationRequest | null;
   codeflyMdFileCount: number;
   streamingState: StreamingState;
   initError: string | null;
-  pendingGeminiHistoryItems: HistoryItemWithoutId[];
+  pendingCodeflyHistoryItems: HistoryItemWithoutId[];
   thought: ThoughtSummary | null;
   shellModeActive: boolean;
   userMessages: string[];

@@ -10,9 +10,9 @@ import type { Config } from '../config/config.js';
 import type { CodeflyClient } from '../core/client.js';
 import type { BaseLlmClient } from '../core/baseLlmClient.js';
 import type {
-  ServerGeminiContentEvent,
-  ServerGeminiStreamEvent,
-  ServerGeminiToolCallRequestEvent,
+  ServerCodeflyContentEvent,
+  ServerCodeflyStreamEvent,
+  ServerCodeflyToolCallRequestEvent,
 } from '../core/turn.js';
 import { CodeflyEventType } from '../core/turn.js';
 import * as loggers from '../telemetry/loggers.js';
@@ -50,7 +50,7 @@ describe('LoopDetectionService', () => {
   const createToolCallRequestEvent = (
     name: string,
     args: Record<string, unknown>,
-  ): ServerGeminiToolCallRequestEvent => ({
+  ): ServerCodeflyToolCallRequestEvent => ({
     type: CodeflyEventType.ToolCallRequest,
     value: {
       name,
@@ -61,7 +61,7 @@ describe('LoopDetectionService', () => {
     },
   });
 
-  const createContentEvent = (content: string): ServerGeminiContentEvent => ({
+  const createContentEvent = (content: string): ServerCodeflyContentEvent => ({
     type: CodeflyEventType.Content,
     value: content,
   });
@@ -126,7 +126,7 @@ describe('LoopDetectionService', () => {
       });
       const otherEvent = {
         type: 'thought',
-      } as unknown as ServerGeminiStreamEvent;
+      } as unknown as ServerCodeflyStreamEvent;
 
       // Send events just below the threshold
       for (let i = 0; i < TOOL_CALL_LOOP_THRESHOLD - 1; i++) {
@@ -742,7 +742,7 @@ describe('LoopDetectionService', () => {
     it('should return false for unhandled event types', () => {
       const otherEvent = {
         type: 'unhandled_event',
-      } as unknown as ServerGeminiStreamEvent;
+      } as unknown as ServerCodeflyStreamEvent;
       expect(service.addAndCheck(otherEvent)).toBe(false);
       expect(service.addAndCheck(otherEvent)).toBe(false);
     });
@@ -778,7 +778,7 @@ describe('LoopDetectionService LLM Checks', () => {
       modelConfigService: {
         getResolvedConfig: vi.fn().mockImplementation((key) => {
           if (key.model === 'loop-detection') {
-            return { model: 'gemini-2.5-flash', generateContentConfig: {} };
+            return { model: 'codefly-2.5-flash', generateContentConfig: {} };
           }
           return {
             model: 'cognitive-loop-v1',
@@ -1050,7 +1050,7 @@ describe('LoopDetectionService LLM Checks', () => {
       expect.objectContaining({
         'event.name': 'loop_detected',
         loop_type: LoopType.LLM_DETECTED_LOOP,
-        confirmed_by_model: 'gemini-2.5-flash',
+        confirmed_by_model: 'codefly-2.5-flash',
       }),
     );
   });

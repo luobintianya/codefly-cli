@@ -80,7 +80,7 @@ const getPortFromMock = (
 ) => {
   const port = vi
     .mocked(replaceMock)
-    .mock.calls.find((call) => call[0] === 'GEMINI_CLI_IDE_SERVER_PORT')?.[1];
+    .mock.calls.find((call) => call[0] === 'CODEFLY_CLI_IDE_SERVER_PORT')?.[1];
 
   if (port === undefined) {
     expect.fail('Port was not set');
@@ -122,7 +122,7 @@ describe('IDEServer', () => {
 
     expect(replaceMock).toHaveBeenNthCalledWith(
       1,
-      'GEMINI_CLI_IDE_SERVER_PORT',
+      'CODEFLY_CLI_IDE_SERVER_PORT',
       expect.any(String), // port is a number as a string
     );
 
@@ -133,29 +133,29 @@ describe('IDEServer', () => {
 
     expect(replaceMock).toHaveBeenNthCalledWith(
       2,
-      'GEMINI_CLI_IDE_WORKSPACE_PATH',
+      'CODEFLY_CLI_IDE_WORKSPACE_PATH',
       expectedWorkspacePaths,
     );
 
     expect(replaceMock).toHaveBeenNthCalledWith(
       3,
-      'GEMINI_CLI_IDE_AUTH_TOKEN',
+      'CODEFLY_CLI_IDE_AUTH_TOKEN',
       'test-auth-token',
     );
 
     const port = getPortFromMock(replaceMock);
     const expectedPortFile = path.join(
       '/tmp',
-      'gemini',
+      'codefly',
       'ide',
-      `gemini-ide-server-${process.ppid}-${port}.json`,
+      `codefly-ide-server-${process.ppid}-${port}.json`,
     );
     const expectedContent = JSON.stringify({
       port: parseInt(port, 10),
       workspacePath: expectedWorkspacePaths,
       authToken: 'test-auth-token',
     });
-    expect(fs.mkdir).toHaveBeenCalledWith(path.join('/tmp', 'gemini', 'ide'), {
+    expect(fs.mkdir).toHaveBeenCalledWith(path.join('/tmp', 'codefly', 'ide'), {
       recursive: true,
     });
     expect(fs.writeFile).toHaveBeenCalledWith(
@@ -172,16 +172,16 @@ describe('IDEServer', () => {
     const replaceMock = mockContext.environmentVariableCollection.replace;
 
     expect(replaceMock).toHaveBeenCalledWith(
-      'GEMINI_CLI_IDE_WORKSPACE_PATH',
+      'CODEFLY_CLI_IDE_WORKSPACE_PATH',
       '/foo/bar',
     );
 
     const port = getPortFromMock(replaceMock);
     const expectedPortFile = path.join(
       '/tmp',
-      'gemini',
+      'codefly',
       'ide',
-      `gemini-ide-server-${process.ppid}-${port}.json`,
+      `codefly-ide-server-${process.ppid}-${port}.json`,
     );
     const expectedContent = JSON.stringify({
       port: parseInt(port, 10),
@@ -202,16 +202,16 @@ describe('IDEServer', () => {
     const replaceMock = mockContext.environmentVariableCollection.replace;
 
     expect(replaceMock).toHaveBeenCalledWith(
-      'GEMINI_CLI_IDE_WORKSPACE_PATH',
+      'CODEFLY_CLI_IDE_WORKSPACE_PATH',
       '',
     );
 
     const port = getPortFromMock(replaceMock);
     const expectedPortFile = path.join(
       '/tmp',
-      'gemini',
+      'codefly',
       'ide',
-      `gemini-ide-server-${process.ppid}-${port}.json`,
+      `codefly-ide-server-${process.ppid}-${port}.json`,
     );
     const expectedContent = JSON.stringify({
       port: parseInt(port, 10),
@@ -231,7 +231,7 @@ describe('IDEServer', () => {
     const replaceMock = mockContext.environmentVariableCollection.replace;
 
     expect(replaceMock).toHaveBeenCalledWith(
-      'GEMINI_CLI_IDE_WORKSPACE_PATH',
+      'CODEFLY_CLI_IDE_WORKSPACE_PATH',
       '/foo/bar',
     );
 
@@ -246,20 +246,20 @@ describe('IDEServer', () => {
       path.delimiter,
     );
     expect(replaceMock).toHaveBeenCalledWith(
-      'GEMINI_CLI_IDE_WORKSPACE_PATH',
+      'CODEFLY_CLI_IDE_WORKSPACE_PATH',
       expectedWorkspacePaths,
     );
     expect(replaceMock).toHaveBeenCalledWith(
-      'GEMINI_CLI_IDE_AUTH_TOKEN',
+      'CODEFLY_CLI_IDE_AUTH_TOKEN',
       'test-auth-token',
     );
 
     const port = getPortFromMock(replaceMock);
     const expectedPortFile = path.join(
       '/tmp',
-      'gemini',
+      'codefly',
       'ide',
-      `gemini-ide-server-${process.ppid}-${port}.json`,
+      `codefly-ide-server-${process.ppid}-${port}.json`,
     );
     const expectedContent = JSON.stringify({
       port: parseInt(port, 10),
@@ -277,7 +277,7 @@ describe('IDEServer', () => {
     await ideServer.syncEnvVars();
 
     expect(replaceMock).toHaveBeenCalledWith(
-      'GEMINI_CLI_IDE_WORKSPACE_PATH',
+      'CODEFLY_CLI_IDE_WORKSPACE_PATH',
       '/baz/qux',
     );
     const expectedContent2 = JSON.stringify({
@@ -298,9 +298,9 @@ describe('IDEServer', () => {
     const port = getPortFromMock(replaceMock);
     const portFile = path.join(
       '/tmp',
-      'gemini',
+      'codefly',
       'ide',
-      `gemini-ide-server-${process.ppid}-${port}.json`,
+      `codefly-ide-server-${process.ppid}-${port}.json`,
     );
     expect(fs.writeFile).toHaveBeenCalledWith(portFile, expect.any(String));
 
@@ -323,16 +323,16 @@ describe('IDEServer', () => {
       const expectedWorkspacePaths = 'c:\\foo\\bar;d:\\baz\\qux';
 
       expect(replaceMock).toHaveBeenCalledWith(
-        'GEMINI_CLI_IDE_WORKSPACE_PATH',
+        'CODEFLY_CLI_IDE_WORKSPACE_PATH',
         expectedWorkspacePaths,
       );
 
       const port = getPortFromMock(replaceMock);
       const expectedPortFile = path.join(
         '/tmp',
-        'gemini',
+        'codefly',
         'ide',
-        `gemini-ide-server-${process.ppid}-${port}.json`,
+        `codefly-ide-server-${process.ppid}-${port}.json`,
       );
       const expectedContent = JSON.stringify({
         port: parseInt(port, 10),

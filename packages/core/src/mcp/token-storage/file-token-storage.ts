@@ -24,8 +24,8 @@ export class FileTokenStorage extends BaseTokenStorage {
   }
 
   private deriveEncryptionKey(): Buffer {
-    const salt = `${os.hostname()}-${os.userInfo().username}-gemini-cli`;
-    return crypto.scryptSync('gemini-cli-oauth', salt, 32);
+    const salt = `${os.hostname()}-${os.userInfo().username}-codefly-cli`;
+    return crypto.scryptSync('codefly-cli-oauth', salt, 32);
   }
 
   private encrypt(text: string): string {

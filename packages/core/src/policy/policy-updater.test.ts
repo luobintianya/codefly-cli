@@ -51,7 +51,7 @@ describe('createPolicyUpdater', () => {
     messageBus = new MessageBus(policyEngine);
     mockStorage = new Storage('/mock/project');
     vi.spyOn(mockStorage, 'getWorkspacePoliciesDir').mockReturnValue(
-      '/mock/project/.gemini/policies',
+      '/mock/project/.codefly/policies',
     );
   });
 

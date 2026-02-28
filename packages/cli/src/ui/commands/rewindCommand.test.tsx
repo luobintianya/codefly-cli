@@ -54,7 +54,7 @@ vi.mock('../hooks/useSessionBrowser.js', () => ({
   convertSessionToHistoryFormats: vi.fn().mockReturnValue({
     uiHistory: [
       { type: 'user', text: 'old user' },
-      { type: 'gemini', text: 'old gemini' },
+      { type: 'codefly', text: 'old codefly' },
     ],
     clientHistory: [{ role: 'user', parts: [{ text: 'old user' }] }],
   }),
@@ -144,7 +144,7 @@ describe('rewindCommand', () => {
       expect(mockLoadHistory).toHaveBeenCalledWith(
         [
           expect.objectContaining({ text: 'old user', id: 1 }),
-          expect.objectContaining({ text: 'old gemini', id: 2 }),
+          expect.objectContaining({ text: 'old codefly', id: 2 }),
         ],
         'New Prompt',
       );
@@ -340,7 +340,7 @@ describe('rewindCommand', () => {
 
   it('should return info if no user interactions found', () => {
     mockGetConversation.mockReturnValue({
-      messages: [{ id: 'msg-1', type: 'gemini', content: 'hello' }],
+      messages: [{ id: 'msg-1', type: 'codefly', content: 'hello' }],
       sessionId: 'test-session',
     });
 

@@ -5,7 +5,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { GeminiCliAgent } from './agent.js';
+import { CodeflyCliAgent } from './agent.js';
 import { skillDir } from './skills.js';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -23,16 +23,16 @@ const getGoldenPath = (name: string) =>
 const SKILL_DIR = path.resolve(__dirname, '../test-data/skills/pirate-skill');
 const SKILL_ROOT = path.resolve(__dirname, '../test-data/skills');
 
-describe('GeminiCliAgent Skills Integration', () => {
+describe('CodeflyCliAgent Skills Integration', () => {
   it('loads and activates a skill from a directory', async () => {
     const goldenFile = getGoldenPath('skill-dir-success');
 
-    const agent = new GeminiCliAgent({
+    const agent = new CodeflyCliAgent({
       instructions: 'You are a helpful assistant.',
       skills: [skillDir(SKILL_DIR)],
       // If recording, use real model + record path.
       // If testing, use auto model + fake path.
-      model: RECORD_MODE ? 'gemini-2.0-flash' : undefined,
+      model: RECORD_MODE ? 'codefly-2.0-flash' : undefined,
       recordResponses: RECORD_MODE ? goldenFile : undefined,
       fakeResponses: RECORD_MODE ? undefined : goldenFile,
     });
@@ -61,12 +61,12 @@ describe('GeminiCliAgent Skills Integration', () => {
   it('loads and activates a skill from a root', async () => {
     const goldenFile = getGoldenPath('skill-root-success');
 
-    const agent = new GeminiCliAgent({
+    const agent = new CodeflyCliAgent({
       instructions: 'You are a helpful assistant.',
       skills: [skillDir(SKILL_ROOT)],
       // If recording, use real model + record path.
       // If testing, use auto model + fake path.
-      model: RECORD_MODE ? 'gemini-2.0-flash' : undefined,
+      model: RECORD_MODE ? 'codefly-2.0-flash' : undefined,
       recordResponses: RECORD_MODE ? goldenFile : undefined,
       fakeResponses: RECORD_MODE ? undefined : goldenFile,
     });

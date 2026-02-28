@@ -10,9 +10,9 @@ import { readFile } from 'node:fs/promises';
 import { quote } from 'shell-quote';
 import { debugLogger, CODEFLY_DIR } from '@codeflyai/codefly-core';
 
-export const LOCAL_DEV_SANDBOX_IMAGE_NAME = 'gemini-cli-sandbox';
-export const SANDBOX_NETWORK_NAME = 'gemini-cli-sandbox';
-export const SANDBOX_PROXY_NAME = 'gemini-cli-sandbox-proxy';
+export const LOCAL_DEV_SANDBOX_IMAGE_NAME = 'codefly-cli-sandbox';
+export const SANDBOX_NETWORK_NAME = 'codefly-cli-sandbox';
+export const SANDBOX_PROXY_NAME = 'codefly-cli-sandbox-proxy';
 export const BUILTIN_SEATBELT_PROFILES = [
   'permissive-open',
   'permissive-proxied',
@@ -142,8 +142,8 @@ export function entrypoint(workdir: string, cliArgs: string[]): string[] {
         ? 'npm run debug --'
         : 'npm rebuild && npm run start --'
       : isDebugMode
-        ? `node --inspect-brk=0.0.0.0:${process.env['DEBUG_PORT'] || '9229'} $(which gemini)`
-        : 'gemini';
+        ? `node --inspect-brk=0.0.0.0:${process.env['DEBUG_PORT'] || '9229'} $(which codefly)`
+        : 'codefly';
 
   const args = [...shellCmds, cliCmd, ...quotedCliArgs];
   return ['bash', '-c', args.join(' ')];

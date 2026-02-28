@@ -18,7 +18,12 @@ import * as process from 'node:process';
 import * as path from 'node:path';
 import { relaunchApp } from '../../utils/processUtils.js';
 import { runExitCleanup } from '../../utils/cleanup.js';
-import { ExitCodes } from '@codeflyai/codefly-core';
+import { ExitCodes, type FolderDiscoveryResults } from '@codeflyai/codefly-core';
+import { useUIState } from '../contexts/UIStateContext.js';
+import { useAlternateBuffer } from '../hooks/useAlternateBuffer.js';
+import { StickyHeader } from './StickyHeader.js';
+import { ShowMoreLines } from './ShowMoreLines.js';
+import { OverflowProvider } from '../contexts/OverflowContext.js';
 
 export enum FolderTrustChoice {
   TRUST_FOLDER = 'trust_folder',
@@ -134,7 +139,7 @@ export const FolderTrustDialog: React.FC<FolderTrustDialogProps> = ({
     <Box flexDirection="column">
       <Box marginBottom={1}>
         <Text color={theme.text.primary}>
-          Trusting a folder allows Gemini CLI to load its local configurations,
+          Trusting a folder allows Codefly CLI to load its local configurations,
           including custom commands, hooks, MCP servers, agent skills, and
           settings. These configurations could execute code on your behalf or
           change the behavior of the CLI.

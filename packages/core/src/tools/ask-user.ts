@@ -150,7 +150,7 @@ export class AskUserInvocation extends BaseToolInvocation<
     return `Asking user: ${this.params.questions.map((q) => q.question).join(', ')}`;
   }
 
-  async execute(signal: AbortSignal): Promise<ToolResult> {
+  async execute(_signal: AbortSignal): Promise<ToolResult> {
     if (!this.messageBus) {
       return {
         llmContent: 'Error: MessageBus not available for AskUserTool.',
@@ -160,7 +160,10 @@ export class AskUserInvocation extends BaseToolInvocation<
         },
       };
     }
-    const correlationId = randomUUID();
+
+    const questionTypes = this.params.questions
+      .map((q) => q.type)
+      .filter((t): t is QuestionType => !!t);
 
     if (this.confirmationOutcome === ToolConfirmationOutcome.Cancel) {
       return {
@@ -201,53 +204,11 @@ export class AskUserInvocation extends BaseToolInvocation<
           .join('\n')}`
       : 'User submitted without answering questions.';
 
-          const returnDisplay = `User answered:\n${formattedAnswers}`;
-
-          resolve({
-            llmContent: JSON.stringify({ answers: response.answers }),
-            returnDisplay,
-          });
-        }
-      };
-
-      const cleanup = () => {
-        if (responseHandler) {
-          this.messageBus!.unsubscribe(
-            MessageBusType.ASK_USER_RESPONSE,
-            responseHandler,
-          );
-        }
-        signal.removeEventListener('abort', abortHandler);
-      };
-
-      const abortHandler = () => {
-        cleanup();
-        resolve({
-          llmContent: 'Tool execution cancelled by user.',
-          returnDisplay: 'Cancelled',
-          error: {
-            message: 'Cancelled',
-          },
-        });
-      };
-
-      if (signal.aborted) {
-        abortHandler();
-        return;
-      }
-
-      signal.addEventListener('abort', abortHandler);
-      this.messageBus!.subscribe(
-        MessageBusType.ASK_USER_RESPONSE,
-        responseHandler,
-      );
-
-      // Publish request
-      this.messageBus!.publish(request).catch((err) => {
-        cleanup();
-        reject(err);
-      });
-    });
+    return {
+      llmContent: JSON.stringify({ answers: this.userAnswers }),
+      returnDisplay,
+      data: metrics,
+    };
   }
 }
 

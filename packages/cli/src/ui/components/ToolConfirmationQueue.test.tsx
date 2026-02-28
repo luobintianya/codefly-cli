@@ -9,7 +9,8 @@ import { Box } from 'ink';
 import { ToolConfirmationQueue } from './ToolConfirmationQueue.js';
 import { StreamingState } from '../types.js';
 import { renderWithProviders } from '../../test-utils/render.js';
-import type { Config } from '@codeflyai/codefly-core';
+import { waitFor } from '../../test-utils/async.js';
+import { CoreToolCallStatus, type Config } from '@codeflyai/codefly-core';
 import type { ConfirmingToolState } from '../hooks/useConfirmingTool.js';
 import { theme } from '../semantic-colors.js';
 
@@ -21,9 +22,9 @@ vi.mock('./StickyHeader.js', async (importOriginal) => {
   };
 });
 
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
   const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+    await importOriginal<typeof import('@codeflyai/codefly-core')>();
   return {
     ...actual,
     validatePlanPath: vi.fn().mockResolvedValue(undefined),
@@ -41,7 +42,7 @@ describe('ToolConfirmationQueue', () => {
   const mockConfig = {
     isTrustedFolder: () => true,
     getIdeMode: () => false,
-    getModel: () => 'gemini-pro',
+    getModel: () => 'codefly-pro',
     getDebugMode: () => false,
     getTargetDir: () => '/mock/target/dir',
     getFileSystemService: () => ({

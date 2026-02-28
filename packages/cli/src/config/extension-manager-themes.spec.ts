@@ -20,7 +20,7 @@ import {
 import { createExtension } from '../test-utils/createExtension.js';
 import { ExtensionManager } from './extension-manager.js';
 import { themeManager, DEFAULT_THEME } from '../ui/themes/theme-manager.js';
-import { GEMINI_DIR, type Config, tmpdir } from '@google/gemini-cli-core';
+import { CODEFLY_DIR, type Config, tmpdir } from '@codeflyai/codefly-core';
 import { createTestMergedSettings, SettingScope } from './settings.js';
 
 describe('ExtensionManager theme loading', () => {
@@ -30,7 +30,7 @@ describe('ExtensionManager theme loading', () => {
 
   beforeAll(async () => {
     tempHomeDir = await fs.promises.mkdtemp(
-      path.join(tmpdir(), 'gemini-cli-test-'),
+      path.join(tmpdir(), 'codefly-cli-test-'),
     );
   });
 
@@ -41,8 +41,8 @@ describe('ExtensionManager theme loading', () => {
   });
 
   beforeEach(() => {
-    process.env['GEMINI_CLI_HOME'] = tempHomeDir;
-    userExtensionsDir = path.join(tempHomeDir, GEMINI_DIR, 'extensions');
+    process.env['CODEFLY_CLI_HOME'] = tempHomeDir;
+    userExtensionsDir = path.join(tempHomeDir, CODEFLY_DIR, 'extensions');
     // Ensure userExtensionsDir is clean for each test
     fs.rmSync(userExtensionsDir, { recursive: true, force: true });
     fs.mkdirSync(userExtensionsDir, { recursive: true });
@@ -65,7 +65,7 @@ describe('ExtensionManager theme loading', () => {
   });
 
   afterEach(() => {
-    delete process.env['GEMINI_CLI_HOME'];
+    delete process.env['CODEFLY_CLI_HOME'];
   });
 
   it('should register themes from an extension when started', async () => {
@@ -92,7 +92,7 @@ describe('ExtensionManager theme loading', () => {
       getMcpClientManager: () => ({
         startExtension: vi.fn().mockResolvedValue(undefined),
       }),
-      getGeminiClient: () => ({
+      getCodeflyClient: () => ({
         isInitialized: () => false,
         updateSystemInstruction: vi.fn(),
         setTools: vi.fn(),
@@ -104,7 +104,7 @@ describe('ExtensionManager theme loading', () => {
       getFileExclusions: () => ({
         isIgnored: () => false,
       }),
-      getGeminiMdFilePaths: () => [],
+      getCodeflyMdFilePaths: () => [],
       getMcpServers: () => ({}),
       getAllowedMcpServers: () => [],
       getSanitizationConfig: () => ({
@@ -190,7 +190,7 @@ describe('ExtensionManager theme loading', () => {
       getImportFormat: () => 'tree',
       getFileFilteringOptions: () => ({
         respectGitIgnore: true,
-        respectGeminiIgnore: true,
+        respectCodeflyIgnore: true,
       }),
       getDiscoveryMaxDirs: () => 200,
       getMcpClientManager: () => ({
@@ -199,10 +199,10 @@ describe('ExtensionManager theme loading', () => {
         stopExtension: vi.fn().mockResolvedValue(undefined),
       }),
       setUserMemory: vi.fn(),
-      setGeminiMdFileCount: vi.fn(),
-      setGeminiMdFilePaths: vi.fn(),
+      setCodeflyMdFileCount: vi.fn(),
+      setCodeflyMdFilePaths: vi.fn(),
       getEnableExtensionReloading: () => true,
-      getGeminiClient: () => ({
+      getCodeflyClient: () => ({
         isInitialized: () => false,
         updateSystemInstruction: vi.fn(),
         setTools: vi.fn(),

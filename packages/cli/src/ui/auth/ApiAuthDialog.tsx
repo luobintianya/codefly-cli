@@ -42,7 +42,7 @@ export function ApiAuthDialog({
   const viewportWidth = mainAreaWidth - 8;
 
   const isOpenAI = selectedAuthType === AuthType.OPENAI;
-  const providerName = isOpenAI ? 'OpenAI Compatible' : 'Gemini';
+  const providerName = isOpenAI ? 'OpenAI Compatible' : 'Codefly';
   const keyLink = isOpenAI
     ? 'https://platform.openai.com/api-keys'
     : 'https://aistudio.google.com/app/apikey';
@@ -67,7 +67,6 @@ export function ApiAuthDialog({
       width: viewportWidth,
       height: 4,
     },
-    isValidPath: () => false,
     inputFilter: (text) => text.replace(/[\r\n]/g, ''),
     singleLine: true,
   });
@@ -79,7 +78,6 @@ export function ApiAuthDialog({
       width: viewportWidth,
       height: 4,
     },
-    isValidPath: () => false,
     inputFilter: (text) => text.replace(/[\r\n]/g, ''),
     singleLine: true,
   });
@@ -91,7 +89,6 @@ export function ApiAuthDialog({
       width: viewportWidth,
       height: 4,
     },
-    isValidPath: () => false,
     inputFilter: (text) => text.replace(/[\r\n]/g, ''),
     singleLine: true,
   });
@@ -144,6 +141,7 @@ export function ApiAuthDialog({
           });
         }
       }
+      return false;
     },
     { isActive: true },
   );

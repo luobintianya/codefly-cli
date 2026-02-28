@@ -7,7 +7,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import * as path from 'node:path';
 import { loadConfig } from './config.js';
-import type { ExtensionLoader } from '@codeflyai/codefly-core';
 import type { Settings } from './settings.js';
 import {
   type ExtensionLoader,
@@ -17,12 +16,12 @@ import {
   ExperimentFlags,
   fetchAdminControlsOnce,
   type FetchAdminControlsResponse,
-} from '@google/gemini-cli-core';
+} from '@codeflyai/codefly-core';
 
 // Mock dependencies
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
   const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+    await importOriginal<typeof import('@codeflyai/codefly-core')>();
   return {
     ...actual,
     Config: vi.fn().mockImplementation((params) => {
@@ -56,36 +55,21 @@ vi.mock('@google/gemini-cli-core', async (importOriginal) => {
     coreEvents: {
       emitAdminSettingsChanged: vi.fn(),
     },
+    ApprovalMode: { DEFAULT: 'default', YOLO: 'yolo' },
+    AuthType: {
+      LOGIN_WITH_GOOGLE: 'login_with_google',
+      USE_CODEFLY: 'use_codefly',
+    },
+    CODEFLY_DIR: '.codefly',
+    DEFAULT_CODEFLY_EMBEDDING_MODEL: 'models/embedding-001',
+    DEFAULT_CODEFLY_MODEL: 'models/codefly-1.5-flash',
+    PREVIEW_CODEFLY_MODEL: 'models/codefly-1.5-pro-latest',
+    homedir: () => '/tmp',
+    GitService: {
+      verifyGitAvailability: vi.fn().mockResolvedValue(true),
+    },
   };
 });
-
-vi.mock('@codeflyai/codefly-core', async () => ({
-  Config: class MockConfig {
-    constructor(params: unknown) {
-      mockConfigConstructor(params);
-    }
-    initialize = vi.fn();
-    refreshAuth = vi.fn();
-  },
-  loadServerHierarchicalMemory: mockLoadServerHierarchicalMemory,
-  startupProfiler: {
-    flush: vi.fn(),
-  },
-  FileDiscoveryService: vi.fn(),
-  ApprovalMode: { DEFAULT: 'default', YOLO: 'yolo' },
-  AuthType: {
-    LOGIN_WITH_GOOGLE: 'login_with_google',
-    USE_GEMINI: 'use_gemini',
-  },
-  CODEFLY_DIR: '.gemini',
-  DEFAULT_CODEFLY_EMBEDDING_MODEL: 'models/embedding-001',
-  DEFAULT_CODEFLY_MODEL: 'models/gemini-1.5-flash',
-  PREVIEW_CODEFLY_MODEL: 'models/gemini-1.5-pro-latest',
-  homedir: () => '/tmp',
-  GitService: {
-    verifyGitAvailability: mockVerifyGitAvailability,
-  },
-}));
 
 describe('loadConfig', () => {
   const mockSettings = {} as Settings;
@@ -94,12 +78,12 @@ describe('loadConfig', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    process.env['GEMINI_API_KEY'] = 'test-key';
+    process.env['CODEFLY_API_KEY'] = 'test-key';
   });
 
   afterEach(() => {
     delete process.env['CUSTOM_IGNORE_FILE_PATHS'];
-    delete process.env['GEMINI_API_KEY'];
+    delete process.env['CODEFLY_API_KEY'];
   });
 
   describe('admin settings overrides', () => {
@@ -285,7 +269,7 @@ describe('loadConfig', () => {
 
     expect(FileDiscoveryService).toHaveBeenCalledWith(expect.any(String), {
       respectGitIgnore: false,
-      respectGeminiIgnore: undefined,
+      respectCodeflyIgnore: undefined,
       customIgnoreFilePaths: [testPath],
     });
   });

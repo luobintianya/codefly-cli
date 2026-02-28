@@ -14,10 +14,10 @@ import type {
 } from '@codeflyai/codefly-core';
 
 // Mock child components
-vi.mock('./GeminiPrivacyNotice.js', async () => {
+vi.mock('./CodeflyPrivacyNotice.js', async () => {
   const { Text } = await import('ink');
   return {
-    GeminiPrivacyNotice: () => <Text>GeminiPrivacyNotice</Text>,
+    CodeflyPrivacyNotice: () => <Text>CodeflyPrivacyNotice</Text>,
   };
 });
 
@@ -47,8 +47,8 @@ describe('PrivacyNotice', () => {
 
   it.each([
     {
-      authType: 'gemini-api-key' as AuthType,
-      expectedComponent: 'GeminiPrivacyNotice',
+      authType: 'codefly-api-key' as AuthType,
+      expectedComponent: 'CodeflyPrivacyNotice',
     },
     {
       authType: 'vertex-ai' as AuthType,

@@ -72,7 +72,7 @@ describe('mcp-client', () => {
     // create a tmp dir for this test
     // Create a unique temporary directory for the workspace to avoid conflicts
     testWorkspace = fs.mkdtempSync(
-      path.join(os.tmpdir(), 'gemini-agent-test-'),
+      path.join(os.tmpdir(), 'codefly-agent-test-'),
     );
     workspaceContext = new WorkspaceContext(testWorkspace);
   });
@@ -1735,7 +1735,7 @@ describe('mcp-client', () => {
       });
     });
 
-    it('sets an env variable GEMINI_CLI=1 for stdio MCP servers', async () => {
+    it('sets an env variable CODEFLY_CLI=1 for stdio MCP servers', async () => {
       const mockedTransport = vi
         .spyOn(SdkClientStdioLib, 'StdioClientTransport')
         .mockReturnValue({} as SdkClientStdioLib.StdioClientTransport);
@@ -1754,7 +1754,7 @@ describe('mcp-client', () => {
 
       const callArgs = mockedTransport.mock.calls[0][0];
       expect(callArgs.env).toBeDefined();
-      expect(callArgs.env!['GEMINI_CLI']).toBe('1');
+      expect(callArgs.env!['CODEFLY_CLI']).toBe('1');
     });
 
     it('should exclude extension settings with undefined values from environment', async () => {
@@ -1770,7 +1770,7 @@ describe('mcp-client', () => {
             name: 'test-ext',
             resolvedSettings: [
               {
-                envVar: 'GEMINI_CLI_EXT_VAR',
+                envVar: 'CODEFLY_CLI_EXT_VAR',
                 value: undefined,
                 sensitive: false,
                 name: 'ext-setting',
@@ -1789,7 +1789,7 @@ describe('mcp-client', () => {
 
       const callArgs = mockedTransport.mock.calls[0][0];
       expect(callArgs.env).toBeDefined();
-      expect(callArgs.env!['GEMINI_CLI_EXT_VAR']).toBeUndefined();
+      expect(callArgs.env!['CODEFLY_CLI_EXT_VAR']).toBeUndefined();
     });
 
     it('should expand environment variables in mcpServerConfig.env and not redact them', async () => {
@@ -1800,7 +1800,7 @@ describe('mcp-client', () => {
       const originalEnv = process.env;
       process.env = {
         ...originalEnv,
-        GEMINI_TEST_VAR: 'expanded-value',
+        CODEFLY_TEST_VAR: 'expanded-value',
       };
 
       try {
@@ -1809,7 +1809,7 @@ describe('mcp-client', () => {
           {
             command: 'test-command',
             env: {
-              TEST_EXPANDED: 'Value is $GEMINI_TEST_VAR',
+              TEST_EXPANDED: 'Value is $CODEFLY_TEST_VAR',
               SECRET_KEY: 'intentional-secret-123',
             },
           },
@@ -2061,7 +2061,7 @@ describe('connectToMcpServer with OAuth', () => {
     vi.mocked(ClientLib.Client).mockImplementation(() => mockedClient);
 
     testWorkspace = fs.mkdtempSync(
-      path.join(os.tmpdir(), 'gemini-agent-test-'),
+      path.join(os.tmpdir(), 'codefly-agent-test-'),
     );
     workspaceContext = new WorkspaceContext(testWorkspace);
 
@@ -2281,7 +2281,7 @@ describe('connectToMcpServer - HTTP→SSE fallback', () => {
     vi.mocked(ClientLib.Client).mockImplementation(() => mockedClient);
 
     testWorkspace = fs.mkdtempSync(
-      path.join(os.tmpdir(), 'gemini-agent-test-'),
+      path.join(os.tmpdir(), 'codefly-agent-test-'),
     );
     workspaceContext = new WorkspaceContext(testWorkspace);
 
@@ -2413,7 +2413,7 @@ describe('connectToMcpServer - OAuth with transport fallback', () => {
     vi.mocked(ClientLib.Client).mockImplementation(() => mockedClient);
 
     testWorkspace = fs.mkdtempSync(
-      path.join(os.tmpdir(), 'gemini-agent-test-'),
+      path.join(os.tmpdir(), 'codefly-agent-test-'),
     );
     workspaceContext = new WorkspaceContext(testWorkspace);
 

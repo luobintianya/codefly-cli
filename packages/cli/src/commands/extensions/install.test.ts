@@ -16,7 +16,7 @@ import {
 } from 'vitest';
 import { handleInstall, installCommand } from './install.js';
 import yargs from 'yargs';
-import * as core from '@google/gemini-cli-core';
+import * as core from '@codeflyai/codefly-core';
 import type { inferInstallMetadata } from '../../config/extension-manager.js';
 import { ExtensionManager } from '../../config/extension-manager.js';
 import type {
@@ -67,9 +67,9 @@ vi.mock('../../config/trustedFolders.js', () => ({
   },
 }));
 
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
   const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+    await importOriginal<typeof import('@codeflyai/codefly-core')>();
   return {
     ...actual,
     FolderTrustDiscoveryService: {
@@ -169,8 +169,8 @@ describe('handleInstall', () => {
   });
 
   function createMockExtension(
-    overrides: Partial<core.GeminiCLIExtension> = {},
-  ): core.GeminiCLIExtension {
+    overrides: Partial<core.CodeflyCLIExtension> = {},
+  ): core.CodeflyCLIExtension {
     return {
       name: 'mock-extension',
       version: '1.0.0',

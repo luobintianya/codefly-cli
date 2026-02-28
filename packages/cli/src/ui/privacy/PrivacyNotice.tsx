@@ -6,7 +6,7 @@
 
 import { Box } from 'ink';
 import { type Config, AuthType } from '@codeflyai/codefly-core';
-import { GeminiPrivacyNotice } from './GeminiPrivacyNotice.js';
+import { CodeflyPrivacyNotice } from './CodeflyPrivacyNotice.js';
 import { CloudPaidPrivacyNotice } from './CloudPaidPrivacyNotice.js';
 import { CloudFreePrivacyNotice } from './CloudFreePrivacyNotice.js';
 
@@ -25,8 +25,8 @@ const PrivacyNoticeText = ({
   const authType = config.getContentGeneratorConfig()?.authType;
 
   switch (authType) {
-    case AuthType.USE_GEMINI:
-      return <GeminiPrivacyNotice onExit={onExit} />;
+    case AuthType.USE_CODEFLY:
+      return <CodeflyPrivacyNotice onExit={onExit} />;
     case AuthType.USE_VERTEX_AI:
       return <CloudPaidPrivacyNotice onExit={onExit} />;
     default:

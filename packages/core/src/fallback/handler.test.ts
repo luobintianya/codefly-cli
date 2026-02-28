@@ -56,7 +56,7 @@ vi.mock('../utils/debugLogger.js', () => ({
 
 const MOCK_PRO_MODEL = PREVIEW_CODEFLY_MODEL;
 const FALLBACK_MODEL = DEFAULT_CODEFLY_FLASH_MODEL;
-const AUTH_OAUTH = AuthType.USE_GEMINI;
+const AUTH_OAUTH = AuthType.USE_CODEFLY;
 
 const createMockConfig = (overrides: Partial<Config> = {}): Config =>
   ({
@@ -257,7 +257,7 @@ describe('handleFallback', () => {
 
       expect(result).toBe(false);
       expect(openBrowserSecurely).toHaveBeenCalledWith(
-        'https://goo.gle/set-up-gemini-code-assist',
+        'https://goo.gle/set-up-codefly-code-assist',
       );
       expect(policyConfig.activateFallbackMode).not.toHaveBeenCalled();
     });

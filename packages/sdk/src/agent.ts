@@ -10,24 +10,24 @@ import {
   createSessionId,
   type ResumedSessionData,
   type ConversationRecord,
-} from '@google/gemini-cli-core';
+} from '@codeflyai/codefly-core';
 
-import { GeminiCliSession } from './session.js';
-import type { GeminiCliAgentOptions } from './types.js';
+import { CodeflyCliSession } from './session.js';
+import type { CodeflyCliAgentOptions } from './types.js';
 
-export class GeminiCliAgent {
-  private options: GeminiCliAgentOptions;
+export class CodeflyCliAgent {
+  private options: CodeflyCliAgentOptions;
 
-  constructor(options: GeminiCliAgentOptions) {
+  constructor(options: CodeflyCliAgentOptions) {
     this.options = options;
   }
 
-  session(options?: { sessionId?: string }): GeminiCliSession {
+  session(options?: { sessionId?: string }): CodeflyCliSession {
     const sessionId = options?.sessionId || createSessionId();
-    return new GeminiCliSession(this.options, sessionId, this);
+    return new CodeflyCliSession(this.options, sessionId, this);
   }
 
-  async resumeSession(sessionId: string): Promise<GeminiCliSession> {
+  async resumeSession(sessionId: string): Promise<CodeflyCliSession> {
     const cwd = this.options.cwd || process.cwd();
     const storage = new Storage(cwd);
     await storage.initialize();
@@ -74,7 +74,7 @@ export class GeminiCliAgent {
       filePath,
     };
 
-    return new GeminiCliSession(
+    return new CodeflyCliSession(
       this.options,
       conversation.sessionId,
       this,

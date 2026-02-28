@@ -8,8 +8,8 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as dotenv from 'dotenv';
 
-import type { TelemetryTarget } from '@codeflyai/codefly-core';
 import {
+  type TelemetryTarget,
   AuthType,
   Config,
   FileDiscoveryService,
@@ -20,9 +20,12 @@ import {
   DEFAULT_CODEFLY_MODEL,
   type ExtensionLoader,
   startupProfiler,
-  PREVIEW_CODEFLY_MODEL,
   homedir,
   GitService,
+  type ConfigParameters,
+  getCodeAssistServer,
+  fetchAdminControlsOnce,
+  ExperimentFlags,
 } from '@codeflyai/codefly-core';
 
 import { logger } from '../utils/logger.js';
@@ -39,7 +42,7 @@ export async function loadConfig(
 
   const folderTrust =
     settings.folderTrust === true ||
-    process.env['GEMINI_FOLDER_TRUST'] === 'true';
+    process.env['CODEFLY_FOLDER_TRUST'] === 'true';
 
   let checkpointing = process.env['CHECKPOINTING']
     ? process.env['CHECKPOINTING'] === 'true'
@@ -56,9 +59,7 @@ export async function loadConfig(
 
   const configParams: ConfigParameters = {
     sessionId: taskId,
-    model: settings.general?.previewFeatures
-      ? PREVIEW_CODEFLY_MODEL
-      : DEFAULT_CODEFLY_MODEL,
+    model: DEFAULT_CODEFLY_MODEL,
     embeddingModel: DEFAULT_CODEFLY_EMBEDDING_MODEL,
     sandbox: undefined, // Sandbox might not be relevant for a server-side agent
     targetDir: workspaceDir, // Or a specific directory the agent operates on
@@ -70,7 +71,7 @@ export async function loadConfig(
     allowedTools: settings.allowedTools || settings.tools?.allowed || undefined,
     showMemoryUsage: settings.showMemoryUsage || false,
     approvalMode:
-      process.env['GEMINI_YOLO_MODE'] === 'true'
+      process.env['CODEFLY_YOLO_MODE'] === 'true'
         ? ApprovalMode.YOLO
         : ApprovalMode.DEFAULT,
     mcpServers: settings.mcpServers,
@@ -87,7 +88,7 @@ export async function loadConfig(
     // Git-aware file filtering settings
     fileFiltering: {
       respectGitIgnore: settings.fileFiltering?.respectGitIgnore,
-      respectGeminiIgnore: settings.fileFiltering?.respectGeminiIgnore,
+      respectCodeflyIgnore: settings.fileFiltering?.respectCodeflyIgnore,
       enableRecursiveFileSearch:
         settings.fileFiltering?.enableRecursiveFileSearch,
       customIgnoreFilePaths: [
@@ -109,7 +110,7 @@ export async function loadConfig(
 
   const fileService = new FileDiscoveryService(workspaceDir, {
     respectGitIgnore: configParams?.fileFiltering?.respectGitIgnore,
-    respectGeminiIgnore: configParams?.fileFiltering?.respectGeminiIgnore,
+    respectCodeflyIgnore: configParams?.fileFiltering?.respectCodeflyIgnore,
     customIgnoreFilePaths: configParams?.fileFiltering?.customIgnoreFilePaths,
   });
   const { memoryContent, fileCount, filePaths } =
@@ -124,7 +125,7 @@ export async function loadConfig(
   configParams.userMemory = memoryContent;
   configParams.codeflyMdFileCount = fileCount;
   configParams.codeflyMdFilePaths = filePaths;
-  const config = new Config({
+  const initialConfig = new Config({
     ...configParams,
   });
 
@@ -207,10 +208,10 @@ export function loadEnvironment(): void {
 function findEnvFile(startDir: string): string | null {
   let currentDir = path.resolve(startDir);
   while (true) {
-    // prefer gemini-specific .env under CODEFLY_DIR
-    const geminiEnvPath = path.join(currentDir, CODEFLY_DIR, '.env');
-    if (fs.existsSync(geminiEnvPath)) {
-      return geminiEnvPath;
+    // prefer codefly-specific .env under CODEFLY_DIR
+    const codeflyEnvPath = path.join(currentDir, CODEFLY_DIR, '.env');
+    if (fs.existsSync(codeflyEnvPath)) {
+      return codeflyEnvPath;
     }
     const envPath = path.join(currentDir, '.env');
     if (fs.existsSync(envPath)) {
@@ -218,10 +219,10 @@ function findEnvFile(startDir: string): string | null {
     }
     const parentDir = path.dirname(currentDir);
     if (parentDir === currentDir || !parentDir) {
-      // check .env under home as fallback, again preferring gemini-specific .env
-      const homeGeminiEnvPath = path.join(process.cwd(), CODEFLY_DIR, '.env');
-      if (fs.existsSync(homeGeminiEnvPath)) {
-        return homeGeminiEnvPath;
+      // check .env under home as fallback, again preferring codefly-specific .env
+      const homeCodeflyEnvPath = path.join(process.cwd(), CODEFLY_DIR, '.env');
+      if (fs.existsSync(homeCodeflyEnvPath)) {
+        return homeCodeflyEnvPath;
       }
       const homeEnvPath = path.join(homedir(), '.env');
       if (fs.existsSync(homeEnvPath)) {
@@ -253,11 +254,11 @@ async function refreshAuthentication(
     logger.info(
       `[${logPrefix}] GOOGLE_CLOUD_PROJECT: ${process.env['GOOGLE_CLOUD_PROJECT']}`,
     );
-  } else if (process.env['GEMINI_API_KEY']) {
-    logger.info(`[${logPrefix}] Using Gemini API Key`);
-    await config.refreshAuth(AuthType.USE_GEMINI);
+  } else if (process.env['CODEFLY_API_KEY']) {
+    logger.info(`[${logPrefix}] Using Codefly API Key`);
+    await config.refreshAuth(AuthType.USE_CODEFLY);
   } else {
-    const errorMessage = `[${logPrefix}] Unable to set GeneratorConfig. Please provide a GEMINI_API_KEY or set USE_CCPA.`;
+    const errorMessage = `[${logPrefix}] Unable to set GeneratorConfig. Please provide a CODEFLY_API_KEY or set USE_CCPA.`;
     logger.error(errorMessage);
     throw new Error(errorMessage);
   }

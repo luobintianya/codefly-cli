@@ -78,7 +78,7 @@ export type ConversationRecordExtra =
       type: 'user' | 'info' | 'error' | 'warning';
     }
   | {
-      type: 'gemini';
+      type: 'codefly';
       toolCalls?: ToolCallRecord[];
       thoughts?: Array<ThoughtSummary & { timestamp: string }>;
       tokens?: TokensSummary | null;
@@ -254,8 +254,8 @@ export class ChatRecordingService {
           message.content,
           message.displayContent,
         );
-        if (msg.type === 'gemini') {
-          // If it's a new Gemini message then incorporate any queued thoughts.
+        if (msg.type === 'codefly') {
+          // If it's a new Codefly message then incorporate any queued thoughts.
           conversation.messages.push({
             ...msg,
             thoughts: this.queuedThoughts,
@@ -293,7 +293,7 @@ export class ChatRecordingService {
   }
 
   /**
-   * Updates the tokens for the last message in the conversation (which should be by Gemini).
+   * Updates the tokens for the last message in the conversation (which should be by Codefly).
    */
   recordMessageTokens(
     respUsageMetadata: GenerateContentResponseUsageMetadata,
@@ -313,7 +313,7 @@ export class ChatRecordingService {
         const lastMsg = this.getLastMessage(conversation);
         // If the last message already has token info, it's because this new token info is for a
         // new message that hasn't been recorded yet.
-        if (lastMsg && lastMsg.type === 'gemini' && !lastMsg.tokens) {
+        if (lastMsg && lastMsg.type === 'codefly' && !lastMsg.tokens) {
           lastMsg.tokens = tokens;
           this.queuedTokens = null;
         } else {
@@ -330,7 +330,7 @@ export class ChatRecordingService {
   }
 
   /**
-   * Adds tool calls to the last message in the conversation (which should be by Gemini).
+   * Adds tool calls to the last message in the conversation (which should be by Codefly).
    * This method enriches tool calls with metadata from the ToolRegistry.
    */
   recordToolCalls(model: string, toolCalls: ToolCallRecord[]): void {
@@ -351,25 +351,25 @@ export class ChatRecordingService {
     try {
       this.updateConversation((conversation) => {
         const lastMsg = this.getLastMessage(conversation);
-        // If a tool call was made, but the last message isn't from Gemini, it's because Gemini is
+        // If a tool call was made, but the last message isn't from Codefly, it's because Codefly is
         // calling tools without starting the message with text.  So the user submits a prompt, and
-        // Gemini immediately calls a tool (maybe with some thinking first).  In that case, create
-        // a new empty Gemini message.
-        // Also if there are any queued thoughts, it means this tool call(s) is from a new Gemini
-        // message--because it's thought some more since we last, if ever, created a new Gemini
+        // Codefly immediately calls a tool (maybe with some thinking first).  In that case, create
+        // a new empty Codefly message.
+        // Also if there are any queued thoughts, it means this tool call(s) is from a new Codefly
+        // message--because it's thought some more since we last, if ever, created a new Codefly
         // message from tool calls, when we dequeued the thoughts.
         if (
           !lastMsg ||
-          lastMsg.type !== 'gemini' ||
+          lastMsg.type !== 'codefly' ||
           this.queuedThoughts.length > 0
         ) {
           const newMsg: MessageRecord = {
-            ...this.newMessage('gemini' as const, ''),
+            ...this.newMessage('codefly' as const, ''),
             // This isn't strictly necessary, but TypeScript apparently can't
             // tell that the first parameter to newMessage() becomes the
             // resulting message's type, and so it thinks that toolCalls may
             // not be present.  Confirming the type here satisfies it.
-            type: 'gemini' as const,
+            type: 'codefly' as const,
             toolCalls: enrichedToolCalls,
             thoughts: this.queuedThoughts,
             model,
@@ -386,7 +386,7 @@ export class ChatRecordingService {
           }
           conversation.messages.push(newMsg);
         } else {
-          // The last message is an existing Gemini message that we need to update.
+          // The last message is an existing Codefly message that we need to update.
 
           // Update any existing tool call entries.
           if (!lastMsg.toolCalls) {
@@ -666,7 +666,7 @@ export class ChatRecordingService {
 
         // Update the conversation records tool results if they've changed.
         for (const message of conversation.messages) {
-          if (message.type === 'gemini' && message.toolCalls) {
+          if (message.type === 'codefly' && message.toolCalls) {
             for (const toolCall of message.toolCalls) {
               const newParts = partsMap.get(toolCall.id);
               if (newParts !== undefined) {

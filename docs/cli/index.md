@@ -1,17 +1,17 @@
-# Gemini CLI
+# Codefly CLI
 
-Within Gemini CLI, `packages/cli` is the frontend for users to send and receive
-prompts with the Gemini AI model and its associated tools. For a general
-overview of Gemini CLI, see the [main documentation page](../index.md).
+Within Codefly CLI, `packages/cli` is the frontend for users to send and receive
+prompts with the Codefly AI model and its associated tools. For a general
+overview of Codefly CLI, see the [main documentation page](../index.md).
 
 ## Basic features
 
 - **[Commands](./commands.md):** A reference for all built-in slash commands
 - **[Custom commands](./custom-commands.md):** Create your own commands and
   shortcuts for frequently used prompts.
-- **[Headless mode](./headless.md):** Use Gemini CLI programmatically for
+- **[Headless mode](./headless.md):** Use Codefly CLI programmatically for
   scripting and automation.
-- **[Model selection](./model.md):** Configure the Gemini AI model used by the
+- **[Model selection](./model.md):** Configure the Codefly AI model used by the
   CLI.
 - **[Settings](./settings.md):** Configure various aspects of the CLI's behavior
   and appearance.
@@ -25,7 +25,7 @@ overview of Gemini CLI, see the [main documentation page](../index.md).
 
 - **[Checkpointing](./checkpointing.md):** Automatically save and restore
   snapshots of your session and files.
-- **[Enterprise configuration](./enterprise.md):** Deploy and manage Gemini CLI
+- **[Enterprise configuration](./enterprise.md):** Deploy and manage Codefly CLI
   in an enterprise environment.
 - **[Sandboxing](./sandbox.md):** Isolate tool execution in a secure,
   containerized environment.
@@ -43,24 +43,24 @@ overview of Gemini CLI, see the [main documentation page](../index.md).
 - **[OpenSpec](./openspec.md):** An AI-native system for spec-driven development
   workflows.
 - **[System prompt override](./system-prompt.md):** Replace the built‑in system
-  instructions using `GEMINI_SYSTEM_MD`.
+  instructions using `CODEFLY_SYSTEM_MD`.
 
 ## Non-interactive mode
 
-Gemini CLI can be run in a non-interactive mode, which is useful for scripting
+Codefly CLI can be run in a non-interactive mode, which is useful for scripting
 and automation. In this mode, you pipe input to the CLI, it executes the
 command, and then it exits.
 
-The following example pipes a command to Gemini CLI from your terminal:
+The following example pipes a command to Codefly CLI from your terminal:
 
 ```bash
-echo "What is fine tuning?" | gemini
+echo "What is fine tuning?" | codefly
 ```
 
 You can also use the `--prompt` or `-p` flag:
 
 ```bash
-gemini -p "What is fine tuning?"
+codefly -p "What is fine tuning?"
 ```
 
 For comprehensive documentation on headless usage, scripting, automation, and

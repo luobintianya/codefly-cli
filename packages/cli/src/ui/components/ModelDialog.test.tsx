@@ -10,15 +10,11 @@ import { ModelDialog } from './ModelDialog.js';
 import { renderWithProviders } from '../../test-utils/render.js';
 import { waitFor } from '../../test-utils/async.js';
 import { createMockSettings } from '../../test-utils/settings.js';
-import {
-  DEFAULT_CODEFLY_MODEL,
-  DEFAULT_CODEFLY_MODEL_AUTO,
-  DEFAULT_CODEFLY_FLASH_MODEL,
-  DEFAULT_GEMINI_FLASH_LITE_MODEL,
-  PREVIEW_CODEFLY_MODEL,
-  PREVIEW_CODEFLY_MODEL_AUTO,
-} from '@codeflyai/codefly-core';
+import { DEFAULT_CODEFLY_FLASH_LITE_MODEL, DEFAULT_CODEFLY_FLASH_MODEL, DEFAULT_CODEFLY_MODEL, DEFAULT_CODEFLY_MODEL_AUTO, PREVIEW_CODEFLY_3_1_CUSTOM_TOOLS_MODEL, PREVIEW_CODEFLY_3_1_MODEL, PREVIEW_CODEFLY_FLASH_MODEL, PREVIEW_CODEFLY_MODEL, PREVIEW_CODEFLY_MODEL_AUTO } from '@codeflyai/codefly-core';
 import type { Config, ModelSlashCommandEvent } from '@codeflyai/codefly-core';
+
+// Helper for flush event queue
+const waitForUpdate = () => new Promise(resolve => setTimeout(resolve, 50));
 
 // Mock dependencies
 const mockGetDisplayString = vi.fn();
@@ -58,22 +54,25 @@ describe('<ModelDialog />', () => {
   const mockGetModel = vi.fn();
   const mockOnClose = vi.fn();
   const mockGetHasAccessToPreviewModel = vi.fn();
-  const mockGetGemini31LaunchedSync = vi.fn();
+  const mockGetCodefly31LaunchedSync = vi.fn();
+  const mockGetPreviewFeatures = vi.fn();
 
   interface MockConfig extends Partial<Config> {
     setModel: (model: string, isTemporary?: boolean) => Promise<void>;
     getModel: () => string;
     getHasAccessToPreviewModel: () => boolean;
+    getPreviewFeatures: () => boolean;
     getIdeMode: () => boolean;
-    getGemini31LaunchedSync: () => boolean;
+    getCodefly31LaunchedSync: () => boolean;
   }
 
   const mockConfig: MockConfig = {
     setModel: mockSetModel,
     getModel: mockGetModel,
     getHasAccessToPreviewModel: mockGetHasAccessToPreviewModel,
+    getPreviewFeatures: mockGetPreviewFeatures,
     getIdeMode: () => false,
-    getGemini31LaunchedSync: mockGetGemini31LaunchedSync,
+    getCodefly31LaunchedSync: mockGetCodefly31LaunchedSync,
   };
 
   beforeEach(() => {
@@ -81,19 +80,19 @@ describe('<ModelDialog />', () => {
     mockGetModel.mockReturnValue(DEFAULT_CODEFLY_MODEL_AUTO);
     mockGetPreviewFeatures.mockReturnValue(false);
     mockGetHasAccessToPreviewModel.mockReturnValue(false);
-    mockGetGemini31LaunchedSync.mockReturnValue(false);
+    mockGetCodefly31LaunchedSync.mockReturnValue(false);
 
     // Default implementation for getDisplayString
     mockGetDisplayString.mockImplementation((val: string) => {
-      if (val === 'auto-gemini-2.5') return 'Auto (Gemini 2.5)';
-      if (val === 'auto-gemini-3') return 'Auto (Gemini 3)';
+      if (val === 'auto-codefly-2.5') return 'Auto (Codefly 2.5)';
+      if (val === 'auto-codefly-3') return 'Auto (Codefly 3)';
       return val;
     });
   });
 
   const renderComponent = async (
-    configValue = mockConfig as Config,
-    authType = AuthType.LOGIN_WITH_GOOGLE,
+    configValue = mockConfig as unknown as Config,
+    authType = 'login-with-google',
   ) => {
     const settings = createMockSettings({
       security: {
@@ -112,22 +111,22 @@ describe('<ModelDialog />', () => {
   };
 
   it('renders the initial "main" view correctly', async () => {
-    const { lastFrame, unmount } = await renderComponent();
+    const { lastFrame } = await renderComponent();
     expect(lastFrame()).toContain('Select Model');
     expect(lastFrame()).toContain('Remember model for future sessions: true');
     expect(lastFrame()).toContain('Auto');
     expect(lastFrame()).toContain('Manual');
-    unmount();
   });
 
-  it('renders "main" view with preview options when preview features are enabled', () => {
+  it('renders "main" view with preview options when preview features are enabled', async () => {
     mockGetPreviewFeatures.mockReturnValue(true);
     mockGetHasAccessToPreviewModel.mockReturnValue(true); // Must have access
-    const { lastFrame } = renderComponent();
-    expect(lastFrame()).toContain('Auto (Gemini 3)');
+    const { lastFrame } = await renderComponent();
+    expect(lastFrame()).toContain('Auto (Codefly 3)');
   });
 
-    const { lastFrame, stdin, waitUntilReady, unmount } =
+  it('renders "manual" view after selecting manual option', async () => {
+    const { lastFrame, stdin, waitUntilReady } =
       await renderComponent();
 
     // Select "Manual" (index 1)
@@ -144,17 +143,17 @@ describe('<ModelDialog />', () => {
     await waitUntilReady();
 
     // Should now show manual options and headers
-    expect(lastFrame()).toContain('Google / Gemini');
+    expect(lastFrame()).toContain('Google / Codefly');
     expect(lastFrame()).toContain(DEFAULT_CODEFLY_MODEL);
     expect(lastFrame()).toContain(DEFAULT_CODEFLY_FLASH_MODEL);
-    expect(lastFrame()).toContain(DEFAULT_GEMINI_FLASH_LITE_MODEL);
+    expect(lastFrame()).toContain(DEFAULT_CODEFLY_FLASH_LITE_MODEL);
   });
 
   it('renders "manual" view with preview options when preview features are enabled', async () => {
     mockGetPreviewFeatures.mockReturnValue(true);
     mockGetHasAccessToPreviewModel.mockReturnValue(true); // Must have access
     mockGetModel.mockReturnValue(PREVIEW_CODEFLY_MODEL_AUTO);
-    const { lastFrame, stdin } = renderComponent();
+    const { lastFrame, stdin } = await renderComponent();
 
     // Select "Manual" (index 1 because Preview Auto is same as Default Auto now due to deduplication)
     stdin.write('\u001B[B'); // Arrow Down
@@ -170,7 +169,7 @@ describe('<ModelDialog />', () => {
   });
 
   it('sets model and closes when a model is selected in "main" view', async () => {
-    const { stdin, waitUntilReady, unmount } = await renderComponent();
+    const { stdin, waitUntilReady } = await renderComponent();
 
     // Select "Auto" (index 0)
     await act(async () => {
@@ -186,7 +185,7 @@ describe('<ModelDialog />', () => {
   });
 
   it('sets model and closes when a model is selected in "manual" view', async () => {
-    const { stdin, waitUntilReady, unmount } = await renderComponent();
+    const { stdin } = await renderComponent();
 
     // Navigate to Manual (index 1) and select
     stdin.write('\u001B[B');
@@ -205,7 +204,7 @@ describe('<ModelDialog />', () => {
   });
 
   it('toggles persist mode with Tab key', async () => {
-    const { lastFrame, stdin, waitUntilReady, unmount } =
+    const { lastFrame, stdin, waitUntilReady } =
       await renderComponent();
 
     expect(lastFrame()).toContain('Remember model for future sessions: true');
@@ -232,7 +231,7 @@ describe('<ModelDialog />', () => {
   });
 
   it('closes dialog on escape in "main" view', async () => {
-    const { stdin, waitUntilReady, unmount } = await renderComponent();
+    const { stdin, waitUntilReady } = await renderComponent();
 
     await act(async () => {
       stdin.write('\u001B'); // Escape
@@ -245,11 +244,10 @@ describe('<ModelDialog />', () => {
     await waitFor(() => {
       expect(mockOnClose).toHaveBeenCalled();
     });
-    unmount();
   });
 
   it('goes back to "main" view on escape in "manual" view', async () => {
-    const { lastFrame, stdin, waitUntilReady, unmount } =
+    const { lastFrame, stdin, waitUntilReady } =
       await renderComponent();
 
     // Go to manual view
@@ -275,20 +273,18 @@ describe('<ModelDialog />', () => {
       // Should be back to main view (Manual option visible)
       expect(lastFrame()).toContain('Manual');
     });
-    unmount();
   });
 
   it('shows the preferred manual model in the main view option using getDisplayString', async () => {
-    mockGetModel.mockReturnValue(DEFAULT_GEMINI_MODEL);
+    mockGetModel.mockReturnValue(DEFAULT_CODEFLY_MODEL);
     mockGetDisplayString.mockImplementation((val: string) => {
-      if (val === DEFAULT_GEMINI_MODEL) return 'My Custom Model Display';
-      if (val === 'auto-gemini-2.5') return 'Auto (Gemini 2.5)';
+      if (val === DEFAULT_CODEFLY_MODEL) return 'My Custom Model Display';
+      if (val === 'auto-codefly-2.5') return 'Auto (Codefly 2.5)';
       return val;
     });
-    const { lastFrame, unmount } = await renderComponent();
+    const { lastFrame } = await renderComponent();
 
     expect(lastFrame()).toContain('Manual (My Custom Model Display)');
-    unmount();
   });
 
   describe('Preview Models', () => {
@@ -296,23 +292,23 @@ describe('<ModelDialog />', () => {
       mockGetHasAccessToPreviewModel.mockReturnValue(true);
     });
 
-    it('should NOT show preview options if user has access but preview features are disabled', () => {
+    it('should NOT show preview options if user has access but preview features are disabled', async () => {
       mockGetHasAccessToPreviewModel.mockReturnValue(true);
       mockGetPreviewFeatures.mockReturnValue(false);
-      const { lastFrame } = renderComponent();
+      const { lastFrame } = await renderComponent();
       expect(lastFrame()).not.toContain('Auto (Preview)');
     });
 
-    it('should show preview options if user has access AND preview features are enabled', () => {
+    it('should show preview options if user has access AND preview features are enabled', async () => {
       mockGetHasAccessToPreviewModel.mockReturnValue(true);
       mockGetPreviewFeatures.mockReturnValue(true);
-      const { lastFrame } = renderComponent();
-      expect(lastFrame()).toContain('Auto (Gemini 3)');
+      const { lastFrame } = await renderComponent();
+      expect(lastFrame()).toContain('Auto (Codefly 3)');
     });
 
-    it('shows Gemini 3 models in manual view when Gemini 3.1 is NOT launched', async () => {
-      mockGetGemini31LaunchedSync.mockReturnValue(false);
-      const { lastFrame, stdin, waitUntilReady, unmount } =
+    it('shows Codefly 3 models in manual view when Codefly 3.1 is NOT launched', async () => {
+      mockGetCodefly31LaunchedSync.mockReturnValue(false);
+      const { lastFrame, stdin, waitUntilReady } =
         await renderComponent();
 
       // Go to manual view
@@ -326,15 +322,14 @@ describe('<ModelDialog />', () => {
       await waitUntilReady();
 
       const output = lastFrame();
-      expect(output).toContain(PREVIEW_GEMINI_MODEL);
-      expect(output).toContain(PREVIEW_GEMINI_FLASH_MODEL);
-      unmount();
+      expect(output).toContain(PREVIEW_CODEFLY_MODEL);
+      expect(output).toContain(PREVIEW_CODEFLY_FLASH_MODEL);
     });
 
-    it('shows Gemini 3.1 models in manual view when Gemini 3.1 IS launched', async () => {
-      mockGetGemini31LaunchedSync.mockReturnValue(true);
-      const { lastFrame, stdin, waitUntilReady, unmount } =
-        await renderComponent(mockConfig as Config, AuthType.USE_VERTEX_AI);
+    it('shows Codefly 3.1 models in manual view when Codefly 3.1 IS launched', async () => {
+      mockGetCodefly31LaunchedSync.mockReturnValue(true);
+      const { lastFrame, stdin, waitUntilReady } =
+        await renderComponent(mockConfig as unknown as Config, 'use-vertex-ai');
 
       // Go to manual view
       await act(async () => {
@@ -347,16 +342,15 @@ describe('<ModelDialog />', () => {
       await waitUntilReady();
 
       const output = lastFrame();
-      expect(output).toContain(PREVIEW_GEMINI_3_1_MODEL);
-      expect(output).toContain(PREVIEW_GEMINI_FLASH_MODEL);
-      unmount();
+      expect(output).toContain(PREVIEW_CODEFLY_3_1_MODEL);
+      expect(output).toContain(PREVIEW_CODEFLY_FLASH_MODEL);
     });
 
-    it('uses custom tools model when Gemini 3.1 IS launched and auth is Gemini API Key', async () => {
-      mockGetGemini31LaunchedSync.mockReturnValue(true);
-      const { stdin, waitUntilReady, unmount } = await renderComponent(
-        mockConfig as Config,
-        AuthType.USE_GEMINI,
+    it('uses custom tools model when Codefly 3.1 IS launched and auth is Codefly API Key', async () => {
+      mockGetCodefly31LaunchedSync.mockReturnValue(true);
+      const { stdin, waitUntilReady } = await renderComponent(
+        mockConfig as unknown as Config,
+        'use-codefly',
       );
 
       // Go to manual view
@@ -369,7 +363,7 @@ describe('<ModelDialog />', () => {
       });
       await waitUntilReady();
 
-      // Select Gemini 3.1 (first item in preview section)
+      // Select Codefly 3.1 (first item in preview section)
       await act(async () => {
         stdin.write('\r');
       });
@@ -377,11 +371,10 @@ describe('<ModelDialog />', () => {
 
       await waitFor(() => {
         expect(mockSetModel).toHaveBeenCalledWith(
-          PREVIEW_GEMINI_3_1_CUSTOM_TOOLS_MODEL,
+          PREVIEW_CODEFLY_3_1_CUSTOM_TOOLS_MODEL,
           true,
         );
       });
-      unmount();
     });
   });
 });

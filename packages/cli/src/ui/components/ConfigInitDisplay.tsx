@@ -12,7 +12,7 @@ import {
   type McpClient,
   MCPServerStatus,
 } from '@codeflyai/codefly-core';
-import { GeminiSpinner } from './GeminiRespondingSpinner.js';
+import { CodeflySpinner } from './CodeflyRespondingSpinner.js';
 import { theme } from '../semantic-colors.js';
 
 export const ConfigInitDisplay = ({
@@ -68,7 +68,7 @@ export const ConfigInitDisplay = ({
   return (
     <Box marginTop={1}>
       <Text>
-        <GeminiSpinner /> <Text color={theme.text.primary}>{message}</Text>
+        <CodeflySpinner /> <Text color={theme.text.primary}>{message}</Text>
       </Text>
     </Box>
   );

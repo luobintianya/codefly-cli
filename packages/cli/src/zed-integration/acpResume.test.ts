@@ -13,20 +13,20 @@ import {
   type Mocked,
   type Mock,
 } from 'vitest';
-import { GeminiAgent } from './zedIntegration.js';
+import { CodeflyAgent } from './zedIntegration.js';
 import * as acp from '@agentclientprotocol/sdk';
 import {
   ApprovalMode,
   AuthType,
   type Config,
   CoreToolCallStatus,
-} from '@google/gemini-cli-core';
+} from '@codeflyai/codefly-core';
 import { loadCliConfig, type CliArgs } from '../config/config.js';
 import {
   SessionSelector,
   convertSessionToHistoryFormats,
 } from '../utils/sessionUtils.js';
-import { convertSessionToClientHistory } from '@google/gemini-cli-core';
+import { convertSessionToClientHistory } from '@codeflyai/codefly-core';
 import type { LoadedSettings } from '../config/settings.js';
 
 vi.mock('../config/config.js', () => ({
@@ -43,9 +43,9 @@ vi.mock('../utils/sessionUtils.js', async (importOriginal) => {
   };
 });
 
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
   const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+    await importOriginal<typeof import('@codeflyai/codefly-core')>();
   return {
     ...actual,
     CoreToolCallStatus: {
@@ -70,12 +70,12 @@ vi.mock('@google/gemini-cli-core', async (importOriginal) => {
   };
 });
 
-describe('GeminiAgent Session Resume', () => {
+describe('CodeflyAgent Session Resume', () => {
   let mockConfig: Mocked<Config>;
   let mockSettings: Mocked<LoadedSettings>;
   let mockArgv: CliArgs;
   let mockConnection: Mocked<acp.AgentSideConnection>;
-  let agent: GeminiAgent;
+  let agent: CodeflyAgent;
 
   beforeEach(() => {
     mockConfig = {
@@ -83,7 +83,7 @@ describe('GeminiAgent Session Resume', () => {
       initialize: vi.fn().mockResolvedValue(undefined),
       getFileSystemService: vi.fn(),
       setFileSystemService: vi.fn(),
-      getGeminiClient: vi.fn().mockReturnValue({
+      getCodeflyClient: vi.fn().mockReturnValue({
         initialize: vi.fn().mockResolvedValue(undefined),
         resumeChat: vi.fn().mockResolvedValue(undefined),
         getChat: vi.fn().mockReturnValue({}),
@@ -108,7 +108,7 @@ describe('GeminiAgent Session Resume', () => {
 
     (loadCliConfig as Mock).mockResolvedValue(mockConfig);
 
-    agent = new GeminiAgent(mockConfig, mockSettings, mockArgv, mockConnection);
+    agent = new CodeflyAgent(mockConfig, mockSettings, mockArgv, mockConnection);
   });
 
   it('should advertise loadSession capability', async () => {
@@ -125,7 +125,7 @@ describe('GeminiAgent Session Resume', () => {
       messages: [
         { type: 'user', content: [{ text: 'Hello' }] },
         {
-          type: 'gemini',
+          type: 'codefly',
           content: [{ text: 'Hi there' }],
           thoughts: [{ subject: 'Thinking', description: 'about greeting' }],
           toolCalls: [
@@ -139,7 +139,7 @@ describe('GeminiAgent Session Resume', () => {
           ],
         },
         {
-          type: 'gemini',
+          type: 'codefly',
           content: [{ text: 'Trying a write' }],
           toolCalls: [
             {
@@ -206,7 +206,7 @@ describe('GeminiAgent Session Resume', () => {
     });
 
     // Verify resumeChat received the correct arguments
-    expect(mockConfig.getGeminiClient().resumeChat).toHaveBeenCalledWith(
+    expect(mockConfig.getCodeflyClient().resumeChat).toHaveBeenCalledWith(
       mockClientHistory,
       expect.objectContaining({
         conversation: sessionData,

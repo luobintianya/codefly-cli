@@ -18,7 +18,7 @@ import {
   useUIState,
   type UIState,
 } from '../contexts/UIStateContext.js';
-import { CoreToolCallStatus } from '@google/gemini-cli-core';
+import { CoreToolCallStatus } from '@codeflyai/codefly-core';
 import { type IndividualToolCallDisplay } from '../types.js';
 
 // Mock dependencies
@@ -285,7 +285,7 @@ describe('MainContent', () => {
   const defaultMockUiState = {
     history: [
       { id: 1, type: 'user', text: 'Hello' },
-      { id: 2, type: 'gemini', text: 'Hi there' },
+      { id: 2, type: 'codefly', text: 'Hi there' },
     ],
     pendingHistoryItems: [],
     mainAreaWidth: 80,

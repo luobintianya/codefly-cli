@@ -90,7 +90,7 @@ class DatabaseSchemaToolInvocation extends BaseToolInvocation<
     try {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      // eslint-disable-next-line import/no-internal-modules
+       
       mysql = await import('mysql2/promise');
     } catch (_e) {
       throw new Error(

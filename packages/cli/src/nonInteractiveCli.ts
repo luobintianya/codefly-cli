@@ -4,31 +4,29 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type {
-  Config,
-  ToolCallRequestInfo,
-  ResumedSessionData,
-  UserFeedbackPayload,
+import {
+  CodeflyEventType,
+  CoreEvent,
+  FatalInputError,
+  JsonFormatter,
+  JsonStreamEventType,
+  OutputFormat,
+  StreamJsonFormatter,
+  ToolErrorType,
+  convertSessionToClientHistory,
+  coreEvents,
+  debugLogger,
+  promptIdContext,
+  uiTelemetryService,
+  Scheduler,
+  type EditorType,
+  type Config,
+  type ToolCallRequestInfo,
+  type ResumedSessionData,
+  type UserFeedbackPayload,
 } from '@codeflyai/codefly-core';
 import { isSlashCommand } from './ui/utils/commandUtils.js';
 import type { LoadedSettings } from './config/settings.js';
-import {
-  executeToolCall,
-  CodeflyEventType,
-  FatalInputError,
-  promptIdContext,
-  OutputFormat,
-  JsonFormatter,
-  StreamJsonFormatter,
-  JsonStreamEventType,
-  uiTelemetryService,
-  debugLogger,
-  coreEvents,
-  CoreEvent,
-  createWorkingStdio,
-  // recordToolCallInteractions,
-  ToolErrorType,
-} from '@codeflyai/codefly-core';
 
 import type { Content, Part } from '@google/genai';
 import readline from 'node:readline';
@@ -69,15 +67,14 @@ export async function runNonInteractive({
       },
     });
 
-    if (process.env['GEMINI_CLI_ACTIVITY_LOG_TARGET']) {
+    if (process.env['CODEFLY_CLI_ACTIVITY_LOG_TARGET']) {
       const { setupInitialActivityLogger } = await import(
         './utils/devtoolsService.js'
       );
       await setupInitialActivityLogger(config);
     }
 
-    const { stdout: workingStdout } = createWorkingStdio();
-    const textOutput = new TextOutput(workingStdout);
+    const textOutput = new TextOutput(process.stdout);
 
     const handleUserFeedback = (payload: UserFeedbackPayload) => {
       const prefix = payload.severity.toUpperCase();
@@ -98,6 +95,13 @@ export async function runNonInteractive({
         : null;
 
     const abortController = new AbortController();
+    const scheduler = new Scheduler({
+      config,
+      messageBus: config.getMessageBus(),
+      getPreferredEditor: () =>
+        settings.merged.general?.preferredEditor as EditorType | undefined,
+      schedulerId: 'non-interactive-cli',
+    });
 
     // Track cancellation state
     let isAborting = false;
@@ -207,11 +211,11 @@ export async function runNonInteractive({
         }
       });
 
-      const geminiClient = config.getCodeflyClient();
+      const codeflyClient = config.getCodeflyClient();
 
       // Initialize chat.  Resume if resume data is passed.
       if (resumedSessionData) {
-        await geminiClient.resumeChat(
+        await codeflyClient.resumeChat(
           convertSessionToClientHistory(
             resumedSessionData.conversation.messages,
           ),
@@ -291,7 +295,7 @@ export async function runNonInteractive({
         }
         const toolCallRequests: ToolCallRequestInfo[] = [];
 
-        const responseStream = geminiClient.sendMessageStream(
+        const responseStream = codeflyClient.sendMessageStream(
           currentMessages[0]?.parts || [],
           abortController.signal,
           prompt_id,
@@ -433,11 +437,11 @@ export async function runNonInteractive({
             }
           }
 
-          // Record tool calls with full metadata before sending responses to Gemini
+          // Record tool calls with full metadata before sending responses to Codefly
           try {
             const currentModel =
-              geminiClient.getCurrentSequenceModel() ?? config.getModel();
-            geminiClient
+              codeflyClient.getCurrentSequenceModel() ?? config.getModel();
+            codeflyClient
               .getChat()
               .recordCompletedToolCalls(currentModel, completedToolCalls);
 

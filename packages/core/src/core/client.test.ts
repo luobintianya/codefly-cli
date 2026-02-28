@@ -155,7 +155,7 @@ async function fromAsync<T>(promise: AsyncGenerator<T>): Promise<readonly T[]> {
   return results;
 }
 
-describe('Gemini Client (client.ts)', () => {
+describe('Codefly Client (client.ts)', () => {
   let mockContentGenerator: ContentGenerator;
   let mockConfig: Config;
   let client: CodeflyClient;
@@ -197,7 +197,7 @@ describe('Gemini Client (client.ts)', () => {
     const contentGeneratorConfig: ContentGeneratorConfig = {
       apiKey: 'test-key',
       vertexai: false,
-      authType: AuthType.USE_GEMINI,
+      authType: AuthType.USE_CODEFLY,
     };
     mockConfig = {
       getContentGeneratorConfig: vi
@@ -1406,7 +1406,7 @@ ${JSON.stringify(
 
     it("should use the sticky model's token limit for the overflow check", async () => {
       // Arrange
-      const STICKY_MODEL = 'gemini-1.5-flash';
+      const STICKY_MODEL = 'codefly-1.5-flash';
       const STICKY_MODEL_LIMIT = 1000;
       const CONFIG_MODEL_LIMIT = 2000;
 
@@ -1839,8 +1839,8 @@ ${JSON.stringify(
           model: 'fallback-model',
           reason: 'test',
         });
-        vi.mocked(mockConfig.getModel).mockReturnValue('gemini-2.5-flash');
-        coreEvents.emitModelChanged('gemini-2.5-flash');
+        vi.mocked(mockConfig.getModel).mockReturnValue('codefly-2.5-flash');
+        coreEvents.emitModelChanged('codefly-2.5-flash');
 
         stream = client.sendMessageStream(
           [{ text: 'Continue' }],

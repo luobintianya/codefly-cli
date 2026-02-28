@@ -37,7 +37,7 @@ export class GcpMetricExporter extends MetricExporter {
     super({
       projectId,
       credentials,
-      prefix: 'custom.googleapis.com/gemini_cli',
+      prefix: 'custom.googleapis.com/codefly_cli',
     });
   }
 }
@@ -52,7 +52,7 @@ export class GcpLogExporter implements LogRecordExporter {
 
   constructor(projectId?: string, credentials?: JWTInput) {
     this.logging = new Logging({ projectId, credentials });
-    this.log = this.logging.log('gemini_cli');
+    this.log = this.logging.log('codefly_cli');
   }
 
   export(

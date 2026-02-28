@@ -43,7 +43,7 @@ import { debugLogger } from '../../utils/debugLogger.js';
  */
 export async function createBrowserAgentDefinition(
   config: Config,
-  messageBus: MessageBus,
+  messageBus: MessageBus | undefined,
   printOutput?: (msg: string) => void,
 ): Promise<{
   definition: LocalAgentDefinition<typeof BrowserTaskResultSchema>;

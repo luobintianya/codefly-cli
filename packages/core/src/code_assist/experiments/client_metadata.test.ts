@@ -105,10 +105,10 @@ describe('client_metadata', () => {
       expect(metadata.ideName).toBe('IDE_UNSPECIFIED');
     });
 
-    it('should always return the pluginType as GEMINI', async () => {
+    it('should always return the pluginType as CODEFLY', async () => {
       const { getClientMetadata } = await import('./client_metadata.js');
       const metadata = await getClientMetadata();
-      expect(metadata.pluginType).toBe('GEMINI');
+      expect(metadata.pluginType).toBe('CODEFLY');
     });
   });
 });

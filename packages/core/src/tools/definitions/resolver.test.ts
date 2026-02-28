@@ -66,7 +66,7 @@ describe('resolveToolDeclaration', () => {
   });
 
   it('should return the base definition when a modelId is provided but no overrides exist', () => {
-    const result = resolveToolDeclaration(mockDefinition, 'gemini-1.5-pro');
+    const result = resolveToolDeclaration(mockDefinition, 'codefly-1.5-pro');
     expect(result).toEqual(mockDefinition.base);
   });
 });

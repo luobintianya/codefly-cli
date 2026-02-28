@@ -1,6 +1,6 @@
 # Headless mode reference
 
-Headless mode provides a programmatic interface to Gemini CLI, returning
+Headless mode provides a programmatic interface to Codefly CLI, returning
 structured text or JSON output without an interactive terminal UI.
 
 ## Technical reference

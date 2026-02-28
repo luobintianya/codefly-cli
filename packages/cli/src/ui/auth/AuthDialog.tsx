@@ -35,9 +35,9 @@ export function AuthDialog({
       key: AuthType.OPENAI,
     },
     {
-      label: 'Use Gemini API Key',
-      value: AuthType.USE_GEMINI,
-      key: AuthType.USE_GEMINI,
+      label: 'Use Codefly API Key',
+      value: AuthType.USE_CODEFLY,
+      key: AuthType.USE_CODEFLY,
     },
     {
       label: 'Login with Google',
@@ -57,7 +57,7 @@ export function AuthDialog({
             key: AuthType.COMPUTE_ADC,
           },
         ]
-      : process.env['GEMINI_CLI_USE_COMPUTE_ADC'] === 'true'
+      : process.env['CODEFLY_CLI_USE_COMPUTE_ADC'] === 'true'
         ? [
             {
               label: 'Use metadata server application default credentials',
@@ -75,7 +75,7 @@ export function AuthDialog({
   }
 
   let defaultAuthType = null;
-  const defaultAuthTypeEnv = process.env['GEMINI_DEFAULT_AUTH_TYPE'];
+  const defaultAuthTypeEnv = process.env['CODEFLY_DEFAULT_AUTH_TYPE'];
   if (
     defaultAuthTypeEnv &&
     // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
@@ -86,7 +86,7 @@ export function AuthDialog({
   }
 
   // Only use the explicitly saved selectedType or admin-configured default.
-  // Do NOT fall back to env vars (GEMINI_API_KEY, OPENAI_API_KEY, etc.) so
+  // Do NOT fall back to env vars (CODEFLY_API_KEY, OPENAI_API_KEY, etc.) so
   // that the dialog always reflects the user's last explicit choice.
   const preferredAuthType =
     settings.merged.security.auth.selectedType || defaultAuthType;
@@ -179,7 +179,7 @@ export function AuthDialog({
         </Box>
         <Box marginTop={1}>
           <Text color={theme.text.link}>
-            {'https://geminicli.com/docs/resources/tos-privacy/'}
+            {'https://codeflycli.com/docs/resources/tos-privacy/'}
           </Text>
         </Box>
       </Box>

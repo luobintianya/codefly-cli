@@ -107,8 +107,8 @@ export function useHistory({
             });
             break;
           case 'user':
-          case 'gemini':
-          case 'gemini_content':
+          case 'codefly':
+          case 'codefly_content':
             // Core conversation recording handled by CodeflyChat.
             break;
           default:

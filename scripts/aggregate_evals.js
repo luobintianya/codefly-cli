@@ -42,7 +42,7 @@ function getModelFromPath(reportPath) {
   if (matchNew) return matchNew[1];
 
   const matchOld = artifactDir.match(/^eval-logs-(\d+)$/);
-  if (matchOld) return 'gemini-2.5-pro'; // Legacy default
+  if (matchOld) return 'codefly-2.5-pro'; // Legacy default
 
   return 'unknown';
 }
@@ -110,7 +110,7 @@ function fetchHistoricalData() {
     // Fetch artifacts for each run
     for (const run of runs) {
       const tmpDir = fs.mkdtempSync(
-        path.join(os.tmpdir(), `gemini-evals-${run.databaseId}-`),
+        path.join(os.tmpdir(), `codefly-evals-${run.databaseId}-`),
       );
       try {
         // Download report.json files.
@@ -147,7 +147,7 @@ function fetchHistoricalData() {
 function generateMarkdown(currentStatsByModel, history) {
   console.log('### Evals Nightly Summary\n');
   console.log(
-    'See [evals/README.md](https://github.com/google-gemini/gemini-cli/tree/main/evals) for more details.\n',
+    'See [evals/README.md](https://github.com/google-codefly/codefly-cli/tree/main/evals) for more details.\n',
   );
 
   // Reverse history to show oldest first
@@ -201,7 +201,7 @@ function generateMarkdown(currentStatsByModel, history) {
     }
 
     for (const name of Array.from(allTestNames).sort()) {
-      const searchUrl = `https://github.com/search?q=repo%3Agoogle-gemini%2Fgemini-cli%20%22${encodeURIComponent(name)}%22&type=code`;
+      const searchUrl = `https://github.com/search?q=repo%3Agoogle-codefly%2Fcodefly-cli%20%22${encodeURIComponent(name)}%22&type=code`;
       let row = `| [${name}](${searchUrl}) |`;
 
       // History

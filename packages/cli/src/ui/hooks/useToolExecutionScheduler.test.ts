@@ -112,6 +112,7 @@ describe('useToolExecutionScheduler', () => {
     act(() => {
       void mockMessageBus.publish({
         type: MessageBusType.TOOL_CALLS_UPDATE,
+        schedulerId: 'test-scheduler',
         toolCalls: [mockToolCall],
       } as ToolCallsUpdateMessage);
     });
@@ -123,7 +124,7 @@ describe('useToolExecutionScheduler', () => {
       request: { callId: 'call-1', name: 'test_tool' },
       status: 'executing', // Core status
       liveOutput: 'Loading...',
-      responseSubmittedToGemini: false,
+      responseSubmittedToCodefly: false,
     });
   });
 
@@ -156,6 +157,7 @@ describe('useToolExecutionScheduler', () => {
     act(() => {
       void mockMessageBus.publish({
         type: MessageBusType.TOOL_CALLS_UPDATE,
+        schedulerId: 'test-scheduler',
         toolCalls: [mockToolCall],
       } as ToolCallsUpdateMessage);
     });
@@ -212,6 +214,7 @@ describe('useToolExecutionScheduler', () => {
     act(() => {
       void mockMessageBus.publish({
         type: MessageBusType.TOOL_CALLS_UPDATE,
+        schedulerId: 'test-scheduler',
         toolCalls: [mockToolCall],
       } as ToolCallsUpdateMessage);
     });
@@ -241,7 +244,7 @@ describe('useToolExecutionScheduler', () => {
     });
   });
 
-  it('preserves responseSubmittedToGemini flag across updates', () => {
+  it('preserves responseSubmittedToCodefly flag across updates', () => {
     const { result } = renderHook(() =>
       useToolExecutionScheduler(
         vi.fn().mockResolvedValue(undefined),
@@ -274,6 +277,7 @@ describe('useToolExecutionScheduler', () => {
     act(() => {
       void mockMessageBus.publish({
         type: MessageBusType.TOOL_CALLS_UPDATE,
+        schedulerId: 'test-scheduler',
         toolCalls: [mockToolCall],
       } as ToolCallsUpdateMessage);
     });
@@ -284,17 +288,18 @@ describe('useToolExecutionScheduler', () => {
       markAsSubmitted(['call-1']);
     });
 
-    expect(result.current[0][0].responseSubmittedToGemini).toBe(true);
+    expect(result.current[0][0].responseSubmittedToCodefly).toBe(true);
 
     // 3. Receive another update (should preserve the true flag)
     act(() => {
       void mockMessageBus.publish({
         type: MessageBusType.TOOL_CALLS_UPDATE,
+        schedulerId: 'test-scheduler',
         toolCalls: [mockToolCall],
       } as ToolCallsUpdateMessage);
     });
 
-    expect(result.current[0][0].responseSubmittedToGemini).toBe(true);
+    expect(result.current[0][0].responseSubmittedToCodefly).toBe(true);
   });
 
   it('updates lastToolOutputTime when tools are executing', () => {
@@ -313,6 +318,7 @@ describe('useToolExecutionScheduler', () => {
     act(() => {
       void mockMessageBus.publish({
         type: MessageBusType.TOOL_CALLS_UPDATE,
+        schedulerId: 'test-scheduler',
         toolCalls: [
           {
             status: 'executing' as const,

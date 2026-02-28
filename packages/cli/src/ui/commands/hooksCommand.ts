@@ -12,7 +12,9 @@ import type {
   MessageActionReturn,
 } from '@codeflyai/codefly-core';
 import { getErrorMessage } from '@codeflyai/codefly-core';
-import { SettingScope } from '../../config/settings.js';
+import { SettingScope, isLoadableSettingScope } from '../../config/settings.js';
+import { enableHook, disableHook } from '../../utils/hookSettings.js';
+import { renderHookActionFeedback } from '../../utils/hookUtils.js';
 
 /**
  * Display a formatted list of hooks with their status

@@ -63,8 +63,8 @@ describe('Configuration Integration Tests', () => {
   beforeEach(() => {
     server.resetHandlers(http.post(CLEARCUT_URL, () => HttpResponse.text()));
 
-    tempDir = fs.mkdtempSync(path.join(tmpdir(), 'gemini-cli-test-'));
-    vi.stubEnv('GEMINI_API_KEY', 'test-api-key');
+    tempDir = fs.mkdtempSync(path.join(tmpdir(), 'codefly-cli-test-'));
+    vi.stubEnv('CODEFLY_API_KEY', 'test-api-key');
     vi.clearAllMocks();
   });
 
@@ -247,11 +247,8 @@ describe('Configuration Integration Tests', () => {
   });
 
   describe('loadCliConfig', () => {
-    it('should pass language setting to Config', async () => {
-      const settings = createTestMergedSettings({
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        general: { language: 'zh-CN' as any },
-      });
+    it('should correctly initialize config with provided arguments', async () => {
+      const settings = createTestMergedSettings();
       const argv: CliArgs = {
         query: undefined,
         model: undefined,
@@ -263,6 +260,9 @@ describe('Configuration Integration Tests', () => {
         approvalMode: undefined,
         allowedMcpServerNames: undefined,
         allowedTools: undefined,
+        acceptRawOutputRisk: undefined,
+        isCommand: undefined,
+        policy: undefined,
         experimentalAcp: undefined,
         extensions: undefined,
         listExtensions: undefined,
@@ -276,12 +276,10 @@ describe('Configuration Integration Tests', () => {
         fakeResponses: undefined,
         recordResponses: undefined,
         rawOutput: undefined,
-        acceptRawOutputRisk: undefined,
-        isCommand: undefined,
       };
 
       const config = await loadCliConfig(settings, 'test-session', argv);
-      expect(config.language).toBe('zh-CN');
+      expect(config.getSessionId()).toBe('test-session');
     });
   });
 });

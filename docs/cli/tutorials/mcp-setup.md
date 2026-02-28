@@ -1,12 +1,12 @@
 # Set up an MCP server
 
-Connect Gemini CLI to your external databases and services. In this guide,
-you'll learn how to extend Gemini CLI's capabilities by installing the GitHub
+Connect Codefly CLI to your external databases and services. In this guide,
+you'll learn how to extend Codefly CLI's capabilities by installing the GitHub
 MCP server and using it to manage your repositories.
 
 ## Prerequisites
 
-- Gemini CLI installed.
+- Codefly CLI installed.
 - **Docker:** Required for this specific example (many MCP servers run as Docker
   containers).
 - **GitHub token:** A Personal Access Token (PAT) with repo permissions.
@@ -24,13 +24,13 @@ Most MCP servers require authentication. For GitHub, you need a PAT.
 export GITHUB_PERSONAL_ACCESS_TOKEN="github_pat_..."
 ```
 
-## How to configure Gemini CLI
+## How to configure Codefly CLI
 
-You tell Gemini about new servers by editing your `settings.json`.
+You tell Codefly about new servers by editing your `settings.json`.
 
-1.  Open `~/.gemini/settings.json` (or the project-specific
-    `.gemini/settings.json`).
-2.  Add the `mcpServers` block. This tells Gemini: "Run this docker container
+1.  Open `~/.codefly/settings.json` (or the project-specific
+    `.codefly/settings.json`).
+2.  Add the `mcpServers` block. This tells Codefly: "Run this docker container
     and talk to it."
 
 ```json
@@ -60,7 +60,7 @@ You tell Gemini about new servers by editing your `settings.json`.
 
 ## How to verify the connection
 
-Restart Gemini CLI. It will automatically try to start the defined servers.
+Restart Codefly CLI. It will automatically try to start the defined servers.
 
 **Command:** `/mcp list`
 
@@ -76,7 +76,7 @@ don't need to learn special commands; just ask in natural language.
 
 ### Scenario: Listing pull requests
 
-**Prompt:** `List the open PRs in the google/gemini-cli repository.`
+**Prompt:** `List the open PRs in the google/codefly-cli repository.`
 
 The agent will:
 

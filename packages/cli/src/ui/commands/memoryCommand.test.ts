@@ -76,19 +76,19 @@ describe('memoryCommand', () => {
   describe('/memory show', () => {
     let showCommand: SlashCommand;
     let mockGetUserMemory: Mock;
-    let mockGetGeminiMdFileCount: Mock;
+    let mockGetCodeflyMdFileCount: Mock;
 
     beforeEach(() => {
       showCommand = getSubCommand('show');
 
       mockGetUserMemory = vi.fn();
-      mockGetGeminiMdFileCount = vi.fn();
+      mockGetCodeflyMdFileCount = vi.fn();
 
       vi.mocked(showMemory).mockImplementation((config) => {
         const memoryContent = config.getUserMemory() || '';
         const fileCount = config.getCodeflyMdFileCount() || 0;
         let content;
-        if (memoryContent.length > 0) {
+        if (typeof memoryContent === 'string' && memoryContent.length > 0) {
           content = `Current memory content from ${fileCount} file(s):\n\n---\n${memoryContent}\n---`;
         } else {
           content = 'Memory is currently empty.';
@@ -104,7 +104,7 @@ describe('memoryCommand', () => {
         services: {
           config: {
             getUserMemory: mockGetUserMemory,
-            getCodeflyMdFileCount: mockGetGeminiMdFileCount,
+            getCodeflyMdFileCount: mockGetCodeflyMdFileCount,
             getExtensionLoader: () => new SimpleExtensionLoader([]),
           },
         },
@@ -115,7 +115,7 @@ describe('memoryCommand', () => {
       if (!showCommand.action) throw new Error('Command has no action');
 
       mockGetUserMemory.mockReturnValue('');
-      mockGetGeminiMdFileCount.mockReturnValue(0);
+      mockGetCodeflyMdFileCount.mockReturnValue(0);
 
       await showCommand.action(mockContext, '');
 
@@ -134,7 +134,7 @@ describe('memoryCommand', () => {
       const memoryContent = 'This is a test memory.';
 
       mockGetUserMemory.mockReturnValue(memoryContent);
-      mockGetGeminiMdFileCount.mockReturnValue(1);
+      mockGetCodeflyMdFileCount.mockReturnValue(1);
 
       await showCommand.action(mockContext, '');
 
@@ -208,21 +208,21 @@ describe('memoryCommand', () => {
   describe('/memory refresh', () => {
     let refreshCommand: SlashCommand;
     let mockSetUserMemory: Mock;
-    let mockSetGeminiMdFileCount: Mock;
-    let mockSetGeminiMdFilePaths: Mock;
+    let mockSetCodeflyMdFileCount: Mock;
+    let mockSetCodeflyMdFilePaths: Mock;
     let mockContextManagerRefresh: Mock;
 
     beforeEach(() => {
       refreshCommand = getSubCommand('refresh');
       mockSetUserMemory = vi.fn();
-      mockSetGeminiMdFileCount = vi.fn();
-      mockSetGeminiMdFilePaths = vi.fn();
+      mockSetCodeflyMdFileCount = vi.fn();
+      mockSetCodeflyMdFilePaths = vi.fn();
       mockContextManagerRefresh = vi.fn().mockResolvedValue(undefined);
 
       const mockConfig = {
         setUserMemory: mockSetUserMemory,
-        setCodeflyMdFileCount: mockSetGeminiMdFileCount,
-        setCodeflyMdFilePaths: mockSetGeminiMdFilePaths,
+        setCodeflyMdFileCount: mockSetCodeflyMdFileCount,
+        setCodeflyMdFilePaths: mockSetCodeflyMdFilePaths,
         getWorkingDir: () => '/test/dir',
         getDebugMode: () => false,
         getFileService: () => ({}) as FileDiscoveryService,
@@ -354,8 +354,8 @@ describe('memoryCommand', () => {
 
       expect(mockRefreshMemory).toHaveBeenCalledOnce();
       expect(mockSetUserMemory).not.toHaveBeenCalled();
-      expect(mockSetGeminiMdFileCount).not.toHaveBeenCalled();
-      expect(mockSetGeminiMdFilePaths).not.toHaveBeenCalled();
+      expect(mockSetCodeflyMdFileCount).not.toHaveBeenCalled();
+      expect(mockSetCodeflyMdFilePaths).not.toHaveBeenCalled();
 
       expect(mockContext.ui.addItem).toHaveBeenCalledWith(
         {
@@ -391,11 +391,11 @@ describe('memoryCommand', () => {
 
   describe('/memory list', () => {
     let listCommand: SlashCommand;
-    let mockGetGeminiMdfilePaths: Mock;
+    let mockGetCodeflyMdfilePaths: Mock;
 
     beforeEach(() => {
       listCommand = getSubCommand('list');
-      mockGetGeminiMdfilePaths = vi.fn();
+      mockGetCodeflyMdfilePaths = vi.fn();
       vi.mocked(listMemoryFiles).mockImplementation((config) => {
         const filePaths = config.getCodeflyMdFilePaths() || [];
         const fileCount = filePaths.length;
@@ -414,7 +414,7 @@ describe('memoryCommand', () => {
       mockContext = createMockCommandContext({
         services: {
           config: {
-            getCodeflyMdFilePaths: mockGetGeminiMdfilePaths,
+            getCodeflyMdFilePaths: mockGetCodeflyMdfilePaths,
           },
         },
       });
@@ -423,7 +423,7 @@ describe('memoryCommand', () => {
     it('should display a message if no CODEFLY.md files are found', async () => {
       if (!listCommand.action) throw new Error('Command has no action');
 
-      mockGetGeminiMdfilePaths.mockReturnValue([]);
+      mockGetCodeflyMdfilePaths.mockReturnValue([]);
 
       await listCommand.action(mockContext, '');
 
@@ -440,7 +440,7 @@ describe('memoryCommand', () => {
       if (!listCommand.action) throw new Error('Command has no action');
 
       const filePaths = ['/path/one/CODEFLY.md', '/path/two/CODEFLY.md'];
-      mockGetGeminiMdfilePaths.mockReturnValue(filePaths);
+      mockGetCodeflyMdfilePaths.mockReturnValue(filePaths);
 
       await listCommand.action(mockContext, '');
 

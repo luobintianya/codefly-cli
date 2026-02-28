@@ -8,11 +8,11 @@ export const SHELL_COMMAND_NAME = 'Shell Command';
 
 export const SHELL_NAME = 'Shell';
 
-// Limit Gemini messages to a very high number of lines to mitigate performance
-// issues in the worst case if we somehow get an enormous response from Gemini.
+// Limit Codefly messages to a very high number of lines to mitigate performance
+// issues in the worst case if we somehow get an enormous response from Codefly.
 // This threshold is arbitrary but should be high enough to never impact normal
 // usage.
-export const MAX_GEMINI_MESSAGE_LINES = 65536;
+export const MAX_CODEFLY_MESSAGE_LINES = 65536;
 
 export const SHELL_FOCUS_HINT_DELAY_MS = 5000;
 
@@ -40,7 +40,7 @@ export const DEFAULT_INPUT_BACKGROUND_OPACITY = 0.24;
 export const DEFAULT_BORDER_OPACITY = 0.4;
 
 export const KEYBOARD_SHORTCUTS_URL =
-  'https://geminicli.com/docs/cli/keyboard-shortcuts/';
+  'https://codeflycli.com/docs/cli/keyboard-shortcuts/';
 export const LRU_BUFFER_PERF_CACHE_LIMIT = 20000;
 
 // Max lines to show for active shell output when not focused

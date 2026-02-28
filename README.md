@@ -17,7 +17,7 @@ Learn all about Codefly in our [documentation](https://codefly.dev/docs/).
 
 - **🎯 Free tier**: 60 requests/min and 1,000 requests/day with personal Google
   account.
-- **🧠 Powerful AI Models**: Access to 1M token context window with Gemini 2.5
+- **🧠 Powerful AI Models**: Access to 1M token context window with Codefly 2.5
   Pro.
 - **🔧 Built-in tools**: Google Search grounding, file operations, shell
   commands, web fetching, database schema inspection, and API schema analysis.
@@ -29,7 +29,7 @@ Learn all about Codefly in our [documentation](https://codefly.dev/docs/).
 ## 📦 Installation
 
 See
-[Gemini CLI installation, execution, and releases](./docs/get-started/installation.md)
+[Codefly CLI installation, execution, and releases](./docs/get-started/installation.md)
 for recommended system specifications and a detailed installation guide.
 
 ### Quick Install
@@ -106,7 +106,7 @@ npm install -g @codeflyai/codefly@nightly
 ### Advanced Capabilities
 
 - Ground your queries with built-in
-  [Google Search](https://ai.google.dev/gemini-api/docs/grounding) for real-time
+  [Google Search](https://ai.google.dev/codefly-api/docs/grounding) for real-time
   information
 - Conversation checkpointing to save and resume complex sessions
 - Custom context files (CODEFLY.md) to tailor behavior for your projects
@@ -131,15 +131,15 @@ Choose the authentication method that best fits your needs:
 
 ### Option 1: Login with Google (OAuth login using your Google Account)
 
-**✨ Best for:** Individual developers as well as anyone who has a Gemini Code
+**✨ Best for:** Individual developers as well as anyone who has a Codefly Code
 Assist License. (see
-[quota limits and terms of service](https://cloud.google.com/gemini/docs/quotas)
+[quota limits and terms of service](https://cloud.google.com/codefly/docs/quotas)
 for details)
 
 **Benefits:**
 
 - **Free tier**: 60 requests/min and 1,000 requests/day
-- **Gemini 2.5 Pro** with 1M token context window
+- **Codefly 2.5 Pro** with 1M token context window
 - **No API key management** - just sign in with your Google account
 - **Automatic updates** to latest models
 
@@ -157,19 +157,19 @@ export GOOGLE_CLOUD_PROJECT="YOUR_PROJECT_ID"
 codefly
 ```
 
-### Option 2: Gemini API Key
+### Option 2: Codefly API Key
 
 **✨ Best for:** Developers who need specific model control or paid tier access
 
 **Benefits:**
 
-- **Free tier**: 100 requests/day with Gemini 2.5 Pro
-- **Model selection**: Choose specific Gemini models
+- **Free tier**: 100 requests/day with Codefly 2.5 Pro
+- **Model selection**: Choose specific Codefly models
 - **Usage-based billing**: Upgrade for higher limits when needed
 
 ```bash
 # Get your key from https://aistudio.google.com/apikey
-export GEMINI_API_KEY="YOUR_API_KEY"
+export CODEFLY_API_KEY="YOUR_API_KEY"
 codefly
 ```
 
@@ -212,7 +212,7 @@ codefly --include-directories ../lib,../docs
 #### Use specific model
 
 ```bash
-codefly -m gemini-2.5-flash
+codefly -m codefly-2.5-flash
 ```
 
 #### Non-interactive mode for scripts
@@ -296,9 +296,9 @@ codefly
 
 ### Advanced Topics
 
-- [**Headless Mode (Scripting)**](./docs/cli/headless.md) - Use Gemini CLI in
+- [**Headless Mode (Scripting)**](./docs/cli/headless.md) - Use Codefly CLI in
   automated workflows.
-- [**Architecture Overview**](./docs/architecture.md) - How Gemini CLI works.
+- [**Architecture Overview**](./docs/architecture.md) - How Codefly CLI works.
 - [**IDE Integration**](./docs/ide-integration/index.md) - VS Code companion.
 - [**Sandboxing & Security**](./docs/cli/sandbox.md) - Safe execution
   environments.

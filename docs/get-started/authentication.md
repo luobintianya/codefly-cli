@@ -1,10 +1,10 @@
-# Gemini CLI authentication setup
+# Codefly CLI authentication setup
 
-To use Gemini CLI, you'll need to authenticate with Google. This guide helps you
+To use Codefly CLI, you'll need to authenticate with Google. This guide helps you
 quickly find the best way to sign in based on your account type and how you're
 using the CLI.
 
-For most users, we recommend starting Gemini CLI and logging in with your
+For most users, we recommend starting Codefly CLI and logging in with your
 personal Google account.
 
 ## Choose your authentication method <a id="auth-methods"></a>
@@ -15,16 +15,16 @@ Select the authentication method that matches your situation in the table below:
 | :--------------------------------------------------------------------- | :--------------------------------------------------------------- | :---------------------------------------------------------- |
 | Individual Google accounts                                             | [Login with Google](#login-google)                               | No, with exceptions                                         |
 | Organization users with a company, school, or Google Workspace account | [Login with Google](#login-google)                               | [Yes](#set-gcp)                                             |
-| AI Studio user with a Gemini API key                                   | [Use Gemini API Key](#gemini-api)                                | No                                                          |
+| AI Studio user with a Codefly API key                                   | [Use Codefly API Key](#codefly-api)                                | No                                                          |
 | Google Cloud Vertex AI user                                            | [Vertex AI](#vertex-ai)                                          | [Yes](#set-gcp)                                             |
-| [Headless mode](#headless)                                             | [Use Gemini API Key](#gemini-api) or<br> [Vertex AI](#vertex-ai) | No (for Gemini API Key)<br> [Yes](#set-gcp) (for Vertex AI) |
+| [Headless mode](#headless)                                             | [Use Codefly API Key](#codefly-api) or<br> [Vertex AI](#vertex-ai) | No (for Codefly API Key)<br> [Yes](#set-gcp) (for Vertex AI) |
 
 ### What is my Google account type?
 
 - **Individual Google accounts:** Includes all
   [free tier accounts](../resources/quota-and-pricing.md#free-usage) such as
-  Gemini Code Assist for individuals, as well as paid subscriptions for
-  [Google AI Pro and Ultra](https://gemini.google/subscriptions/).
+  Codefly Code Assist for individuals, as well as paid subscriptions for
+  [Google AI Pro and Ultra](https://codefly.google/subscriptions/).
 
 - **Organization accounts:** Accounts using paid licenses through an
   organization such as a company, school, or
@@ -34,23 +34,23 @@ Select the authentication method that matches your situation in the table below:
 
 ## (Recommended) Login with Google <a id="login-google"></a>
 
-If you run Gemini CLI on your local machine, the simplest authentication method
+If you run Codefly CLI on your local machine, the simplest authentication method
 is logging in with your Google account. This method requires a web browser on a
-machine that can communicate with the terminal running Gemini CLI (e.g., your
+machine that can communicate with the terminal running Codefly CLI (e.g., your
 local machine).
 
 > **Important:** If you are a **Google AI Pro** or **Google AI Ultra**
 > subscriber, use the Google account associated with your subscription.
 
-To authenticate and use Gemini CLI:
+To authenticate and use Codefly CLI:
 
 1. Start the CLI:
 
    ```bash
-   gemini
+   codefly
    ```
 
-2. Select **Login with Google**. Gemini CLI opens a login prompt using your web
+2. Select **Login with Google**. Codefly CLI opens a login prompt using your web
    browser. Follow the on-screen instructions. Your credentials will be cached
    locally for future sessions.
 
@@ -61,26 +61,26 @@ project for authentication. However, you'll need to set a Google Cloud project
 when you meet at least one of the following conditions:
 
 - You are using a company, school, or Google Workspace account.
-- You are using a Gemini Code Assist license from the Google Developer Program.
-- You are using a license from a Gemini Code Assist subscription.
+- You are using a Codefly Code Assist license from the Google Developer Program.
+- You are using a license from a Codefly Code Assist subscription.
 
 For instructions, see [Set your Google Cloud Project](#set-gcp).
 
-## Use Gemini API key <a id="gemini-api"></a>
+## Use Codefly API key <a id="codefly-api"></a>
 
 If you don't want to authenticate using your Google account, you can use an API
 key from Google AI Studio.
 
-To authenticate and use Gemini CLI with a Gemini API key:
+To authenticate and use Codefly CLI with a Codefly API key:
 
 1. Obtain your API key from
    [Google AI Studio](https://aistudio.google.com/app/apikey).
 
-2. Set the `GEMINI_API_KEY` environment variable to your key. For example:
+2. Set the `CODEFLY_API_KEY` environment variable to your key. For example:
 
    ```bash
-   # Replace YOUR_GEMINI_API_KEY with the key from AI Studio
-   export GEMINI_API_KEY="YOUR_GEMINI_API_KEY"
+   # Replace YOUR_CODEFLY_API_KEY with the key from AI Studio
+   export CODEFLY_API_KEY="YOUR_CODEFLY_API_KEY"
    ```
 
    To make this setting persistent, see
@@ -89,18 +89,18 @@ To authenticate and use Gemini CLI with a Gemini API key:
 3. Start the CLI:
 
    ```bash
-   gemini
+   codefly
    ```
 
-4. Select **Use Gemini API key**.
+4. Select **Use Codefly API key**.
 
-> **Warning:** Treat API keys, especially for services like Gemini, as sensitive
+> **Warning:** Treat API keys, especially for services like Codefly, as sensitive
 > credentials. Protect them to prevent unauthorized access and potential misuse
 > of the service under your account.
 
 ## Use Vertex AI <a id="vertex-ai"></a>
 
-To use Gemini CLI with Google Cloud's Vertex AI platform, choose from the
+To use Codefly CLI with Google Cloud's Vertex AI platform, choose from the
 following authentication options:
 
 - A. Application Default Credentials (ADC) using `gcloud`.
@@ -127,11 +127,11 @@ To make any Vertex AI environment variable settings persistent, see
 
 Consider this authentication method if you have Google Cloud CLI installed.
 
-> **Note:** If you have previously set `GOOGLE_API_KEY` or `GEMINI_API_KEY`, you
+> **Note:** If you have previously set `GOOGLE_API_KEY` or `CODEFLY_API_KEY`, you
 > must unset them to use ADC:
 >
 > ```bash
-> unset GOOGLE_API_KEY GEMINI_API_KEY
+> unset GOOGLE_API_KEY CODEFLY_API_KEY
 > ```
 
 1. Verify you have a Google Cloud project and Vertex AI API is enabled.
@@ -147,7 +147,7 @@ Consider this authentication method if you have Google Cloud CLI installed.
 4. Start the CLI:
 
    ```bash
-   gemini
+   codefly
    ```
 
 5. Select **Vertex AI**.
@@ -157,11 +157,11 @@ Consider this authentication method if you have Google Cloud CLI installed.
 Consider this method of authentication in non-interactive environments, CI/CD
 pipelines, or if your organization restricts user-based ADC or API key creation.
 
-> **Note:** If you have previously set `GOOGLE_API_KEY` or `GEMINI_API_KEY`, you
+> **Note:** If you have previously set `GOOGLE_API_KEY` or `CODEFLY_API_KEY`, you
 > must unset them:
 >
 > ```bash
-> unset GOOGLE_API_KEY GEMINI_API_KEY
+> unset GOOGLE_API_KEY CODEFLY_API_KEY
 > ```
 
 1.  [Create a service account and key](https://cloud.google.com/iam/docs/keys-create-delete)
@@ -181,7 +181,7 @@ pipelines, or if your organization restricts user-based ADC or API key creation.
 4.  Start the CLI:
 
     ```bash
-    gemini
+    codefly
     ```
 
 5.  Select **Vertex AI**.
@@ -210,7 +210,7 @@ pipelines, or if your organization restricts user-based ADC or API key creation.
 4.  Start the CLI:
 
     ```bash
-    gemini
+    codefly
     ```
 
 5.  Select **Vertex AI**.
@@ -221,24 +221,24 @@ pipelines, or if your organization restricts user-based ADC or API key creation.
 > Google Cloud project for authentication.
 
 When you sign in using your Google account, you may need to configure a Google
-Cloud project for Gemini CLI to use. This applies when you meet at least one of
+Cloud project for Codefly CLI to use. This applies when you meet at least one of
 the following conditions:
 
 - You are using a Company, School, or Google Workspace account.
-- You are using a Gemini Code Assist license from the Google Developer Program.
-- You are using a license from a Gemini Code Assist subscription.
+- You are using a Codefly Code Assist license from the Google Developer Program.
+- You are using a license from a Codefly Code Assist subscription.
 
-To configure Gemini CLI to use a Google Cloud project, do the following:
+To configure Codefly CLI to use a Google Cloud project, do the following:
 
 1.  [Find your Google Cloud Project ID](https://support.google.com/googleapi/answer/7014113).
 
-2.  [Enable the Gemini for Cloud API](https://cloud.google.com/gemini/docs/discover/set-up-gemini#enable-api).
+2.  [Enable the Codefly for Cloud API](https://cloud.google.com/codefly/docs/discover/set-up-codefly#enable-api).
 
-3.  [Configure necessary IAM access permissions](https://cloud.google.com/gemini/docs/discover/set-up-gemini#grant-iam).
+3.  [Configure necessary IAM access permissions](https://cloud.google.com/codefly/docs/discover/set-up-codefly#grant-iam).
 
 4.  Configure your environment variables. Set either the `GOOGLE_CLOUD_PROJECT`
-    or `GOOGLE_CLOUD_PROJECT_ID` variable to the project ID to use with Gemini
-    CLI. Gemini CLI checks for `GOOGLE_CLOUD_PROJECT` first, then falls back to
+    or `GOOGLE_CLOUD_PROJECT_ID` variable to the project ID to use with Codefly
+    CLI. Codefly CLI checks for `GOOGLE_CLOUD_PROJECT` first, then falls back to
     `GOOGLE_CLOUD_PROJECT_ID`.
 
     For example, to set the `GOOGLE_CLOUD_PROJECT_ID` variable:
@@ -272,7 +272,7 @@ persist them with the following methods:
     > shell can read them.
 
 2.  **Use a `.env` file:** Create a `.codefly/.env` file in your project
-    directory or home directory. Gemini CLI automatically loads variables from
+    directory or home directory. Codefly CLI automatically loads variables from
     the first `.env` file it finds, searching up from the current directory,
     then in `~/.codefly/.env` or `~/.env`. `.codefly/.env` is recommended.
 
@@ -282,7 +282,7 @@ persist them with the following methods:
     mkdir -p ~/.codefly
     cat >> ~/.codefly/.env <<'EOF'
     GOOGLE_CLOUD_PROJECT="your-project-id"
-    # Add other variables like GEMINI_API_KEY as needed
+    # Add other variables like CODEFLY_API_KEY as needed
     EOF
     ```
 
@@ -290,12 +290,12 @@ Variables are loaded from the first file found, not merged.
 
 ## Running in Google Cloud environments <a id="cloud-env"></a>
 
-When running Gemini CLI within certain Google Cloud environments, authentication
+When running Codefly CLI within certain Google Cloud environments, authentication
 is automatic.
 
-In a Google Cloud Shell environment, Gemini CLI typically authenticates
+In a Google Cloud Shell environment, Codefly CLI typically authenticates
 automatically using your Cloud Shell credentials. In Compute Engine
-environments, Gemini CLI automatically uses Application Default Credentials
+environments, Codefly CLI automatically uses Application Default Credentials
 (ADC) from the environment's metadata server.
 
 If automatic authentication fails, use one of the interactive methods described
@@ -309,7 +309,7 @@ if an existing authentication credential is cached.
 If you have not already logged in with an authentication credential, you must
 configure authentication using environment variables:
 
-- [Use Gemini API Key](#gemini-api)
+- [Use Codefly API Key](#codefly-api)
 - [Vertex AI](#vertex-ai)
 
 ## What's next?
@@ -317,5 +317,5 @@ configure authentication using environment variables:
 Your authentication method affects your quotas, pricing, Terms of Service, and
 privacy notices. Review the following pages to learn more:
 
-- [Gemini CLI: Quotas and Pricing](../resources/quota-and-pricing.md).
-- [Gemini CLI: Terms of Service and Privacy Notice](../resources/tos-privacy.md).
+- [Codefly CLI: Quotas and Pricing](../resources/quota-and-pricing.md).
+- [Codefly CLI: Terms of Service and Privacy Notice](../resources/tos-privacy.md).

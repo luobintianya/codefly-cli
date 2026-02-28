@@ -6,7 +6,7 @@
 
 import type { Content } from '@google/genai';
 import { createHash } from 'node:crypto';
-import type { ServerGeminiStreamEvent } from '../core/turn.js';
+import type { ServerCodeflyStreamEvent } from '../core/turn.js';
 import { CodeflyEventType } from '../core/turn.js';
 import {
   logLoopDetected,
@@ -147,7 +147,7 @@ export class LoopDetectionService {
    * @param event - The stream event to process
    * @returns true if a loop is detected, false otherwise
    */
-  addAndCheck(event: ServerGeminiStreamEvent): boolean {
+  addAndCheck(event: ServerCodeflyStreamEvent): boolean {
     if (this.disabledForSession || this.config.getDisableLoopDetection()) {
       return false;
     }

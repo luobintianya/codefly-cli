@@ -411,22 +411,22 @@ describe('SessionSelector', () => {
     expect(sessions[0].id).toBe(sessionIdWithUser);
   });
 
-  it('should list session with gemini message even without user message', async () => {
-    const sessionIdGeminiOnly = randomUUID();
+  it('should list session with codefly message even without user message', async () => {
+    const sessionIdCodeflyOnly = randomUUID();
 
     // Create test session files
     const chatsDir = path.join(tmpDir, 'chats');
     await fs.mkdir(chatsDir, { recursive: true });
 
-    // Session with only gemini message - should be listed
-    const sessionGeminiOnly = {
-      sessionId: sessionIdGeminiOnly,
+    // Session with only codefly message - should be listed
+    const sessionCodeflyOnly = {
+      sessionId: sessionIdCodeflyOnly,
       projectHash: 'test-hash',
       startTime: '2024-01-01T10:00:00.000Z',
       lastUpdated: '2024-01-01T10:30:00.000Z',
       messages: [
         {
-          type: 'gemini',
+          type: 'codefly',
           content: 'Hello, how can I help?',
           id: 'msg1',
           timestamp: '2024-01-01T10:00:00.000Z',
@@ -437,17 +437,17 @@ describe('SessionSelector', () => {
     await fs.writeFile(
       path.join(
         chatsDir,
-        `${SESSION_FILE_PREFIX}2024-01-01T10-00-${sessionIdGeminiOnly.slice(0, 8)}.json`,
+        `${SESSION_FILE_PREFIX}2024-01-01T10-00-${sessionIdCodeflyOnly.slice(0, 8)}.json`,
       ),
-      JSON.stringify(sessionGeminiOnly, null, 2),
+      JSON.stringify(sessionCodeflyOnly, null, 2),
     );
 
     const sessionSelector = new SessionSelector(config);
     const sessions = await sessionSelector.listSessions();
 
-    // Should list the session with gemini message
+    // Should list the session with codefly message
     expect(sessions.length).toBe(1);
-    expect(sessions[0].id).toBe(sessionIdGeminiOnly);
+    expect(sessions[0].id).toBe(sessionIdCodeflyOnly);
   });
 
   it('should not list sessions marked as subagent', async () => {
@@ -555,7 +555,7 @@ describe('extractFirstUserMessage', () => {
   it('should return "Empty conversation" for no user messages', () => {
     const messages = [
       {
-        type: 'gemini',
+        type: 'codefly',
         content: 'Hello',
         id: 'msg1',
         timestamp: '2024-01-01T10:00:00.000Z',
@@ -580,10 +580,10 @@ describe('hasUserOrAssistantMessage', () => {
     expect(hasUserOrAssistantMessage(messages)).toBe(true);
   });
 
-  it('should return true when session has gemini message', () => {
+  it('should return true when session has codefly message', () => {
     const messages = [
       {
-        type: 'gemini',
+        type: 'codefly',
         content: 'Hello, how can I help?',
         id: 'msg1',
         timestamp: '2024-01-01T10:00:00.000Z',
@@ -593,7 +593,7 @@ describe('hasUserOrAssistantMessage', () => {
     expect(hasUserOrAssistantMessage(messages)).toBe(true);
   });
 
-  it('should return true when session has both user and gemini messages', () => {
+  it('should return true when session has both user and codefly messages', () => {
     const messages = [
       {
         type: 'user',
@@ -602,7 +602,7 @@ describe('hasUserOrAssistantMessage', () => {
         timestamp: '2024-01-01T10:00:00.000Z',
       },
       {
-        type: 'gemini',
+        type: 'codefly',
         content: 'Hi there!',
         id: 'msg2',
         timestamp: '2024-01-01T10:01:00.000Z',

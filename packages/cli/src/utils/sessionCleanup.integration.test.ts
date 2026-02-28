@@ -72,7 +72,7 @@ describe('Session Cleanup Integration', () => {
     const path = await import('node:path');
     const os = await import('node:os');
 
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'gemini-test-'));
+    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'codefly-test-'));
     const chatsDir = path.join(tempDir, 'chats');
     await fs.mkdir(chatsDir, { recursive: true });
 
@@ -152,7 +152,7 @@ describe('Session Cleanup Integration', () => {
     const path = await import('node:path');
     const os = await import('node:os');
 
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'gemini-test-'));
+    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'codefly-test-'));
     const chatsDir = path.join(tempDir, 'chats');
     await fs.mkdir(chatsDir, { recursive: true });
 

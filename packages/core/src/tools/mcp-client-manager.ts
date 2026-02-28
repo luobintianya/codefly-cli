@@ -4,11 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type {
-  Config,
-  CodeflyCLIExtension,
-  MCPServerConfig,
-} from '../config/config.js';
+import type { Config, CodeflyCLIExtension } from '../config/config.js';
+import { MCPServerConfig } from '../config/config.js';
 import type { ToolRegistry } from './tool-registry.js';
 import {
   McpClient,
@@ -67,7 +64,7 @@ export class McpClientManager {
    *
    *    - Removes all its MCP servers from the global configuration object.
    *    - Disconnects all MCP clients from their servers.
-   *    - Updates the Gemini chat configuration to load the new tools.
+   *    - Updates the Codefly chat configuration to load the new tools.
    */
   async stopExtension(extension: CodeflyCLIExtension) {
     debugLogger.log(`Unloading extension: ${extension.name}`);
@@ -96,16 +93,36 @@ export class McpClientManager {
    *
    *    - Adds all its MCP servers to the global configuration object.
    *    - Connects MCP clients to each server and discovers their tools.
-   *    - Updates the Gemini chat configuration to load the new tools.
+   *    - Updates the Codefly chat configuration to load the new tools.
    */
   async startExtension(extension: CodeflyCLIExtension) {
     debugLogger.log(`Loading extension: ${extension.name}`);
     await Promise.all(
       Object.entries(extension.mcpServers ?? {}).map(([name, config]) =>
-        this.maybeDiscoverMcpServer(name, {
-          ...config,
-          extension,
-        }),
+        this.maybeDiscoverMcpServer(
+          name,
+          new MCPServerConfig(
+            config.command,
+            config.args,
+            config.env,
+            config.cwd,
+            config.url,
+            config.httpUrl,
+            config.headers,
+            config.tcp,
+            config.type,
+            config.timeout,
+            config.trust,
+            config.description,
+            config.includeTools,
+            config.excludeTools,
+            extension,
+            config.oauth,
+            config.authProviderType,
+            config.targetAudience,
+            config.targetServiceAccount,
+          ),
+        ),
       ),
     );
     await this.cliConfig.refreshMcpContext();
@@ -236,7 +253,7 @@ export class McpClientManager {
             this.cliConfig.getDebugMode(),
             this.clientVersion,
             async () => {
-              debugLogger.log('Tools changed, updating Gemini context...');
+              debugLogger.log('Tools changed, updating Codefly context...');
               await this.scheduleMcpContextRefresh();
             },
           );
@@ -300,7 +317,7 @@ export class McpClientManager {
 
   /**
    * Initiates the tool discovery process for all configured MCP servers (via
-   * gemini settings or command line arguments).
+   * codefly settings or command line arguments).
    *
    * It connects to each server, discovers its available tools, and registers
    * them with the `ToolRegistry`.

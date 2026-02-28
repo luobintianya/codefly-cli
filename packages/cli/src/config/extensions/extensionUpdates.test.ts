@@ -6,6 +6,8 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import * as fs from 'node:fs';
+import * as path from 'node:path';
+import * as os from 'node:os';
 import { getMissingSettings } from './extensionSettings.js';
 import type { ExtensionConfig } from '../extension.js';
 import {
@@ -13,10 +15,15 @@ import {
   type ExtensionInstallMetadata,
   type CodeflyCLIExtension,
   coreEvents,
+  KeychainTokenStorage,
 } from '@codeflyai/codefly-core';
 import { EXTENSION_SETTINGS_FILENAME } from './variables.js';
 import { ExtensionManager } from '../extension-manager.js';
 import { createTestMergedSettings } from '../settings.js';
+import { ExtensionStorage } from './storage.js';
+
+let tempHomeDir: string;
+let extensionDir: string;
 
 // --- Mocks ---
 
@@ -146,10 +153,10 @@ describe('extensionUpdates', () => {
 
     // Setup Temp Dirs
     tempHomeDir = fs.mkdtempSync(
-      path.join(os.tmpdir(), 'gemini-cli-test-home-'),
+      path.join(os.tmpdir(), 'codefly-cli-test-home-'),
     );
     tempWorkspaceDir = fs.mkdtempSync(
-      path.join(os.tmpdir(), 'gemini-cli-test-workspace-'),
+      path.join(os.tmpdir(), 'codefly-cli-test-workspace-'),
     );
     extensionDir = path.join(tempHomeDir, '.codefly', 'extensions', 'test-ext');
 
@@ -344,7 +351,7 @@ describe('extensionUpdates', () => {
         expect(coreEvents.emitFeedback).toHaveBeenCalledWith(
           'warning',
           expect.stringContaining(
-            'Please run "gemini extensions config test-ext [setting-name]"',
+            'Please run "codefly extensions config test-ext [setting-name]"',
           ),
         );
       },

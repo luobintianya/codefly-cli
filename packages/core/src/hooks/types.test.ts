@@ -164,7 +164,7 @@ describe('Hook Output Classes', () => {
 
     it('applyLLMRequestModifications should return target unchanged', () => {
       const target: GenerateContentParameters = {
-        model: 'gemini-pro',
+        model: 'codefly-pro',
         contents: [],
       };
       const output = new DefaultHookOutput({});
@@ -243,7 +243,7 @@ describe('Hook Output Classes', () => {
 
     it('applyLLMRequestModifications should apply modifications if llm_request is present', () => {
       const target: GenerateContentParameters = {
-        model: 'gemini-pro',
+        model: 'codefly-pro',
         contents: [{ parts: [{ text: 'original' }] }],
       };
       const mockRequest: Partial<LLMRequest> = {
@@ -262,7 +262,7 @@ describe('Hook Output Classes', () => {
 
     it('applyLLMRequestModifications should return target unchanged if llm_request is not present', () => {
       const target: GenerateContentParameters = {
-        model: 'gemini-pro',
+        model: 'codefly-pro',
         contents: [],
       };
       const output = new BeforeModelHookOutput({});

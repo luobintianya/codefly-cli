@@ -24,7 +24,7 @@ describe('Interactive file system', () => {
       settings: {
         security: {
           auth: {
-            selectedType: 'gemini-api-key',
+            selectedType: 'codefly-api-key',
           },
           disableYoloMode: false,
         },

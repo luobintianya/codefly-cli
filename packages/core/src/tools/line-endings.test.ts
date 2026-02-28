@@ -23,7 +23,7 @@ import type { ToolRegistry } from './tool-registry.js';
 import path from 'node:path';
 import fs from 'node:fs';
 import os from 'node:os';
-import { GeminiClient } from '../core/client.js';
+import { CodeflyClient } from '../core/client.js';
 import type { BaseLlmClient } from '../core/baseLlmClient.js';
 import {
   ensureCorrectEdit,
@@ -36,7 +36,7 @@ import {
   getMockMessageBusInstance,
 } from '../test-utils/mock-message-bus.js';
 
-const rootDir = path.resolve(os.tmpdir(), 'gemini-cli-line-ending-test-root');
+const rootDir = path.resolve(os.tmpdir(), 'codefly-cli-line-ending-test-root');
 
 // --- MOCKS ---
 vi.mock('../core/client.js');
@@ -50,7 +50,7 @@ vi.mock('../ide/ide-client.js', () => ({
   },
 }));
 
-let mockGeminiClientInstance: Mocked<GeminiClient>;
+let mockCodeflyClientInstance: Mocked<CodeflyClient>;
 let mockBaseLlmClientInstance: Mocked<BaseLlmClient>;
 const mockEnsureCorrectEdit = vi.fn<typeof ensureCorrectEdit>();
 const mockEnsureCorrectFileContent = vi.fn<typeof ensureCorrectFileContent>();
@@ -61,7 +61,7 @@ const mockConfigInternal = {
   getTargetDir: () => rootDir,
   getApprovalMode: vi.fn(() => ApprovalMode.DEFAULT),
   setApprovalMode: vi.fn(),
-  getGeminiClient: vi.fn(),
+  getCodeflyClient: vi.fn(),
   getBaseLlmClient: vi.fn(),
   getFileSystemService: () => fsService,
   getIdeMode: vi.fn(() => false),
@@ -78,8 +78,8 @@ const mockConfigInternal = {
   getUserAgent: () => 'test-agent',
   getUserMemory: () => '',
   setUserMemory: vi.fn(),
-  getGeminiMdFileCount: () => 0,
-  setGeminiMdFileCount: vi.fn(),
+  getCodeflyMdFileCount: () => 0,
+  setCodeflyMdFileCount: vi.fn(),
   getDisableLLMCorrection: vi.fn(() => false),
   validatePathAccess: vi.fn().mockReturnValue(null),
   getToolRegistry: () =>
@@ -111,10 +111,10 @@ describe('Line Ending Preservation', () => {
       fs.mkdirSync(rootDir, { recursive: true });
     }
 
-    mockGeminiClientInstance = new (vi.mocked(GeminiClient))(
+    mockCodeflyClientInstance = new (vi.mocked(CodeflyClient))(
       mockConfig,
-    ) as Mocked<GeminiClient>;
-    vi.mocked(GeminiClient).mockImplementation(() => mockGeminiClientInstance);
+    ) as Mocked<CodeflyClient>;
+    vi.mocked(CodeflyClient).mockImplementation(() => mockCodeflyClientInstance);
 
     mockBaseLlmClientInstance = {
       generateJson: vi.fn(),
@@ -125,8 +125,8 @@ describe('Line Ending Preservation', () => {
       mockEnsureCorrectFileContent,
     );
 
-    mockConfigInternal.getGeminiClient.mockReturnValue(
-      mockGeminiClientInstance,
+    mockConfigInternal.getCodeflyClient.mockReturnValue(
+      mockCodeflyClientInstance,
     );
     mockConfigInternal.getBaseLlmClient.mockReturnValue(
       mockBaseLlmClientInstance,

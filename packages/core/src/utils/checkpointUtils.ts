@@ -84,7 +84,7 @@ export function getTruncatedCheckpointNames(filenames: string[]): string[] {
 export async function processRestorableToolCalls<HistoryType>(
   toolCalls: ToolCallRequestInfo[],
   gitService: GitService,
-  geminiClient: CodeflyClient,
+  codeflyClient: CodeflyClient,
   history?: HistoryType,
 ): Promise<{
   checkpointsToWrite: Map<string, string>;
@@ -126,7 +126,7 @@ export async function processRestorableToolCalls<HistoryType>(
         continue;
       }
 
-      const clientHistory = geminiClient.getHistory();
+      const clientHistory = codeflyClient.getHistory();
       const checkpointData: ToolCallData<HistoryType> = {
         history,
         clientHistory,

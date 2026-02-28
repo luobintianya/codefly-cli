@@ -72,7 +72,7 @@ describe('LoggingContentGenerator', () => {
     it('should log request and response on success', async () => {
       const req = {
         contents: [{ role: 'user', parts: [{ text: 'hello' }] }],
-        model: 'gemini-pro',
+        model: 'codefly-pro',
       };
       const userPromptId = 'prompt-123';
       const response: GenerateContentResponse = {
@@ -118,7 +118,7 @@ describe('LoggingContentGenerator', () => {
     it('should log error on failure', async () => {
       const req = {
         contents: [{ role: 'user', parts: [{ text: 'hello' }] }],
-        model: 'gemini-pro',
+        model: 'codefly-pro',
       };
       const userPromptId = 'prompt-123';
       const error = new Error('test error');
@@ -162,7 +162,7 @@ describe('LoggingContentGenerator', () => {
     it('should log request and response on success', async () => {
       const req = {
         contents: [{ role: 'user', parts: [{ text: 'hello' }] }],
-        model: 'gemini-pro',
+        model: 'codefly-pro',
       };
       const userPromptId = 'prompt-123';
       const response = {
@@ -216,7 +216,7 @@ describe('LoggingContentGenerator', () => {
     it('should log error on failure', async () => {
       const req = {
         contents: [{ role: 'user', parts: [{ text: 'hello' }] }],
-        model: 'gemini-pro',
+        model: 'codefly-pro',
       };
       const userPromptId = 'prompt-123';
       const error = new Error('test error');
@@ -256,7 +256,7 @@ describe('LoggingContentGenerator', () => {
     it('should set latest API request in config for main agent requests', async () => {
       const req = {
         contents: [{ role: 'user', parts: [{ text: 'hello' }] }],
-        model: 'gemini-pro',
+        model: 'codefly-pro',
       };
       // Main agent prompt IDs end with exactly 8 hashes and a turn counter
       const mainAgentPromptId = 'session-uuid########1';
@@ -281,7 +281,7 @@ describe('LoggingContentGenerator', () => {
     it('should NOT set latest API request in config for sub-agent requests', async () => {
       const req = {
         contents: [{ role: 'user', parts: [{ text: 'hello' }] }],
-        model: 'gemini-pro',
+        model: 'codefly-pro',
       };
       // Sub-agent prompt IDs contain fewer hashes, typically separating the agent name and ID
       const subAgentPromptId = 'codebase_investigator#12345';
@@ -312,7 +312,7 @@ describe('LoggingContentGenerator', () => {
 
   describe('countTokens', () => {
     it('should call the wrapped countTokens method', async () => {
-      const req = { contents: [], model: 'gemini-pro' };
+      const req = { contents: [], model: 'codefly-pro' };
       const response = { totalTokens: 10 };
       vi.mocked(wrapped.countTokens).mockResolvedValue(response);
 
@@ -327,7 +327,7 @@ describe('LoggingContentGenerator', () => {
     it('should call the wrapped embedContent method', async () => {
       const req = {
         contents: [{ role: 'user', parts: [] }],
-        model: 'gemini-pro',
+        model: 'codefly-pro',
       };
       const response: EmbedContentResponse = { embeddings: [{ values: [] }] };
       vi.mocked(wrapped.embedContent).mockResolvedValue(response);

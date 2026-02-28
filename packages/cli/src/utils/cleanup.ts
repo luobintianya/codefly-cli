@@ -56,7 +56,7 @@ export function registerTelemetryConfig(config: Config) {
 
 export async function runExitCleanup() {
   // drain stdin to prevent printing garbage on exit
-  // https://github.com/google-gemini/gemini-cli/issues/1680
+  // https://github.com/google-codefly/codefly-cli/issues/1680
   await drainStdin();
 
   runSyncCleanup();

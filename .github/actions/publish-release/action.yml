@@ -1,5 +1,5 @@
 name: 'Publish Release'
-description: 'Builds, prepares, and publishes the gemini-cli packages to npm and creates a GitHub release.'
+description: 'Builds, prepares, and publishes the codefly-cli packages to npm and creates a GitHub release.'
 
 inputs:
   release-version:
@@ -51,7 +51,7 @@ inputs:
     type: 'boolean'
     required: false
     default: false
-  gemini_api_key:
+  codefly_api_key:
     description: 'The API key for running integration tests.'
     required: true
   npm-registry-publish-url:
@@ -85,8 +85,8 @@ runs:
       working-directory: '${{ inputs.working-directory }}'
       shell: 'bash'
       run: |
-        git config user.name "gemini-cli-robot"
-        git config user.email "gemini-cli-robot@google.com"
+        git config user.name "codefly-cli-robot"
+        git config user.email "codefly-cli-robot@google.com"
 
     - name: '🌿 Create and switch to a release branch'
       working-directory: '${{ inputs.working-directory }}'
@@ -233,7 +233,7 @@ runs:
         npm-package: '${{ inputs.cli-package-name }}@${{ inputs.release-version }}'
         expected-version: '${{ inputs.release-version }}'
         working-directory: '${{ inputs.working-directory }}'
-        gemini_api_key: '${{ inputs.gemini_api_key }}'
+        codefly_api_key: '${{ inputs.codefly_api_key }}'
         github-token: '${{ inputs.github-token }}'
         npm-registry-url: '${{ inputs.npm-registry-url }}'
         npm-registry-scope: '${{ inputs.npm-registry-scope }}'
@@ -261,7 +261,7 @@ runs:
       shell: 'bash'
       run: |
         gh release create "${{ inputs.release-tag }}" \
-          bundle/gemini.js \
+          bundle/codefly.js \
           --target "${{ steps.release_branch.outputs.BRANCH_NAME }}" \
           --title "Release ${{ inputs.release-tag }}" \
           --notes-start-tag "${{ inputs.previous-tag }}" \

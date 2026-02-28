@@ -7,7 +7,12 @@
 import { useEffect, useReducer, useRef } from 'react';
 import { setTimeout as setTimeoutPromise } from 'node:timers/promises';
 import type { Config, FileSearch } from '@codeflyai/codefly-core';
-import { FileSearchFactory, escapePath } from '@codeflyai/codefly-core';
+import path from 'node:path';
+import {
+  FileSearchFactory,
+  escapePath,
+  FileDiscoveryService,
+} from '@codeflyai/codefly-core';
 import type { Suggestion } from '../components/SuggestionsDisplay.js';
 import { MAX_SUGGESTIONS_TO_SHOW } from '../components/SuggestionsDisplay.js';
 import { CommandKind } from '../commands/types.js';
@@ -269,13 +274,17 @@ export function useAtCompletion(props: UseAtCompletionProps): void {
     const initialize = async () => {
       const currentEpoch = initEpoch.current;
       try {
+        const fileDiscoveryService = new FileDiscoveryService(cwd, {
+          respectGitIgnore:
+            config?.getFileFilteringOptions()?.respectGitIgnore ?? true,
+          respectCodeflyIgnore:
+            config?.getFileFilteringOptions()?.respectCodeflyIgnore ?? true,
+        });
+
         const searcher = FileSearchFactory.create({
           projectRoot: cwd,
           ignoreDirs: [],
-          useGitignore:
-            config?.getFileFilteringOptions()?.respectGitIgnore ?? true,
-          useGeminiignore:
-            config?.getFileFilteringOptions()?.respectCodeflyIgnore ?? true,
+          fileDiscoveryService,
           cache: true,
           cacheTtl: 30, // 30 seconds
           enableRecursiveFileSearch:
@@ -285,7 +294,7 @@ export function useAtCompletion(props: UseAtCompletionProps): void {
           maxFiles: config?.getFileFilteringOptions()?.maxFileCount,
         });
         await searcher.initialize();
-        fileSearch.current = searcher;
+        fileSearchMap.current.set(cwd, searcher);
         dispatch({ type: 'INITIALIZE_SUCCESS' });
         if (state.pattern !== null) {
           dispatch({ type: 'SEARCH', payload: state.pattern });

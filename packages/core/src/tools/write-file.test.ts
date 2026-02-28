@@ -47,8 +47,8 @@ import {
   getMockMessageBusInstance,
 } from '../test-utils/mock-message-bus.js';
 
-const rootDir = path.resolve(os.tmpdir(), 'gemini-cli-test-root');
-const plansDir = path.resolve(os.tmpdir(), 'gemini-cli-test-plans');
+const rootDir = path.resolve(os.tmpdir(), 'codefly-cli-test-root');
+const plansDir = path.resolve(os.tmpdir(), 'codefly-cli-test-plans');
 
 // --- MOCKS ---
 vi.mock('../core/client.js');

@@ -14,23 +14,28 @@ import {
   type Mock,
   type Mocked,
 } from 'vitest';
-import { GeminiAgent, Session } from './zedIntegration.js';
+import { CodeflyAgent, Session } from './zedIntegration.js';
 import * as acp from '@agentclientprotocol/sdk';
 import {
   AuthType,
-  ToolConfirmationOutcome,
-  StreamEventType,
-  isWithinRoot,
+  LlmRole,
   ReadManyFilesTool,
+  StreamEventType,
+  ToolConfirmationOutcome,
+  isWithinRoot,
   type CodeflyChat,
   type Config,
   type MessageBus,
 } from '@codeflyai/codefly-core';
-import { SettingScope, type LoadedSettings } from '../config/settings.js';
+import {
+  SettingScope,
+  loadSettings,
+  type LoadedSettings,
+} from '../config/settings.js';
 import { loadCliConfig, type CliArgs } from '../config/config.js';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
-import { ApprovalMode } from '@google/gemini-cli-core/src/policy/types.js';
+import { ApprovalMode } from '@codeflyai/codefly-core/src/policy/types.js';
 
 vi.mock('../config/config.js', () => ({
   loadCliConfig: vi.fn(),
@@ -113,12 +118,12 @@ async function* createMockStream(items: any[]) {
   }
 }
 
-describe('GeminiAgent', () => {
+describe('CodeflyAgent', () => {
   let mockConfig: Mocked<Awaited<ReturnType<typeof loadCliConfig>>>;
   let mockSettings: Mocked<LoadedSettings>;
   let mockArgv: CliArgs;
   let mockConnection: Mocked<acp.AgentSideConnection>;
-  let agent: GeminiAgent;
+  let agent: CodeflyAgent;
 
   beforeEach(() => {
     mockConfig = {
@@ -158,7 +163,12 @@ describe('GeminiAgent', () => {
       setValue: vi.fn(),
     }));
 
-    agent = new GeminiAgent(mockConfig, mockSettings, mockArgv, mockConnection);
+    agent = new CodeflyAgent(
+      mockConfig,
+      mockSettings,
+      mockArgv,
+      mockConnection,
+    );
   });
 
   it('should initialize correctly', async () => {
@@ -255,10 +265,10 @@ describe('GeminiAgent', () => {
     });
   });
 
-  it('should fail session creation if Gemini API key is missing', async () => {
+  it('should fail session creation if Codefly API key is missing', async () => {
     (loadSettings as unknown as Mock).mockImplementation(() => ({
       merged: {
-        security: { auth: { selectedType: AuthType.USE_GEMINI } },
+        security: { auth: { selectedType: AuthType.USE_CODEFLY } },
         mcpServers: {},
       },
       setValue: vi.fn(),
@@ -273,7 +283,7 @@ describe('GeminiAgent', () => {
         mcpServers: [],
       }),
     ).rejects.toMatchObject({
-      message: 'Gemini API key is missing or not configured.',
+      message: 'Codefly API key is missing or not configured.',
     });
   });
 
@@ -326,7 +336,12 @@ describe('GeminiAgent', () => {
   });
 
   it('should initialize file system service if client supports it', async () => {
-    agent = new GeminiAgent(mockConfig, mockSettings, mockArgv, mockConnection);
+    agent = new CodeflyAgent(
+      mockConfig,
+      mockSettings,
+      mockArgv,
+      mockConnection,
+    );
     await agent.initialize({
       clientCapabilities: { fs: { readTextFile: true, writeTextFile: true } },
       protocolVersion: 1,
@@ -436,8 +451,8 @@ describe('Session', () => {
       unsubscribe: vi.fn(),
     } as unknown as Mocked<MessageBus>;
     mockConfig = {
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
-      getActiveModel: vi.fn().mockReturnValue('gemini-pro'),
+      getModel: vi.fn().mockReturnValue('codefly-pro'),
+      getActiveModel: vi.fn().mockReturnValue('codefly-pro'),
       getToolRegistry: vi.fn().mockReturnValue(mockToolRegistry),
       getFileService: vi.fn().mockReturnValue({
         shouldIgnoreFile: vi.fn().mockReturnValue(false),

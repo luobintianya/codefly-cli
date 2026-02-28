@@ -25,9 +25,8 @@ import { loadConfig, loadEnvironment, setTargetDir } from '../config/config.js';
 import { loadSettings } from '../config/settings.js';
 import { loadExtensions } from '../config/extension.js';
 import { commandRegistry } from '../commands/command-registry.js';
-import { debugLogger, SimpleExtensionLoader } from '@codeflyai/codefly-core';
+import { debugLogger, SimpleExtensionLoader , GitService } from '@codeflyai/codefly-core';
 import type { Command, CommandArgument } from '../commands/types.js';
-import { GitService } from '@codeflyai/codefly-core';
 
 type CommandResponse = {
   name: string;
@@ -37,7 +36,7 @@ type CommandResponse = {
 };
 
 const coderAgentCard: AgentCard = {
-  name: 'Gemini SDLC Agent',
+  name: 'Codefly SDLC Agent',
   description:
     'An agent that generates code based on natural language instructions and streams file outputs.',
   url: 'http://localhost:41242/',

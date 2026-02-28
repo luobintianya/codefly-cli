@@ -9,14 +9,12 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { handleAtCommand } from './atCommandProcessor.js';
 import type { Config, DiscoveredMCPResource } from '@codeflyai/codefly-core';
 import {
+  CoreToolCallStatus,
   FileDiscoveryService,
   GlobTool,
   ReadManyFilesTool,
   StandardFileSystemService,
   ToolRegistry,
-  COMMON_IGNORE_PATTERNS,
-  GEMINI_IGNORE_FILE_NAME,
-  // DEFAULT_FILE_EXCLUDES,
 } from '@codeflyai/codefly-core';
 import * as core from '@codeflyai/codefly-core';
 import * as os from 'node:os';
@@ -81,7 +79,7 @@ describe('handleAtCommand', () => {
         getDirectories: () => [testRootDir],
       }),
       storage: {
-        getProjectTempDir: () => path.join(os.tmpdir(), 'gemini-cli-temp'),
+        getProjectTempDir: () => path.join(os.tmpdir(), 'codefly-cli-temp'),
       },
       isPathAllowed(this: Config, absolutePath: string): boolean {
         if (this.interactive && path.isAbsolute(absolutePath)) {
@@ -117,7 +115,7 @@ describe('handleAtCommand', () => {
       getDebugMode: () => false,
       getWorkingDir: () => '/working/dir',
       getFileExclusions: () => ({
-        getCoreIgnorePatterns: () => COMMON_IGNORE_PATTERNS,
+        getCoreIgnorePatterns: () => ['.git', 'node_modules'],
         getDefaultExcludePatterns: () => [],
         getGlobExcludes: () => [],
         buildExcludePatterns: () => [],
@@ -133,7 +131,6 @@ describe('handleAtCommand', () => {
         getClient: () => undefined,
       }),
       getMessageBus: () => mockMessageBus,
-      getWorkingDir: () => '/test/dir',
     } as unknown as Config;
 
     const registry = new ToolRegistry(mockConfig, mockMessageBus);
@@ -695,17 +692,17 @@ describe('handleAtCommand', () => {
     });
   });
 
-  describe('gemini-ignore filtering', () => {
-    it('should skip gemini-ignored files in @ commands', async () => {
+  describe('codefly-ignore filtering', () => {
+    it('should skip codefly-ignored files in @ commands', async () => {
       await createTestFile(
         path.join(testRootDir, '.codeflyignore'),
         'build/output.js',
       );
-      const geminiIgnoredFile = await createTestFile(
+      const codeflyIgnoredFile = await createTestFile(
         path.join(testRootDir, 'build', 'output.js'),
         'console.log("Hello");',
       );
-      const query = `@${geminiIgnoredFile}`;
+      const query = `@${codeflyIgnoredFile}`;
 
       const result = await handleAtCommand({
         query,
@@ -720,10 +717,10 @@ describe('handleAtCommand', () => {
         processedQuery: [{ text: query }],
       });
       expect(mockOnDebugMessage).toHaveBeenCalledWith(
-        `Path ${geminiIgnoredFile} is gemini-ignored and will be skipped.`,
+        `Path ${codeflyIgnoredFile} is codefly-ignored and will be skipped.`,
       );
       expect(mockOnDebugMessage).toHaveBeenCalledWith(
-        `Ignored 1 files:\nGemini-ignored: ${geminiIgnoredFile}`,
+        `Ignored 1 files:\nCodefly-ignored: ${codeflyIgnoredFile}`,
       );
     });
   });
@@ -758,7 +755,7 @@ describe('handleAtCommand', () => {
     });
   });
 
-  it('should handle mixed gemini-ignored and valid files', async () => {
+  it('should handle mixed codefly-ignored and valid files', async () => {
     await createTestFile(
       path.join(testRootDir, '.codeflyignore'),
       'dist/bundle.js',
@@ -767,11 +764,11 @@ describe('handleAtCommand', () => {
       path.join(testRootDir, 'src', 'main.ts'),
       '// Main application entry',
     );
-    const geminiIgnoredFile = await createTestFile(
+    const codeflyIgnoredFile = await createTestFile(
       path.join(testRootDir, 'dist', 'bundle.js'),
       'console.log("bundle");',
     );
-    const query = `@${validFile} @${geminiIgnoredFile}`;
+    const query = `@${validFile} @${codeflyIgnoredFile}`;
 
     const result = await handleAtCommand({
       query,
@@ -784,7 +781,7 @@ describe('handleAtCommand', () => {
 
     expect(result).toEqual({
       processedQuery: [
-        { text: `@${getRelativePath(validFile)} @${geminiIgnoredFile}` },
+        { text: `@${getRelativePath(validFile)} @${codeflyIgnoredFile}` },
         { text: '\n--- Content from referenced files ---' },
         { text: `\nContent from @${getRelativePath(validFile)}:\n` },
         { text: '// Main application entry' },
@@ -792,10 +789,10 @@ describe('handleAtCommand', () => {
       ],
     });
     expect(mockOnDebugMessage).toHaveBeenCalledWith(
-      `Path ${geminiIgnoredFile} is gemini-ignored and will be skipped.`,
+      `Path ${codeflyIgnoredFile} is codefly-ignored and will be skipped.`,
     );
     expect(mockOnDebugMessage).toHaveBeenCalledWith(
-      `Ignored 1 files:\nGemini-ignored: ${geminiIgnoredFile}`,
+      `Ignored 1 files:\nCodefly-ignored: ${codeflyIgnoredFile}`,
     );
   });
 

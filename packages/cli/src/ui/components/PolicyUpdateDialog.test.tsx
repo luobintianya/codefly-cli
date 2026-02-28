@@ -13,16 +13,16 @@ import {
   type Config,
   type PolicyUpdateConfirmationRequest,
   PolicyIntegrityManager,
-} from '@google/gemini-cli-core';
+} from '@codeflyai/codefly-core';
 
 const { mockAcceptIntegrity } = vi.hoisted(() => ({
   mockAcceptIntegrity: vi.fn(),
 }));
 
 // Mock PolicyIntegrityManager
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
   const original =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+    await importOriginal<typeof import('@codeflyai/codefly-core')>();
   return {
     ...original,
     PolicyIntegrityManager: vi.fn().mockImplementation(() => ({
@@ -44,8 +44,8 @@ describe('PolicyUpdateDialog', () => {
 
     mockRequest = {
       scope: 'workspace',
-      identifier: '/test/workspace/.gemini/policies',
-      policyDir: '/test/workspace/.gemini/policies',
+      identifier: '/test/workspace/.codefly/policies',
+      policyDir: '/test/workspace/.codefly/policies',
       newHash: 'test-hash',
     } as PolicyUpdateConfirmationRequest;
 
@@ -69,7 +69,7 @@ describe('PolicyUpdateDialog', () => {
     const output = lastFrame();
     expect(output).toMatchSnapshot();
     expect(output).toContain('New or changed workspace policies detected');
-    expect(output).toContain('Location: /test/workspace/.gemini/policies');
+    expect(output).toContain('Location: /test/workspace/.codefly/policies');
     expect(output).toContain('Accept and Load');
     expect(output).toContain('Ignore');
   });

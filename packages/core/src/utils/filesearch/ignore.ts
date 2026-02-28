@@ -13,7 +13,7 @@ const hasFileExtension = picomatch('**/*[*.]*');
 
 export function loadIgnoreRules(
   service: FileDiscoveryService,
-  ignoreDirs: string[] = [],
+  extraIgnoreDirs: string[] = [],
 ): Ignore {
   const ignorer = new Ignore();
   const ignoreFiles = service.getAllIgnoreFilePaths();
@@ -24,14 +24,7 @@ export function loadIgnoreRules(
     }
   }
 
-  if (options.useGeminiignore) {
-    const geminiignorePath = path.join(options.projectRoot, '.codeflyignore');
-    if (fs.existsSync(geminiignorePath)) {
-      ignorer.add(fs.readFileSync(geminiignorePath, 'utf8'));
-    }
-  }
-
-  const ignoreDirs = ['.git', ...options.ignoreDirs];
+  const allIgnoreDirs = ['.git', ...extraIgnoreDirs];
   ignorer.add(
     allIgnoreDirs.map((dir) => {
       if (dir.endsWith('/')) {

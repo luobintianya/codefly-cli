@@ -1,6 +1,6 @@
 # Advanced Model Configuration
 
-This guide details the Model Configuration system within the Gemini CLI.
+This guide details the Model Configuration system within the Codefly CLI.
 Designed for researchers, AI quality engineers, and advanced users, this system
 provides a rigorous framework for managing generative model hyperparameters and
 behaviors.
@@ -130,7 +130,7 @@ Defines the actual parameters for the model.
 
 | Property                | Type     | Description                                                        |
 | :---------------------- | :------- | :----------------------------------------------------------------- |
-| `model`                 | `string` | The identifier of the model to be called (e.g., `gemini-2.5-pro`). |
+| `model`                 | `string` | The identifier of the model to be called (e.g., `codefly-2.5-pro`). |
 | `generateContentConfig` | `object` | The configuration object passed to the `@google/genai` SDK.        |
 
 ### `GenerateContentConfig` (Common Parameters)
@@ -199,10 +199,10 @@ changing client code.
   "overrides": [
     {
       "match": {
-        "model": "gemini-2.5-pro"
+        "model": "codefly-2.5-pro"
       },
       "modelConfig": {
-        "model": "gemini-2.5-pro-experimental-001"
+        "model": "codefly-2.5-pro-experimental-001"
       }
     }
   ]

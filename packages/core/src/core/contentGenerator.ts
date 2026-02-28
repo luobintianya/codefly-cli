@@ -54,7 +54,7 @@ export interface ContentGenerator {
 
 export enum AuthType {
   LOGIN_WITH_GOOGLE = 'oauth-personal',
-  USE_GEMINI = 'gemini-api-key',
+  USE_CODEFLY = 'codefly-api-key',
   USE_VERTEX_AI = 'vertex-ai',
   LEGACY_CLOUD_SHELL = 'cloud-shell',
   COMPUTE_ADC = 'compute-default-credentials',
@@ -67,7 +67,7 @@ export enum AuthType {
  * Checks in order:
  * 1. GOOGLE_GENAI_USE_GCA=true -> LOGIN_WITH_GOOGLE
  * 2. GOOGLE_GENAI_USE_VERTEXAI=true -> USE_VERTEX_AI
- * 3. GEMINI_API_KEY -> USE_GEMINI
+ * 3. CODEFLY_API_KEY -> USE_CODEFLY
  */
 export function getAuthTypeFromEnv(): AuthType | undefined {
   if (process.env['GOOGLE_GENAI_USE_GCA'] === 'true') {
@@ -76,8 +76,8 @@ export function getAuthTypeFromEnv(): AuthType | undefined {
   if (process.env['GOOGLE_GENAI_USE_VERTEXAI'] === 'true') {
     return AuthType.USE_VERTEX_AI;
   }
-  if (process.env['GEMINI_API_KEY']) {
-    return AuthType.USE_GEMINI;
+  if (process.env['CODEFLY_API_KEY']) {
+    return AuthType.USE_CODEFLY;
   }
   return undefined;
 }
@@ -95,8 +95,8 @@ export async function createContentGeneratorConfig(
   config: Config,
   authType: AuthType | undefined,
 ): Promise<ContentGeneratorConfig> {
-  const geminiApiKey =
-    process.env['GEMINI_API_KEY'] || (await loadApiKey()) || undefined;
+  const codeflyApiKey =
+    process.env['CODEFLY_API_KEY'] || (await loadApiKey()) || undefined;
   const googleApiKey = process.env['GOOGLE_API_KEY'] || undefined;
   const googleCloudProject =
     process.env['GOOGLE_CLOUD_PROJECT'] ||
@@ -120,8 +120,8 @@ export async function createContentGeneratorConfig(
     return contentGeneratorConfig;
   }
 
-  if (authType === AuthType.USE_GEMINI && geminiApiKey) {
-    contentGeneratorConfig.apiKey = geminiApiKey;
+  if (authType === AuthType.USE_CODEFLY && codeflyApiKey) {
+    contentGeneratorConfig.apiKey = codeflyApiKey;
     contentGeneratorConfig.vertexai = false;
 
     return contentGeneratorConfig;
@@ -169,16 +169,16 @@ export async function createContentGenerator(
     const version = await getVersion();
     const model = resolveModel(
       gcConfig.getModel(),
-      config.authType === AuthType.USE_GEMINI ||
+      config.authType === AuthType.USE_CODEFLY ||
         config.authType === AuthType.USE_VERTEX_AI ||
-        ((await gcConfig.getGemini31Launched?.()) ?? false),
+        ((await gcConfig.getCodefly31Launched?.()) ?? false),
     );
     const customHeadersEnv =
-      process.env['GEMINI_CLI_CUSTOM_HEADERS'] || undefined;
-    const userAgent = `GeminiCLI/${version}/${model} (${process.platform}; ${process.arch})`;
+      process.env['CODEFLY_CLI_CUSTOM_HEADERS'] || undefined;
+    const userAgent = `CodeflyCLI/${version}/${model} (${process.platform}; ${process.arch})`;
     const customHeadersMap = parseCustomHeaders(customHeadersEnv);
     const apiKeyAuthMechanism =
-      process.env['GEMINI_API_KEY_AUTH_MECHANISM'] || 'x-goog-api-key';
+      process.env['CODEFLY_API_KEY_AUTH_MECHANISM'] || 'x-goog-api-key';
     const apiVersionEnv = process.env['GOOGLE_GENAI_API_VERSION'];
 
     const baseHeaders: Record<string, string> = {
@@ -188,7 +188,7 @@ export async function createContentGenerator(
 
     if (
       apiKeyAuthMechanism === 'bearer' &&
-      (config.authType === AuthType.USE_GEMINI ||
+      (config.authType === AuthType.USE_CODEFLY ||
         config.authType === AuthType.USE_VERTEX_AI) &&
       config.apiKey
     ) {
@@ -211,7 +211,7 @@ export async function createContentGenerator(
     }
 
     if (
-      config.authType === AuthType.USE_GEMINI ||
+      config.authType === AuthType.USE_CODEFLY ||
       config.authType === AuthType.USE_VERTEX_AI
     ) {
       let headers: Record<string, string> = { ...baseHeaders };
@@ -220,7 +220,7 @@ export async function createContentGenerator(
         const installationId = installationManager.getInstallationId();
         headers = {
           ...headers,
-          'x-gemini-api-privileged-user-id': `${installationId}`,
+          'x-codefly-api-privileged-user-id': `${installationId}`,
         };
       }
       const httpOptions = { headers };

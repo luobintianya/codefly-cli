@@ -4,9 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { useUIActions } from '../contexts/UIActionsContext.js';
+import type { UIActions } from '../contexts/UIActionsContext.js';
 import { render } from '../../test-utils/render.js';
 import { ShellInputPrompt } from './ShellInputPrompt.js';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { act } from 'react';
 import { ShellExecutionService } from '@codeflyai/codefly-core';
 
 // Mock useKeypress

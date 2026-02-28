@@ -70,11 +70,11 @@ runs:
       id: 'docker_build'
       shell: 'bash'
       env:
-        GEMINI_SANDBOX_IMAGE_TAG: '${{ steps.image_tag.outputs.FINAL_TAG }}'
-        GEMINI_SANDBOX: 'docker'
+        CODEFLY_SANDBOX_IMAGE_TAG: '${{ steps.image_tag.outputs.FINAL_TAG }}'
+        CODEFLY_SANDBOX: 'docker'
       run: |-
         npm run build:sandbox -- \
-          --image google/gemini-cli-sandbox:${{ steps.image_tag.outputs.FINAL_TAG }} \
+          --image google/codefly-cli-sandbox:${{ steps.image_tag.outputs.FINAL_TAG }} \
           --output-file final_image_uri.txt
         echo "uri=$(cat final_image_uri.txt)" >> $GITHUB_OUTPUT
     - name: 'verify'
@@ -82,8 +82,8 @@ runs:
       run: |-
         docker run --rm --entrypoint sh "${{ steps.docker_build.outputs.uri }}" -lc '
           set -e
-          node -e "const fs=require(\"node:fs\"); JSON.parse(fs.readFileSync(\"/usr/local/share/npm-global/lib/node_modules/@google/gemini-cli/package.json\",\"utf8\")); JSON.parse(fs.readFileSync(\"/usr/local/share/npm-global/lib/node_modules/@google/gemini-cli-core/package.json\",\"utf8\"));"
-          /usr/local/share/npm-global/bin/gemini --version >/dev/null
+          node -e "const fs=require(\"node:fs\"); JSON.parse(fs.readFileSync(\"/usr/local/share/npm-global/lib/node_modules/@codeflyai/codefly/package.json\",\"utf8\")); JSON.parse(fs.readFileSync(\"/usr/local/share/npm-global/lib/node_modules/@codeflyai/codefly-core/package.json\",\"utf8\"));"
+          /usr/local/share/npm-global/bin/codefly --version >/dev/null
         '
     - name: 'publish'
       shell: 'bash'

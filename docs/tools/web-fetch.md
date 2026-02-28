@@ -1,6 +1,6 @@
 # Web fetch tool (`web_fetch`)
 
-The `web_fetch` tool allows the Gemini agent to retrieve and process content
+The `web_fetch` tool allows the Codefly agent to retrieve and process content
 from specific URLs provided in your prompt.
 
 ## Technical reference
@@ -17,7 +17,7 @@ specific operations like summarization or extraction.
 ## Technical behavior
 
 - **Confirmation:** Triggers a confirmation dialog showing the converted URLs.
-- **Processing:** Uses the Gemini API's `urlContext` for retrieval.
+- **Processing:** Uses the Codefly API's `urlContext` for retrieval.
 - **Fallback:** If API access fails, the tool attempts to fetch raw content
   directly from your local machine.
 - **Formatting:** Returns a synthesized response with source attribution.

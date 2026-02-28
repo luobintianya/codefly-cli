@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { fetchWithTimeout } from '@google/gemini-cli-core';
+import { fetchWithTimeout } from '@codeflyai/codefly-core';
 import { AsyncFzf } from 'fzf';
 
 export interface RegistryExtension {
@@ -30,7 +30,7 @@ export interface RegistryExtension {
 
 export class ExtensionRegistryClient {
   private static readonly REGISTRY_URL =
-    'https://geminicli.com/extensions.json';
+    'https://codeflycli.com/extensions.json';
   private static readonly FETCH_TIMEOUT_MS = 10000; // 10 seconds
 
   private static fetchPromise: Promise<RegistryExtension[]> | null = null;

@@ -436,7 +436,7 @@ describe('extensionsCommand', () => {
 
       await exploreAction(mockContext, '');
 
-      const extensionsUrl = 'https://geminicli.com/extensions/';
+      const extensionsUrl = 'https://codeflycli.com/extensions/';
       expect(mockContext.ui.addItem).toHaveBeenCalledWith({
         type: MessageType.INFO,
         text: `Opening extensions page in your browser: ${extensionsUrl}`,
@@ -448,8 +448,8 @@ describe('extensionsCommand', () => {
     it('should only add an info message in a sandbox environment', async () => {
       // Simulate a sandbox environment
       vi.stubEnv('NODE_ENV', '');
-      vi.stubEnv('SANDBOX', 'gemini-sandbox');
-      const extensionsUrl = 'https://geminicli.com/extensions/';
+      vi.stubEnv('SANDBOX', 'codefly-sandbox');
+      const extensionsUrl = 'https://codeflycli.com/extensions/';
 
       await exploreAction(mockContext, '');
 
@@ -465,7 +465,7 @@ describe('extensionsCommand', () => {
     it('should add an info message and not call open in NODE_ENV test environment', async () => {
       vi.stubEnv('NODE_ENV', 'test');
       vi.stubEnv('SANDBOX', '');
-      const extensionsUrl = 'https://geminicli.com/extensions/';
+      const extensionsUrl = 'https://codeflycli.com/extensions/';
 
       await exploreAction(mockContext, '');
 
@@ -480,7 +480,7 @@ describe('extensionsCommand', () => {
 
     it('should handle errors when opening the browser', async () => {
       vi.stubEnv('NODE_ENV', '');
-      const extensionsUrl = 'https://geminicli.com/extensions/';
+      const extensionsUrl = 'https://codeflycli.com/extensions/';
       const errorMessage = 'Failed to open browser';
       vi.mocked(open).mockRejectedValue(new Error(errorMessage));
 
@@ -908,7 +908,7 @@ describe('extensionsCommand', () => {
     it('handles errors during skill or agent reload', async () => {
       const mockExtensions = [
         { name: 'ext1', isActive: true },
-      ] as GeminiCLIExtension[];
+      ] as CodeflyCLIExtension[];
       mockGetExtensions.mockReturnValue(mockExtensions);
       mockReloadSkills.mockRejectedValue(new Error('Failed to reload skills'));
 

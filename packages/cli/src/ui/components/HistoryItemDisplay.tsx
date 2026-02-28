@@ -10,17 +10,16 @@ import { escapeAnsiCtrlCodes } from '../utils/textUtils.js';
 import type { HistoryItem } from '../types.js';
 import { UserMessage } from './messages/UserMessage.js';
 import { UserShellMessage } from './messages/UserShellMessage.js';
-import { GeminiMessage } from './messages/GeminiMessage.js';
+import { CodeflyMessage } from './messages/CodeflyMessage.js';
 import { InfoMessage } from './messages/InfoMessage.js';
 import { ErrorMessage } from './messages/ErrorMessage.js';
 import { ToolGroupMessage } from './messages/ToolGroupMessage.js';
-import { GeminiMessageContent } from './messages/GeminiMessageContent.js';
+import { CodeflyMessageContent } from './messages/CodeflyMessageContent.js';
 import { CompressionMessage } from './messages/CompressionMessage.js';
 import { WarningMessage } from './messages/WarningMessage.js';
 import { Box } from 'ink';
 import { AboutBox } from './AboutBox.js';
 import { StatsDisplay } from './StatsDisplay.js';
-import { ModelStatsDisplay } from './ModelStatsDisplay.js';
 import { ToolStatsDisplay } from './ToolStatsDisplay.js';
 import { SessionSummaryDisplay } from './SessionSummaryDisplay.js';
 import { Help } from './Help.js';
@@ -45,7 +44,7 @@ interface HistoryItemDisplayProps {
   terminalWidth: number;
   isPending: boolean;
   commands?: readonly SlashCommand[];
-  availableTerminalHeightGemini?: number;
+  availableTerminalHeightCodefly?: number;
   isExpandable?: boolean;
 }
 
@@ -55,7 +54,7 @@ export const HistoryItemDisplay: React.FC<HistoryItemDisplayProps> = ({
   terminalWidth,
   isPending,
   commands,
-  availableTerminalHeightGemini,
+  availableTerminalHeightCodefly,
   isExpandable,
 }) => {
   const settings = useSettings();
@@ -77,22 +76,22 @@ export const HistoryItemDisplay: React.FC<HistoryItemDisplayProps> = ({
       {itemForDisplay.type === 'user_shell' && (
         <UserShellMessage text={itemForDisplay.text} width={terminalWidth} />
       )}
-      {itemForDisplay.type === 'gemini' && (
-        <GeminiMessage
+      {itemForDisplay.type === 'codefly' && (
+        <CodeflyMessage
           text={itemForDisplay.text}
           isPending={isPending}
           availableTerminalHeight={
-            availableTerminalHeightGemini ?? availableTerminalHeight
+            availableTerminalHeightCodefly ?? availableTerminalHeight
           }
           terminalWidth={terminalWidth}
         />
       )}
-      {itemForDisplay.type === 'gemini_content' && (
-        <GeminiMessageContent
+      {itemForDisplay.type === 'codefly_content' && (
+        <CodeflyMessageContent
           text={itemForDisplay.text}
           isPending={isPending}
           availableTerminalHeight={
-            availableTerminalHeightGemini ?? availableTerminalHeight
+            availableTerminalHeightCodefly ?? availableTerminalHeight
           }
           terminalWidth={terminalWidth}
         />

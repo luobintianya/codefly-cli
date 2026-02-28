@@ -401,7 +401,7 @@ export async function downloadFromGitHubRelease(
     // For regular github releases, the repository is put inside of a top level
     // directory. In this case we should see exactly two file in the destination
     // dir, the archive and the directory. If we see that, validate that the
-    // dir has a gemini extension configuration file and then move all files
+    // dir has a codefly extension configuration file and then move all files
     // from the directory up one level into the destination directory.
     const entries = await fs.promises.readdir(destination, {
       withFileTypes: true,
@@ -503,7 +503,7 @@ export async function downloadFile(
   redirectCount: number = 0,
 ): Promise<void> {
   const headers: Record<string, string> = {
-    'User-agent': 'gemini-cli',
+    'User-agent': 'codefly-cli',
     Accept: 'application/octet-stream',
     ...options?.headers,
   };

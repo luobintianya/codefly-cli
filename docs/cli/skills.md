@@ -1,6 +1,6 @@
 # Agent Skills
 
-Agent Skills allow you to extend Gemini CLI with specialized expertise,
+Agent Skills allow you to extend Codefly CLI with specialized expertise,
 procedural workflows, and task-specific resources. Based on the
 [Agent Skills](https://agentskills.io) open standard, a "skill" is a
 self-contained directory that packages instructions and assets into a
@@ -8,13 +8,13 @@ discoverable capability.
 
 ## Overview
 
-Unlike general context files ([`GEMINI.md`](./gemini-md.md)), which provide
+Unlike general context files ([`CODEFLY.md`](./codefly-md.md)), which provide
 persistent workspace-wide background, Skills represent **on-demand expertise**.
-This allows Gemini to maintain a vast library of specialized capabilities—such
+This allows Codefly to maintain a vast library of specialized capabilities—such
 as security auditing, cloud deployments, or codebase migrations—without
 cluttering the model's immediate context window.
 
-Gemini autonomously decides when to employ a skill based on your request and the
+Codefly autonomously decides when to employ a skill based on your request and the
 skill's description. When a relevant skill is identified, the model "pulls in"
 the full instructions and resources required to complete the task using the
 `activate_skill` tool.
@@ -33,12 +33,12 @@ the full instructions and resources required to complete the task using the
 
 ## Skill Discovery Tiers
 
-Gemini CLI discovers skills from three primary locations:
+Codefly CLI discovers skills from three primary locations:
 
-1.  **Workspace Skills**: Located in `.gemini/skills/` or the `.agents/skills/`
+1.  **Workspace Skills**: Located in `.codefly/skills/` or the `.agents/skills/`
     alias. Workspace skills are typically committed to version control and
     shared with the team.
-2.  **User Skills**: Located in `~/.gemini/skills/` or the `~/.agents/skills/`
+2.  **User Skills**: Located in `~/.codefly/skills/` or the `~/.agents/skills/`
     alias. These are personal skills available across all your workspaces.
 3.  **Extension Skills**: Skills bundled within installed
     [extensions](../extensions/index.md).
@@ -47,7 +47,7 @@ Gemini CLI discovers skills from three primary locations:
 locations override lower ones: **Workspace > User > Extension**.
 
 Within the same tier (user or workspace), the `.agents/skills/` alias takes
-precedence over the `.gemini/skills/` directory. This generic alias provides an
+precedence over the `.codefly/skills/` directory. This generic alias provides an
 intuitive path for managing agent-specific expertise that remains compatible
 across different AI agent tools.
 
@@ -68,48 +68,48 @@ _Note: `/skills disable` and `/skills enable` default to the `user` scope. Use
 
 ### From the Terminal
 
-The `gemini skills` command provides management utilities:
+The `codefly skills` command provides management utilities:
 
 ```bash
 # List all discovered skills
-gemini skills list
+codefly skills list
 
 # Link agent skills from a local directory via symlink
-# Discovers skills (SKILL.md or */SKILL.md) and creates symlinks in ~/.gemini/skills
+# Discovers skills (SKILL.md or */SKILL.md) and creates symlinks in ~/.codefly/skills
 # (or ~/.agents/skills)
-gemini skills link /path/to/my-skills-repo
+codefly skills link /path/to/my-skills-repo
 
-# Link to the workspace scope (.gemini/skills or .agents/skills)
-gemini skills link /path/to/my-skills-repo --scope workspace
+# Link to the workspace scope (.codefly/skills or .agents/skills)
+codefly skills link /path/to/my-skills-repo --scope workspace
 
 # Install a skill from a Git repository, local directory, or zipped skill file (.skill)
-# Uses the user scope by default (~/.gemini/skills or ~/.agents/skills)
-gemini skills install https://github.com/user/repo.git
-gemini skills install /path/to/local/skill
-gemini skills install /path/to/local/my-expertise.skill
+# Uses the user scope by default (~/.codefly/skills or ~/.agents/skills)
+codefly skills install https://github.com/user/repo.git
+codefly skills install /path/to/local/skill
+codefly skills install /path/to/local/my-expertise.skill
 
 # Install a specific skill from a monorepo or subdirectory using --path
-gemini skills install https://github.com/my-org/my-skills.git --path skills/frontend-design
+codefly skills install https://github.com/my-org/my-skills.git --path skills/frontend-design
 
-# Install to the workspace scope (.gemini/skills or .agents/skills)
-gemini skills install /path/to/skill --scope workspace
+# Install to the workspace scope (.codefly/skills or .agents/skills)
+codefly skills install /path/to/skill --scope workspace
 
 # Uninstall a skill by name
-gemini skills uninstall my-expertise --scope workspace
+codefly skills uninstall my-expertise --scope workspace
 
 # Enable a skill (globally)
-gemini skills enable my-expertise
+codefly skills enable my-expertise
 
 # Disable a skill. Can use --scope to specify workspace or user (defaults to workspace)
-gemini skills disable my-expertise --scope workspace
+codefly skills disable my-expertise --scope workspace
 ```
 
 ## How it Works
 
-1.  **Discovery**: At the start of a session, Gemini CLI scans the discovery
+1.  **Discovery**: At the start of a session, Codefly CLI scans the discovery
     tiers and injects the name and description of all enabled skills into the
     system prompt.
-2.  **Activation**: When Gemini identifies a task matching a skill's
+2.  **Activation**: When Codefly identifies a task matching a skill's
     description, it calls the `activate_skill` tool.
 3.  **Consent**: You will see a confirmation prompt in the UI detailing the
     skill's name, purpose, and the directory path it will gain access to.
@@ -123,7 +123,7 @@ gemini skills disable my-expertise --scope workspace
 
 ### Skill activation
 
-Once a skill is activated (typically by Gemini identifying a task that matches
+Once a skill is activated (typically by Codefly identifying a task that matches
 the skill's description and your approval), its specialized instructions and
 resources are loaded into the agent's context. A skill remains active and its
 guidance is prioritized for the duration of the session.

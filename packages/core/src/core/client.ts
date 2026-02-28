@@ -16,9 +16,8 @@ import {
   getDirectoryContextString,
   getInitialChatHistory,
 } from '../utils/environmentContext.js';
-import type { ServerGeminiStreamEvent, ChatCompressionInfo } from './turn.js';
-import { CompressionStatus } from './turn.js';
-import { Turn, CodeflyEventType } from './turn.js';
+import type { ServerCodeflyStreamEvent, ChatCompressionInfo } from './turn.js';
+import { CompressionStatus , Turn, CodeflyEventType } from './turn.js';
 import type { Config } from '../config/config.js';
 import { getCoreSystemPrompt } from './prompts.js';
 import { checkNextSpeaker } from '../utils/nextSpeakerChecker.js';
@@ -359,7 +358,7 @@ export class CodeflyClient {
     } catch (error) {
       await reportError(
         error,
-        'Error initializing Gemini chat session.',
+        'Error initializing Codefly chat session.',
         history,
         'startChat',
       );
@@ -544,7 +543,7 @@ export class CodeflyClient {
     // including any permanent fallbacks (config.setModel) or manual overrides.
     return resolveModel(
       this.config.getActiveModel(),
-      this.config.getGemini31LaunchedSync?.() ?? false,
+      this.config.getCodefly31LaunchedSync?.() ?? false,
     );
   }
 
@@ -555,7 +554,7 @@ export class CodeflyClient {
     boundedTurns: number,
     isInvalidStreamRetry: boolean,
     displayContent?: PartListUnion,
-  ): AsyncGenerator<ServerGeminiStreamEvent, Turn> {
+  ): AsyncGenerator<ServerCodeflyStreamEvent, Turn> {
     // Re-initialize turn (it was empty before if in loop, or new instance)
     let turn = new Turn(this.getChat(), prompt_id);
 
@@ -604,7 +603,7 @@ export class CodeflyClient {
     }
 
     // Prevent context updates from being sent while a tool call is
-    // waiting for a response. The Gemini API requires that a functionResponse
+    // waiting for a response. The Codefly API requires that a functionResponse
     // part from the user immediately follows a functionCall part from the model
     // in the conversation history . The IDE context is not discarded; it will
     // be included in the next regular message sent to the model.
@@ -795,7 +794,7 @@ export class CodeflyClient {
     turns: number = MAX_TURNS,
     isInvalidStreamRetry: boolean = false,
     displayContent?: PartListUnion,
-  ): AsyncGenerator<ServerGeminiStreamEvent, Turn> {
+  ): AsyncGenerator<ServerCodeflyStreamEvent, Turn> {
     if (!isInvalidStreamRetry) {
       this.config.resetTurn();
     }

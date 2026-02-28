@@ -21,7 +21,7 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import type { Config } from '../config/config.js';
 import { Storage } from '../config/storage.js';
-import { GEMINI_IGNORE_FILE_NAME } from '../config/constants.js';
+import { CODEFLY_IGNORE_FILE_NAME } from '../config/constants.js';
 import { createMockWorkspaceContext } from '../test-utils/mockWorkspaceContext.js';
 import type { ChildProcess } from 'node:child_process';
 import { spawn } from 'node:child_process';
@@ -275,10 +275,10 @@ describe('RipGrepTool', () => {
       getWorkspaceContext: () => createMockWorkspaceContext(tempRootDir),
       getDebugMode: () => false,
       getFileFilteringRespectGitIgnore: () => true,
-      getFileFilteringRespectGeminiIgnore: () => true,
+      getFileFilteringRespectCodeflyIgnore: () => true,
       getFileFilteringOptions: () => ({
         respectGitIgnore: true,
-        respectGeminiIgnore: true,
+        respectCodeflyIgnore: true,
       }),
       storage: {
         getProjectTempDir: vi.fn().mockReturnValue('/tmp/project'),
@@ -682,13 +682,13 @@ describe('RipGrepTool', () => {
     }, 10000);
 
     it('should filter out files based on FileDiscoveryService even if ripgrep returns them', async () => {
-      // Create .geminiignore to ignore 'ignored.txt'
+      // Create .codeflyignore to ignore 'ignored.txt'
       await fs.writeFile(
-        path.join(tempRootDir, GEMINI_IGNORE_FILE_NAME),
+        path.join(tempRootDir, CODEFLY_IGNORE_FILE_NAME),
         'ignored.txt',
       );
 
-      // Re-initialize tool so FileDiscoveryService loads the new .geminiignore
+      // Re-initialize tool so FileDiscoveryService loads the new .codeflyignore
       const toolWithIgnore = new RipGrepTool(
         mockConfig,
         createMockMessageBus(),
@@ -1439,16 +1439,16 @@ describe('RipGrepTool', () => {
     });
 
     it('should add .codeflyignore when enabled and patterns exist', async () => {
-      const geminiIgnorePath = path.join(tempRootDir, '.codeflyignore');
-      await fs.writeFile(geminiIgnorePath, 'ignored.log');
-      const configWithGeminiIgnore = {
+      const codeflyIgnorePath = path.join(tempRootDir, '.codeflyignore');
+      await fs.writeFile(codeflyIgnorePath, 'ignored.log');
+      const configWithCodeflyIgnore = {
         getTargetDir: () => tempRootDir,
         getWorkspaceContext: () => createMockWorkspaceContext(tempRootDir),
         getDebugMode: () => false,
         getFileFilteringRespectCodeflyIgnore: () => true,
       } as unknown as Config;
-      const geminiIgnoreTool = new RipGrepTool(
-        configWithGeminiIgnore,
+      const codeflyIgnoreTool = new RipGrepTool(
+        configWithCodeflyIgnore,
         createMockMessageBus(),
       );
 
@@ -1468,27 +1468,27 @@ describe('RipGrepTool', () => {
       );
 
       const params: RipGrepToolParams = { pattern: 'secret' };
-      const invocation = geminiIgnoreTool.build(params);
+      const invocation = codeflyIgnoreTool.build(params);
       await invocation.execute(abortSignal);
 
       expect(mockSpawn).toHaveBeenLastCalledWith(
         expect.anything(),
-        expect.arrayContaining(['--ignore-file', geminiIgnorePath]),
+        expect.arrayContaining(['--ignore-file', codeflyIgnorePath]),
         expect.anything(),
       );
     });
 
     it('should skip .codeflyignore when disabled', async () => {
-      const geminiIgnorePath = path.join(tempRootDir, '.codeflyignore');
-      await fs.writeFile(geminiIgnorePath, 'ignored.log');
-      const configWithoutGeminiIgnore = {
+      const codeflyIgnorePath = path.join(tempRootDir, '.codeflyignore');
+      await fs.writeFile(codeflyIgnorePath, 'ignored.log');
+      const configWithoutCodeflyIgnore = {
         getTargetDir: () => tempRootDir,
         getWorkspaceContext: () => createMockWorkspaceContext(tempRootDir),
         getDebugMode: () => false,
         getFileFilteringRespectCodeflyIgnore: () => false,
       } as unknown as Config;
-      const geminiIgnoreTool = new RipGrepTool(
-        configWithoutGeminiIgnore,
+      const codeflyIgnoreTool = new RipGrepTool(
+        configWithoutCodeflyIgnore,
         createMockMessageBus(),
       );
 
@@ -1508,12 +1508,12 @@ describe('RipGrepTool', () => {
       );
 
       const params: RipGrepToolParams = { pattern: 'secret' };
-      const invocation = geminiIgnoreTool.build(params);
+      const invocation = codeflyIgnoreTool.build(params);
       await invocation.execute(abortSignal);
 
       expect(mockSpawn).toHaveBeenLastCalledWith(
         expect.anything(),
-        expect.not.arrayContaining(['--ignore-file', geminiIgnorePath]),
+        expect.not.arrayContaining(['--ignore-file', codeflyIgnorePath]),
         expect.anything(),
       );
     });
@@ -1637,7 +1637,7 @@ describe('RipGrepTool', () => {
         getDebugMode: () => false,
         getFileFilteringOptions: () => ({
           respectGitIgnore: true,
-          respectGeminiIgnore: true,
+          respectCodeflyIgnore: true,
         }),
         storage: {
           getProjectTempDir: vi.fn().mockReturnValue('/tmp/project'),

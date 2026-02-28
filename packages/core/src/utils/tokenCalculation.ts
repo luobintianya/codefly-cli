@@ -17,7 +17,7 @@ const NON_ASCII_TOKENS_PER_CHAR = 1.3;
 // Fixed token estimate for images
 const IMAGE_TOKEN_ESTIMATE = 3000;
 // Fixed token estimate for PDFs (~100 pages at 258 tokens/page)
-// See: https://ai.google.dev/gemini-api/docs/document-processing
+// See: https://ai.google.dev/codefly-api/docs/document-processing
 const PDF_TOKEN_ESTIMATE = 25800;
 
 // Maximum number of characters to process with the full character-by-character heuristic.
@@ -58,12 +58,12 @@ function estimateMediaTokens(part: Part): number | undefined {
   const mimeType = inlineData?.mimeType || fileData?.mimeType;
 
   if (mimeType?.startsWith('image/')) {
-    // Images: 3,000 tokens (covers up to 4K resolution on Gemini 3)
-    // See: https://ai.google.dev/gemini-api/docs/vision#token_counting
+    // Images: 3,000 tokens (covers up to 4K resolution on Codefly 3)
+    // See: https://ai.google.dev/codefly-api/docs/vision#token_counting
     return IMAGE_TOKEN_ESTIMATE;
   } else if (mimeType?.startsWith('application/pdf')) {
     // PDFs: 25,800 tokens (~100 pages at 258 tokens/page)
-    // See: https://ai.google.dev/gemini-api/docs/document-processing
+    // See: https://ai.google.dev/codefly-api/docs/document-processing
     return PDF_TOKEN_ESTIMATE;
   }
   return undefined;
@@ -71,7 +71,7 @@ function estimateMediaTokens(part: Part): number | undefined {
 
 /**
  * Heuristic estimation for tool responses, avoiding massive string copies
- * and accounting for nested Gemini 3 multimodal parts.
+ * and accounting for nested Codefly 3 multimodal parts.
  */
 function estimateFunctionResponseTokens(part: Part, depth: number): number {
   const fr = part.functionResponse;
@@ -87,7 +87,7 @@ function estimateFunctionResponseTokens(part: Part, depth: number): number {
     totalTokens += JSON.stringify(response).length / 4;
   }
 
-  // Gemini 3: Handle nested multimodal parts recursively.
+  // Codefly 3: Handle nested multimodal parts recursively.
   // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
   const nestedParts = (fr as unknown as { parts?: Part[] }).parts;
   if (nestedParts && nestedParts.length > 0) {

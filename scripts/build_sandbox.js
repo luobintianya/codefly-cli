@@ -81,7 +81,7 @@ const dockerFile = argv.f;
 
 if (!image.length) {
   console.warn(
-    'No default image tag specified in gemini-cli/packages/cli/package.json',
+    'No default image tag specified in codefly-cli/packages/cli/package.json',
   );
 }
 
@@ -92,7 +92,7 @@ if (!argv.s) {
 
 console.log('packing @codeflyai/codefly ...');
 const cliPackageDir = join('packages', 'cli');
-rmSync(join(cliPackageDir, 'dist', 'google-gemini-cli-*.tgz'), { force: true });
+rmSync(join(cliPackageDir, 'dist', 'google-codefly-cli-*.tgz'), { force: true });
 execSync(
   `npm pack -w @codeflyai/codefly --pack-destination ./packages/cli/dist`,
   {
@@ -102,7 +102,7 @@ execSync(
 
 console.log('packing @codeflyai/codefly-core ...');
 const corePackageDir = join('packages', 'core');
-rmSync(join(corePackageDir, 'dist', 'google-gemini-cli-core-*.tgz'), {
+rmSync(join(corePackageDir, 'dist', 'google-codefly-cli-core-*.tgz'), {
   force: true,
 });
 execSync(
@@ -115,11 +115,11 @@ const packageVersion = JSON.parse(
 ).version;
 
 chmodSync(
-  join(cliPackageDir, 'dist', `google-gemini-cli-${packageVersion}.tgz`),
+  join(cliPackageDir, 'dist', `google-codefly-cli-${packageVersion}.tgz`),
   0o755,
 );
 chmodSync(
-  join(corePackageDir, 'dist', `google-gemini-cli-core-${packageVersion}.tgz`),
+  join(corePackageDir, 'dist', `google-codefly-cli-core-${packageVersion}.tgz`),
   0o755,
 );
 
@@ -139,7 +139,7 @@ function buildImage(imageName, dockerfile) {
     if (isWindows) {
       // PowerShell doesn't support <() process substitution.
       // Create a temporary auth file that we will clean up after.
-      tempAuthFile = join(os.tmpdir(), `gemini-auth-${Date.now()}.json`);
+      tempAuthFile = join(os.tmpdir(), `codefly-auth-${Date.now()}.json`);
       writeFileSync(tempAuthFile, '{}');
       buildCommandArgs = `--authfile="${tempAuthFile}"`;
     } else {
@@ -153,7 +153,7 @@ function buildImage(imageName, dockerfile) {
   ).version;
 
   const imageTag =
-    process.env.GEMINI_SANDBOX_IMAGE_TAG || imageName.split(':')[1];
+    process.env.CODEFLY_SANDBOX_IMAGE_TAG || imageName.split(':')[1];
   const finalImageName = `${imageName.split(':')[0]}:${imageTag}`;
 
   try {

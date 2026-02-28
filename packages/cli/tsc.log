@@ -1,0 +1,808 @@
+src/codefly.tsx(607,51): error TS2345: Argument of type 'import("/Users/robinx/code/codefly-cli/packages/core/dist/src/config/storage", { with: { "resolution-mode": "import" } }).Storage' is not assignable to parameter of type 'Storage'.
+  Type 'Storage' is missing the following properties from type 'Storage': length, clear, getItem, key, and 2 more.
+src/codefly_cleanup.test.tsx(13,7): error TS6196: 'MockProcessExitError' is declared but never used.
+src/commands/openspec.ts(7,29): error TS2307: Cannot find module '@codeflyai/codefly-core/openspec' or its corresponding type declarations.
+src/config/auth.ts(11,3): error TS2554: Expected 2-3 arguments, but got 1.
+src/config/config.integration.test.ts(255,13): error TS2741: Property 'policy' is missing in type '{ query: undefined; model: undefined; sandbox: undefined; debug: undefined; prompt: undefined; promptInteractive: undefined; yolo: undefined; approvalMode: undefined; allowedMcpServerNames: undefined; ... 15 more ...; isCommand: undefined; }' but required in type 'CliArgs'.
+src/config/config.integration.test.ts(284,21): error TS2339: Property 'language' does not exist on type 'Config'.
+src/config/config.test.ts(1543,41): error TS2304: Cannot find name 'MCPServerConfig'.
+src/config/config.test.ts(1582,42): error TS2304: Cannot find name 'MCPServerConfig'.
+src/config/config.test.ts(1607,42): error TS2304: Cannot find name 'MCPServerConfig'.
+src/config/config.test.ts(1641,42): error TS2304: Cannot find name 'MCPServerConfig'.
+src/config/config.test.ts(1665,42): error TS2304: Cannot find name 'MCPServerConfig'.
+src/config/config.test.ts(1673,52): error TS2304: Cannot find name 'MCPServerConfig'.
+src/config/config.test.ts(1708,42): error TS2304: Cannot find name 'MCPServerConfig'.
+src/config/config.test.ts(1715,52): error TS2304: Cannot find name 'MCPServerConfig'.
+src/config/config.test.ts(2641,21): error TS2304: Cannot find name 'MergedSettings'.
+src/config/config.ts(796,5): error TS2353: Object literal may only specify known properties, and 'geminiMdFileCount' does not exist in type 'ConfigParameters'.
+src/config/extension-manager.ts(153,31): error TS2339: Property 'allowedExtensions' does not exist on type 'InferMergedSettings<{ readonly disableYoloMode: { readonly type: "boolean"; readonly label: "Disable YOLO Mode"; readonly category: "Security"; readonly requiresRestart: true; readonly default: false; readonly description: "Disable YOLO mode, even if enabled by a flag."; readonly showInDialog: true; }; ... 5 more .....'.
+src/config/extension-manager.ts(154,31): error TS2339: Property 'allowedExtensions' does not exist on type 'InferMergedSettings<{ readonly disableYoloMode: { readonly type: "boolean"; readonly label: "Disable YOLO Mode"; readonly category: "Security"; readonly requiresRestart: true; readonly default: false; readonly description: "Disable YOLO mode, even if enabled by a flag."; readonly showInDialog: true; }; ... 5 more .....'.
+src/config/extension-manager.ts(156,56): error TS2339: Property 'allowedExtensions' does not exist on type 'InferMergedSettings<{ readonly disableYoloMode: { readonly type: "boolean"; readonly label: "Disable YOLO Mode"; readonly category: "Security"; readonly requiresRestart: true; readonly default: false; readonly description: "Disable YOLO mode, even if enabled by a flag."; readonly showInDialog: true; }; ... 5 more .....'.
+src/config/extension-manager.ts(157,10): error TS7006: Parameter 'pattern' implicitly has an 'any' type.
+src/config/extension-manager.ts(553,31): error TS2339: Property 'allowedExtensions' does not exist on type 'InferMergedSettings<{ readonly disableYoloMode: { readonly type: "boolean"; readonly label: "Disable YOLO Mode"; readonly category: "Security"; readonly requiresRestart: true; readonly default: false; readonly description: "Disable YOLO mode, even if enabled by a flag."; readonly showInDialog: true; }; ... 5 more .....'.
+src/config/extension-manager.ts(554,31): error TS2339: Property 'allowedExtensions' does not exist on type 'InferMergedSettings<{ readonly disableYoloMode: { readonly type: "boolean"; readonly label: "Disable YOLO Mode"; readonly category: "Security"; readonly requiresRestart: true; readonly default: false; readonly description: "Disable YOLO mode, even if enabled by a flag."; readonly showInDialog: true; }; ... 5 more .....'.
+src/config/extension-manager.ts(561,56): error TS2339: Property 'allowedExtensions' does not exist on type 'InferMergedSettings<{ readonly disableYoloMode: { readonly type: "boolean"; readonly label: "Disable YOLO Mode"; readonly category: "Security"; readonly requiresRestart: true; readonly default: false; readonly description: "Disable YOLO mode, even if enabled by a flag."; readonly showInDialog: true; }; ... 5 more .....'.
+src/config/extension-manager.ts(562,10): error TS7006: Parameter 'pattern' implicitly has an 'any' type.
+src/config/extension.test.ts(674,11): error TS2353: Object literal may only specify known properties, and 'allowedExtensions' does not exist in type 'InferSettings<{ readonly disableYoloMode: { readonly type: "boolean"; readonly label: "Disable YOLO Mode"; readonly category: "Security"; readonly requiresRestart: true; readonly default: false; readonly description: "Disable YOLO mode, even if enabled by a flag."; readonly showInDialog: true; }; ... 5 more ...; rea...'.
+src/config/extension.test.ts(702,11): error TS2353: Object literal may only specify known properties, and 'allowedExtensions' does not exist in type 'InferSettings<{ readonly disableYoloMode: { readonly type: "boolean"; readonly label: "Disable YOLO Mode"; readonly category: "Security"; readonly requiresRestart: true; readonly default: false; readonly description: "Disable YOLO mode, even if enabled by a flag."; readonly showInDialog: true; }; ... 5 more ...; rea...'.
+src/config/extension.test.ts(1197,11): error TS2353: Object literal may only specify known properties, and 'allowedExtensions' does not exist in type 'InferSettings<{ readonly disableYoloMode: { readonly type: "boolean"; readonly label: "Disable YOLO Mode"; readonly category: "Security"; readonly requiresRestart: true; readonly default: false; readonly description: "Disable YOLO mode, even if enabled by a flag."; readonly showInDialog: true; }; ... 5 more ...; rea...'.
+src/config/extension.ts(34,12): error TS2304: Cannot find name 'CustomTheme'.
+src/config/extensions/extensionUpdates.test.ts(148,5): error TS2304: Cannot find name 'tempHomeDir'.
+src/config/extensions/extensionUpdates.test.ts(149,7): error TS2304: Cannot find name 'path'.
+src/config/extensions/extensionUpdates.test.ts(149,17): error TS2304: Cannot find name 'os'.
+src/config/extensions/extensionUpdates.test.ts(152,7): error TS2304: Cannot find name 'path'.
+src/config/extensions/extensionUpdates.test.ts(152,17): error TS2304: Cannot find name 'os'.
+src/config/extensions/extensionUpdates.test.ts(154,5): error TS2304: Cannot find name 'extensionDir'.
+src/config/extensions/extensionUpdates.test.ts(154,20): error TS2304: Cannot find name 'path'.
+src/config/extensions/extensionUpdates.test.ts(154,30): error TS2304: Cannot find name 'tempHomeDir'.
+src/config/extensions/extensionUpdates.test.ts(157,14): error TS2304: Cannot find name 'ExtensionStorage'.
+src/config/extensions/extensionUpdates.test.ts(158,7): error TS2304: Cannot find name 'extensionDir'.
+src/config/extensions/extensionUpdates.test.ts(165,18): error TS2304: Cannot find name 'extensionDir'.
+src/config/extensions/extensionUpdates.test.ts(166,15): error TS2304: Cannot find name 'os'.
+src/config/extensions/extensionUpdates.test.ts(166,43): error TS2304: Cannot find name 'tempHomeDir'.
+src/config/extensions/extensionUpdates.test.ts(187,27): error TS2304: Cannot find name 'path'.
+src/config/extensions/extensionUpdates.test.ts(187,37): error TS2304: Cannot find name 'extensionDir'.
+src/config/extensions/extensionUpdates.test.ts(191,32): error TS2304: Cannot find name 'KeychainTokenStorage'.
+src/config/extensions/extensionUpdates.test.ts(249,32): error TS2304: Cannot find name 'path'.
+src/config/extensions/extensionUpdates.test.ts(283,19): error TS2304: Cannot find name 'extensionDir'.
+src/config/extensions/extensionUpdates.test.ts(306,19): error TS2304: Cannot find name 'extensionDir'.
+src/config/policy.ts(41,60): error TS2345: Argument of type 'Storage' is not assignable to parameter of type 'import("/Users/robinx/code/codefly-cli/packages/core/dist/src/config/storage", { with: { "resolution-mode": "import" } }).Storage'.
+  Type 'Storage' is missing the following properties from type 'Storage': targetDir, sessionId, projectIdentifier, initPromise, and 30 more.
+src/config/policy.ts(46,37): error TS2304: Cannot find name 'PolicyUpdateConfirmationRequest'.
+src/config/policy.ts(61,7): error TS2304: Cannot find name 'PolicyUpdateConfirmationRequest'.
+src/config/policy.ts(65,33): error TS2554: Expected 0 arguments, but got 1.
+src/config/policy.ts(69,17): error TS4111: Property 'isWorkspaceHomeDir' comes from an index signature, so it must be accessed with ['isWorkspaceHomeDir'].
+src/config/policy.ts(73,51): error TS4111: Property 'getWorkspacePoliciesDir' comes from an index signature, so it must be accessed with ['getWorkspacePoliciesDir'].
+src/config/policy.ts(74,34): error TS2304: Cannot find name 'PolicyIntegrityManager'.
+src/config/policy.ts(81,36): error TS2304: Cannot find name 'IntegrityStatus'.
+src/config/policy.ts(84,34): error TS2304: Cannot find name 'IntegrityStatus'.
+src/config/policy.ts(106,7): error TS2304: Cannot find name 'writeToStderr'.
+src/config/settings.ts(21,8): error TS6133: 'FetchAdminControlsResponse' is declared but its value is never read.
+src/config/settings.ts(470,42): error TS2304: Cannot find name 'AdminControlsSettings'.
+src/config/skills-backward-compatibility.test.ts(42,9): error TS2559: Type 'string' has no properties in common with type 'HierarchicalMemory'.
+src/config/skills-backward-compatibility.test.ts(63,9): error TS2559: Type 'string' has no properties in common with type 'HierarchicalMemory'.
+src/config/skills-backward-compatibility.test.ts(87,9): error TS2559: Type 'string' has no properties in common with type 'HierarchicalMemory'.
+src/config/skills-backward-compatibility.test.ts(111,9): error TS2559: Type 'string' has no properties in common with type 'HierarchicalMemory'.
+src/config/skills-backward-compatibility.test.ts(136,9): error TS2559: Type 'string' has no properties in common with type 'HierarchicalMemory'.
+src/config/trustedFolders.test.ts(7,1): error TS6133: 'osActual' is declared but its value is never read.
+src/config/trustedFolders.test.ts(8,10): error TS2300: Duplicate identifier 'FatalConfigError'.
+src/config/trustedFolders.test.ts(8,28): error TS2300: Duplicate identifier 'ideContextStore'.
+src/config/trustedFolders.test.ts(16,8): error TS6133: 'Mocked' is declared but its value is never read.
+src/config/trustedFolders.test.ts(17,8): error TS6133: 'Mock' is declared but its value is never read.
+src/config/trustedFolders.test.ts(23,3): error TS2300: Duplicate identifier 'FatalConfigError'.
+src/config/trustedFolders.test.ts(24,3): error TS2300: Duplicate identifier 'ideContextStore'.
+src/config/trustedFolders.ts(10,22): error TS2307: Cannot find module 'proper-lockfile' or its corresponding type declarations.
+src/config/trustedFolders.ts(129,23): error TS2304: Cannot find name 'HeadlessModeOptions'.
+src/config/trustedFolders.ts(131,9): error TS2304: Cannot find name 'isHeadlessMode'.
+src/config/trustedFolders.ts(206,9): error TS2552: Cannot find name 'coreEvents'. Did you mean 'CloseEvent'?
+src/config/trustedFolders.ts(338,21): error TS2304: Cannot find name 'HeadlessModeOptions'.
+src/config/trustedFolders.ts(367,21): error TS2304: Cannot find name 'HeadlessModeOptions'.
+src/config/trustedFolders.ts(369,7): error TS2304: Cannot find name 'isHeadlessMode'.
+src/core/auth.test.ts(40,16): error TS2339: Property 'LOGIN_WITH_GOOGLE' does not exist on type '{ readonly OAUTH: "oauth"; }'.
+src/core/auth.test.ts(44,16): error TS2339: Property 'LOGIN_WITH_GOOGLE' does not exist on type '{ readonly OAUTH: "oauth"; }'.
+src/core/auth.test.ts(53,16): error TS2339: Property 'LOGIN_WITH_GOOGLE' does not exist on type '{ readonly OAUTH: "oauth"; }'.
+src/core/auth.test.ts(57,16): error TS2339: Property 'LOGIN_WITH_GOOGLE' does not exist on type '{ readonly OAUTH: "oauth"; }'.
+src/core/auth.test.ts(63,11): error TS2304: Cannot find name 'ValidationRequiredError'.
+src/core/auth.test.ts(67,16): error TS2339: Property 'LOGIN_WITH_GOOGLE' does not exist on type '{ readonly OAUTH: "oauth"; }'.
+src/core/auth.test.ts(71,16): error TS2339: Property 'LOGIN_WITH_GOOGLE' does not exist on type '{ readonly OAUTH: "oauth"; }'.
+src/core/auth.ts(32,22): error TS2304: Cannot find name 'ValidationRequiredError'.
+src/deferred.ts(7,10): error TS6133: 'debugLogger' is declared but its value is never read.
+src/deferred.ts(33,5): error TS2304: Cannot find name 'coreEvents'.
+src/deferred.ts(35,7): error TS2304: Cannot find name 'getAdminErrorMessage'.
+src/deferred.ts(45,5): error TS2304: Cannot find name 'coreEvents'.
+src/deferred.ts(47,7): error TS2304: Cannot find name 'getAdminErrorMessage'.
+src/deferred.ts(54,5): error TS2304: Cannot find name 'coreEvents'.
+src/deferred.ts(56,7): error TS2304: Cannot find name 'getAdminErrorMessage'.
+src/nonInteractiveCli.test.ts(69,18): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(131,5): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(269,15): error TS2304: Cannot find name 'GeminiEventType'.
+src/nonInteractiveCli.test.ts(273,5): error TS2304: Cannot find name 'mockGeminiClient'.
+src/nonInteractiveCli.test.ts(292,15): error TS2304: Cannot find name 'GeminiEventType'.
+src/nonInteractiveCli.test.ts(296,5): error TS2304: Cannot find name 'mockGeminiClient'.
+src/nonInteractiveCli.test.ts(323,5): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(325,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/nonInteractiveCli.test.ts(366,12): error TS2304: Cannot find name 'mockCoreExecuteToolCall'.
+src/nonInteractiveCli.test.ts(400,5): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(402,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/nonInteractiveCli.test.ts(452,12): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(466,5): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(468,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/nonInteractiveCli.test.ts(517,12): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(570,5): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(572,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/nonInteractiveCli.test.ts(612,12): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(745,5): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(747,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/nonInteractiveCli.test.ts(801,12): error TS2304: Cannot find name 'mockCoreExecuteToolCall'.
+src/nonInteractiveCli.test.ts(1342,5): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(1344,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/nonInteractiveCli.test.ts(1384,12): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(1541,5): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(1543,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/nonInteractiveCli.test.ts(1733,5): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(1735,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/nonInteractiveCli.test.ts(1816,5): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(1818,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/nonInteractiveCli.test.ts(1851,12): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(1878,5): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(1880,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/nonInteractiveCli.test.ts(1942,5): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(1944,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/nonInteractiveCli.test.ts(2174,15): error TS2304: Cannot find name 'GeminiEventType'.
+src/nonInteractiveCli.test.ts(2185,7): error TS2304: Cannot find name 'mockSchedulerSchedule'.
+src/nonInteractiveCli.test.ts(2187,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/nonInteractiveCli.test.ts(2202,17): error TS2304: Cannot find name 'GeminiEventType'.
+src/nonInteractiveCli.test.ts(2207,7): error TS2304: Cannot find name 'mockGeminiClient'.
+src/nonInteractiveCli.ts(16,3): error TS2724: '"@codeflyai/codefly-core"' has no exported member named 'executeToolCall'. Did you mean 'ExecutingToolCall'?
+src/nonInteractiveCli.ts(16,3): error TS6133: 'executeToolCall' is declared but its value is never read.
+src/nonInteractiveCli.ts(215,11): error TS2304: Cannot find name 'convertSessionToClientHistory'.
+src/nonInteractiveCli.ts(389,44): error TS2304: Cannot find name 'scheduler'.
+src/nonInteractiveCli.ts(453,14): error TS7006: Parameter 'tc' implicitly has an 'any' type.
+src/services/BuiltinCommandLoader.ts(26,1): error TS6133: 'commandsCommand' is declared but its value is never read.
+src/services/BuiltinCommandLoader.ts(35,1): error TS6133: 'shortcutsCommand' is declared but its value is never read.
+src/services/BuiltinCommandLoader.ts(43,1): error TS6133: 'oncallCommand' is declared but its value is never read.
+src/services/BuiltinCommandLoader.ts(46,10): error TS2300: Duplicate identifier 'privacyCommand'.
+src/services/BuiltinCommandLoader.ts(48,10): error TS2300: Duplicate identifier 'privacyCommand'.
+src/services/BuiltinCommandLoader.ts(58,1): error TS6133: 'shellsCommand' is declared but its value is never read.
+src/services/CommandService.ts(123,7): error TS2304: Cannot find name 'coreEvents'.
+src/test-utils/AppRig.tsx(297,13): error TS2353: Object literal may only specify known properties, and 'geminiMdFileCount' does not exist in type 'InitializationResult'.
+src/test-utils/AppRig.tsx(541,10): error TS2339: Property 'getGeminiClient' does not exist on type 'Config'.
+src/test-utils/createExtension.ts(26,27): error TS2304: Cannot find name 'ExtensionSetting'.
+src/test-utils/createExtension.ts(27,25): error TS2304: Cannot find name 'CustomTheme'.
+src/ui/App.test.tsx(11,1): error TS6133: 'Config' is declared but its value is never read.
+src/ui/App.test.tsx(14,26): error TS6133: 'ToolCallStatus' is declared but its value is never read.
+src/ui/App.test.tsx(241,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/AppContainer.test.tsx(588,25): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/AppContainer.test.tsx(640,25): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/AppContainer.test.tsx(685,25): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/AppContainer.test.tsx(850,23): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/AppContainer.test.tsx(897,23): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/AppContainer.test.tsx(1811,23): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/AppContainer.test.tsx(3423,32): error TS2339: Property 'showIsExpandableHint' does not exist on type 'UIState'.
+src/ui/AppContainer.test.tsx(3430,30): error TS2339: Property 'showIsExpandableHint' does not exist on type 'UIState'.
+src/ui/AppContainer.test.tsx(3437,32): error TS2339: Property 'showIsExpandableHint' does not exist on type 'UIState'.
+src/ui/AppContainer.test.tsx(3462,32): error TS2339: Property 'showIsExpandableHint' does not exist on type 'UIState'.
+src/ui/AppContainer.test.tsx(3469,30): error TS2339: Property 'showIsExpandableHint' does not exist on type 'UIState'.
+src/ui/AppContainer.test.tsx(3487,30): error TS2339: Property 'showIsExpandableHint' does not exist on type 'UIState'.
+src/ui/AppContainer.test.tsx(3495,32): error TS2339: Property 'showIsExpandableHint' does not exist on type 'UIState'.
+src/ui/AppContainer.test.tsx(3520,32): error TS2339: Property 'showIsExpandableHint' does not exist on type 'UIState'.
+src/ui/AppContainer.test.tsx(3527,30): error TS2339: Property 'showIsExpandableHint' does not exist on type 'UIState'.
+src/ui/AppContainer.test.tsx(3541,30): error TS2339: Property 'showIsExpandableHint' does not exist on type 'UIState'.
+src/ui/AppContainer.test.tsx(3555,30): error TS2339: Property 'showIsExpandableHint' does not exist on type 'UIState'.
+src/ui/AppContainer.test.tsx(3570,30): error TS2339: Property 'showIsExpandableHint' does not exist on type 'UIState'.
+src/ui/AppContainer.test.tsx(3578,32): error TS2339: Property 'showIsExpandableHint' does not exist on type 'UIState'.
+src/ui/AppContainer.test.tsx(3611,30): error TS2339: Property 'showIsExpandableHint' does not exist on type 'UIState'.
+src/ui/AppContainer.test.tsx(3633,30): error TS2339: Property 'permissionConfirmationRequest' does not exist on type 'UIState'.
+src/ui/AppContainer.test.tsx(3634,30): error TS2339: Property 'permissionConfirmationRequest' does not exist on type 'UIState'.
+src/ui/AppContainer.test.tsx(3663,27): error TS2339: Property 'permissionConfirmationRequest' does not exist on type 'UIState'.
+src/ui/AppContainer.test.tsx(3674,32): error TS2339: Property 'permissionConfirmationRequest' does not exist on type 'UIState'.
+src/ui/AppContainer.test.tsx(3753,25): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/AppContainer.tsx(166,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/AppContainer.tsx(180,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/AppContainer.tsx(264,10): error TS6133: 'showIsExpandableHint' is declared but its value is never read.
+src/ui/AppContainer.tsx(541,46): error TS2304: Cannot find name 'AgentsDiscoveredPayload'.
+src/ui/AppContainer.tsx(561,14): error TS2540: Cannot assign to 'openaiConfig' because it is a read-only property.
+src/ui/AppContainer.tsx(771,28): error TS2304: Cannot find name 'ChangeAuthRequestedError'.
+src/ui/AppContainer.tsx(829,18): error TS2540: Cannot assign to 'openaiConfig' because it is a read-only property.
+src/ui/AppContainer.tsx(1017,44): error TS2304: Cannot find name 'ConsentRequestPayload'.
+src/ui/AppContainer.tsx(1151,5): error TS6133: 'dismissBackgroundShell' is declared but its value is never read.
+src/ui/AppContainer.tsx(1183,5): error TS6133: 'setActiveBackgroundShellPid' is declared but its value is never read.
+src/ui/AppContainer.tsx(2192,10): error TS2304: Cannot find name 'generateSteeringAckMessage'.
+src/ui/AppContainer.tsx(2195,13): error TS7006: Parameter 'ackText' implicitly has an 'any' type.
+src/ui/AppContainer.tsx(2201,31): error TS2304: Cannot find name 'buildUserSteeringHintPrompt'.
+src/ui/AppContainer.tsx(2568,45): error TS2304: Cannot find name 'NewAgentsChoice'.
+src/ui/AppContainer.tsx(2569,37): error TS2304: Cannot find name 'NewAgentsChoice'.
+src/ui/auth/ApiAuthDialog.tsx(70,5): error TS2353: Object literal may only specify known properties, and 'isValidPath' does not exist in type 'UseTextBufferProps'.
+src/ui/auth/ApiAuthDialog.tsx(82,5): error TS2353: Object literal may only specify known properties, and 'isValidPath' does not exist in type 'UseTextBufferProps'.
+src/ui/auth/ApiAuthDialog.tsx(94,5): error TS2353: Object literal may only specify known properties, and 'isValidPath' does not exist in type 'UseTextBufferProps'.
+src/ui/auth/ApiAuthDialog.tsx(132,5): error TS7030: Not all code paths return a value.
+src/ui/auth/AuthDialog.test.tsx(7,1): error TS6133: 'act' is declared but its value is never read.
+src/ui/auth/AuthDialog.test.tsx(223,31): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/auth/AuthDialog.test.tsx(241,31): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/auth/AuthDialog.test.tsx(256,31): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/commands/hooksCommand.ts(78,18): error TS2304: Cannot find name 'enableHook'.
+src/ui/commands/hooksCommand.ts(84,20): error TS2304: Cannot find name 'renderHookActionFeedback'.
+src/ui/commands/hooksCommand.ts(86,6): error TS7006: Parameter 'label' implicitly has an 'any' type.
+src/ui/commands/hooksCommand.ts(86,13): error TS7006: Parameter 'path' implicitly has an 'any' type.
+src/ui/commands/hooksCommand.ts(133,18): error TS2304: Cannot find name 'disableHook'.
+src/ui/commands/hooksCommand.ts(139,20): error TS2304: Cannot find name 'renderHookActionFeedback'.
+src/ui/commands/hooksCommand.ts(141,6): error TS7006: Parameter 'label' implicitly has an 'any' type.
+src/ui/commands/hooksCommand.ts(141,13): error TS7006: Parameter 'path' implicitly has an 'any' type.
+src/ui/commands/hooksCommand.ts(245,11): error TS2304: Cannot find name 'isLoadableSettingScope'.
+src/ui/commands/hooksCommand.ts(246,27): error TS2345: Argument of type 'SettingScope' is not assignable to parameter of type 'LoadableSettingScope'.
+src/ui/commands/memoryCommand.test.ts(91,27): error TS2339: Property 'length' does not exist on type 'string | HierarchicalMemory'.
+  Property 'length' does not exist on type 'HierarchicalMemory'.
+src/ui/commands/modelCommand.test.ts(107,17): error TS2304: Cannot find name 'MessageType'.
+src/ui/commands/modelCommand.test.ts(139,17): error TS2304: Cannot find name 'MessageType'.
+src/ui/commands/modelCommand.test.ts(153,17): error TS2304: Cannot find name 'MessageType'.
+src/ui/commands/rewindCommand.tsx(54,27): error TS2304: Cannot find name 'convertSessionToClientHistory'.
+src/ui/commands/rewindCommand.tsx(145,15): error TS2304: Cannot find name 'logRewind'.
+src/ui/commands/rewindCommand.tsx(145,37): error TS2304: Cannot find name 'RewindEvent'.
+src/ui/commands/rewindCommand.tsx(184,17): error TS2304: Cannot find name 'checkExhaustive'.
+src/ui/components/AboutBox.tsx(38,52): error TS2339: Property 'showUserIdentity' does not exist on type 'InferMergedSettings<{ readonly language: { readonly type: "string"; readonly label: "Language"; readonly category: "General"; readonly requiresRestart: true; readonly default: "en"; readonly description: "The language for the CLI interface."; readonly showInDialog: true; }; ... 13 more ...; readonly sessionRetention...'.
+src/ui/components/AskUserDialog.test.tsx(1105,33): error TS2304: Cannot find name 'chalk'.
+src/ui/components/AskUserDialog.test.tsx(1137,33): error TS2304: Cannot find name 'chalk'.
+src/ui/components/AskUserDialog.test.tsx(1168,33): error TS2304: Cannot find name 'chalk'.
+src/ui/components/AskUserDialog.test.tsx(1221,10): error TS2304: Cannot find name 'UIState'.
+src/ui/components/AskUserDialog.test.tsx(1224,8): error TS2304: Cannot find name 'UIStateContext'.
+src/ui/components/AskUserDialog.test.tsx(1231,9): error TS2304: Cannot find name 'UIStateContext'.
+src/ui/components/AskUserDialog.test.tsx(1257,10): error TS2304: Cannot find name 'UIState'.
+src/ui/components/AskUserDialog.test.tsx(1260,8): error TS2304: Cannot find name 'UIStateContext'.
+src/ui/components/AskUserDialog.test.tsx(1267,9): error TS2304: Cannot find name 'UIStateContext'.
+src/ui/components/BackgroundShellDisplay.tsx(64,5): error TS2339: Property 'dismissBackgroundShell' does not exist on type 'UIActions'.
+src/ui/components/BackgroundShellDisplay.tsx(65,5): error TS2339: Property 'setActiveBackgroundShellPid' does not exist on type 'UIActions'.
+src/ui/components/BackgroundShellDisplay.tsx(66,5): error TS2339: Property 'setIsBackgroundShellListOpen' does not exist on type 'UIActions'.
+src/ui/components/Composer.test.tsx(62,21): error TS2339: Property 'transientMessage' does not exist on type 'UIState'.
+src/ui/components/Composer.test.tsx(221,44): error TS2304: Cannot find name 'Config'.
+src/ui/components/Composer.test.tsx(241,20): error TS2304: Cannot find name 'Config'.
+src/ui/components/Composer.test.tsx(250,57): error TS2304: Cannot find name 'Config'.
+src/ui/components/Composer.test.tsx(431,25): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/Composer.test.tsx(554,9): error TS2353: Object literal may only specify known properties, and 'transientMessage' does not exist in type 'Partial<UIState>'.
+src/ui/components/Composer.test.tsx(725,44): error TS2304: Cannot find name 'tokenLimit'.
+src/ui/components/Composer.tsx(10,3): error TS2300: Duplicate identifier 'ApprovalMode'.
+src/ui/components/Composer.tsx(37,10): error TS2300: Duplicate identifier 'ApprovalMode'.
+src/ui/components/Composer.tsx(69,27): error TS2304: Cannot find name 'HistoryItemToolGroup'.
+src/ui/components/Composer.tsx(73,14): error TS7006: Parameter 'tool' implicitly has an 'any' type.
+src/ui/components/ContextUsageDisplay.tsx(9,1): error TS6133: 'tokenLimit' is declared but its value is never read.
+src/ui/components/ContextUsageDisplay.tsx(20,22): error TS2304: Cannot find name 'getContextUsagePercentage'.
+src/ui/components/DialogManager.tsx(31,10): error TS2300: Duplicate identifier 'SettingScope'.
+src/ui/components/DialogManager.tsx(40,10): error TS2300: Duplicate identifier 'SettingScope'.
+src/ui/components/DialogManager.tsx(119,15): error TS2339: Property 'newAgents' does not exist on type 'UIState'.
+src/ui/components/DialogManager.tsx(122,25): error TS2339: Property 'newAgents' does not exist on type 'UIState'.
+src/ui/components/DialogManager.tsx(189,15): error TS2339: Property 'permissionConfirmationRequest' does not exist on type 'UIState'.
+src/ui/components/DialogManager.tsx(190,27): error TS2339: Property 'permissionConfirmationRequest' does not exist on type 'UIState'.
+src/ui/components/DialogManager.tsx(191,34): error TS7006: Parameter 'f' implicitly has an 'any' type.
+src/ui/components/DialogManager.tsx(196,19): error TS2339: Property 'permissionConfirmationRequest' does not exist on type 'UIState'.
+src/ui/components/FolderTrustDialog.test.tsx(238,40): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/components/FolderTrustDialog.tsx(32,22): error TS2304: Cannot find name 'FolderDiscoveryResults'.
+src/ui/components/FolderTrustDialog.tsx(41,62): error TS2304: Cannot find name 'useUIState'.
+src/ui/components/FolderTrustDialog.tsx(42,29): error TS2304: Cannot find name 'useAlternateBuffer'.
+src/ui/components/FolderTrustDialog.tsx(149,50): error TS7006: Parameter 'error' implicitly has an 'any' type.
+src/ui/components/FolderTrustDialog.tsx(149,57): error TS7006: Parameter 'i' implicitly has an 'any' type.
+src/ui/components/FolderTrustDialog.tsx(162,51): error TS7006: Parameter 'warning' implicitly has an 'any' type.
+src/ui/components/FolderTrustDialog.tsx(162,60): error TS7006: Parameter 'i' implicitly has an 'any' type.
+src/ui/components/FolderTrustDialog.tsx(180,33): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/ui/components/FolderTrustDialog.tsx(180,39): error TS7006: Parameter 'idx' implicitly has an 'any' type.
+src/ui/components/FolderTrustDialog.tsx(210,12): error TS2304: Cannot find name 'StickyHeader'.
+src/ui/components/FolderTrustDialog.tsx(217,13): error TS2304: Cannot find name 'StickyHeader'.
+src/ui/components/FolderTrustDialog.tsx(287,10): error TS2304: Cannot find name 'ShowMoreLines'.
+src/ui/components/FolderTrustDialog.tsx(309,6): error TS2304: Cannot find name 'OverflowProvider'.
+src/ui/components/FolderTrustDialog.tsx(309,34): error TS2304: Cannot find name 'OverflowProvider'.
+src/ui/components/HistoryItemDisplay.test.tsx(153,24): error TS6133: 'waitUntilReady' is declared but its value is never read.
+src/ui/components/HistoryItemDisplay.test.tsx(153,40): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/components/HistoryItemDisplay.test.tsx(242,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/HistoryItemDisplay.tsx(23,1): error TS6133: 'ModelStatsDisplay' is declared but its value is never read.
+src/ui/components/IdeTrustChangeDialog.test.tsx(20,40): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/components/IdeTrustChangeDialog.test.tsx(33,40): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/components/InputPrompt.test.tsx(3846,33): error TS2339: Property 'terminalCursorFocus' does not exist on type 'Props'.
+src/ui/components/InputPrompt.test.tsx(3850,33): error TS2339: Property 'terminalCursorPosition' does not exist on type 'Props'.
+src/ui/components/InputPrompt.test.tsx(3875,33): error TS2339: Property 'terminalCursorFocus' does not exist on type 'Props'.
+src/ui/components/InputPrompt.test.tsx(3879,33): error TS2339: Property 'terminalCursorPosition' does not exist on type 'Props'.
+src/ui/components/InputPrompt.test.tsx(3904,33): error TS2339: Property 'terminalCursorFocus' does not exist on type 'Props'.
+src/ui/components/InputPrompt.test.tsx(3908,33): error TS2339: Property 'terminalCursorPosition' does not exist on type 'Props'.
+src/ui/components/InputPrompt.test.tsx(3936,27): error TS2339: Property 'terminalCursorPosition' does not exist on type 'Props'.
+src/ui/components/InputPrompt.test.tsx(3941,27): error TS2339: Property 'terminalCursorFocus' does not exist on type 'Props'.
+src/ui/components/InputPrompt.test.tsx(3945,28): error TS2339: Property 'terminalCursorPosition' does not exist on type 'Props'.
+src/ui/components/InputPrompt.test.tsx(3976,27): error TS2339: Property 'terminalCursorPosition' does not exist on type 'Props'.
+src/ui/components/InputPrompt.test.tsx(3984,27): error TS2339: Property 'terminalCursorFocus' does not exist on type 'Props'.
+src/ui/components/InputPrompt.test.tsx(3987,31): error TS2339: Property 'terminalCursorPosition' does not exist on type 'Props'.
+src/ui/components/InputPrompt.test.tsx(4011,33): error TS2339: Property 'terminalCursorFocus' does not exist on type 'Props'.
+src/ui/components/InputPrompt.test.tsx(4014,33): error TS2339: Property 'terminalCursorPosition' does not exist on type 'Props'.
+src/ui/components/InputPrompt.tsx(1462,19): error TS2322: Type '{ children: (string | Element)[]; terminalCursorFocus: true; terminalCursorPosition: number; }' is not assignable to type 'IntrinsicAttributes & Props'.
+  Property 'terminalCursorFocus' does not exist on type 'IntrinsicAttributes & Props'.
+src/ui/components/InputPrompt.tsx(1586,25): error TS2322: Type '{ children: (string | false | Element | ReactNode[])[]; terminalCursorFocus: boolean; terminalCursorPosition: number; }' is not assignable to type 'IntrinsicAttributes & Props'.
+  Property 'terminalCursorFocus' does not exist on type 'IntrinsicAttributes & Props'.
+src/ui/components/messages/ShellToolMessage.test.tsx(12,26): error TS6133: 'ToolCallStatus' is declared but its value is never read.
+src/ui/components/messages/ShellToolMessage.test.tsx(63,13): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ShellToolMessage.test.tsx(118,29): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ShellToolMessage.test.tsx(122,11): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ShellToolMessage.test.tsx(144,22): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ShellToolMessage.test.tsx(159,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ShellToolMessage.test.tsx(164,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ShellToolMessage.test.tsx(169,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ShellToolMessage.test.tsx(175,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ShellToolMessage.test.tsx(189,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ShellToolMessage.test.tsx(218,9): error TS2304: Cannot find name 'ACTIVE_SHELL_MAX_LINES'.
+src/ui/components/messages/ShellToolMessage.test.tsx(230,9): error TS2304: Cannot find name 'ACTIVE_SHELL_MAX_LINES'.
+src/ui/components/messages/ShellToolMessage.test.tsx(240,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ShellToolMessage.test.tsx(263,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ShellToolMessage.test.tsx(281,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ShellToolMessage.test.tsx(307,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ShellToolMessage.tsx(66,7): error TS2304: Cannot find name 'useUIState'.
+src/ui/components/messages/ShellToolMessage.tsx(67,29): error TS2304: Cannot find name 'useAlternateBuffer'.
+src/ui/components/messages/ShellToolMessage.tsx(161,21): error TS2304: Cannot find name 'calculateShellMaxLines'.
+src/ui/components/messages/ShellToolMessage.tsx(174,56): error TS2304: Cannot find name 'ACTIVE_SHELL_MAX_LINES'.
+src/ui/components/messages/Todo.tsx(8,1): error TS6192: All imports in import declaration are unused.
+src/ui/components/messages/Todo.tsx(10,8): error TS6133: 'Todo' is declared but its value is never read.
+src/ui/components/messages/Todo.tsx(12,8): error TS6133: 'TodoStatus' is declared but its value is never read.
+src/ui/components/messages/Todo.tsx(14,1): error TS6133: 'theme' is declared but its value is never read.
+src/ui/components/messages/ToolConfirmationMessage.test.tsx(16,3): error TS2724: '"../../../test-utils/render.js"' has no exported member named 'createMockSettings'. Did you mean 'mockSettings'?
+src/ui/components/messages/ToolGroupMessage.test.tsx(17,1): error TS6133: 'Config' is declared but its value is never read.
+src/ui/components/messages/ToolGroupMessage.test.tsx(31,13): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(49,26): error TS2304: Cannot find name 'makeFakeConfig'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(51,16): error TS2304: Cannot find name 'os'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(85,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(112,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(118,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(124,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(159,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(165,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(171,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(340,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(424,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(449,34): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(453,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(522,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(527,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(532,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(537,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(541,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(543,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(553,19): error TS2304: Cannot find name 'ASK_USER_DISPLAY_NAME'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(580,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(584,17): error TS2304: Cannot find name 'ASK_USER_DISPLAY_NAME'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(585,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(607,17): error TS2304: Cannot find name 'ASK_USER_DISPLAY_NAME'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(608,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(632,15): error TS2304: Cannot find name 'WRITE_FILE_DISPLAY_NAME'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(633,15): error TS2304: Cannot find name 'ApprovalMode'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(636,15): error TS2304: Cannot find name 'EDIT_DISPLAY_NAME'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(636,40): error TS2304: Cannot find name 'ApprovalMode'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(638,15): error TS2304: Cannot find name 'WRITE_FILE_DISPLAY_NAME'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(639,15): error TS2304: Cannot find name 'ApprovalMode'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(642,15): error TS2304: Cannot find name 'READ_FILE_DISPLAY_NAME'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(642,45): error TS2304: Cannot find name 'ApprovalMode'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(643,15): error TS2304: Cannot find name 'GLOB_DISPLAY_NAME'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(643,40): error TS2304: Cannot find name 'ApprovalMode'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(738,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolMessage.test.tsx(12,1): error TS6133: 'StreamingContext' is declared but its value is never read.
+src/ui/components/messages/ToolMessage.test.tsx(41,13): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolMessage.test.tsx(225,45): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolMessage.test.tsx(235,45): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolMessage.test.tsx(247,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolMessage.test.tsx(258,45): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolMessage.test.tsx(268,45): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolMessage.test.tsx(278,45): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolMessage.test.tsx(288,45): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolMessage.test.tsx(298,45): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolMessage.test.tsx(383,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolMessage.test.tsx(405,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolMessage.test.tsx(425,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolMessageFocusHint.test.tsx(37,13): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolResultDisplay.test.tsx(10,1): error TS6192: All imports in import declaration are unused.
+src/ui/components/messages/ToolResultDisplay.tsx(63,9): error TS2304: Cannot find name 'AnsiLine'.
+src/ui/components/messages/ToolResultDisplay.tsx(68,24): error TS2304: Cannot find name 'AnsiLine'.
+src/ui/components/messages/ToolShared.tsx(46,11): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolShared.tsx(51,16): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolShared.tsx(61,11): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolShared.tsx(68,16): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolShared.tsx(137,11): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolShared.tsx(187,11): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/ModelDialog.test.tsx(121,24): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/components/ModelDialog.test.tsx(136,47): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/components/ModelDialog.test.tsx(179,36): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/components/ModelDialog.test.tsx(195,20): error TS6133: 'waitUntilReady' is declared but its value is never read.
+src/ui/components/ModelDialog.test.tsx(214,47): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/components/ModelDialog.test.tsx(257,47): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/components/ModelDialog.test.tsx(286,34): error TS2304: Cannot find name 'DEFAULT_GEMINI_MODEL'.
+src/ui/components/ModelDialog.test.tsx(288,19): error TS2304: Cannot find name 'DEFAULT_GEMINI_MODEL'.
+src/ui/components/ModelDialog.test.tsx(332,32): error TS2304: Cannot find name 'PREVIEW_GEMINI_MODEL'.
+src/ui/components/ModelDialog.test.tsx(333,32): error TS2304: Cannot find name 'PREVIEW_GEMINI_FLASH_MODEL'.
+src/ui/components/ModelDialog.test.tsx(352,32): error TS2304: Cannot find name 'PREVIEW_GEMINI_3_1_MODEL'.
+src/ui/components/ModelDialog.test.tsx(353,32): error TS2304: Cannot find name 'PREVIEW_GEMINI_FLASH_MODEL'.
+src/ui/components/ModelDialog.test.tsx(381,11): error TS2304: Cannot find name 'PREVIEW_GEMINI_3_1_CUSTOM_TOOLS_MODEL'.
+src/ui/components/ModelDialog.tsx(30,1): error TS6133: 'ThemedGradient' is declared but its value is never read.
+src/ui/components/ModelDialog.tsx(38,9): error TS2451: Cannot redeclare block-scoped variable 'settings'.
+src/ui/components/ModelDialog.tsx(41,9): error TS2451: Cannot redeclare block-scoped variable 'settings'.
+src/ui/components/ModelDialog.tsx(49,9): error TS6133: 'useCustomToolModel' is declared but its value is never read.
+src/ui/components/ModelDialog.tsx(50,41): error TS2304: Cannot find name 'AuthType'.
+src/ui/components/ModelStatsDisplay.test.tsx(431,14): error TS2304: Cannot find name 'LlmRole'.
+src/ui/components/ModelStatsDisplay.test.tsx(551,26): error TS2304: Cannot find name 'LlmRole'.
+src/ui/components/ModelStatsDisplay.test.tsx(611,65): error TS2304: Cannot find name 'LlmRole'.
+src/ui/components/Notifications.tsx(55,26): error TS2304: Cannot find name 'WarningPriority'.
+src/ui/components/Notifications.tsx(71,28): error TS2304: Cannot find name 'WarningPriority'.
+src/ui/components/SessionSummaryDisplay.tsx(20,5): error TS2322: Type '{ title: string; duration: string; footer: string; }' is not assignable to type 'IntrinsicAttributes & StatsDisplayProps'.
+  Property 'footer' does not exist on type 'IntrinsicAttributes & StatsDisplayProps'.
+src/ui/components/SettingsDialog.tsx(42,1): error TS6133: 'useUIState' is declared but its value is never read.
+src/ui/components/SettingsDialog.tsx(43,1): error TS6133: 'useTextBuffer' is declared but its value is never read.
+src/ui/components/SettingsDialog.tsx(212,24): error TS2304: Cannot find name 'useSearchBuffer'.
+src/ui/components/shared/BaseSettingsDialog.tsx(565,27): error TS2322: Type '{ children: string; color: string; terminalCursorFocus: boolean; terminalCursorPosition: number; }' is not assignable to type 'IntrinsicAttributes & Props'.
+  Property 'terminalCursorFocus' does not exist on type 'IntrinsicAttributes & Props'.
+src/ui/components/shared/TextInput.tsx(70,17): error TS2322: Type '{ children: (string | Element)[]; terminalCursorFocus: true; terminalCursorPosition: number; }' is not assignable to type 'IntrinsicAttributes & Props'.
+  Property 'terminalCursorFocus' does not exist on type 'IntrinsicAttributes & Props'.
+src/ui/components/shared/TextInput.tsx(105,15): error TS2322: Type '{ children: string; terminalCursorFocus: boolean; terminalCursorPosition: number; }' is not assignable to type 'IntrinsicAttributes & Props'.
+  Property 'terminalCursorFocus' does not exist on type 'IntrinsicAttributes & Props'.
+src/ui/components/ShellInputPrompt.test.tsx(38,15): error TS2304: Cannot find name 'useUIActions'.
+src/ui/components/ShellInputPrompt.test.tsx(40,18): error TS2304: Cannot find name 'UIActions'.
+src/ui/components/ShellInputPrompt.test.tsx(40,32): error TS2304: Cannot find name 'UIActions'.
+src/ui/components/ShellInputPrompt.test.tsx(60,11): error TS2304: Cannot find name 'act'.
+src/ui/components/ShellInputPrompt.test.tsx(89,11): error TS2304: Cannot find name 'act'.
+src/ui/components/ShellInputPrompt.test.tsx(116,11): error TS2304: Cannot find name 'act'.
+src/ui/components/ShellInputPrompt.test.tsx(138,13): error TS2304: Cannot find name 'act'.
+src/ui/components/ShellInputPrompt.test.tsx(167,11): error TS2304: Cannot find name 'act'.
+src/ui/components/ShellInputPrompt.test.tsx(180,11): error TS2304: Cannot find name 'act'.
+src/ui/components/ShellInputPrompt.test.tsx(202,11): error TS2304: Cannot find name 'act'.
+src/ui/components/ShellInputPrompt.test.tsx(226,11): error TS2304: Cannot find name 'act'.
+src/ui/components/ShellInputPrompt.test.tsx(251,11): error TS2304: Cannot find name 'act'.
+src/ui/components/StatsDisplay.tsx(11,26): error TS6133: 'formatResetTime' is declared but its value is never read.
+src/ui/components/StatsDisplay.tsx(84,18): error TS2304: Cannot find name 'getDisplayString'.
+src/ui/components/StatsDisplay.tsx(117,18): error TS2304: Cannot find name 'currentModel'.
+src/ui/components/StatsDisplay.tsx(117,34): error TS2304: Cannot find name 'isAutoModel'.
+src/ui/components/StatsDisplay.tsx(117,46): error TS2304: Cannot find name 'currentModel'.
+src/ui/components/StatsDisplay.tsx(119,10): error TS2304: Cannot find name 'getDisplayString'.
+src/ui/components/StatsDisplay.tsx(119,27): error TS2304: Cannot find name 'currentModel'.
+src/ui/components/StatsDisplay.tsx(134,9): error TS2304: Cannot find name 'showQuotaColumn'.
+src/ui/components/StatsDisplay.tsx(135,9): error TS2304: Cannot find name 'pooledRemaining'.
+src/ui/components/StatsDisplay.tsx(136,9): error TS2304: Cannot find name 'pooledLimit'.
+src/ui/components/StatsDisplay.tsx(137,9): error TS2304: Cannot find name 'pooledLimit'.
+src/ui/components/StatsDisplay.tsx(139,14): error TS2304: Cannot find name 'QuotaStatsInfo'.
+src/ui/components/StatsDisplay.tsx(140,26): error TS2304: Cannot find name 'pooledRemaining'.
+src/ui/components/StatsDisplay.tsx(141,22): error TS2304: Cannot find name 'pooledLimit'.
+src/ui/components/StatsDisplay.tsx(142,26): error TS2304: Cannot find name 'pooledResetTime'.
+src/ui/components/StatsDisplay.tsx(297,20): error TS2304: Cannot find name 'useSettings'.
+src/ui/components/StatsDisplay.tsx(298,18): error TS2304: Cannot find name 'useConfig'.
+src/ui/components/StatsDisplay.tsx(302,53): error TS2304: Cannot find name 'AuthType'.
+src/ui/components/StatsDisplay.tsx(303,27): error TS2304: Cannot find name 'quotaStats'.
+src/ui/components/StatsDisplay.tsx(304,23): error TS2304: Cannot find name 'quotaStats'.
+src/ui/components/StatsDisplay.tsx(305,27): error TS2304: Cannot find name 'quotaStats'.
+src/ui/components/StatsDisplay.tsx(335,10): error TS2304: Cannot find name 'footer'.
+src/ui/components/StatsDisplay.tsx(338,34): error TS2304: Cannot find name 'footer'.
+src/ui/components/StatsDisplay.tsx(357,30): error TS2304: Cannot find name 'selectedAuthType'.
+src/ui/components/StatsDisplay.tsx(360,16): error TS2304: Cannot find name 'selectedAuthType'.
+src/ui/components/StatsDisplay.tsx(361,19): error TS2304: Cannot find name 'userEmail'.
+src/ui/components/StatsDisplay.tsx(362,47): error TS2304: Cannot find name 'userEmail'.
+src/ui/components/StatsDisplay.tsx(364,19): error TS2304: Cannot find name 'selectedAuthType'.
+src/ui/components/StatsDisplay.tsx(368,30): error TS2304: Cannot find name 'tier'.
+src/ui/components/StatsDisplay.tsx(370,47): error TS2304: Cannot find name 'tier'.
+src/ui/components/StatsDisplay.tsx(438,9): error TS2322: Type '{ models: Record<string, ModelMetrics>; cacheEfficiency: number; totalCachedTokens: number; currentModel: any; pooledRemaining: any; pooledLimit: any; pooledResetTime: any; useGemini3_1: any; useCustomToolModel: any; }' is not assignable to type 'IntrinsicAttributes & { models: Record<string, ModelMetrics>; cacheEfficiency: number; totalCachedTokens: number; }'.
+  Property 'currentModel' does not exist on type 'IntrinsicAttributes & { models: Record<string, ModelMetrics>; cacheEfficiency: number; totalCachedTokens: number; }'.
+src/ui/components/StatsDisplay.tsx(438,23): error TS2304: Cannot find name 'currentModel'.
+src/ui/components/Tips.test.tsx(24,7): error TS1308: 'await' expressions are only allowed within async functions and at the top levels of modules.
+src/ui/components/ToastDisplay.test.tsx(32,7): error TS2353: Object literal may only specify known properties, and 'transientMessage' does not exist in type 'Partial<UIState>'.
+src/ui/components/ToastDisplay.test.tsx(130,7): error TS2353: Object literal may only specify known properties, and 'transientMessage' does not exist in type 'Partial<UIState>'.
+src/ui/components/ToastDisplay.test.tsx(141,7): error TS2353: Object literal may only specify known properties, and 'transientMessage' does not exist in type 'Partial<UIState>'.
+src/ui/components/ToastDisplay.test.tsx(186,7): error TS2353: Object literal may only specify known properties, and 'showIsExpandableHint' does not exist in type 'Partial<UIState>'.
+src/ui/components/ToastDisplay.test.tsx(195,7): error TS2353: Object literal may only specify known properties, and 'showIsExpandableHint' does not exist in type 'Partial<UIState>'.
+src/ui/components/ToastDisplay.tsx(16,21): error TS2339: Property 'transientMessage' does not exist on type 'UIState'.
+src/ui/components/ToastDisplay.tsx(21,13): error TS2339: Property 'showIsExpandableHint' does not exist on type 'UIState'.
+src/ui/components/ToastDisplay.tsx(35,13): error TS2339: Property 'transientMessage' does not exist on type 'UIState'.
+src/ui/components/ToastDisplay.tsx(36,13): error TS2339: Property 'transientMessage' does not exist on type 'UIState'.
+src/ui/components/ToastDisplay.tsx(39,51): error TS2339: Property 'transientMessage' does not exist on type 'UIState'.
+src/ui/components/ToastDisplay.tsx(65,13): error TS2339: Property 'transientMessage' does not exist on type 'UIState'.
+src/ui/components/ToastDisplay.tsx(66,13): error TS2339: Property 'transientMessage' does not exist on type 'UIState'.
+src/ui/components/ToastDisplay.tsx(69,51): error TS2339: Property 'transientMessage' does not exist on type 'UIState'.
+src/ui/components/ToastDisplay.tsx(77,15): error TS2339: Property 'showIsExpandableHint' does not exist on type 'UIState'.
+src/ui/components/ToolConfirmationQueue.test.tsx(65,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/ToolConfirmationQueue.test.tsx(109,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/ToolConfirmationQueue.test.tsx(140,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/ToolConfirmationQueue.test.tsx(174,11): error TS2304: Cannot find name 'waitFor'.
+src/ui/components/ToolConfirmationQueue.test.tsx(190,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/ToolConfirmationQueue.test.tsx(229,11): error TS2304: Cannot find name 'waitFor'.
+src/ui/components/ToolConfirmationQueue.test.tsx(240,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/ToolConfirmationQueue.test.tsx(280,11): error TS2304: Cannot find name 'waitFor'.
+src/ui/components/ToolConfirmationQueue.test.tsx(295,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/ToolConfirmationQueue.test.tsx(338,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/ToolConfirmationQueue.test.tsx(376,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/ToolConfirmationQueue.test.tsx(399,11): error TS2304: Cannot find name 'waitFor'.
+src/ui/components/views/ExtensionsList.tsx(73,42): error TS2304: Cannot find name 'getFormattedSettingValue'.
+src/ui/contexts/TerminalContext.tsx(68,35): error TS2339: Property 'queryBackgroundColor' does not exist on type 'typeof TerminalCapabilityManager'.
+src/ui/contexts/ToolActionsContext.test.tsx(17,8): error TS6133: 'ToolCallConfirmationDetails' is declared but its value is never read.
+src/ui/contexts/ToolActionsContext.test.tsx(19,10): error TS6133: 'ToolCallStatus' is declared but its value is never read.
+src/ui/contexts/ToolActionsContext.test.tsx(49,15): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/contexts/ToolActionsContext.test.tsx(58,15): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/contexts/ToolActionsContext.test.tsx(192,15): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/contexts/ToolActionsContext.test.tsx(201,23): error TS2304: Cannot find name 'SerializableConfirmationDetails'.
+src/ui/contexts/UIStateContext.tsx(18,3): error TS6196: 'PermissionConfirmationRequest' is declared but never used.
+src/ui/contexts/UIStateContext.tsx(115,27): error TS2304: Cannot find name 'FolderDiscoveryResults'.
+src/ui/contexts/UIStateContext.tsx(117,36): error TS2304: Cannot find name 'PolicyUpdateConfirmationRequest'.
+src/ui/hooks/atCommandProcessor.test.ts(18,3): error TS6133: 'GEMINI_IGNORE_FILE_NAME' is declared but its value is never read.
+src/ui/hooks/atCommandProcessor.test.ts(136,7): error TS1117: An object literal cannot have multiple properties with the same name.
+src/ui/hooks/atCommandProcessor.test.ts(216,45): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/atCommandProcessor.test.ts(320,45): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/atCommandProcessor.test.ts(1442,51): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/atCommandProcessor.ts(13,3): error TS6196: 'DiscoveredMCPResource' is declared but never used.
+src/ui/hooks/atCommandProcessor.ts(418,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/atCommandProcessor.ts(432,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/atCommandProcessor.ts(457,27): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/atCommandProcessor.ts(511,15): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/atCommandProcessor.ts(570,15): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/shellCommandProcessor.test.tsx(29,13): error TS2304: Cannot find name 'mockShellKill'.
+src/ui/hooks/shellCommandProcessor.test.tsx(30,19): error TS2304: Cannot find name 'mockShellBackground'.
+src/ui/hooks/shellCommandProcessor.test.tsx(31,18): error TS2304: Cannot find name 'mockShellSubscribe'.
+src/ui/hooks/shellCommandProcessor.test.tsx(32,15): error TS2304: Cannot find name 'mockShellOnExit'.
+src/ui/hooks/shellCommandProcessor.test.tsx(188,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/shellCommandProcessor.test.tsx(227,21): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/shellCommandProcessor.test.tsx(256,51): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/shellCommandProcessor.test.tsx(470,51): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/shellCommandProcessor.test.tsx(764,14): error TS2304: Cannot find name 'mockShellOnExit'.
+src/ui/hooks/shellCommandProcessor.test.tsx(765,14): error TS2304: Cannot find name 'mockShellSubscribe'.
+src/ui/hooks/shellCommandProcessor.test.tsx(821,14): error TS2304: Cannot find name 'mockShellKill'.
+src/ui/hooks/shellCommandProcessor.test.tsx(850,14): error TS2304: Cannot find name 'mockShellBackground'.
+src/ui/hooks/shellCommandProcessor.test.tsx(879,28): error TS2304: Cannot find name 'mockShellOnExit'.
+src/ui/hooks/shellCommandProcessor.test.tsx(880,10): error TS7006: Parameter 'call' implicitly has an 'any' type.
+src/ui/hooks/shellCommandProcessor.test.tsx(905,28): error TS2304: Cannot find name 'mockShellOnExit'.
+src/ui/hooks/shellCommandProcessor.test.tsx(906,10): error TS7006: Parameter 'call' implicitly has an 'any' type.
+src/ui/hooks/shellCommandProcessor.test.tsx(943,33): error TS2304: Cannot find name 'mockShellSubscribe'.
+src/ui/hooks/shellCommandProcessor.test.tsx(944,10): error TS7006: Parameter 'call' implicitly has an 'any' type.
+src/ui/hooks/shellCommandProcessor.test.tsx(969,33): error TS2304: Cannot find name 'mockShellSubscribe'.
+src/ui/hooks/shellCommandProcessor.test.tsx(970,10): error TS7006: Parameter 'call' implicitly has an 'any' type.
+src/ui/hooks/shellCommandProcessor.test.tsx(999,33): error TS2304: Cannot find name 'mockShellSubscribe'.
+src/ui/hooks/shellCommandProcessor.test.tsx(1000,10): error TS7006: Parameter 'call' implicitly has an 'any' type.
+src/ui/hooks/shellCommandProcessor.ts(11,1): error TS6133: 'ToolCallStatus' is declared but its value is never read.
+src/ui/hooks/shellCommandProcessor.ts(12,23): error TS6133: 'useState' is declared but its value is never read.
+src/ui/hooks/shellCommandProcessor.ts(17,3): error TS6196: 'ShellExecutionResult' is declared but never used.
+src/ui/hooks/shellCommandProcessor.ts(88,29): error TS2304: Cannot find name 'useReducer'.
+src/ui/hooks/shellCommandProcessor.ts(91,19): error TS2304: Cannot find name 'useRef'.
+src/ui/hooks/shellCommandProcessor.ts(110,3): error TS2304: Cannot find name 'useEffect'.
+src/ui/hooks/shellCommandProcessor.ts(146,3): error TS2304: Cannot find name 'useEffect'.
+src/ui/hooks/shellCommandProcessor.ts(309,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/shellCommandProcessor.ts(455,29): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/shellCommandProcessor.ts(458,27): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/shellCommandProcessor.ts(461,27): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/shellCommandProcessor.ts(464,27): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/shellCommandProcessor.ts(467,27): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/shellCommandProcessor.ts(470,27): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/shellCommandProcessor.ts(488,31): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/shellCommandProcessor.ts(541,12): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(predicate: (value: unknown, index: number, array: unknown[]) => value is unknown, thisArg?: any): unknown[]', gave the following error.
+    Argument of type '(s: BackgroundShell) => boolean' is not assignable to parameter of type '(value: unknown, index: number, array: unknown[]) => value is unknown'.
+      Types of parameters 's' and 'value' are incompatible.
+        Type 'unknown' is not assignable to type 'BackgroundShell'.
+  Overload 2 of 2, '(predicate: (value: unknown, index: number, array: unknown[]) => unknown, thisArg?: any): unknown[]', gave the following error.
+    Argument of type '(s: BackgroundShell) => boolean' is not assignable to parameter of type '(value: unknown, index: number, array: unknown[]) => unknown'.
+      Types of parameters 's' and 'value' are incompatible.
+        Type 'unknown' is not assignable to type 'BackgroundShell'.
+src/ui/hooks/slashCommandProcessor.test.tsx(186,33): error TS2304: Cannot find name 'SlashCommandConflictHandler'.
+src/ui/hooks/slashCommandProcessor.test.tsx(189,38): error TS2304: Cannot find name 'UserFeedbackPayload'.
+src/ui/hooks/slashCommandProcessor.test.tsx(204,19): error TS2304: Cannot find name 'CoreEvent'.
+src/ui/hooks/slashCommandProcessor.test.tsx(254,22): error TS2304: Cannot find name 'CoreEvent'.
+src/ui/hooks/slashCommandProcessor.ts(585,31): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(42,8): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(43,8): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(44,8): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(45,8): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(46,8): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(47,8): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(48,8): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(50,14): error TS2304: Cannot find name 'mapCoreStatusToDisplayStatus'.
+src/ui/hooks/toolMapping.test.ts(57,9): error TS2304: Cannot find name 'mapCoreStatusToDisplayStatus'.
+src/ui/hooks/toolMapping.test.ts(91,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(105,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(111,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(125,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(144,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(153,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(164,39): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(180,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(191,39): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(207,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(225,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(234,39): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(243,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(256,39): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(262,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(278,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(297,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(313,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(321,43): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.test.ts(326,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.ts(41,25): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.ts(44,26): error TS2339: Property 'invocation' does not exist on type 'ToolCall'.
+  Property 'invocation' does not exist on type 'ErroredToolCall'.
+src/ui/hooks/toolMapping.ts(45,32): error TS18048: 'call.tool' is possibly 'undefined'.
+src/ui/hooks/toolMapping.ts(66,12): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.ts(67,30): error TS2339: Property 'response' does not exist on type 'ToolCall'.
+  Property 'response' does not exist on type 'ValidatingToolCall'.
+src/ui/hooks/toolMapping.ts(68,27): error TS2339: Property 'response' does not exist on type 'ToolCall'.
+  Property 'response' does not exist on type 'ValidatingToolCall'.
+src/ui/hooks/toolMapping.ts(70,12): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.ts(71,12): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.ts(72,30): error TS2339: Property 'response' does not exist on type 'ToolCall'.
+  Property 'response' does not exist on type 'ValidatingToolCall'.
+src/ui/hooks/toolMapping.ts(74,12): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.ts(75,30): error TS2339: Property 'correlationId' does not exist on type 'ToolCall'.
+  Property 'correlationId' does not exist on type 'ValidatingToolCall'.
+src/ui/hooks/toolMapping.ts(77,36): error TS2339: Property 'confirmationDetails' does not exist on type 'ToolCall'.
+  Property 'confirmationDetails' does not exist on type 'ValidatingToolCall'.
+src/ui/hooks/toolMapping.ts(79,12): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.ts(80,30): error TS2339: Property 'liveOutput' does not exist on type 'ToolCall'.
+  Property 'liveOutput' does not exist on type 'ValidatingToolCall'.
+src/ui/hooks/toolMapping.ts(81,22): error TS2339: Property 'pid' does not exist on type 'ToolCall'.
+  Property 'pid' does not exist on type 'ValidatingToolCall'.
+src/ui/hooks/toolMapping.ts(82,32): error TS2339: Property 'progressMessage' does not exist on type 'ToolCall'.
+  Property 'progressMessage' does not exist on type 'ValidatingToolCall'.
+src/ui/hooks/toolMapping.ts(83,25): error TS2339: Property 'progress' does not exist on type 'ToolCall'.
+  Property 'progress' does not exist on type 'ValidatingToolCall'.
+src/ui/hooks/toolMapping.ts(84,30): error TS2339: Property 'progressTotal' does not exist on type 'ToolCall'.
+  Property 'progressTotal' does not exist on type 'ValidatingToolCall'.
+src/ui/hooks/toolMapping.ts(86,12): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.ts(87,12): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.ts(90,15): error TS2322: Type 'ToolCall' is not assignable to type 'never'.
+  Type 'ValidatingToolCall' is not assignable to type 'never'.
+src/ui/hooks/useApprovalModeIndicator.ts(52,22): error TS2304: Cannot find name 'getAdminErrorMessage'.
+src/ui/hooks/useAtCompletion.test.ts(91,12): error TS2304: Cannot find name 'escapePath'.
+src/ui/hooks/useAtCompletion.test.ts(152,35): error TS2304: Cannot find name 'FileDiscoveryService'.
+src/ui/hooks/useAtCompletion.test.ts(277,35): error TS2304: Cannot find name 'FileDiscoveryService'.
+src/ui/hooks/useAtCompletion.test.ts(622,11): error TS2304: Cannot find name 'escapePath'.
+src/ui/hooks/useAtCompletion.test.ts(669,11): error TS2304: Cannot find name 'escapePath'.
+src/ui/hooks/useAtCompletion.test.ts(700,11): error TS2304: Cannot find name 'escapePath'.
+src/ui/hooks/useAtCompletion.ts(275,11): error TS2353: Object literal may only specify known properties, and 'useGitignore' does not exist in type 'FileSearchOptions'.
+src/ui/hooks/useAtCompletion.ts(288,9): error TS2304: Cannot find name 'fileSearch'.
+src/ui/hooks/useAtCompletion.ts(348,49): error TS2304: Cannot find name 'path'.
+src/ui/hooks/useBanner.test.ts(18,1): error TS6133: 'Config' is declared but its value is never read.
+src/ui/hooks/useBanner.ts(9,1): error TS6133: 'Config' is declared but its value is never read.
+src/ui/hooks/useEditorSettings.ts(69,9): error TS2304: Cannot find name 'coreEvents'.
+src/ui/hooks/useEditorSettings.ts(69,25): error TS2304: Cannot find name 'CoreEvent'.
+src/ui/hooks/useEditorSettings.ts(79,5): error TS2304: Cannot find name 'coreEvents'.
+src/ui/hooks/useEditorSettings.ts(79,21): error TS2304: Cannot find name 'CoreEvent'.
+src/ui/hooks/useFolderTrust.test.ts(363,17): error TS2304: Cannot find name 'isHeadlessMode'.
+src/ui/hooks/useFolderTrust.test.ts(377,17): error TS2304: Cannot find name 'MessageType'.
+src/ui/hooks/useFolderTrust.ts(28,14): error TS2304: Cannot find name 'FolderDiscoveryResults'.
+src/ui/hooks/useFolderTrust.ts(39,12): error TS2304: Cannot find name 'FolderTrustDiscoveryService'.
+src/ui/hooks/useFolderTrust.ts(40,16): error TS7006: Parameter 'results' implicitly has an 'any' type.
+src/ui/hooks/useFolderTrust.ts(64,9): error TS2304: Cannot find name 'isHeadlessMode'.
+src/ui/hooks/useGeminiStream.test.tsx(33,3): error TS2305: Module '"@codeflyai/codefly-core"' has no exported member 'GeminiEventType'.
+src/ui/hooks/useGeminiStream.test.tsx(334,47): error TS2339: Property 'getGeminiClient' does not exist on type 'Config'.
+src/ui/hooks/useGeminiStream.test.tsx(1276,22): error TS2339: Property 'getGeminiClient' does not exist on type 'Config'.
+src/ui/hooks/useGeminiStream.test.tsx(1317,22): error TS2339: Property 'getGeminiClient' does not exist on type 'Config'.
+src/ui/hooks/useGeminiStream.test.tsx(2473,20): error TS2339: Property 'getGeminiClient' does not exist on type 'Config'.
+src/ui/hooks/useGeminiStream.test.tsx(2821,22): error TS2339: Property 'getGeminiClient' does not exist on type 'Config'.
+src/ui/hooks/useGeminiStream.test.tsx(3056,18): error TS2339: Property 'getGeminiClient' does not exist on type 'Config'.
+src/ui/hooks/useGeminiStream.test.tsx(3097,18): error TS2339: Property 'getGeminiClient' does not exist on type 'Config'.
+src/ui/hooks/useGeminiStream.test.tsx(3177,18): error TS2339: Property 'getGeminiClient' does not exist on type 'Config'.
+src/ui/hooks/useGeminiStream.ts(9,3): error TS2305: Module '"@codeflyai/codefly-core"' has no exported member 'GeminiEventType'.
+src/ui/hooks/useGeminiStream.ts(44,3): error TS2305: Module '"@codeflyai/codefly-core"' has no exported member 'GeminiClient'.
+src/ui/hooks/useGeminiStream.ts(45,3): error TS2724: '"@codeflyai/codefly-core"' has no exported member named 'ServerGeminiChatCompressedEvent'. Did you mean 'ServerCodeflyChatCompressedEvent'?
+src/ui/hooks/useGeminiStream.ts(275,20): error TS2339: Property 'getGeminiClient' does not exist on type 'Config'.
+src/ui/hooks/useGeminiStream.ts(278,14): error TS2339: Property 'getGeminiClient' does not exist on type 'Config'.
+src/ui/hooks/useGeminiStream.ts(918,13): error TS2554: Expected 1-4 arguments, but got 5.
+src/ui/hooks/useGeminiStream.ts(974,23): error TS2339: Property 'IMAGE_RECITATION' does not exist on type 'typeof FinishReason'.
+src/ui/hooks/useGeminiStream.ts(976,23): error TS2339: Property 'IMAGE_OTHER' does not exist on type 'typeof FinishReason'.
+src/ui/hooks/useGeminiStream.ts(1152,38): error TS2339: Property 'value' does not exist on type 'ServerGeminiStreamEvent'.
+  Property 'value' does not exist on type 'ServerGeminiLoopDetectedEvent'.
+src/ui/hooks/useGeminiStream.ts(1157,21): error TS2339: Property 'value' does not exist on type 'ServerGeminiStreamEvent'.
+  Property 'value' does not exist on type 'ServerGeminiLoopDetectedEvent'.
+src/ui/hooks/useGeminiStream.ts(1163,41): error TS2339: Property 'value' does not exist on type 'ServerGeminiStreamEvent'.
+  Property 'value' does not exist on type 'ServerGeminiLoopDetectedEvent'.
+src/ui/hooks/useGeminiStream.ts(1169,36): error TS2339: Property 'value' does not exist on type 'ServerGeminiStreamEvent'.
+  Property 'value' does not exist on type 'ServerGeminiLoopDetectedEvent'.
+src/ui/hooks/useGeminiStream.ts(1173,21): error TS2339: Property 'value' does not exist on type 'ServerGeminiStreamEvent'.
+  Property 'value' does not exist on type 'ServerGeminiLoopDetectedEvent'.
+src/ui/hooks/useGeminiStream.ts(1175,21): error TS2339: Property 'value' does not exist on type 'ServerGeminiStreamEvent'.
+  Property 'value' does not exist on type 'ServerGeminiLoopDetectedEvent'.
+src/ui/hooks/useGeminiStream.ts(1176,21): error TS2339: Property 'value' does not exist on type 'ServerGeminiStreamEvent'.
+  Property 'value' does not exist on type 'ServerGeminiLoopDetectedEvent'.
+src/ui/hooks/useGeminiStream.ts(1181,21): error TS2339: Property 'value' does not exist on type 'ServerGeminiStreamEvent'.
+  Property 'value' does not exist on type 'ServerGeminiLoopDetectedEvent'.
+src/ui/hooks/useGeminiStream.ts(1183,21): error TS2339: Property 'value' does not exist on type 'ServerGeminiStreamEvent'.
+  Property 'value' does not exist on type 'ServerGeminiLoopDetectedEvent'.
+src/ui/hooks/useGeminiStream.ts(1184,21): error TS2339: Property 'value' does not exist on type 'ServerGeminiStreamEvent'.
+  Property 'value' does not exist on type 'ServerGeminiLoopDetectedEvent'.
+src/ui/hooks/useGeminiStream.ts(1188,46): error TS2339: Property 'value' does not exist on type 'ServerGeminiStreamEvent'.
+  Property 'value' does not exist on type 'ServerGeminiLoopDetectedEvent'.
+src/ui/hooks/useGeminiStream.ts(1199,21): error TS2339: Property 'value' does not exist on type 'ServerGeminiStreamEvent'.
+  Property 'value' does not exist on type 'ServerGeminiLoopDetectedEvent'.
+src/ui/hooks/useGeminiStream.ts(1200,21): error TS2339: Property 'value' does not exist on type 'ServerGeminiStreamEvent'.
+  Property 'value' does not exist on type 'ServerGeminiLoopDetectedEvent'.
+src/ui/hooks/useGeminiStream.ts(1204,33): error TS2345: Argument of type 'ServerGeminiStreamEvent' is not assignable to parameter of type 'ServerGeminiFinishedEvent'.
+  Type 'ServerCodeflyChatCompressedEvent' is not assignable to type 'ServerGeminiFinishedEvent'.
+    Types of property 'type' are incompatible.
+      Type 'CodeflyEventType.ChatCompressed' is not assignable to type 'CodeflyEventType.Finished'.
+src/ui/hooks/useGeminiStream.ts(1207,39): error TS2339: Property 'value' does not exist on type 'ServerGeminiStreamEvent'.
+  Property 'value' does not exist on type 'ServerGeminiLoopDetectedEvent'.
+src/ui/hooks/useGeminiStream.ts(1210,40): error TS2339: Property 'value' does not exist on type 'ServerGeminiStreamEvent'.
+  Property 'value' does not exist on type 'ServerGeminiLoopDetectedEvent'.
+src/ui/hooks/useGeminiStream.ts(1223,19): error TS2322: Type 'ServerGeminiStreamEvent' is not assignable to type 'never'.
+  Type 'ServerCodeflyChatCompressedEvent' is not assignable to type 'never'.
+src/ui/hooks/useGeminiStream.ts(1364,26): error TS2339: Property 'getGeminiClient' does not exist on type 'Config'.
+src/ui/hooks/useGeminiStream.ts(1408,23): error TS2554: Expected 1-4 arguments, but got 5.
+src/ui/hooks/useLoadingIndicator.test.tsx(36,25): error TS2304: Cannot find name 'LoadingPhrasesMode'.
+src/ui/hooks/useLoadingIndicator.test.tsx(48,14): error TS2304: Cannot find name 'LoadingPhrasesMode'.
+src/ui/hooks/useLoadingIndicator.test.tsx(76,16): error TS2304: Cannot find name 'LoadingPhrasesMode'.
+src/ui/hooks/useLoadingIndicator.ts(20,24): error TS2304: Cannot find name 'LoadingPhrasesMode'.
+src/ui/hooks/usePromptCompletion.ts(110,9): error TS2304: Cannot find name 'LlmRole'.
+src/ui/hooks/useQuotaAndFallback.ts(91,13): error TS2304: Cannot find name 'VALID_GEMINI_MODELS'.
+src/ui/hooks/useQuotaAndFallback.ts(93,55): error TS2304: Cannot find name 'getDisplayString'.
+src/ui/hooks/useSessionBrowser.test.ts(159,12): error TS2304: Cannot find name 'convertSessionToClientHistory'.
+src/ui/hooks/useSessionBrowser.test.ts(177,27): error TS2304: Cannot find name 'convertSessionToClientHistory'.
+src/ui/hooks/useSessionBrowser.test.ts(206,27): error TS2304: Cannot find name 'convertSessionToClientHistory'.
+src/ui/hooks/useSessionBrowser.test.ts(229,12): error TS2304: Cannot find name 'convertSessionToClientHistory'.
+src/ui/hooks/useSessionBrowser.test.ts(243,21): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/useSessionBrowser.test.ts(263,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/useSessionBrowser.test.ts(268,27): error TS2304: Cannot find name 'convertSessionToClientHistory'.
+src/ui/hooks/useSessionBrowser.ts(16,15): error TS2300: Duplicate identifier 'Part'.
+src/ui/hooks/useSessionBrowser.ts(17,10): error TS6133: 'partListUnionToString' is declared but its value is never read.
+src/ui/hooks/useSessionBrowser.ts(20,15): error TS2300: Duplicate identifier 'Part'.
+src/ui/hooks/useSessionBrowser.ts(82,13): error TS2304: Cannot find name 'convertSessionToClientHistory'.
+src/ui/hooks/useSessionResume.ts(96,9): error TS2304: Cannot find name 'convertSessionToClientHistory'.
+src/ui/hooks/useShowMemoryCommand.ts(42,105): error TS2339: Property 'substring' does not exist on type 'string | HierarchicalMemory'.
+  Property 'substring' does not exist on type 'HierarchicalMemory'.
+src/ui/hooks/useShowMemoryCommand.ts(59,40): error TS2339: Property 'trim' does not exist on type 'string | HierarchicalMemory'.
+  Property 'trim' does not exist on type 'HierarchicalMemory'.
+src/ui/hooks/useToolExecutionScheduler.test.ts(275,35): error TS2352: Conversion of type '{ type: MessageBusType.TOOL_CALLS_UPDATE; toolCalls: { status: "success"; request: { callId: string; name: string; args: {}; isClientInitiated: boolean; prompt_id: string; }; tool: AnyDeclarativeTool; invocation: AnyToolInvocation; response: { ...; }; }[]; }' to type 'ToolCallsUpdateMessage' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Property 'schedulerId' is missing in type '{ type: MessageBusType.TOOL_CALLS_UPDATE; toolCalls: { status: "success"; request: { callId: string; name: string; args: {}; isClientInitiated: boolean; prompt_id: string; }; tool: AnyDeclarativeTool; invocation: AnyToolInvocation; response: { ...; }; }[]; }' but required in type 'ToolCallsUpdateMessage'.
+src/ui/hooks/useToolExecutionScheduler.test.ts(291,35): error TS2352: Conversion of type '{ type: MessageBusType.TOOL_CALLS_UPDATE; toolCalls: { status: "success"; request: { callId: string; name: string; args: {}; isClientInitiated: boolean; prompt_id: string; }; tool: AnyDeclarativeTool; invocation: AnyToolInvocation; response: { ...; }; }[]; }' to type 'ToolCallsUpdateMessage' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Property 'schedulerId' is missing in type '{ type: MessageBusType.TOOL_CALLS_UPDATE; toolCalls: { status: "success"; request: { callId: string; name: string; args: {}; isClientInitiated: boolean; prompt_id: string; }; tool: AnyDeclarativeTool; invocation: AnyToolInvocation; response: { ...; }; }[]; }' but required in type 'ToolCallsUpdateMessage'.
+src/ui/hooks/useToolExecutionScheduler.ts(75,21): error TS2345: Argument of type '{ config: Config; messageBus: MessageBus; getPreferredEditor: () => "vscode" | "vscodium" | "windsurf" | "cursor" | "zed" | "antigravity" | "vim" | "neovim" | "emacs" | "hx" | undefined; }' is not assignable to parameter of type 'SchedulerOptions'.
+  Property 'schedulerId' is missing in type '{ config: Config; messageBus: MessageBus; getPreferredEditor: () => "vscode" | "vscodium" | "windsurf" | "cursor" | "zed" | "antigravity" | "vim" | "neovim" | "emacs" | "hx" | undefined; }' but required in type 'SchedulerOptions'.
+src/ui/hooks/useTurnActivityMonitor.test.ts(96,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/useTurnActivityMonitor.test.ts(111,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/vim.ts(384,11): error TS2304: Cannot find name 'keyMatchers'.
+src/ui/hooks/vim.ts(384,23): error TS2304: Cannot find name 'Command'.
+src/ui/hooks/vim.ts(585,11): error TS2304: Cannot find name 'keyMatchers'.
+src/ui/hooks/vim.ts(585,23): error TS2304: Cannot find name 'Command'.
+src/ui/hooks/vim.ts(596,13): error TS2304: Cannot find name 'keyMatchers'.
+src/ui/hooks/vim.ts(596,25): error TS2304: Cannot find name 'Command'.
+src/ui/types.ts(12,3): error TS6196: 'ToolCallConfirmationDetails' is declared but never used.
+src/ui/types.ts(83,14): error TS2304: Cannot find name 'checkExhaustive'.
+src/ui/types.ts(109,18): error TS2304: Cannot find name 'ApprovalMode'.
+src/ui/utils/CodeColorizer.tsx(25,1): error TS6133: 'isAlternateBufferEnabled' is declared but its value is never read.
+src/ui/utils/highlight.ts(14,1): error TS6133: 'AT_COMMAND_PATH_REGEX_SOURCE' is declared but its value is never read.
+src/ui/utils/InlineMarkdownRenderer.tsx(10,1): error TS6133: 'stringWidth' is declared but its value is never read.
+src/ui/utils/InlineMarkdownRenderer.tsx(30,16): error TS2304: Cannot find name 'stripUnsafeCharacters'.
+src/ui/utils/rewindFileOps.test.ts(71,45): error TS2339: Property 'computeAddedAndRemovedLines' does not exist on type 'typeof import("/Users/robinx/code/codefly-cli/packages/core/dist/index", { with: { "resolution-mode": "import" } })'.
+src/ui/utils/rewindFileOps.test.ts(71,45): error TS6133: 'computeAddedAndRemovedLines' is declared but its value is never read.
+src/ui/utils/rewindFileOps.test.ts(91,17): error TS2304: Cannot find name 'computeModelAddedAndRemovedLines'.
+src/ui/utils/rewindFileOps.test.ts(127,45): error TS2339: Property 'computeAddedAndRemovedLines' does not exist on type 'typeof import("/Users/robinx/code/codefly-cli/packages/core/dist/index", { with: { "resolution-mode": "import" } })'.
+src/ui/utils/rewindFileOps.test.ts(127,45): error TS6133: 'computeAddedAndRemovedLines' is declared but its value is never read.
+src/ui/utils/rewindFileOps.test.ts(167,17): error TS2304: Cannot find name 'computeModelAddedAndRemovedLines'.
+src/ui/utils/rewindFileOps.ts(17,3): error TS2724: '"@codeflyai/codefly-core"' has no exported member named 'computeAddedAndRemovedLines'. Did you mean 'computeModelAddedAndRemovedLines'?
+src/ui/utils/rewindFileOps.ts(17,3): error TS6133: 'computeAddedAndRemovedLines' is declared but its value is never read.
+src/ui/utils/rewindFileOps.ts(64,32): error TS2304: Cannot find name 'computeModelAddedAndRemovedLines'.
+src/ui/utils/rewindFileOps.ts(115,32): error TS2304: Cannot find name 'computeModelAddedAndRemovedLines'.
+src/ui/utils/TableRenderer.tsx(11,3): error TS2305: Module '"ink"' has no exported member 'toStyledCharacters'.
+src/ui/utils/TableRenderer.tsx(12,3): error TS2305: Module '"ink"' has no exported member 'styledCharsToString'.
+src/ui/utils/TableRenderer.tsx(13,3): error TS2305: Module '"ink"' has no exported member 'styledCharsWidth'.
+src/ui/utils/TableRenderer.tsx(14,3): error TS2305: Module '"ink"' has no exported member 'wordBreakStyledChars'.
+src/ui/utils/TableRenderer.tsx(15,3): error TS2724: '"ink"' has no exported member named 'wrapStyledChars'. Did you mean 'StyledChar'?
+src/ui/utils/TableRenderer.tsx(16,3): error TS2305: Module '"ink"' has no exported member 'widestLineFromStyledChars'.
+src/ui/utils/TableRenderer.tsx(183,47): error TS7006: Parameter 'line' implicitly has an 'any' type.
+src/ui/utils/terminalCapabilityManager.ts(31,3): error TS2304: Cannot find name 'disableModifyOtherKeys'.
+src/ui/utils/terminalCapabilityManager.ts(142,44): error TS2304: Cannot find name 'parseColor'.
+src/ui/utils/terminalCapabilityManager.ts(198,37): error TS2339: Property 'HIDDEN_MODE' does not exist on type 'typeof TerminalCapabilityManager'.
+src/utils/activityLogger.ts(135,32): error TS2304: Cannot find name 'ConsoleLogPayload'.
+src/utils/activityLogger.ts(164,20): error TS2304: Cannot find name 'ConsoleLogPayload'.
+src/utils/activityLogger.ts(180,20): error TS2304: Cannot find name 'ConsoleLogPayload'.
+src/utils/activityLogger.ts(654,23): error TS2304: Cannot find name 'ConsoleLogPayload'.
+src/utils/activityLogger.ts(732,10): error TS2339: Property 'on' does not exist on type 'WebSocket'.
+src/utils/activityLogger.ts(743,10): error TS2339: Property 'on' does not exist on type 'WebSocket'.
+src/utils/activityLogger.ts(765,10): error TS2339: Property 'on' does not exist on type 'WebSocket'.
+src/utils/activityLogger.ts(771,10): error TS2339: Property 'on' does not exist on type 'WebSocket'.
+src/utils/activityLogger.ts(771,23): error TS7006: Parameter 'err' implicitly has an 'any' type.
+src/utils/relaunch.ts(11,8): error TS6133: 'FetchAdminControlsResponse' is declared but its value is never read.
+src/utils/relaunch.ts(37,25): error TS2304: Cannot find name 'AdminControlsSettings'.
+src/utils/relaunch.ts(74,47): error TS2304: Cannot find name 'AdminControlsSettings'.
+src/utils/sessionCleanup.ts(101,33): error TS2304: Cannot find name 'sanitizeFilenamePart'.
+src/utils/sessionCleanup.ts(104,13): error TS2304: Cannot find name 'TOOL_OUTPUTS_DIR'.
+src/utils/sessionCleanup.ts(366,35): error TS2554: Expected 0 arguments, but got 1.
+src/utils/sessionCleanup.ts(367,21): error TS4111: Property 'initialize' comes from an index signature, so it must be accessed with ['initialize'].
+src/utils/sessionCleanup.ts(368,25): error TS4111: Property 'getProjectTempDir' comes from an index signature, so it must be accessed with ['getProjectTempDir'].
+src/utils/sessionCleanup.ts(370,37): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/utils/sessionCleanup.ts(370,46): error TS2304: Cannot find name 'TOOL_OUTPUTS_DIR'.
+src/utils/sessionCleanup.ts(460,29): error TS2304: Cannot find name 'sanitizeFilenamePart'.
+src/utils/sessionUtils.ts(592,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/utils/sessionUtils.ts(593,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/utils/userStartupWarnings.ts(20,13): error TS2304: Cannot find name 'WarningPriority'.
+src/utils/userStartupWarnings.ts(26,13): error TS2304: Cannot find name 'WarningPriority'.
+src/utils/userStartupWarnings.ts(58,13): error TS2304: Cannot find name 'WarningPriority'.
+src/utils/userStartupWarnings.ts(87,12): error TS2304: Cannot find name 'StartupWarning'.
+src/utils/userStartupWarnings.ts(101,45): error TS2304: Cannot find name 'StartupWarning'.
+src/utils/userStartupWarnings.ts(105,10): error TS2304: Cannot find name 'getCompatibilityWarnings'.
+src/validateNonInterActiveAuth.ts(20,23): error TS2304: Cannot find name 'AuthType'.
+src/validateNonInterActiveAuth.ts(26,53): error TS2304: Cannot find name 'getAuthTypeFromEnv'.
+src/validateNonInterActiveAuth.ts(41,21): error TS2304: Cannot find name 'AuthType'.
+src/zed-integration/acpResume.test.ts(209,23): error TS2339: Property 'getGeminiClient' does not exist on type 'Mocked<Config>'.
+src/zed-integration/zedIntegration.test.ts(153,6): error TS2304: Cannot find name 'loadSettings'.
+src/zed-integration/zedIntegration.test.ts(259,6): error TS2304: Cannot find name 'loadSettings'.
+src/zed-integration/zedIntegration.test.ts(777,7): error TS2304: Cannot find name 'LlmRole'.
+src/zed-integration/zedIntegration.ts(251,27): error TS2304: Cannot find name 'convertSessionToClientHistory'.
+src/zed-integration/zedIntegration.ts(253,33): error TS2339: Property 'getGeminiClient' does not exist on type 'Config'.
+src/zed-integration/zedIntegration.ts(416,44): error TS2304: Cannot find name 'ApprovalMode'.
+src/zed-integration/zedIntegration.ts(420,33): error TS2304: Cannot find name 'ConversationRecord'.
+src/zed-integration/zedIntegration.ts(422,29): error TS2304: Cannot find name 'partListUnionToString'.
+src/zed-integration/zedIntegration.ts(520,11): error TS2304: Cannot find name 'LlmRole'.
+src/zed-integration/zedIntegration.ts(1319,11): error TS2304: Cannot find name 'ApprovalMode'.
+src/zed-integration/zedIntegration.ts(1324,11): error TS2304: Cannot find name 'ApprovalMode'.
+src/zed-integration/zedIntegration.ts(1329,11): error TS2304: Cannot find name 'ApprovalMode'.
+src/zed-integration/zedIntegration.ts(1337,11): error TS2304: Cannot find name 'ApprovalMode'.

@@ -13,23 +13,23 @@ import * as os from 'node:os';
 
 describe('AcknowledgedAgentsService', () => {
   let tempDir: string;
-  let originalGeminiCliHome: string | undefined;
+  let originalCodeflyCliHome: string | undefined;
 
   beforeEach(async () => {
     // Create a unique temp directory for each test
-    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'gemini-cli-test-'));
+    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'codefly-cli-test-'));
 
-    // Override GEMINI_CLI_HOME to point to the temp directory
-    originalGeminiCliHome = process.env['GEMINI_CLI_HOME'];
-    process.env['GEMINI_CLI_HOME'] = tempDir;
+    // Override CODEFLY_CLI_HOME to point to the temp directory
+    originalCodeflyCliHome = process.env['CODEFLY_CLI_HOME'];
+    process.env['CODEFLY_CLI_HOME'] = tempDir;
   });
 
   afterEach(async () => {
     // Restore environment variable
-    if (originalGeminiCliHome) {
-      process.env['GEMINI_CLI_HOME'] = originalGeminiCliHome;
+    if (originalCodeflyCliHome) {
+      process.env['CODEFLY_CLI_HOME'] = originalCodeflyCliHome;
     } else {
-      delete process.env['GEMINI_CLI_HOME'];
+      delete process.env['CODEFLY_CLI_HOME'];
     }
 
     // Clean up temp directory

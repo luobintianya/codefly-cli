@@ -16,7 +16,7 @@ import {
 import {
   getCompatibilityWarnings,
   WarningPriority,
-} from '@google/gemini-cli-core';
+} from '@codeflyai/codefly-core';
 
 // Mock os.homedir to control the home directory in tests
 vi.mock('os', async (importOriginal) => {

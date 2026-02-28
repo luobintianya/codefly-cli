@@ -43,7 +43,7 @@ export class BrowserAgentInvocation extends BaseToolInvocation<
   constructor(
     private readonly config: Config,
     params: AgentInputs,
-    messageBus: MessageBus,
+    messageBus: MessageBus | undefined,
     _toolName?: string,
     _toolDisplayName?: string,
   ) {

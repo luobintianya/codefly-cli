@@ -6,7 +6,7 @@
 
 import { Text } from 'ink';
 import { theme } from '../semantic-colors.js';
-import { tokenLimit } from '@codeflyai/codefly-core';
+import { getContextUsagePercentage } from '../utils/contextUsage.js';
 
 export const ContextUsageDisplay = ({
   promptTokenCount,

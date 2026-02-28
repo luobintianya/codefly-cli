@@ -24,8 +24,15 @@ import {
   COMMON_DIRECTORY_EXCLUDES,
 } from '../utils/ignorePatterns.js';
 import { CodeflyIgnoreParser } from '../utils/codeflyIgnoreParser.js';
-
-const DEFAULT_TOTAL_MAX_MATCHES = 20000;
+import {
+  DEFAULT_TOTAL_MAX_MATCHES,
+  DEFAULT_SEARCH_TIMEOUT_MS,
+} from './constants.js';
+import { type GrepMatch, formatGrepResults } from './grep-utils.js';
+import { execStreaming } from '../utils/shell-utils.js';
+import { RIP_GREP_DEFINITION } from './definitions/coreTools.js';
+import { resolveToolDeclaration } from './definitions/resolver.js';
+import { FileDiscoveryService } from '../services/fileDiscoveryService.js';
 
 function getRgCandidateFilenames(): readonly string[] {
   return process.platform === 'win32' ? ['rg.exe', 'rg'] : ['rg'];
@@ -264,8 +271,16 @@ class GrepToolInvocation extends BaseToolInvocation<
         const absoluteFilePaths = uniqueFiles.map((f) =>
           path.resolve(searchDirAbs, f),
         );
+        const fileDiscoveryService = new FileDiscoveryService(
+          this.config.getTargetDir(),
+          {
+            respectGitIgnore: this.config.getFileFilteringRespectGitIgnore(),
+            respectCodeflyIgnore:
+              this.config.getFileFilteringRespectCodeflyIgnore(),
+          },
+        );
         const allowedFiles =
-          this.fileDiscoveryService.filterFiles(absoluteFilePaths);
+          fileDiscoveryService.filterFiles(absoluteFilePaths);
         const allowedSet = new Set(allowedFiles);
         allMatches = allMatches.filter((m) =>
           allowedSet.has(path.resolve(searchDirAbs, m.filePath)),
@@ -335,7 +350,15 @@ class GrepToolInvocation extends BaseToolInvocation<
       });
 
       if (!this.params.no_ignore) {
-        const allowedFiles = this.fileDiscoveryService.filterFiles(uniqueFiles);
+        const fileDiscoveryService = new FileDiscoveryService(
+          this.config.getTargetDir(),
+          {
+            respectGitIgnore: this.config.getFileFilteringRespectGitIgnore(),
+            respectCodeflyIgnore:
+              this.config.getFileFilteringRespectCodeflyIgnore(),
+          },
+        );
+        const allowedFiles = fileDiscoveryService.filterFiles(uniqueFiles);
         const allowedSet = new Set(allowedFiles);
         enrichedMatches = enrichedMatches.filter((m) =>
           allowedSet.has(m.absolutePath),
@@ -434,9 +457,9 @@ class GrepToolInvocation extends BaseToolInvocation<
 
       if (this.config.getFileFilteringRespectCodeflyIgnore()) {
         // Add .codeflyignore support (ripgrep natively handles .gitignore)
-        const geminiIgnorePath = this.codeflyIgnoreParser.getIgnoreFilePath();
-        if (geminiIgnorePath) {
-          rgArgs.push('--ignore-file', geminiIgnorePath);
+        const codeflyIgnorePath = this.codeflyIgnoreParser.getIgnoreFilePath();
+        if (codeflyIgnorePath) {
+          rgArgs.push('--ignore-file', codeflyIgnorePath);
         }
       }
     }

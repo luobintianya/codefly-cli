@@ -53,7 +53,7 @@ describe('BaseTokenStorage', () => {
   let storage: TestTokenStorage;
 
   beforeEach(() => {
-    storage = new TestTokenStorage('gemini-cli-mcp-oauth');
+    storage = new TestTokenStorage('codefly-cli-mcp-oauth');
   });
 
   describe('validateCredentials', () => {

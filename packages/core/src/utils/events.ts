@@ -164,6 +164,10 @@ export interface QuotaChangedPayload {
   resetTime?: string;
 }
 
+export interface EditorSelectedPayload {
+  editor: EditorType | null;
+}
+
 export enum CoreEvent {
   UserFeedback = 'user-feedback',
   ModelChanged = 'model-changed',
@@ -180,6 +184,15 @@ export enum CoreEvent {
   AdminSettingsChanged = 'admin-settings-changed',
   RetryAttempt = 'retry-attempt',
   CommandsRefreshed = 'commands-refreshed',
+  ConsentRequest = 'consent-request',
+  McpProgress = 'mcp-progress',
+  AgentsDiscovered = 'agents-discovered',
+  SlashCommandConflicts = 'slash-command-conflicts',
+  QuotaChanged = 'quota-changed',
+  TelemetryKeychainAvailability = 'telemetry-keychain-availability',
+  TelemetryTokenStorageType = 'telemetry-token-storage-type',
+  RequestEditorSelection = 'request-editor-selection',
+  EditorSelected = 'editor-selected',
 }
 
 export interface CoreEvents extends ExtensionEvents {
@@ -199,6 +212,14 @@ export interface CoreEvents extends ExtensionEvents {
   [CoreEvent.AdminSettingsChanged]: never[];
   [CoreEvent.RetryAttempt]: [RetryAttemptPayload];
   [CoreEvent.CommandsRefreshed]: never[];
+  [CoreEvent.ConsentRequest]: [ConsentRequestPayload];
+  [CoreEvent.McpProgress]: [McpProgressPayload];
+  [CoreEvent.AgentsDiscovered]: [AgentsDiscoveredPayload];
+  [CoreEvent.SlashCommandConflicts]: [SlashCommandConflictsPayload];
+  [CoreEvent.TelemetryKeychainAvailability]: [KeychainAvailabilityEvent];
+  [CoreEvent.TelemetryTokenStorageType]: [TokenStorageInitializationEvent];
+  [CoreEvent.RequestEditorSelection]: never[];
+  [CoreEvent.EditorSelected]: [EditorSelectedPayload];
 }
 
 type EventBacklogItem = {

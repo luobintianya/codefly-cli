@@ -226,7 +226,7 @@ describe('migrate command', () => {
     );
   });
 
-  it('should replace $CLAUDE_PROJECT_DIR with $GEMINI_PROJECT_DIR', async () => {
+  it('should replace $CLAUDE_PROJECT_DIR with $CODEFLY_PROJECT_DIR', async () => {
     const claudeSettings = {
       hooks: {
         PreToolUse: [
@@ -249,7 +249,7 @@ describe('migrate command', () => {
 
     const migratedHooks = mockSetValue.mock.calls[0][2];
     expect(migratedHooks.BeforeTool[0].hooks[0].command).toBe(
-      'cd $GEMINI_PROJECT_DIR && ls',
+      'cd $CODEFLY_PROJECT_DIR && ls',
     );
   });
 
@@ -300,7 +300,7 @@ describe('migrate command', () => {
     expect(migratedHooks.BeforeTool[0].hooks[0].timeout).toBe(60);
   });
 
-  it('should merge with existing Gemini hooks', async () => {
+  it('should merge with existing Codefly hooks', async () => {
     const claudeSettings = {
       hooks: {
         PreToolUse: [

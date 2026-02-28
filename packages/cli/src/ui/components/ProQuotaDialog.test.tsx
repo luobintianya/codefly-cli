@@ -65,8 +65,8 @@ describe('ProQuotaDialog', () => {
       it('should render switch, upgrade, and stop options for paid tiers', () => {
         const { unmount } = render(
           <ProQuotaDialog
-            failedModel="gemini-2.5-pro"
-            fallbackModel="gemini-2.5-flash"
+            failedModel="codefly-2.5-pro"
+            fallbackModel="codefly-2.5-flash"
             message="paid tier quota error"
             isTerminalQuotaError={true}
             isModelNotFoundError={false}
@@ -78,7 +78,7 @@ describe('ProQuotaDialog', () => {
           expect.objectContaining({
             items: [
               {
-                label: 'Switch to gemini-2.5-flash',
+                label: 'Switch to codefly-2.5-flash',
                 value: 'retry_always',
                 key: 'retry_always',
               },
@@ -133,8 +133,8 @@ describe('ProQuotaDialog', () => {
       it('should render switch, upgrade, and stop options for free tier', () => {
         const { unmount } = render(
           <ProQuotaDialog
-            failedModel="gemini-2.5-pro"
-            fallbackModel="gemini-2.5-flash"
+            failedModel="codefly-2.5-pro"
+            fallbackModel="codefly-2.5-flash"
             message="free tier quota error"
             isTerminalQuotaError={true}
             isModelNotFoundError={false}
@@ -146,7 +146,7 @@ describe('ProQuotaDialog', () => {
           expect.objectContaining({
             items: [
               {
-                label: 'Switch to gemini-2.5-flash',
+                label: 'Switch to codefly-2.5-flash',
                 value: 'retry_always',
                 key: 'retry_always',
               },
@@ -172,8 +172,8 @@ describe('ProQuotaDialog', () => {
       it('should render keep trying, switch, and stop options', () => {
         const { unmount } = render(
           <ProQuotaDialog
-            failedModel="gemini-2.5-pro"
-            fallbackModel="gemini-2.5-flash"
+            failedModel="codefly-2.5-pro"
+            fallbackModel="codefly-2.5-flash"
             message="capacity error"
             isTerminalQuotaError={false}
             isModelNotFoundError={false}
@@ -190,7 +190,7 @@ describe('ProQuotaDialog', () => {
                 key: 'retry_once',
               },
               {
-                label: 'Switch to gemini-2.5-flash',
+                label: 'Switch to codefly-2.5-flash',
                 value: 'retry_always',
                 key: 'retry_always',
               },
@@ -207,9 +207,9 @@ describe('ProQuotaDialog', () => {
       it('should render switch and stop options regardless of tier', () => {
         const { unmount } = render(
           <ProQuotaDialog
-            failedModel="gemini-3-pro-preview"
-            fallbackModel="gemini-2.5-pro"
-            message="You don't have access to gemini-3-pro-preview yet."
+            failedModel="codefly-3-pro-preview"
+            fallbackModel="codefly-2.5-pro"
+            message="You don't have access to codefly-3-pro-preview yet."
             isTerminalQuotaError={false}
             isModelNotFoundError={true}
             onChoice={mockOnChoice}
@@ -220,7 +220,7 @@ describe('ProQuotaDialog', () => {
           expect.objectContaining({
             items: [
               {
-                label: 'Switch to gemini-2.5-pro',
+                label: 'Switch to codefly-2.5-pro',
                 value: 'retry_always',
                 key: 'retry_always',
               },
@@ -244,9 +244,9 @@ describe('ProQuotaDialog', () => {
       it('should render switch and stop options for paid tier as well', () => {
         const { unmount } = render(
           <ProQuotaDialog
-            failedModel="gemini-3-pro-preview"
-            fallbackModel="gemini-2.5-pro"
-            message="You don't have access to gemini-3-pro-preview yet."
+            failedModel="codefly-3-pro-preview"
+            fallbackModel="codefly-2.5-pro"
+            message="You don't have access to codefly-3-pro-preview yet."
             isTerminalQuotaError={false}
             isModelNotFoundError={true}
             onChoice={mockOnChoice}
@@ -257,7 +257,7 @@ describe('ProQuotaDialog', () => {
           expect.objectContaining({
             items: [
               {
-                label: 'Switch to gemini-2.5-pro',
+                label: 'Switch to codefly-2.5-pro',
                 value: 'retry_always',
                 key: 'retry_always',
               },
@@ -284,8 +284,8 @@ describe('ProQuotaDialog', () => {
     it('should call onChoice with the selected value', () => {
       const { unmount } = render(
         <ProQuotaDialog
-          failedModel="gemini-2.5-pro"
-          fallbackModel="gemini-2.5-flash"
+          failedModel="codefly-2.5-pro"
+          fallbackModel="codefly-2.5-flash"
           message=""
           isTerminalQuotaError={false}
           onChoice={mockOnChoice}

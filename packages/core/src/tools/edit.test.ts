@@ -70,7 +70,7 @@ describe('EditTool', () => {
   let tempDir: string;
   let rootDir: string;
   let mockConfig: Config;
-  let geminiClient: any;
+  let codeflyClient: any;
   let fileSystemService: StandardFileSystemService;
   let baseLlmClient: BaseLlmClient;
 
@@ -80,7 +80,7 @@ describe('EditTool', () => {
     rootDir = path.join(tempDir, 'root');
     fs.mkdirSync(rootDir);
 
-    geminiClient = {
+    codeflyClient = {
       generateJson: mockGenerateJson,
       getHistory: vi.fn().mockResolvedValue([]),
     };
@@ -96,7 +96,7 @@ describe('EditTool', () => {
       getSessionId: vi.fn(() => 'mock-session-id'),
       getContentGeneratorConfig: vi.fn(() => ({ authType: 'mock' })),
       getProxy: vi.fn(() => undefined),
-      getCodeflyClient: vi.fn().mockReturnValue(geminiClient),
+      getCodeflyClient: vi.fn().mockReturnValue(codeflyClient),
       getBaseLlmClient: vi.fn().mockReturnValue(baseLlmClient),
       getTargetDir: () => rootDir,
       getApprovalMode: vi.fn(),

@@ -8,7 +8,7 @@ import type React from 'react';
 import { Box, Text } from 'ink';
 import { ThemedGradient } from './ThemedGradient.js';
 import { theme } from '../semantic-colors.js';
-import { formatDuration, formatResetTime } from '../utils/formatters.js';
+import { formatDuration } from '../utils/formatters.js';
 import type { ModelMetrics } from '../contexts/SessionContext.js';
 import { useSessionStats } from '../contexts/SessionContext.js';
 import {
@@ -21,7 +21,10 @@ import {
   CACHE_EFFICIENCY_MEDIUM,
 } from '../utils/displayUtils.js';
 import { computeSessionStats } from '../utils/computeStats.js';
-import {} from '@codeflyai/codefly-core';
+import { getDisplayString, isAutoModel } from '@codeflyai/codefly-core';
+import { useSettings } from '../contexts/SettingsContext.js';
+import { useUIState } from '../contexts/UIStateContext.js';
+import { QuotaStatsInfo } from './QuotaStatsInfo.js';
 
 // A more flexible and powerful StatRow component
 interface StatRowProps {
@@ -97,7 +100,21 @@ const ModelUsageTable: React.FC<{
   models: Record<string, ModelMetrics>;
   cacheEfficiency: number;
   totalCachedTokens: number;
-}> = ({ models, cacheEfficiency, totalCachedTokens }) => {
+  currentModel: string;
+  pooledRemaining?: number;
+  pooledLimit?: number;
+  pooledResetTime?: string;
+  useCodefly3_1?: boolean;
+  useCustomToolModel?: boolean;
+}> = ({
+  models,
+  cacheEfficiency,
+  totalCachedTokens,
+  currentModel,
+  pooledRemaining,
+  pooledLimit,
+  pooledResetTime,
+}) => {
   const rows = buildModelRows(models);
 
   const nameWidth = 25;
@@ -131,7 +148,6 @@ const ModelUsageTable: React.FC<{
       </Box>
 
       {isAuto &&
-        showQuotaColumn &&
         pooledRemaining !== undefined &&
         pooledLimit !== undefined &&
         pooledLimit > 0 && (
@@ -284,25 +300,27 @@ const ModelUsageTable: React.FC<{
 interface StatsDisplayProps {
   duration: string;
   title?: string;
+  footer?: string;
 }
 
 export const StatsDisplay: React.FC<StatsDisplayProps> = ({
   duration,
   title,
+  footer,
 }) => {
   const { stats } = useSessionStats();
   const { metrics } = stats;
   const { models, tools, files } = metrics;
   const computed = computeSessionStats(metrics);
   const settings = useSettings();
-  const config = useConfig();
-  const useGemini3_1 = config.getGemini31LaunchedSync?.() ?? false;
-  const useCustomToolModel =
-    useGemini3_1 &&
-    config.getContentGeneratorConfig().authType === AuthType.USE_GEMINI;
-  const pooledRemaining = quotaStats?.remaining;
-  const pooledLimit = quotaStats?.limit;
-  const pooledResetTime = quotaStats?.resetTime;
+  const uiState = useUIState();
+  const pooledRemaining = uiState.quota.stats?.remaining;
+  const pooledLimit = uiState.quota.stats?.limit;
+  const pooledResetTime = uiState.quota.stats?.resetTime;
+  const currentModel = uiState.currentModel;
+  const selectedAuthType = uiState.selectedAuthType;
+  const userEmail = undefined as string | undefined;
+  const tier = uiState.quota.userTier;
 
   const showUserIdentity = settings.merged.ui.showUserIdentity;
 
@@ -439,8 +457,6 @@ export const StatsDisplay: React.FC<StatsDisplayProps> = ({
         pooledRemaining={pooledRemaining}
         pooledLimit={pooledLimit}
         pooledResetTime={pooledResetTime}
-        useGemini3_1={useGemini3_1}
-        useCustomToolModel={useCustomToolModel}
       />
       {renderFooter()}
     </Box>

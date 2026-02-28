@@ -439,7 +439,7 @@ describe('Logger', () => {
       },
     ])('should save a checkpoint', async ({ tag, encodedTag }) => {
       await logger.saveCheckpoint(
-        { history: conversation, authType: AuthType.USE_GEMINI },
+        { history: conversation, authType: AuthType.USE_CODEFLY },
         tag,
       );
       const taggedFilePath = path.join(
@@ -449,7 +449,7 @@ describe('Logger', () => {
       const fileContent = await fs.readFile(taggedFilePath, 'utf-8');
       expect(JSON.parse(fileContent)).toEqual({
         history: conversation,
-        authType: AuthType.USE_GEMINI,
+        authType: AuthType.USE_CODEFLY,
       });
     });
 
@@ -509,7 +509,7 @@ describe('Logger', () => {
           ...conversation,
           { role: 'user', parts: [{ text: 'hello' }] },
         ],
-        authType: AuthType.USE_GEMINI,
+        authType: AuthType.USE_CODEFLY,
       };
       const taggedFilePath = path.join(
         TEST_CODEFLY_DIR,

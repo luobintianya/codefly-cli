@@ -37,9 +37,14 @@ export function createShowMemoryAction(
       ? contextFileName
       : [contextFileName];
 
+    const currentMemoryString =
+      typeof currentMemory === 'string'
+        ? currentMemory
+        : JSON.stringify(currentMemory, null, 2);
+
     if (debugMode) {
       debugLogger.log(
-        `[DEBUG] Showing memory. Content from config.getUserMemory() (first 200 chars): ${currentMemory.substring(0, 200)}...`,
+        `[DEBUG] Showing memory. Content from config.getUserMemory() (first 200 chars): ${currentMemoryString.substring(0, 200)}...`,
       );
       debugLogger.log(`[DEBUG] Number of context files loaded: ${fileCount}`);
     }
@@ -56,10 +61,10 @@ export function createShowMemoryAction(
       });
     }
 
-    if (currentMemory && currentMemory.trim().length > 0) {
+    if (currentMemoryString && currentMemoryString.trim().length > 0) {
       addMessage({
         type: MessageType.INFO,
-        content: `Current combined memory content:\n\`\`\`markdown\n${currentMemory}\n\`\`\``,
+        content: `Current combined memory content:\n\`\`\`markdown\n${currentMemoryString}\n\`\`\``,
         timestamp: new Date(),
       });
     } else {

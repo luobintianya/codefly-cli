@@ -7,19 +7,20 @@
 import type {
   Config,
   ToolRegistry,
-  ServerGeminiStreamEvent,
+  ServerCodeflyStreamEvent,
   SessionMetrics,
   AnyDeclarativeTool,
   AnyToolInvocation,
   UserFeedbackPayload,
 } from '@codeflyai/codefly-core';
 import {
-  ToolErrorType,
   CodeflyEventType,
-  OutputFormat,
-  uiTelemetryService,
-  FatalInputError,
   CoreEvent,
+  CoreToolCallStatus,
+  FatalInputError,
+  OutputFormat,
+  ToolErrorType,
+  uiTelemetryService,
 } from '@codeflyai/codefly-core';
 import type { Part } from '@google/genai';
 import { runNonInteractive } from './nonInteractiveCli.js';
@@ -42,6 +43,9 @@ const mockSetupInitialActivityLogger = vi.hoisted(() => vi.fn());
 vi.mock('./utils/devtoolsService.js', () => ({
   setupInitialActivityLogger: mockSetupInitialActivityLogger,
 }));
+
+const mockSchedulerSchedule = vi.hoisted(() => vi.fn());
+const mockCoreExecuteToolCall = vi.hoisted(() => vi.fn());
 
 const mockCoreEvents = vi.hoisted(() => ({
   on: vi.fn(),
@@ -69,6 +73,7 @@ vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
       schedule = mockSchedulerSchedule;
       cancelAll = vi.fn();
     },
+    executeToolCall: mockCoreExecuteToolCall,
     isTelemetrySdkInitialized: vi.fn().mockReturnValue(true),
     ChatRecordingService: MockChatRecordingService,
     uiTelemetryService: {
@@ -219,8 +224,8 @@ describe('runNonInteractive', () => {
   });
 
   async function* createStreamFromEvents(
-    events: ServerGeminiStreamEvent[],
-  ): AsyncGenerator<ServerGeminiStreamEvent> {
+    events: ServerCodeflyStreamEvent[],
+  ): AsyncGenerator<ServerCodeflyStreamEvent> {
     for (const event of events) {
       yield event;
     }
@@ -230,7 +235,7 @@ describe('runNonInteractive', () => {
     processStdoutSpy.mock.calls.map((c) => c[0]).join('');
 
   it('should process input and write text output', async () => {
-    const events: ServerGeminiStreamEvent[] = [
+    const events: ServerCodeflyStreamEvent[] = [
       { type: CodeflyEventType.Content, value: 'Hello' },
       { type: CodeflyEventType.Content, value: ' World' },
       {
@@ -262,15 +267,15 @@ describe('runNonInteractive', () => {
     // so we no longer expect shutdownTelemetry to be called directly here
   });
 
-  it('should register activity logger when GEMINI_CLI_ACTIVITY_LOG_TARGET is set', async () => {
-    vi.stubEnv('GEMINI_CLI_ACTIVITY_LOG_TARGET', '/tmp/test.jsonl');
-    const events: ServerGeminiStreamEvent[] = [
+  it('should register activity logger when CODEFLY_CLI_ACTIVITY_LOG_TARGET is set', async () => {
+    vi.stubEnv('CODEFLY_CLI_ACTIVITY_LOG_TARGET', '/tmp/test.jsonl');
+    const events: ServerCodeflyStreamEvent[] = [
       {
-        type: GeminiEventType.Finished,
+        type: CodeflyEventType.Finished,
         value: { reason: undefined, usageMetadata: { totalTokenCount: 0 } },
       },
     ];
-    mockGeminiClient.sendMessageStream.mockReturnValue(
+    mockCodeflyClient.sendMessageStream.mockReturnValue(
       createStreamFromEvents(events),
     );
 
@@ -285,15 +290,15 @@ describe('runNonInteractive', () => {
     vi.unstubAllEnvs();
   });
 
-  it('should not register activity logger when GEMINI_CLI_ACTIVITY_LOG_TARGET is not set', async () => {
-    vi.stubEnv('GEMINI_CLI_ACTIVITY_LOG_TARGET', '');
-    const events: ServerGeminiStreamEvent[] = [
+  it('should not register activity logger when CODEFLY_CLI_ACTIVITY_LOG_TARGET is not set', async () => {
+    vi.stubEnv('CODEFLY_CLI_ACTIVITY_LOG_TARGET', '');
+    const events: ServerCodeflyStreamEvent[] = [
       {
-        type: GeminiEventType.Finished,
+        type: CodeflyEventType.Finished,
         value: { reason: undefined, usageMetadata: { totalTokenCount: 0 } },
       },
     ];
-    mockGeminiClient.sendMessageStream.mockReturnValue(
+    mockCodeflyClient.sendMessageStream.mockReturnValue(
       createStreamFromEvents(events),
     );
 
@@ -309,7 +314,7 @@ describe('runNonInteractive', () => {
   });
 
   it('should handle a single tool call and respond', async () => {
-    const toolCallEvent: ServerGeminiStreamEvent = {
+    const toolCallEvent: ServerCodeflyStreamEvent = {
       type: CodeflyEventType.ToolCallRequest,
       value: {
         callId: 'tool-1',
@@ -342,8 +347,8 @@ describe('runNonInteractive', () => {
       },
     ]);
 
-    const firstCallEvents: ServerGeminiStreamEvent[] = [toolCallEvent];
-    const secondCallEvents: ServerGeminiStreamEvent[] = [
+    const firstCallEvents: ServerCodeflyStreamEvent[] = [toolCallEvent];
+    const secondCallEvents: ServerCodeflyStreamEvent[] = [
       { type: CodeflyEventType.Content, value: 'Final answer' },
       {
         type: CodeflyEventType.Finished,
@@ -385,7 +390,7 @@ describe('runNonInteractive', () => {
     // is printed between each block of text output from the model.
 
     // 1. Define the tool requests that the model will ask the CLI to run.
-    const toolCallEvent: ServerGeminiStreamEvent = {
+    const toolCallEvent: ServerCodeflyStreamEvent = {
       type: CodeflyEventType.ToolCallRequest,
       value: {
         callId: 'mock-tool',
@@ -412,17 +417,17 @@ describe('runNonInteractive', () => {
 
     // 3. Define the sequence of events streamed from the mock model.
     // Turn 1: Model outputs text, then requests a tool call.
-    const modelTurn1: ServerGeminiStreamEvent[] = [
+    const modelTurn1: ServerCodeflyStreamEvent[] = [
       { type: CodeflyEventType.Content, value: 'Use mock tool' },
       toolCallEvent,
     ];
     // Turn 2: Model outputs more text, then requests another tool call.
-    const modelTurn2: ServerGeminiStreamEvent[] = [
+    const modelTurn2: ServerCodeflyStreamEvent[] = [
       { type: CodeflyEventType.Content, value: 'Use mock tool again' },
       toolCallEvent,
     ];
     // Turn 3: Model outputs a final answer.
-    const modelTurn3: ServerGeminiStreamEvent[] = [
+    const modelTurn3: ServerCodeflyStreamEvent[] = [
       { type: CodeflyEventType.Content, value: 'Finished.' },
       {
         type: CodeflyEventType.Finished,
@@ -453,7 +458,7 @@ describe('runNonInteractive', () => {
   });
 
   it('should handle error during tool execution and should send error back to the model', async () => {
-    const toolCallEvent: ServerGeminiStreamEvent = {
+    const toolCallEvent: ServerCodeflyStreamEvent = {
       type: CodeflyEventType.ToolCallRequest,
       value: {
         callId: 'tool-1',
@@ -493,7 +498,7 @@ describe('runNonInteractive', () => {
         },
       },
     ]);
-    const finalResponse: ServerGeminiStreamEvent[] = [
+    const finalResponse: ServerCodeflyStreamEvent[] = [
       {
         type: CodeflyEventType.Content,
         value: 'Sorry, let me try again.',
@@ -557,7 +562,7 @@ describe('runNonInteractive', () => {
   });
 
   it('should not exit if a tool is not found, and should send error back to model', async () => {
-    const toolCallEvent: ServerGeminiStreamEvent = {
+    const toolCallEvent: ServerCodeflyStreamEvent = {
       type: CodeflyEventType.ToolCallRequest,
       value: {
         callId: 'tool-1',
@@ -587,7 +592,7 @@ describe('runNonInteractive', () => {
         },
       },
     ]);
-    const finalResponse: ServerGeminiStreamEvent[] = [
+    const finalResponse: ServerCodeflyStreamEvent[] = [
       {
         type: CodeflyEventType.Content,
         value: "Sorry, I can't find that tool.",
@@ -650,8 +655,8 @@ describe('runNonInteractive', () => {
       processedQuery: processedParts,
     });
 
-    // Mock a simple stream response from the Gemini client
-    const events: ServerGeminiStreamEvent[] = [
+    // Mock a simple stream response from the Codefly client
+    const events: ServerCodeflyStreamEvent[] = [
       { type: CodeflyEventType.Content, value: 'Summary complete.' },
       {
         type: CodeflyEventType.Finished,
@@ -685,7 +690,7 @@ describe('runNonInteractive', () => {
   });
 
   it('should process input and write JSON output with stats', async () => {
-    const events: ServerGeminiStreamEvent[] = [
+    const events: ServerCodeflyStreamEvent[] = [
       { type: CodeflyEventType.Content, value: 'Hello World' },
       {
         type: CodeflyEventType.Finished,
@@ -731,7 +736,7 @@ describe('runNonInteractive', () => {
   it('should write JSON output with stats for tool-only commands (no text response)', async () => {
     // Test the scenario where a command completes successfully with only tool calls
     // but no text response - this would have caught the original bug
-    const toolCallEvent: ServerGeminiStreamEvent = {
+    const toolCallEvent: ServerCodeflyStreamEvent = {
       type: CodeflyEventType.ToolCallRequest,
       value: {
         callId: 'tool-1',
@@ -765,7 +770,7 @@ describe('runNonInteractive', () => {
     ]);
 
     // First call returns only tool call, no content
-    const firstCallEvents: ServerGeminiStreamEvent[] = [
+    const firstCallEvents: ServerCodeflyStreamEvent[] = [
       toolCallEvent,
       {
         type: CodeflyEventType.Finished,
@@ -774,7 +779,7 @@ describe('runNonInteractive', () => {
     ];
 
     // Second call returns no content (tool-only completion)
-    const secondCallEvents: ServerGeminiStreamEvent[] = [
+    const secondCallEvents: ServerCodeflyStreamEvent[] = [
       {
         type: CodeflyEventType.Finished,
         value: { reason: undefined, usageMetadata: { totalTokenCount: 3 } },
@@ -820,7 +825,7 @@ describe('runNonInteractive', () => {
 
   it('should write JSON output with stats for empty response commands', async () => {
     // Test the scenario where a command completes but produces no content at all
-    const events: ServerGeminiStreamEvent[] = [
+    const events: ServerCodeflyStreamEvent[] = [
       {
         type: CodeflyEventType.Finished,
         value: { reason: undefined, usageMetadata: { totalTokenCount: 1 } },
@@ -959,7 +964,7 @@ describe('runNonInteractive', () => {
     };
     mockGetCommands.mockReturnValue([mockCommand]);
 
-    const events: ServerGeminiStreamEvent[] = [
+    const events: ServerCodeflyStreamEvent[] = [
       { type: CodeflyEventType.Content, value: 'Response from command' },
       {
         type: CodeflyEventType.Finished,
@@ -1000,7 +1005,7 @@ describe('runNonInteractive', () => {
     );
     handleSlashCommandSpy.mockResolvedValue([{ text: 'Slash command output' }]);
 
-    const events: ServerGeminiStreamEvent[] = [
+    const events: ServerCodeflyStreamEvent[] = [
       { type: CodeflyEventType.Content, value: 'Response to slash command' },
       {
         type: CodeflyEventType.Finished,
@@ -1070,7 +1075,7 @@ describe('runNonInteractive', () => {
         throw new Error('Cancelled');
       });
 
-    const events: ServerGeminiStreamEvent[] = [
+    const events: ServerCodeflyStreamEvent[] = [
       { type: CodeflyEventType.Content, value: 'Thinking...' },
     ];
     // Create a stream that responds to abortion
@@ -1182,7 +1187,7 @@ describe('runNonInteractive', () => {
     // No commands are mocked, so any slash command is "unknown"
     mockGetCommands.mockReturnValue([]);
 
-    const events: ServerGeminiStreamEvent[] = [
+    const events: ServerCodeflyStreamEvent[] = [
       { type: CodeflyEventType.Content, value: 'Response to unknown' },
       {
         type: CodeflyEventType.Finished,
@@ -1247,7 +1252,7 @@ describe('runNonInteractive', () => {
     };
     mockGetCommands.mockReturnValue([mockCommand]);
 
-    const events: ServerGeminiStreamEvent[] = [
+    const events: ServerCodeflyStreamEvent[] = [
       { type: CodeflyEventType.Content, value: 'Acknowledged' },
       {
         type: CodeflyEventType.Finished,
@@ -1280,7 +1285,7 @@ describe('runNonInteractive', () => {
       './services/BuiltinCommandLoader.js'
     );
     mockGetCommands.mockReturnValue([]); // No commands found, so it will fall through
-    const events: ServerGeminiStreamEvent[] = [
+    const events: ServerCodeflyStreamEvent[] = [
       { type: CodeflyEventType.Content, value: 'Acknowledged' },
       {
         type: CodeflyEventType.Finished,
@@ -1328,7 +1333,7 @@ describe('runNonInteractive', () => {
       getFunctionDeclarations: vi.fn().mockReturnValue([{ name: 'ShellTool' }]),
     } as unknown as ToolRegistry);
 
-    const toolCallEvent: ServerGeminiStreamEvent = {
+    const toolCallEvent: ServerCodeflyStreamEvent = {
       type: CodeflyEventType.ToolCallRequest,
       value: {
         callId: 'tool-shell-1',
@@ -1361,8 +1366,8 @@ describe('runNonInteractive', () => {
       },
     ]);
 
-    const firstCallEvents: ServerGeminiStreamEvent[] = [toolCallEvent];
-    const secondCallEvents: ServerGeminiStreamEvent[] = [
+    const firstCallEvents: ServerCodeflyStreamEvent[] = [toolCallEvent];
+    const secondCallEvents: ServerCodeflyStreamEvent[] = [
       { type: CodeflyEventType.Content, value: 'file.txt' },
       {
         type: CodeflyEventType.Finished,
@@ -1390,7 +1395,7 @@ describe('runNonInteractive', () => {
 
   describe('CoreEvents Integration', () => {
     it('subscribes to UserFeedback and drains backlog on start', async () => {
-      const events: ServerGeminiStreamEvent[] = [
+      const events: ServerCodeflyStreamEvent[] = [
         {
           type: CodeflyEventType.Finished,
           value: { reason: undefined, usageMetadata: { totalTokenCount: 0 } },
@@ -1415,7 +1420,7 @@ describe('runNonInteractive', () => {
     });
 
     it('unsubscribes from UserFeedback on finish', async () => {
-      const events: ServerGeminiStreamEvent[] = [
+      const events: ServerCodeflyStreamEvent[] = [
         {
           type: CodeflyEventType.Finished,
           value: { reason: undefined, usageMetadata: { totalTokenCount: 0 } },
@@ -1439,7 +1444,7 @@ describe('runNonInteractive', () => {
     });
 
     it('logs to process.stderr when UserFeedback event is received', async () => {
-      const events: ServerGeminiStreamEvent[] = [
+      const events: ServerCodeflyStreamEvent[] = [
         {
           type: CodeflyEventType.Finished,
           value: { reason: undefined, usageMetadata: { totalTokenCount: 0 } },
@@ -1476,7 +1481,7 @@ describe('runNonInteractive', () => {
 
     it('logs optional error object to process.stderr in debug mode', async () => {
       vi.mocked(mockConfig.getDebugMode).mockReturnValue(true);
-      const events: ServerGeminiStreamEvent[] = [
+      const events: ServerCodeflyStreamEvent[] = [
         {
           type: CodeflyEventType.Finished,
           value: { reason: undefined, usageMetadata: { totalTokenCount: 0 } },
@@ -1527,7 +1532,7 @@ describe('runNonInteractive', () => {
       MOCK_SESSION_METRICS,
     );
 
-    const toolCallEvent: ServerGeminiStreamEvent = {
+    const toolCallEvent: ServerCodeflyStreamEvent = {
       type: CodeflyEventType.ToolCallRequest,
       value: {
         callId: 'tool-1',
@@ -1555,11 +1560,11 @@ describe('runNonInteractive', () => {
       },
     ]);
 
-    const firstCallEvents: ServerGeminiStreamEvent[] = [
+    const firstCallEvents: ServerCodeflyStreamEvent[] = [
       { type: CodeflyEventType.Content, value: 'Thinking...' },
       toolCallEvent,
     ];
-    const secondCallEvents: ServerGeminiStreamEvent[] = [
+    const secondCallEvents: ServerCodeflyStreamEvent[] = [
       { type: CodeflyEventType.Content, value: 'Final answer' },
       {
         type: CodeflyEventType.Finished,
@@ -1586,7 +1591,7 @@ describe('runNonInteractive', () => {
   });
 
   it('should handle EPIPE error gracefully', async () => {
-    const events: ServerGeminiStreamEvent[] = [
+    const events: ServerCodeflyStreamEvent[] = [
       { type: CodeflyEventType.Content, value: 'Hello' },
       { type: CodeflyEventType.Content, value: ' World' },
     ];
@@ -1622,7 +1627,7 @@ describe('runNonInteractive', () => {
   });
 
   it('should resume chat when resumedSessionData is provided', async () => {
-    const events: ServerGeminiStreamEvent[] = [
+    const events: ServerCodeflyStreamEvent[] = [
       { type: CodeflyEventType.Content, value: 'Resumed' },
       {
         type: CodeflyEventType.Finished,
@@ -1667,7 +1672,7 @@ describe('runNonInteractive', () => {
       name: 'loop detected',
       events: [
         { type: CodeflyEventType.LoopDetected },
-      ] as ServerGeminiStreamEvent[],
+      ] as ServerCodeflyStreamEvent[],
       input: 'Loop test',
       promptId: 'prompt-id-loop',
     },
@@ -1675,7 +1680,7 @@ describe('runNonInteractive', () => {
       name: 'max session turns',
       events: [
         { type: CodeflyEventType.MaxSessionTurns },
-      ] as ServerGeminiStreamEvent[],
+      ] as ServerCodeflyStreamEvent[],
       input: 'Max turns test',
       promptId: 'prompt-id-max-turns',
     },
@@ -1689,7 +1694,7 @@ describe('runNonInteractive', () => {
         MOCK_SESSION_METRICS,
       );
 
-      const streamEvents: ServerGeminiStreamEvent[] = [
+      const streamEvents: ServerCodeflyStreamEvent[] = [
         ...events,
         {
           type: CodeflyEventType.Finished,
@@ -1720,7 +1725,7 @@ describe('runNonInteractive', () => {
   );
 
   it('should log error when tool recording fails', async () => {
-    const toolCallEvent: ServerGeminiStreamEvent = {
+    const toolCallEvent: ServerCodeflyStreamEvent = {
       type: CodeflyEventType.ToolCallRequest,
       value: {
         callId: 'tool-1',
@@ -1746,7 +1751,7 @@ describe('runNonInteractive', () => {
       },
     ]);
 
-    const events: ServerGeminiStreamEvent[] = [
+    const events: ServerCodeflyStreamEvent[] = [
       toolCallEvent,
       { type: CodeflyEventType.Content, value: 'Done' },
       {
@@ -1801,7 +1806,7 @@ describe('runNonInteractive', () => {
   });
 
   it('should stop agent execution immediately when a tool call returns STOP_EXECUTION error', async () => {
-    const toolCallEvent: ServerGeminiStreamEvent = {
+    const toolCallEvent: ServerCodeflyStreamEvent = {
       type: CodeflyEventType.ToolCallRequest,
       value: {
         callId: 'stop-call',
@@ -1829,7 +1834,7 @@ describe('runNonInteractive', () => {
       },
     ]);
 
-    const firstCallEvents: ServerGeminiStreamEvent[] = [
+    const firstCallEvents: ServerCodeflyStreamEvent[] = [
       { type: CodeflyEventType.Content, value: 'Executing tool...' },
       toolCallEvent,
     ];
@@ -1864,7 +1869,7 @@ describe('runNonInteractive', () => {
       MOCK_SESSION_METRICS,
     );
 
-    const toolCallEvent: ServerGeminiStreamEvent = {
+    const toolCallEvent: ServerCodeflyStreamEvent = {
       type: CodeflyEventType.ToolCallRequest,
       value: {
         callId: 'stop-call',
@@ -1891,7 +1896,7 @@ describe('runNonInteractive', () => {
       },
     ]);
 
-    const firstCallEvents: ServerGeminiStreamEvent[] = [
+    const firstCallEvents: ServerCodeflyStreamEvent[] = [
       { type: CodeflyEventType.Content, value: 'Partial content' },
       toolCallEvent,
     ];
@@ -1928,7 +1933,7 @@ describe('runNonInteractive', () => {
       MOCK_SESSION_METRICS,
     );
 
-    const toolCallEvent: ServerGeminiStreamEvent = {
+    const toolCallEvent: ServerCodeflyStreamEvent = {
       type: CodeflyEventType.ToolCallRequest,
       value: {
         callId: 'stop-call',
@@ -1955,7 +1960,7 @@ describe('runNonInteractive', () => {
       },
     ]);
 
-    const firstCallEvents: ServerGeminiStreamEvent[] = [toolCallEvent];
+    const firstCallEvents: ServerCodeflyStreamEvent[] = [toolCallEvent];
 
     mockCodeflyClient.sendMessageStream.mockReturnValue(
       createStreamFromEvents(firstCallEvents),
@@ -1975,7 +1980,7 @@ describe('runNonInteractive', () => {
 
   describe('Agent Execution Events', () => {
     it('should handle AgentExecutionStopped event', async () => {
-      const events: ServerGeminiStreamEvent[] = [
+      const events: ServerCodeflyStreamEvent[] = [
         {
           type: CodeflyEventType.AgentExecutionStopped,
           value: { reason: 'Stopped by hook' },
@@ -2000,7 +2005,7 @@ describe('runNonInteractive', () => {
     });
 
     it('should handle AgentExecutionBlocked event', async () => {
-      const allEvents: ServerGeminiStreamEvent[] = [
+      const allEvents: ServerCodeflyStreamEvent[] = [
         {
           type: CodeflyEventType.AgentExecutionBlocked,
           value: { reason: 'Blocked by hook' },
@@ -2040,7 +2045,7 @@ describe('runNonInteractive', () => {
     const PLAIN_TEXT_LINK = 'Link';
 
     it('should sanitize ANSI output by default', async () => {
-      const events: ServerGeminiStreamEvent[] = [
+      const events: ServerCodeflyStreamEvent[] = [
         { type: CodeflyEventType.Content, value: ANSI_SEQUENCE },
         { type: CodeflyEventType.Content, value: ' ' },
         { type: CodeflyEventType.Content, value: OSC_HYPERLINK },
@@ -2066,7 +2071,7 @@ describe('runNonInteractive', () => {
     });
 
     it('should allow ANSI output when rawOutput is true', async () => {
-      const events: ServerGeminiStreamEvent[] = [
+      const events: ServerCodeflyStreamEvent[] = [
         { type: CodeflyEventType.Content, value: ANSI_SEQUENCE },
         { type: CodeflyEventType.Content, value: ' ' },
         { type: CodeflyEventType.Content, value: OSC_HYPERLINK },
@@ -2093,7 +2098,7 @@ describe('runNonInteractive', () => {
     });
 
     it('should allow ANSI output when only acceptRawOutputRisk is true', async () => {
-      const events: ServerGeminiStreamEvent[] = [
+      const events: ServerCodeflyStreamEvent[] = [
         { type: CodeflyEventType.Content, value: ANSI_SEQUENCE },
         {
           type: CodeflyEventType.Finished,
@@ -2118,7 +2123,7 @@ describe('runNonInteractive', () => {
     });
 
     it('should warn when rawOutput is true and acceptRisk is false', async () => {
-      const events: ServerGeminiStreamEvent[] = [
+      const events: ServerCodeflyStreamEvent[] = [
         {
           type: CodeflyEventType.Finished,
           value: { reason: undefined, usageMetadata: { totalTokenCount: 0 } },
@@ -2144,7 +2149,7 @@ describe('runNonInteractive', () => {
     });
 
     it('should not warn when rawOutput is true and acceptRisk is true', async () => {
-      const events: ServerGeminiStreamEvent[] = [
+      const events: ServerCodeflyStreamEvent[] = [
         {
           type: CodeflyEventType.Finished,
           value: { reason: undefined, usageMetadata: { totalTokenCount: 0 } },
@@ -2170,8 +2175,8 @@ describe('runNonInteractive', () => {
     });
 
     it('should report cancelled tool calls as success in stream-json mode (legacy parity)', async () => {
-      const toolCallEvent: ServerGeminiStreamEvent = {
-        type: GeminiEventType.ToolCallRequest,
+      const toolCallEvent: ServerCodeflyStreamEvent = {
+        type: CodeflyEventType.ToolCallRequest,
         value: {
           callId: 'tool-1',
           name: 'testTool',
@@ -2196,15 +2201,15 @@ describe('runNonInteractive', () => {
         },
       ]);
 
-      const events: ServerGeminiStreamEvent[] = [
+      const events: ServerCodeflyStreamEvent[] = [
         toolCallEvent,
         {
-          type: GeminiEventType.Content,
+          type: CodeflyEventType.Content,
           value: 'Model continues...',
         },
       ];
 
-      mockGeminiClient.sendMessageStream.mockReturnValue(
+      mockCodeflyClient.sendMessageStream.mockReturnValue(
         createStreamFromEvents(events),
       );
 

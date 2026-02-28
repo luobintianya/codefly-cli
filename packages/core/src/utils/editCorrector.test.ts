@@ -45,7 +45,7 @@ import {
   countOccurrences,
   ensureCorrectEdit,
   ensureCorrectFileContent,
-  unescapeStringForGeminiBug,
+  unescapeStringForCodeflyBug,
   resetEditCorrectorCaches_TEST_ONLY,
 } from './editCorrector.js';
 import { CodeflyClient } from '../core/client.js';
@@ -85,72 +85,72 @@ describe('editCorrector', () => {
     });
   });
 
-  describe('unescapeStringForGeminiBug', () => {
+  describe('unescapeStringForCodeflyBug', () => {
     it('should unescape common sequences', () => {
-      expect(unescapeStringForGeminiBug('\\n')).toBe('\n');
-      expect(unescapeStringForGeminiBug('\\t')).toBe('\t');
-      expect(unescapeStringForGeminiBug("\\'")).toBe("'");
-      expect(unescapeStringForGeminiBug('\\"')).toBe('"');
-      expect(unescapeStringForGeminiBug('\\`')).toBe('`');
+      expect(unescapeStringForCodeflyBug('\\n')).toBe('\n');
+      expect(unescapeStringForCodeflyBug('\\t')).toBe('\t');
+      expect(unescapeStringForCodeflyBug("\\'")).toBe("'");
+      expect(unescapeStringForCodeflyBug('\\"')).toBe('"');
+      expect(unescapeStringForCodeflyBug('\\`')).toBe('`');
     });
     it('should handle multiple escaped sequences', () => {
-      expect(unescapeStringForGeminiBug('Hello\\nWorld\\tTest')).toBe(
+      expect(unescapeStringForCodeflyBug('Hello\\nWorld\\tTest')).toBe(
         'Hello\nWorld\tTest',
       );
     });
     it('should not alter already correct sequences', () => {
-      expect(unescapeStringForGeminiBug('\n')).toBe('\n');
-      expect(unescapeStringForGeminiBug('Correct string')).toBe(
+      expect(unescapeStringForCodeflyBug('\n')).toBe('\n');
+      expect(unescapeStringForCodeflyBug('Correct string')).toBe(
         'Correct string',
       );
     });
     it('should handle mixed correct and incorrect sequences', () => {
-      expect(unescapeStringForGeminiBug('\\nCorrect\t\\`')).toBe(
+      expect(unescapeStringForCodeflyBug('\\nCorrect\t\\`')).toBe(
         '\nCorrect\t`',
       );
     });
     it('should handle backslash followed by actual newline character', () => {
-      expect(unescapeStringForGeminiBug('\\\n')).toBe('\n');
-      expect(unescapeStringForGeminiBug('First line\\\nSecond line')).toBe(
+      expect(unescapeStringForCodeflyBug('\\\n')).toBe('\n');
+      expect(unescapeStringForCodeflyBug('First line\\\nSecond line')).toBe(
         'First line\nSecond line',
       );
     });
     it('should handle multiple backslashes before an escapable character (aggressive unescaping)', () => {
-      expect(unescapeStringForGeminiBug('\\\\n')).toBe('\n');
-      expect(unescapeStringForGeminiBug('\\\\\\t')).toBe('\t');
-      expect(unescapeStringForGeminiBug('\\\\\\\\`')).toBe('`');
+      expect(unescapeStringForCodeflyBug('\\\\n')).toBe('\n');
+      expect(unescapeStringForCodeflyBug('\\\\\\t')).toBe('\t');
+      expect(unescapeStringForCodeflyBug('\\\\\\\\`')).toBe('`');
     });
     it('should return empty string for empty input', () => {
-      expect(unescapeStringForGeminiBug('')).toBe('');
+      expect(unescapeStringForCodeflyBug('')).toBe('');
     });
     it('should not alter strings with no targeted escape sequences', () => {
-      expect(unescapeStringForGeminiBug('abc def')).toBe('abc def');
-      expect(unescapeStringForGeminiBug('C:\\Folder\\File')).toBe(
+      expect(unescapeStringForCodeflyBug('abc def')).toBe('abc def');
+      expect(unescapeStringForCodeflyBug('C:\\Folder\\File')).toBe(
         'C:\\Folder\\File',
       );
     });
     it('should correctly process strings with some targeted escapes', () => {
-      expect(unescapeStringForGeminiBug('C:\\Users\\name')).toBe(
+      expect(unescapeStringForCodeflyBug('C:\\Users\\name')).toBe(
         'C:\\Users\name',
       );
     });
     it('should handle complex cases with mixed slashes and characters', () => {
       expect(
-        unescapeStringForGeminiBug('\\\\\\\nLine1\\\nLine2\\tTab\\\\`Tick\\"'),
+        unescapeStringForCodeflyBug('\\\\\\\nLine1\\\nLine2\\tTab\\\\`Tick\\"'),
       ).toBe('\nLine1\nLine2\tTab`Tick"');
     });
     it('should handle escaped backslashes', () => {
-      expect(unescapeStringForGeminiBug('\\\\')).toBe('\\');
-      expect(unescapeStringForGeminiBug('C:\\\\Users')).toBe('C:\\Users');
-      expect(unescapeStringForGeminiBug('path\\\\to\\\\file')).toBe(
+      expect(unescapeStringForCodeflyBug('\\\\')).toBe('\\');
+      expect(unescapeStringForCodeflyBug('C:\\\\Users')).toBe('C:\\Users');
+      expect(unescapeStringForCodeflyBug('path\\\\to\\\\file')).toBe(
         'path\to\\file',
       );
     });
     it('should handle escaped backslashes mixed with other escapes (aggressive unescaping)', () => {
-      expect(unescapeStringForGeminiBug('line1\\\\\\nline2')).toBe(
+      expect(unescapeStringForCodeflyBug('line1\\\\\\nline2')).toBe(
         'line1\nline2',
       );
-      expect(unescapeStringForGeminiBug('quote\\\\"text\\\\nline')).toBe(
+      expect(unescapeStringForCodeflyBug('quote\\\\"text\\\\nline')).toBe(
         'quote"text\nline',
       );
     });
@@ -183,7 +183,7 @@ describe('editCorrector', () => {
         mcpServers: undefined as Record<string, any> | undefined,
         userAgent: 'test-agent',
         userMemory: '',
-        geminiMdFileCount: 0,
+        codeflyMdFileCount: 0,
         alwaysSkipModificationConfirmation: false,
       };
       mockConfigInstance = {
@@ -256,7 +256,7 @@ describe('editCorrector', () => {
     });
 
     describe('Scenario Group 1: originalParams.old_string matches currentContent directly', () => {
-      it('Test 1.1: old_string (no literal \\), new_string (escaped by Gemini) -> new_string unescaped', async () => {
+      it('Test 1.1: old_string (no literal \\), new_string (escaped by Codefly) -> new_string unescaped', async () => {
         const currentContent = 'This is a test string to find me.';
         const originalParams = {
           file_path: '/test/file.txt',
@@ -301,7 +301,7 @@ describe('editCorrector', () => {
         expect(result.params.old_string).toBe('find me');
         expect(result.occurrences).toBe(1);
       });
-      it('Test 1.3: old_string (with literal \\), new_string (escaped by Gemini) -> new_string unchanged (still escaped)', async () => {
+      it('Test 1.3: old_string (with literal \\), new_string (escaped by Codefly) -> new_string unchanged (still escaped)', async () => {
         const currentContent = 'This is a test string to find\\me.';
         const originalParams = {
           file_path: '/test/file.txt',
@@ -348,8 +348,8 @@ describe('editCorrector', () => {
       });
     });
 
-    describe('Scenario Group 2: originalParams.old_string does NOT match, but unescapeStringForGeminiBug(originalParams.old_string) DOES match', () => {
-      it('Test 2.1: old_string (over-escaped, no intended literal \\), new_string (escaped by Gemini) -> new_string unescaped', async () => {
+    describe('Scenario Group 2: originalParams.old_string does NOT match, but unescapeStringForCodeflyBug(originalParams.old_string) DOES match', () => {
+      it('Test 2.1: old_string (over-escaped, no intended literal \\), new_string (escaped by Codefly) -> new_string unescaped', async () => {
         const currentContent = 'This is a test string to find "me".';
         const originalParams = {
           file_path: '/test/file.txt',
@@ -416,7 +416,7 @@ describe('editCorrector', () => {
     });
 
     describe('Scenario Group 3: LLM Correction Path', () => {
-      it('Test 3.1: old_string (no literal \\), new_string (escaped by Gemini), LLM re-escapes new_string -> final new_string is double unescaped', async () => {
+      it('Test 3.1: old_string (no literal \\), new_string (escaped by Codefly), LLM re-escapes new_string -> final new_string is double unescaped', async () => {
         const currentContent = 'This is a test string to corrected find me.';
         const originalParams = {
           file_path: '/test/file.txt',
@@ -439,7 +439,7 @@ describe('editCorrector', () => {
         expect(result.params.old_string).toBe('find me');
         expect(result.occurrences).toBe(1);
       });
-      it('Test 3.2: old_string (with literal \\), new_string (escaped by Gemini), LLM re-escapes new_string -> final new_string is unescaped once', async () => {
+      it('Test 3.2: old_string (with literal \\), new_string (escaped by Codefly), LLM re-escapes new_string -> final new_string is unescaped once', async () => {
         const currentContent = 'This is a test string to corrected find me.';
         const originalParams = {
           file_path: '/test/file.txt',
@@ -558,7 +558,7 @@ describe('editCorrector', () => {
       });
     });
 
-    describe('Scenario Group 5: Specific unescapeStringForGeminiBug checks (integrated into ensureCorrectEdit)', () => {
+    describe('Scenario Group 5: Specific unescapeStringForCodeflyBug checks (integrated into ensureCorrectEdit)', () => {
       it('Test 5.1: old_string needs LLM to become currentContent, new_string also needs correction', async () => {
         const currentContent = 'const x = "a\nbc\\"def\\"';
         const originalParams = {
@@ -653,7 +653,7 @@ describe('editCorrector', () => {
           '/test/file.txt',
           currentContent,
           originalParams,
-          mockGeminiClientInstance,
+          mockCodeflyClientInstance,
           mockBaseLlmClientInstance,
           abortSignal,
           false,
@@ -678,7 +678,7 @@ describe('editCorrector', () => {
           '/test/file.txt',
           currentContent,
           originalParams,
-          mockGeminiClientInstance,
+          mockCodeflyClientInstance,
           mockBaseLlmClientInstance,
           abortSignal,
           false,

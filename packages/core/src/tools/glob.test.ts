@@ -6,7 +6,7 @@
 
 import type { GlobToolParams, GlobPath } from './glob.js';
 import { GlobTool, sortFileEntries } from './glob.js';
-import { partListUnionToString } from '../core/geminiRequest.js';
+import { partListUnionToString } from '../core/codeflyRequest.js';
 import path from 'node:path';
 import { isSubpath } from '../utils/paths.js';
 import fs from 'node:fs/promises';
@@ -20,7 +20,7 @@ import * as glob from 'glob';
 import { createMockMessageBus } from '../test-utils/mock-message-bus.js';
 import {
   DEFAULT_FILE_FILTERING_OPTIONS,
-  GEMINI_IGNORE_FILE_NAME,
+  CODEFLY_IGNORE_FILE_NAME,
 } from '../config/constants.js';
 
 vi.mock('glob', { spy: true });
@@ -391,69 +391,22 @@ describe('GlobTool', () => {
       await fs.writeFile(path.join(tempRootDir, 'ignored_test.txt'), 'content');
       await fs.writeFile(path.join(tempRootDir, 'visible_test.txt'), 'content');
 
-    it.each<IgnoreFileTestCase>([
-      {
-        name: 'should respect .gitignore files by default',
-        ignoreFile: { name: '.gitignore', content: '*.ignored.txt' },
-        filesToCreate: ['a.ignored.txt', 'b.notignored.txt'],
-        globToolParams: { pattern: '*.txt' },
-        expectedCountMessage: 'Found 3 file(s)',
-        notExpectedToContain: ['a.ignored.txt'],
-      },
-      {
-        name: 'should respect .codeflyignore files by default',
-        ignoreFile: { name: '.codeflyignore', content: '*.codeflyignored.txt' },
-        filesToCreate: ['a.codeflyignored.txt', 'b.notignored.txt'],
-        globToolParams: { pattern: '*.txt' },
-        expectedCountMessage: 'Found 3 file(s)',
-        notExpectedToContain: ['a.codeflyignored.txt'],
-      },
-      {
-        name: 'should not respect .gitignore when respect_git_ignore is false',
-        ignoreFile: { name: '.gitignore', content: '*.ignored.txt' },
-        filesToCreate: ['a.ignored.txt'],
-        globToolParams: { pattern: '*.txt', respect_git_ignore: false },
-        expectedCountMessage: 'Found 3 file(s)',
-        expectedToContain: ['a.ignored.txt'],
-      },
-      {
-        name: 'should not respect .codeflyignore when respect_gemini_ignore is false',
-        ignoreFile: { name: '.codeflyignore', content: '*.codeflyignored.txt' },
-        filesToCreate: ['a.codeflyignored.txt'],
-        globToolParams: { pattern: '*.txt', respect_gemini_ignore: false },
-        expectedCountMessage: 'Found 3 file(s)',
-        expectedToContain: ['a.codeflyignored.txt'],
-      },
-    ])(
-      '$name',
-      async ({
-        ignoreFile,
-        filesToCreate,
-        globToolParams,
-        expectedCountMessage,
-        expectedToContain,
-        notExpectedToContain,
-      }) => {
-        await fs.writeFile(
-          path.join(tempRootDir, ignoreFile.name),
-          ignoreFile.content,
-        );
-        for (const file of filesToCreate) {
-          await fs.writeFile(path.join(tempRootDir, file), 'content');
-        }
+      const params: GlobToolParams = { pattern: 'visible_test.txt' };
+      const invocation = globTool.build(params);
+      const result = await invocation.execute(abortSignal);
 
       expect(result.llmContent).toContain('Found 1 file(s)');
       expect(result.llmContent).toContain('visible_test.txt');
       expect(result.llmContent).not.toContain('ignored_test.txt');
     }, 30000);
 
-    it('should respect .geminiignore files by default', async () => {
+    it('should respect .codeflyignore files by default', async () => {
       await fs.writeFile(
-        path.join(tempRootDir, GEMINI_IGNORE_FILE_NAME),
-        'gemini-ignored_test.txt',
+        path.join(tempRootDir, CODEFLY_IGNORE_FILE_NAME),
+        'codefly-ignored_test.txt',
       );
       await fs.writeFile(
-        path.join(tempRootDir, 'gemini-ignored_test.txt'),
+        path.join(tempRootDir, 'codefly-ignored_test.txt'),
         'content',
       );
       await fs.writeFile(path.join(tempRootDir, 'visible_test.txt'), 'content');
@@ -464,7 +417,7 @@ describe('GlobTool', () => {
 
       expect(result.llmContent).toContain('Found 1 file(s)');
       expect(result.llmContent).toContain('visible_test.txt');
-      expect(result.llmContent).not.toContain('gemini-ignored_test.txt');
+      expect(result.llmContent).not.toContain('codefly-ignored_test.txt');
     }, 30000);
 
     it('should not respect .gitignore when respect_git_ignore is false', async () => {
@@ -485,25 +438,25 @@ describe('GlobTool', () => {
       expect(result.llmContent).toContain('ignored_test.txt');
     }, 30000);
 
-    it('should not respect .geminiignore when respect_gemini_ignore is false', async () => {
+    it('should not respect .codeflyignore when respect_codefly_ignore is false', async () => {
       await fs.writeFile(
-        path.join(tempRootDir, GEMINI_IGNORE_FILE_NAME),
-        'gemini-ignored_test.txt',
+        path.join(tempRootDir, CODEFLY_IGNORE_FILE_NAME),
+        'codefly-ignored_test.txt',
       );
       await fs.writeFile(
-        path.join(tempRootDir, 'gemini-ignored_test.txt'),
+        path.join(tempRootDir, 'codefly-ignored_test.txt'),
         'content',
       );
 
       const params: GlobToolParams = {
-        pattern: 'gemini-ignored_test.txt',
-        respect_gemini_ignore: false,
+        pattern: 'codefly-ignored_test.txt',
+        respect_codefly_ignore: false,
       };
       const invocation = globTool.build(params);
       const result = await invocation.execute(abortSignal);
 
       expect(result.llmContent).toContain('Found 1 file(s)');
-      expect(result.llmContent).toContain('gemini-ignored_test.txt');
+      expect(result.llmContent).toContain('codefly-ignored_test.txt');
     }, 30000);
   });
 });

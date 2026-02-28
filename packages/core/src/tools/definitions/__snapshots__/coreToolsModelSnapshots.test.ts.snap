@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snapshot for tool: activate_skill 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-2.5-pro > snapshot for tool: activate_skill 1`] = `
 {
   "description": "Activates a specialized agent skill by name (Available: 'skill1', 'skill2'). Returns the skill's instructions wrapped in \`<activated_skill>\` tags. These provide specialized guidance for the current task. Use this when you identify a task that matches a skill's description. ONLY use names exactly as they appear in the \`<available_skills>\` section.",
   "name": "activate_skill",
@@ -25,7 +25,7 @@ exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snaps
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snapshot for tool: activate_skill_empty 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-2.5-pro > snapshot for tool: activate_skill_empty 1`] = `
 {
   "description": "Activates a specialized agent skill by name. Returns the skill's instructions wrapped in \`<activated_skill>\` tags. These provide specialized guidance for the current task. Use this when you identify a task that matches a skill's description. ONLY use names exactly as they appear in the \`<available_skills>\` section.",
   "name": "activate_skill",
@@ -46,7 +46,7 @@ exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snaps
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snapshot for tool: activate_skill_single 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-2.5-pro > snapshot for tool: activate_skill_single 1`] = `
 {
   "description": "Activates a specialized agent skill by name (Available: 'skill1'). Returns the skill's instructions wrapped in \`<activated_skill>\` tags. These provide specialized guidance for the current task. Use this when you identify a task that matches a skill's description. ONLY use names exactly as they appear in the \`<available_skills>\` section.",
   "name": "activate_skill",
@@ -70,7 +70,7 @@ exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snaps
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snapshot for tool: ask_user 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-2.5-pro > snapshot for tool: ask_user 1`] = `
 {
   "description": "Ask the user one or more questions to gather preferences, clarify requirements, or make decisions.",
   "name": "ask_user",
@@ -147,7 +147,7 @@ exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snaps
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snapshot for tool: enter_plan_mode 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-2.5-pro > snapshot for tool: enter_plan_mode 1`] = `
 {
   "description": "Switch to Plan Mode to safely research, design, and plan complex changes using read-only tools.",
   "name": "enter_plan_mode",
@@ -163,7 +163,7 @@ exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snaps
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snapshot for tool: exit_plan_mode 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-2.5-pro > snapshot for tool: exit_plan_mode 1`] = `
 {
   "description": "Finalizes the planning phase and transitions to implementation by presenting the plan for user approval. This tool MUST be used to exit Plan Mode before any source code edits can be performed. Call this whenever a plan is ready or the user requests implementation.",
   "name": "exit_plan_mode",
@@ -182,9 +182,9 @@ exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snaps
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snapshot for tool: get_internal_docs 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-2.5-pro > snapshot for tool: get_internal_docs 1`] = `
 {
-  "description": "Returns the content of Gemini CLI internal documentation files. If no path is provided, returns a list of all available documentation paths.",
+  "description": "Returns the content of Codefly CLI internal documentation files. If no path is provided, returns a list of all available documentation paths.",
   "name": "get_internal_docs",
   "parametersJsonSchema": {
     "properties": {
@@ -198,7 +198,7 @@ exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snaps
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snapshot for tool: glob 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-2.5-pro > snapshot for tool: glob 1`] = `
 {
   "description": "Efficiently finds files matching specific glob patterns (e.g., \`src/**/*.ts\`, \`**/*.md\`), returning absolute paths sorted by modification time (newest first). Ideal for quickly locating files based on their name or path structure, especially in large codebases.",
   "name": "glob",
@@ -216,8 +216,8 @@ exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snaps
         "description": "The glob pattern to match against (e.g., '**/*.py', 'docs/*.md').",
         "type": "string",
       },
-      "respect_gemini_ignore": {
-        "description": "Optional: Whether to respect .geminiignore patterns when finding files. Defaults to true.",
+      "respect_codefly_ignore": {
+        "description": "Optional: Whether to respect .codeflyignore patterns when finding files. Defaults to true.",
         "type": "boolean",
       },
       "respect_git_ignore": {
@@ -233,9 +233,9 @@ exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snaps
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snapshot for tool: google_web_search 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-2.5-pro > snapshot for tool: google_web_search 1`] = `
 {
-  "description": "Performs a web search using Google Search (via the Gemini API) and returns the results. This tool is useful for finding information on the internet based on a query.",
+  "description": "Performs a web search using Google Search (via the Codefly API) and returns the results. This tool is useful for finding information on the internet based on a query.",
   "name": "google_web_search",
   "parametersJsonSchema": {
     "properties": {
@@ -252,7 +252,7 @@ exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snaps
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snapshot for tool: grep_search 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-2.5-pro > snapshot for tool: grep_search 1`] = `
 {
   "description": "Searches for a regular expression pattern within file contents. Max 100 matches.",
   "name": "grep_search",
@@ -297,7 +297,7 @@ exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snaps
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snapshot for tool: grep_search_ripgrep 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-2.5-pro > snapshot for tool: grep_search_ripgrep 1`] = `
 {
   "description": "Searches for a regular expression pattern within file contents.",
   "name": "grep_search",
@@ -368,7 +368,7 @@ exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snaps
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snapshot for tool: list_directory 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-2.5-pro > snapshot for tool: list_directory 1`] = `
 {
   "description": "Lists the names of files and subdirectories directly within a specified directory path. Can optionally ignore entries matching provided glob patterns.",
   "name": "list_directory",
@@ -379,10 +379,10 @@ exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snaps
         "type": "string",
       },
       "file_filtering_options": {
-        "description": "Optional: Whether to respect ignore patterns from .gitignore or .geminiignore",
+        "description": "Optional: Whether to respect ignore patterns from .gitignore or .codeflyignore",
         "properties": {
-          "respect_gemini_ignore": {
-            "description": "Optional: Whether to respect .geminiignore patterns when listing files. Defaults to true.",
+          "respect_codefly_ignore": {
+            "description": "Optional: Whether to respect .codeflyignore patterns when listing files. Defaults to true.",
             "type": "boolean",
           },
           "respect_git_ignore": {
@@ -408,7 +408,7 @@ exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snaps
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snapshot for tool: read_file 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-2.5-pro > snapshot for tool: read_file 1`] = `
 {
   "description": "Reads and returns the content of a specified file. If the file is large, the content will be truncated. The tool's response will clearly indicate if truncation has occurred and will provide details on how to read more of the file using the 'start_line' and 'end_line' parameters. Handles text, images (PNG, JPG, GIF, WEBP, SVG, BMP), audio files (MP3, WAV, AIFF, AAC, OGG, FLAC), and PDF files. For text files, it can read specific line ranges.",
   "name": "read_file",
@@ -435,7 +435,7 @@ exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snaps
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snapshot for tool: read_many_files 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-2.5-pro > snapshot for tool: read_many_files 1`] = `
 {
   "description": "Reads content from multiple files specified by glob patterns within a configured target directory. For text files, it concatenates their content into a single string. It is primarily designed for text-based files. However, it can also process image (e.g., .png, .jpg), audio (e.g., .mp3, .wav), and PDF (.pdf) files if their file names or extensions are explicitly included in the 'include' argument. For these explicitly requested non-text files, their data is read and included in a format suitable for model consumption (e.g., base64 encoded).
 
@@ -460,10 +460,10 @@ Use this tool when the user's query implies needing the content of several files
         "type": "array",
       },
       "file_filtering_options": {
-        "description": "Whether to respect ignore patterns from .gitignore or .geminiignore",
+        "description": "Whether to respect ignore patterns from .gitignore or .codeflyignore",
         "properties": {
-          "respect_gemini_ignore": {
-            "description": "Optional: Whether to respect .geminiignore patterns when listing files. Defaults to true.",
+          "respect_codefly_ignore": {
+            "description": "Optional: Whether to respect .codeflyignore patterns when listing files. Defaults to true.",
             "type": "boolean",
           },
           "respect_git_ignore": {
@@ -501,7 +501,7 @@ Use this tool when the user's query implies needing the content of several files
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snapshot for tool: replace 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-2.5-pro > snapshot for tool: replace 1`] = `
 {
   "description": "Replaces text within a file. By default, the tool expects to find and replace exactly ONE occurrence of \`old_string\`. If you want to replace multiple occurrences of the exact same string, set \`allow_multiple\` to true. This tool requires providing significant context around the change to ensure precise targeting. Always use the read_file tool to examine the file's current content before attempting a text replacement.
       
@@ -564,7 +564,7 @@ A good instruction should concisely answer:
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snapshot for tool: run_shell_command 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-2.5-pro > snapshot for tool: run_shell_command 1`] = `
 {
   "description": "This tool executes a given shell command as \`bash -c <command>\`. To run a command in the background, set the \`is_background\` parameter to true. Do NOT use \`&\` to background commands. Command is executed as a subprocess that leads its own process group. Command process group can be terminated as \`kill -- -PGID\` or signaled as \`kill -s SIGNAL -- -PGID\`.
 
@@ -608,7 +608,7 @@ exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snaps
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snapshot for tool: save_memory 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-2.5-pro > snapshot for tool: save_memory 1`] = `
 {
   "description": "
 Saves concise global user context (preferences, facts) for use across ALL workspaces.
@@ -635,7 +635,7 @@ NEVER save workspace-specific context, local paths, or commands (e.g. "The entry
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snapshot for tool: web_fetch 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-2.5-pro > snapshot for tool: web_fetch 1`] = `
 {
   "description": "Processes content from URL(s), including local and private network addresses (e.g., localhost), embedded in a prompt. Include up to 20 URLs and instructions (e.g., summarize, extract specific data) directly in the 'prompt' parameter.",
   "name": "web_fetch",
@@ -654,7 +654,7 @@ exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snaps
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snapshot for tool: write_file 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-2.5-pro > snapshot for tool: write_file 1`] = `
 {
   "description": "Writes content to a specified file in the local filesystem.
 
@@ -680,7 +680,7 @@ exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snaps
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-2.5-pro > snapshot for tool: write_todos 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-2.5-pro > snapshot for tool: write_todos 1`] = `
 {
   "description": "This tool can help you list out the current subtasks that are required to be completed for a given user request. The list of subtasks helps you keep track of the current task, organize complex queries and help ensure that you don't miss any steps. With this list, the user can also see the current progress you are making in executing a given task.
 
@@ -712,13 +712,13 @@ DO NOT use this tool for simple tasks that can be completed in less than 2 steps
 ## Examples of When to Use the Todo List
 
 <example>
-User request: Create a website with a React for creating fancy logos using gemini-2.5-flash-image
+User request: Create a website with a React for creating fancy logos using codefly-2.5-flash-image
 
 ToDo list created by the agent:
 1. Initialize a new React project environment (e.g., using Vite).
 2. Design and build the core UI components: a text input (prompt field) for the logo description, selection controls for style parameters (if the API supports them), and an image preview area.
 3. Implement state management (e.g., React Context or Zustand) to manage the user's input prompt, the API loading status (pending, success, error), and the resulting image data.
-4. Create an API service module within the React app (using "fetch" or "axios") to securely format and send the prompt data via an HTTP POST request to the specified "gemini-2.5-flash-image" (Gemini model) endpoint.
+4. Create an API service module within the React app (using "fetch" or "axios") to securely format and send the prompt data via an HTTP POST request to the specified "codefly-2.5-flash-image" (Codefly model) endpoint.
 5. Implement asynchronous logic to handle the API call: show a loading indicator while the request is pending, retrieve the generated image (e.g., as a URL or base64 string) upon success, and display any errors.
 6. Display the returned "fancy logo" from the API response in the preview area component.
 7. Add functionality (e.g., a "Download" button) to allow the user to save the generated image file.
@@ -787,7 +787,7 @@ The agent did not use the todo list because this task could be completed by a ti
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview > snapshot for tool: activate_skill 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-3-pro-preview > snapshot for tool: activate_skill 1`] = `
 {
   "description": "Activates a specialized agent skill by name (Available: 'skill1', 'skill2'). Returns the skill's instructions wrapped in \`<activated_skill>\` tags. These provide specialized guidance for the current task. Use this when you identify a task that matches a skill's description. ONLY use names exactly as they appear in the \`<available_skills>\` section.",
   "name": "activate_skill",
@@ -812,7 +812,7 @@ exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview >
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview > snapshot for tool: activate_skill_empty 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-3-pro-preview > snapshot for tool: activate_skill_empty 1`] = `
 {
   "description": "Activates a specialized agent skill by name. Returns the skill's instructions wrapped in \`<activated_skill>\` tags. These provide specialized guidance for the current task. Use this when you identify a task that matches a skill's description. ONLY use names exactly as they appear in the \`<available_skills>\` section.",
   "name": "activate_skill",
@@ -833,7 +833,7 @@ exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview >
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview > snapshot for tool: activate_skill_single 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-3-pro-preview > snapshot for tool: activate_skill_single 1`] = `
 {
   "description": "Activates a specialized agent skill by name (Available: 'skill1'). Returns the skill's instructions wrapped in \`<activated_skill>\` tags. These provide specialized guidance for the current task. Use this when you identify a task that matches a skill's description. ONLY use names exactly as they appear in the \`<available_skills>\` section.",
   "name": "activate_skill",
@@ -857,7 +857,7 @@ exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview >
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview > snapshot for tool: ask_user 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-3-pro-preview > snapshot for tool: ask_user 1`] = `
 {
   "description": "Ask the user one or more questions to gather preferences, clarify requirements, or make decisions.",
   "name": "ask_user",
@@ -934,7 +934,7 @@ exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview >
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview > snapshot for tool: enter_plan_mode 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-3-pro-preview > snapshot for tool: enter_plan_mode 1`] = `
 {
   "description": "Switch to Plan Mode to safely research, design, and plan complex changes using read-only tools.",
   "name": "enter_plan_mode",
@@ -950,7 +950,7 @@ exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview >
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview > snapshot for tool: exit_plan_mode 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-3-pro-preview > snapshot for tool: exit_plan_mode 1`] = `
 {
   "description": "Finalizes the planning phase and transitions to implementation by presenting the plan for user approval. This tool MUST be used to exit Plan Mode before any source code edits can be performed. Call this whenever a plan is ready or the user requests implementation.",
   "name": "exit_plan_mode",
@@ -969,9 +969,9 @@ exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview >
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview > snapshot for tool: get_internal_docs 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-3-pro-preview > snapshot for tool: get_internal_docs 1`] = `
 {
-  "description": "Returns the content of Gemini CLI internal documentation files. If no path is provided, returns a list of all available documentation paths.",
+  "description": "Returns the content of Codefly CLI internal documentation files. If no path is provided, returns a list of all available documentation paths.",
   "name": "get_internal_docs",
   "parametersJsonSchema": {
     "properties": {
@@ -985,7 +985,7 @@ exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview >
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview > snapshot for tool: glob 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-3-pro-preview > snapshot for tool: glob 1`] = `
 {
   "description": "Efficiently finds files matching specific glob patterns (e.g., \`src/**/*.ts\`, \`**/*.md\`), returning absolute paths sorted by modification time (newest first). Ideal for quickly locating files based on their name or path structure, especially in large codebases.",
   "name": "glob",
@@ -1003,8 +1003,8 @@ exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview >
         "description": "The glob pattern to match against (e.g., '**/*.py', 'docs/*.md').",
         "type": "string",
       },
-      "respect_gemini_ignore": {
-        "description": "Optional: Whether to respect .geminiignore patterns when finding files. Defaults to true.",
+      "respect_codefly_ignore": {
+        "description": "Optional: Whether to respect .codeflyignore patterns when finding files. Defaults to true.",
         "type": "boolean",
       },
       "respect_git_ignore": {
@@ -1020,7 +1020,7 @@ exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview >
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview > snapshot for tool: google_web_search 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-3-pro-preview > snapshot for tool: google_web_search 1`] = `
 {
   "description": "Performs a grounded Google Search to find information across the internet. Returns a synthesized answer with citations (e.g., [1]) and source URIs. Best for finding up-to-date documentation, troubleshooting obscure errors, or broad research. Use this when you don't have a specific URL. If a search result requires deeper analysis, follow up by using 'web_fetch' on the provided URI.",
   "name": "google_web_search",
@@ -1039,7 +1039,7 @@ exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview >
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview > snapshot for tool: grep_search 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-3-pro-preview > snapshot for tool: grep_search 1`] = `
 {
   "description": "Searches for a regular expression pattern within file contents. Max 100 matches.",
   "name": "grep_search",
@@ -1084,7 +1084,7 @@ exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview >
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview > snapshot for tool: grep_search_ripgrep 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-3-pro-preview > snapshot for tool: grep_search_ripgrep 1`] = `
 {
   "description": "Searches for a regular expression pattern within file contents. This tool is FAST and optimized, powered by ripgrep. PREFERRED over standard \`run_shell_command("grep ...")\` due to better performance and automatic output limiting (defaults to 100 matches, but can be increased via \`total_max_matches\`).",
   "name": "grep_search",
@@ -1155,7 +1155,7 @@ exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview >
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview > snapshot for tool: list_directory 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-3-pro-preview > snapshot for tool: list_directory 1`] = `
 {
   "description": "Lists the names of files and subdirectories directly within a specified directory path. Can optionally ignore entries matching provided glob patterns.",
   "name": "list_directory",
@@ -1166,10 +1166,10 @@ exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview >
         "type": "string",
       },
       "file_filtering_options": {
-        "description": "Optional: Whether to respect ignore patterns from .gitignore or .geminiignore",
+        "description": "Optional: Whether to respect ignore patterns from .gitignore or .codeflyignore",
         "properties": {
-          "respect_gemini_ignore": {
-            "description": "Optional: Whether to respect .geminiignore patterns when listing files. Defaults to true.",
+          "respect_codefly_ignore": {
+            "description": "Optional: Whether to respect .codeflyignore patterns when listing files. Defaults to true.",
             "type": "boolean",
           },
           "respect_git_ignore": {
@@ -1195,7 +1195,7 @@ exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview >
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview > snapshot for tool: read_file 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-3-pro-preview > snapshot for tool: read_file 1`] = `
 {
   "description": "Reads and returns the content of a specified file. If the file is large, the content will be truncated. The tool's response will clearly indicate if truncation has occurred and will provide details on how to read more of the file using the 'start_line' and 'end_line' parameters. Handles text, images (PNG, JPG, GIF, WEBP, SVG, BMP), audio files (MP3, WAV, AIFF, AAC, OGG, FLAC), and PDF files. For text files, it can read specific line ranges.",
   "name": "read_file",
@@ -1222,7 +1222,7 @@ exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview >
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview > snapshot for tool: read_many_files 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-3-pro-preview > snapshot for tool: read_many_files 1`] = `
 {
   "description": "Reads content from multiple files specified by glob patterns within a configured target directory. For text files, it concatenates their content into a single string. It is primarily designed for text-based files. However, it can also process image (e.g., .png, .jpg), audio (e.g., .mp3, .wav), and PDF (.pdf) files if their file names or extensions are explicitly included in the 'include' argument. For these explicitly requested non-text files, their data is read and included in a format suitable for model consumption (e.g., base64 encoded).
 
@@ -1247,10 +1247,10 @@ Use this tool when the user's query implies needing the content of several files
         "type": "array",
       },
       "file_filtering_options": {
-        "description": "Whether to respect ignore patterns from .gitignore or .geminiignore",
+        "description": "Whether to respect ignore patterns from .gitignore or .codeflyignore",
         "properties": {
-          "respect_gemini_ignore": {
-            "description": "Optional: Whether to respect .geminiignore patterns when listing files. Defaults to true.",
+          "respect_codefly_ignore": {
+            "description": "Optional: Whether to respect .codeflyignore patterns when listing files. Defaults to true.",
             "type": "boolean",
           },
           "respect_git_ignore": {
@@ -1288,7 +1288,7 @@ Use this tool when the user's query implies needing the content of several files
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview > snapshot for tool: replace 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-3-pro-preview > snapshot for tool: replace 1`] = `
 {
   "description": "Replaces text within a file. By default, the tool expects to find and replace exactly ONE occurrence of \`old_string\`. If you want to replace multiple occurrences of the exact same string, set \`allow_multiple\` to true. This tool requires providing significant context around the change to ensure precise targeting.
 The user has the ability to modify the \`new_string\` content. If modified, this will be stated in the response.",
@@ -1327,7 +1327,7 @@ The user has the ability to modify the \`new_string\` content. If modified, this
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview > snapshot for tool: run_shell_command 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-3-pro-preview > snapshot for tool: run_shell_command 1`] = `
 {
   "description": "This tool executes a given shell command as \`bash -c <command>\`. To run a command in the background, set the \`is_background\` parameter to true. Do NOT use \`&\` to background commands. Command is executed as a subprocess that leads its own process group. Command process group can be terminated as \`kill -- -PGID\` or signaled as \`kill -s SIGNAL -- -PGID\`.
 
@@ -1371,7 +1371,7 @@ exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview >
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview > snapshot for tool: save_memory 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-3-pro-preview > snapshot for tool: save_memory 1`] = `
 {
   "description": "Persists global preferences or facts across ALL future sessions. Use this for recurring instructions like coding styles or tool aliases. Unlike 'write_file', which is for project-specific files, this appends to a global memory file loaded in every workspace. If you are unsure whether a fact should be remembered globally, ask the user first. CRITICAL: Do not use for session-specific context or temporary data.",
   "name": "save_memory",
@@ -1391,7 +1391,7 @@ exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview >
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview > snapshot for tool: web_fetch 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-3-pro-preview > snapshot for tool: web_fetch 1`] = `
 {
   "description": "Analyzes and extracts information from up to 20 URLs. Ideal for documentation review, technical research, or reading raw code from GitHub. You can provide specific, complex instructions for the extraction (e.g., 'Summarize the breaking changes'). Provides cited answers based on the content. GitHub 'blob' URLs are automatically converted to raw versions for better processing. Supports HTTP/HTTPS only.",
   "name": "web_fetch",
@@ -1410,7 +1410,7 @@ exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview >
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview > snapshot for tool: write_file 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-3-pro-preview > snapshot for tool: write_file 1`] = `
 {
   "description": "Writes the complete content to a file, automatically creating missing parent directories. Overwrites existing files. The user has the ability to modify 'content' before it is saved. Best for new or small files; use 'replace' for targeted edits to large files.",
   "name": "write_file",
@@ -1434,7 +1434,7 @@ exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview >
 }
 `;
 
-exports[`coreTools snapshots for specific models > Model: gemini-3-pro-preview > snapshot for tool: write_todos 1`] = `
+exports[`coreTools snapshots for specific models > Model: codefly-3-pro-preview > snapshot for tool: write_todos 1`] = `
 {
   "description": "This tool can help you list out the current subtasks that are required to be completed for a given user request. The list of subtasks helps you keep track of the current task, organize complex queries and help ensure that you don't miss any steps. With this list, the user can also see the current progress you are making in executing a given task.
 
@@ -1466,13 +1466,13 @@ DO NOT use this tool for simple tasks that can be completed in less than 2 steps
 ## Examples of When to Use the Todo List
 
 <example>
-User request: Create a website with a React for creating fancy logos using gemini-2.5-flash-image
+User request: Create a website with a React for creating fancy logos using codefly-2.5-flash-image
 
 ToDo list created by the agent:
 1. Initialize a new React project environment (e.g., using Vite).
 2. Design and build the core UI components: a text input (prompt field) for the logo description, selection controls for style parameters (if the API supports them), and an image preview area.
 3. Implement state management (e.g., React Context or Zustand) to manage the user's input prompt, the API loading status (pending, success, error), and the resulting image data.
-4. Create an API service module within the React app (using "fetch" or "axios") to securely format and send the prompt data via an HTTP POST request to the specified "gemini-2.5-flash-image" (Gemini model) endpoint.
+4. Create an API service module within the React app (using "fetch" or "axios") to securely format and send the prompt data via an HTTP POST request to the specified "codefly-2.5-flash-image" (Codefly model) endpoint.
 5. Implement asynchronous logic to handle the API call: show a loading indicator while the request is pending, retrieve the generated image (e.g., as a URL or base64 string) upon success, and display any errors.
 6. Display the returned "fancy logo" from the API response in the preview area component.
 7. Add functionality (e.g., a "Download" button) to allow the user to save the generated image file.

@@ -23,7 +23,7 @@ import {
 } from '../index.js';
 import { OutputFormat } from '../output/types.js';
 import { logs } from '@opentelemetry/api-logs';
-import type { Config, GeminiCLIExtension } from '../config/config.js';
+import type { Config, CodeflyCLIExtension , type CodeflyCLIExtension } from '../config/config.js';
 import { ApprovalMode } from '../policy/types.js';
 import {
   logApiError,
@@ -102,7 +102,6 @@ import { FileOperation } from './metrics.js';
 import * as sdk from './sdk.js';
 import { createMockMessageBus } from '../test-utils/mock-message-bus.js';
 import { vi, describe, beforeEach, it, expect, afterEach } from 'vitest';
-import { type CodeflyCLIExtension } from '../config/config.js';
 import {
   FinishReason,
   type CallableTool,
@@ -312,7 +311,7 @@ describe('loggers', () => {
       const event = new UserPromptEvent(
         11,
         'prompt-id-9',
-        AuthType.USE_GEMINI,
+        AuthType.USE_CODEFLY,
         'test-prompt',
       );
 
@@ -329,7 +328,7 @@ describe('loggers', () => {
           interactive: false,
           prompt_length: 11,
           prompt_id: 'prompt-id-9',
-          auth_type: 'gemini-api-key',
+          auth_type: 'codefly-api-key',
         },
       });
     });
@@ -411,7 +410,7 @@ describe('loggers', () => {
             },
           ],
         },
-        AuthType.USE_GEMINI,
+        AuthType.USE_CODEFLY,
         usageData,
         'test-response',
       );
@@ -594,7 +593,7 @@ describe('loggers', () => {
             port: 8080,
           },
         },
-        AuthType.USE_GEMINI,
+        AuthType.USE_CODEFLY,
         'ApiError',
         503,
       );
@@ -700,7 +699,7 @@ describe('loggers', () => {
       isInteractive: () => false,
       getUsageStatisticsEnabled: () => true,
       getContentGeneratorConfig: () => ({
-        authType: AuthType.USE_GEMINI,
+        authType: AuthType.USE_CODEFLY,
       }),
     } as Config;
 
@@ -776,7 +775,7 @@ describe('loggers', () => {
         isInteractive: () => false,
         getUsageStatisticsEnabled: () => true,
         getContentGeneratorConfig: () => ({
-          authType: AuthType.USE_GEMINI,
+          authType: AuthType.USE_CODEFLY,
         }),
       } as Config;
 
@@ -876,11 +875,11 @@ describe('loggers', () => {
           },
         ],
         generate_content_config: {},
-        model: 'gemini-1.0-pro',
+        model: 'codefly-1.0-pro',
       };
 
       const event = new ApiRequestEvent(
-        'gemini-1.0-pro',
+        'codefly-1.0-pro',
         promptDetails,
         'Request with hidden prompt',
       );
@@ -895,7 +894,7 @@ describe('loggers', () => {
 
       // Assert on the body
       expect(semanticLogCall.body).toBe(
-        'GenAI operation request details from gemini-1.0-pro.',
+        'GenAI operation request details from codefly-1.0-pro.',
       );
 
       // Assert on specific attributes
@@ -903,7 +902,7 @@ describe('loggers', () => {
       expect(attributes['event.name']).toBe(
         'gen_ai.client.inference.operation.details',
       );
-      expect(attributes['gen_ai.request.model']).toBe('gemini-1.0-pro');
+      expect(attributes['gen_ai.request.model']).toBe('codefly-1.0-pro');
       expect(attributes['gen_ai.provider.name']).toBe('gcp.vertex_ai');
       // Ensure prompt messages are NOT included
       expect(attributes['gen_ai.input.messages']).toBeUndefined();
@@ -919,7 +918,7 @@ describe('loggers', () => {
         getExperimentsAsync: async () => undefined,
         getUsageStatisticsEnabled: () => true,
         getContentGeneratorConfig: () => ({
-          authType: AuthType.USE_GEMINI,
+          authType: AuthType.USE_CODEFLY,
         }),
       } as Config;
 
@@ -1801,7 +1800,7 @@ describe('loggers', () => {
 
     it('should log the event to Clearcut and OTEL, and record metrics', () => {
       const event = new ModelRoutingEvent(
-        'gemini-pro',
+        'codefly-pro',
         'default',
         100,
         'test-reason',
@@ -1813,7 +1812,7 @@ describe('loggers', () => {
       logModelRouting(mockConfig, event);
 
       expect(mockLogger.emit).toHaveBeenCalledWith({
-        body: 'Model routing decision. Model: gemini-pro, Source: default',
+        body: 'Model routing decision. Model: codefly-pro, Source: default',
         attributes: {
           'session.id': 'test-session-id',
           'user.email': 'test-user@example.com',
@@ -1832,7 +1831,7 @@ describe('loggers', () => {
 
     it('should log the event with numerical routing fields', () => {
       const event = new ModelRoutingEvent(
-        'gemini-pro',
+        'codefly-pro',
         'NumericalClassifier (Strict)',
         150,
         '[Score: 90 / Threshold: 80] reasoning',
@@ -1850,7 +1849,7 @@ describe('loggers', () => {
       ).toHaveBeenCalledWith(event);
 
       expect(mockLogger.emit).toHaveBeenCalledWith({
-        body: 'Model routing decision. Model: gemini-pro, Source: NumericalClassifier (Strict)',
+        body: 'Model routing decision. Model: codefly-pro, Source: NumericalClassifier (Strict)',
         attributes: {
           'session.id': 'test-session-id',
           'user.email': 'test-user@example.com',
@@ -1866,7 +1865,7 @@ describe('loggers', () => {
       vi.spyOn(sdk, 'isTelemetrySdkInitialized').mockReturnValue(false);
       vi.spyOn(sdk, 'bufferTelemetryEvent').mockImplementation(() => {});
       const event = new ModelRoutingEvent(
-        'gemini-pro',
+        'codefly-pro',
         'default',
         100,
         'test-reason',

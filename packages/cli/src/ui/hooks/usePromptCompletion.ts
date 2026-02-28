@@ -6,7 +6,7 @@
 
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import type { Config } from '@codeflyai/codefly-core';
-import { debugLogger, getResponseText } from '@codeflyai/codefly-core';
+import { LlmRole, debugLogger, getResponseText } from '@codeflyai/codefly-core';
 import type { Content } from '@google/genai';
 import type { TextBuffer } from '../components/shared/text-buffer.js';
 import { isSlashCommand } from '../utils/commandUtils.js';
@@ -63,7 +63,7 @@ export function usePromptCompletion({
 
   const generatePromptSuggestions = useCallback(async () => {
     const trimmedText = buffer.text.trim();
-    const geminiClient = config?.getCodeflyClient();
+    const codeflyClient = config?.getCodeflyClient();
 
     if (trimmedText === lastRequestedTextRef.current) {
       return;
@@ -75,7 +75,7 @@ export function usePromptCompletion({
 
     if (
       trimmedText.length < PROMPT_COMPLETION_MIN_LENGTH ||
-      !geminiClient ||
+      !codeflyClient ||
       isSlashCommand(trimmedText) ||
       trimmedText.includes('@') ||
       !isPromptCompletionEnabled
@@ -103,7 +103,7 @@ export function usePromptCompletion({
         },
       ];
 
-      const response = await geminiClient.generateContent(
+      const response = await codeflyClient.generateContent(
         { model: 'prompt-completion' },
         contents,
         signal,

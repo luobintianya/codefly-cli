@@ -24,7 +24,7 @@ import type { Config } from '../config/config.js';
 import {
   resolveModel,
   isCodefly2Model,
-  isPreviewModel,
+  supportsModernFeatures,
 } from '../config/models.js';
 import { hasCycleInSchema } from '../tools/tools.js';
 import type { StructuredError } from './turn.js';
@@ -43,7 +43,7 @@ import {
 } from '../telemetry/types.js';
 import { handleFallback } from '../fallback/handler.js';
 import { isFunctionResponse } from '../utils/messageInspectors.js';
-import { partListUnionToString } from './geminiRequest.js';
+import { partListUnionToString } from './codeflyRequest.js';
 import type { ModelConfigKey } from '../services/modelConfigService.js';
 import { estimateTokenCountSync } from '../utils/tokenCalculation.js';
 import {
@@ -276,7 +276,7 @@ export class CodeflyChat {
    *
    * @example
    * ```ts
-   * const chat = ai.chats.create({model: 'gemini-2.0-flash'});
+   * const chat = ai.chats.create({model: 'codefly-2.0-flash'});
    * const response = await chat.sendMessageStream({
    * message: 'Why is the sky blue?'
    * });
@@ -493,14 +493,14 @@ export class CodeflyChat {
     const initialActiveModel = this.config.getActiveModel();
 
     const apiCall = async () => {
-      const useGemini3_1 = (await this.config.getGemini31Launched?.()) ?? false;
+      const useCodefly3_1 = (await this.config.getCodefly31Launched?.()) ?? false;
       // Default to the last used model (which respects arguments/availability selection)
-      let modelToUse = resolveModel(lastModelToUse, useGemini3_1);
+      let modelToUse = resolveModel(lastModelToUse, useCodefly3_1);
 
       // If the active model has changed (e.g. due to a fallback updating the config),
       // we switch to the new active model.
       if (this.config.getActiveModel() !== initialActiveModel) {
-        modelToUse = resolveModel(this.config.getActiveModel(), useGemini3_1);
+        modelToUse = resolveModel(this.config.getActiveModel(), useCodefly3_1);
       }
 
       if (modelToUse !== lastModelToUse) {
@@ -905,7 +905,7 @@ export class CodeflyChat {
     if (responseText) {
       this.chatRecordingService.recordMessage({
         model,
-        type: 'gemini',
+        type: 'codefly',
         content: responseText,
       });
     }
@@ -955,7 +955,7 @@ export class CodeflyChat {
 
   /**
    * Records completed tool calls with full metadata.
-   * This is called by external components when tool calls complete, before sending responses to Gemini.
+   * This is called by external components when tool calls complete, before sending responses to Codefly.
    */
   recordCompletedToolCalls(
     model: string,

@@ -13,7 +13,7 @@ import {
   PREVIEW_CODEFLY_MODEL_AUTO,
   DEFAULT_CODEFLY_MODEL,
   DEFAULT_CODEFLY_FLASH_MODEL,
-  DEFAULT_GEMINI_FLASH_LITE_MODEL,
+  DEFAULT_CODEFLY_FLASH_LITE_MODEL,
   DEFAULT_CODEFLY_MODEL_AUTO,
   ModelSlashCommandEvent,
   logModelSlashCommand,
@@ -27,7 +27,6 @@ import {
 } from './shared/DescriptiveRadioButtonSelect.js';
 import { ConfigContext } from '../contexts/ConfigContext.js';
 import { useSettings } from '../contexts/SettingsContext.js';
-import { ThemedGradient } from './ThemedGradient.js';
 
 interface ModelDialogProps {
   onClose: () => void;
@@ -38,22 +37,22 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
   const settings = useSettings();
   const [view, setView] = useState<'main' | 'manual'>('main');
   const [persistMode, setPersistMode] = useState(true);
-  const settings = useSettings();
 
   // Determine the Preferred Model (read once when the dialog opens).
   const preferredModel = config?.getModel() || DEFAULT_CODEFLY_MODEL_AUTO;
 
   const shouldShowPreviewModels = config?.getHasAccessToPreviewModel();
-  const useGemini31 = config?.getGemini31LaunchedSync?.() ?? false;
-  const selectedAuthType = settings.merged.security.auth.selectedType;
-  const useCustomToolModel =
-    useGemini31 && selectedAuthType === AuthType.USE_GEMINI;
+  // const useCodefly3_1 = config.getCodefly31LaunchedSync?.() ?? false;
+  // TODO: Implement custom tool models
+  // const _useCustomToolModel =
+  //  useCodefly3_1 &&
+  //  config.getContentGeneratorConfig().authType === AuthType.USE_CODEFLY;
 
   const manualModelSelected = useMemo(() => {
     const manualModels = [
       DEFAULT_CODEFLY_MODEL,
       DEFAULT_CODEFLY_FLASH_MODEL,
-      DEFAULT_GEMINI_FLASH_LITE_MODEL,
+      DEFAULT_CODEFLY_FLASH_LITE_MODEL,
       PREVIEW_CODEFLY_MODEL,
       PREVIEW_CODEFLY_FLASH_MODEL,
     ];
@@ -88,19 +87,19 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
         value: DEFAULT_CODEFLY_MODEL_AUTO,
         title: getDisplayString(DEFAULT_CODEFLY_MODEL_AUTO),
         description:
-          'Let Codefly CLI decide the best model for the task: gemini-2.5-pro, gemini-2.5-flash',
+          'Let Codefly CLI decide the best model for the task: codefly-2.5-pro, codefly-2.5-flash',
         key: DEFAULT_CODEFLY_MODEL_AUTO,
       },
       {
         value: PREVIEW_CODEFLY_MODEL,
         title: getDisplayString(PREVIEW_CODEFLY_MODEL),
-        description: 'Gemini 3 Pro (Preview)',
+        description: 'Codefly 3 Pro (Preview)',
         key: PREVIEW_CODEFLY_MODEL,
       },
       {
         value: PREVIEW_CODEFLY_FLASH_MODEL,
         title: getDisplayString(PREVIEW_CODEFLY_FLASH_MODEL),
-        description: 'Gemini 3 Flash (Preview)',
+        description: 'Codefly 3 Flash (Preview)',
         key: PREVIEW_CODEFLY_FLASH_MODEL,
       },
       {
@@ -121,20 +120,20 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
         value: PREVIEW_CODEFLY_MODEL_AUTO,
         title: getDisplayString(PREVIEW_CODEFLY_MODEL_AUTO),
         description:
-          'Let Codefly CLI decide the best model for the task: gemini-3-pro, gemini-3-flash',
+          'Let Codefly CLI decide the best model for the task: codefly-3-pro, codefly-3-flash',
         key: PREVIEW_CODEFLY_MODEL_AUTO,
       });
     }
     return list;
-  }, [shouldShowPreviewModels, manualModelSelected, useGemini31]);
+  }, [shouldShowPreviewModels, manualModelSelected]);
 
   const manualOptions = useMemo(() => {
     const list: Array<DescriptiveRadioSelectItem<string>> = [];
 
-    // --- Google / Gemini ---
+    // --- Google / Codefly ---
     list.push({
       value: 'header-google',
-      title: 'Google / Gemini',
+      title: 'Google / Codefly',
       key: 'header-google',
       isHeader: true,
     });
@@ -166,9 +165,9 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
         key: DEFAULT_CODEFLY_FLASH_MODEL,
       },
       {
-        value: DEFAULT_GEMINI_FLASH_LITE_MODEL,
-        title: getDisplayString(DEFAULT_GEMINI_FLASH_LITE_MODEL),
-        key: DEFAULT_GEMINI_FLASH_LITE_MODEL,
+        value: DEFAULT_CODEFLY_FLASH_LITE_MODEL,
+        title: getDisplayString(DEFAULT_CODEFLY_FLASH_LITE_MODEL),
+        key: DEFAULT_CODEFLY_FLASH_LITE_MODEL,
       },
     );
 
@@ -263,7 +262,7 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
       </Box>
       <Box marginTop={1} flexDirection="column">
         <Text color={theme.text.secondary}>
-          {'> To use a specific Gemini model on startup, use the --model flag.'}
+          {'> To use a specific Codefly model on startup, use the --model flag.'}
         </Text>
       </Box>
       <Box marginTop={1} flexDirection="column">

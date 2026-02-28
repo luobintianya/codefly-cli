@@ -1,6 +1,6 @@
-# Writing hooks for Gemini CLI
+# Writing hooks for Codefly CLI
 
-This guide will walk you through creating hooks for Gemini CLI, from a simple
+This guide will walk you through creating hooks for Codefly CLI, from a simple
 logging hook to a comprehensive workflow assistant that demonstrates all hook
 events working together.
 
@@ -8,7 +8,7 @@ events working together.
 
 Before you start, make sure you have:
 
-- Gemini CLI installed and configured
+- Codefly CLI installed and configured
 - Basic understanding of shell scripting or JavaScript/Node.js
 - Familiarity with JSON for hook input/output
 
@@ -55,7 +55,7 @@ Add the hook configuration to `.codefly/settings.json`:
           {
             "name": "tool-logger",
             "type": "command",
-            "command": "$GEMINI_PROJECT_DIR/.codefly/hooks/log-tools.sh",
+            "command": "$CODEFLY_PROJECT_DIR/.codefly/hooks/log-tools.sh",
             "description": "Log all tool executions"
           }
         ]
@@ -67,7 +67,7 @@ Add the hook configuration to `.codefly/settings.json`:
 
 ### Step 3: Test your hook
 
-Run Gemini CLI and execute any command that uses tools:
+Run Codefly CLI and execute any command that uses tools:
 
 ```
 > Read the README.md file
@@ -115,7 +115,7 @@ exit 0
           {
             "name": "secret-scanner",
             "type": "command",
-            "command": "$GEMINI_PROJECT_DIR/.codefly/hooks/block-secrets.sh",
+            "command": "$CODEFLY_PROJECT_DIR/.codefly/hooks/block-secrets.sh",
             "description": "Prevent committing secrets"
           }
         ]
@@ -172,7 +172,7 @@ exit 0
           {
             "name": "auto-test",
             "type": "command",
-            "command": "$GEMINI_PROJECT_DIR/.codefly/hooks/auto-test.sh",
+            "command": "$CODEFLY_PROJECT_DIR/.codefly/hooks/auto-test.sh",
             "description": "Run tests after code changes"
           }
         ]
@@ -217,7 +217,7 @@ EOF
           {
             "name": "git-context",
             "type": "command",
-            "command": "$GEMINI_PROJECT_DIR/.codefly/hooks/inject-context.sh",
+            "command": "$CODEFLY_PROJECT_DIR/.codefly/hooks/inject-context.sh",
             "description": "Inject git commit history"
           }
         ]
@@ -315,7 +315,7 @@ SessionEnd → Extract and store memories
 **Prerequisites:**
 
 - Node.js 18+
-- Gemini CLI installed
+- Codefly CLI installed
 
 **Setup:**
 
@@ -345,7 +345,7 @@ chmod +x .codefly/hooks/*.js
           {
             "name": "init-assistant",
             "type": "command",
-            "command": "node $GEMINI_PROJECT_DIR/.codefly/hooks/init.js",
+            "command": "node $CODEFLY_PROJECT_DIR/.codefly/hooks/init.js",
             "description": "Initialize Smart Workflow Assistant"
           }
         ]
@@ -358,7 +358,7 @@ chmod +x .codefly/hooks/*.js
           {
             "name": "inject-memories",
             "type": "command",
-            "command": "node $GEMINI_PROJECT_DIR/.codefly/hooks/inject-memories.js",
+            "command": "node $CODEFLY_PROJECT_DIR/.codefly/hooks/inject-memories.js",
             "description": "Inject relevant project memories"
           }
         ]
@@ -371,7 +371,7 @@ chmod +x .codefly/hooks/*.js
           {
             "name": "rag-filter",
             "type": "command",
-            "command": "node $GEMINI_PROJECT_DIR/.codefly/hooks/rag-filter.js",
+            "command": "node $CODEFLY_PROJECT_DIR/.codefly/hooks/rag-filter.js",
             "description": "Filter tools using RAG"
           }
         ]
@@ -384,7 +384,7 @@ chmod +x .codefly/hooks/*.js
           {
             "name": "security-check",
             "type": "command",
-            "command": "node $GEMINI_PROJECT_DIR/.codefly/hooks/security.js",
+            "command": "node $CODEFLY_PROJECT_DIR/.codefly/hooks/security.js",
             "description": "Prevent committing secrets"
           }
         ]
@@ -397,7 +397,7 @@ chmod +x .codefly/hooks/*.js
           {
             "name": "auto-test",
             "type": "command",
-            "command": "node $GEMINI_PROJECT_DIR/.codefly/hooks/auto-test.js",
+            "command": "node $CODEFLY_PROJECT_DIR/.codefly/hooks/auto-test.js",
             "description": "Run tests after code changes"
           }
         ]
@@ -410,7 +410,7 @@ chmod +x .codefly/hooks/*.js
           {
             "name": "record-interaction",
             "type": "command",
-            "command": "node $GEMINI_PROJECT_DIR/.codefly/hooks/record.js",
+            "command": "node $CODEFLY_PROJECT_DIR/.codefly/hooks/record.js",
             "description": "Record interaction for learning"
           }
         ]
@@ -423,7 +423,7 @@ chmod +x .codefly/hooks/*.js
           {
             "name": "consolidate-memories",
             "type": "command",
-            "command": "node $GEMINI_PROJECT_DIR/.codefly/hooks/consolidate.js",
+            "command": "node $CODEFLY_PROJECT_DIR/.codefly/hooks/consolidate.js",
             "description": "Extract and store session learnings"
           }
         ]
@@ -446,7 +446,7 @@ const path = require('path');
 const fs = require('fs');
 
 async function main() {
-  const projectDir = process.env.GEMINI_PROJECT_DIR;
+  const projectDir = process.env.CODEFLY_PROJECT_DIR;
   const chromaPath = path.join(projectDir, '.codefly', 'chroma');
 
   // Ensure chroma directory exists
@@ -506,12 +506,12 @@ async function main() {
   }
 
   // Embed the prompt
-  const genai = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+  const genai = new GoogleGenerativeAI(process.env.CODEFLY_API_KEY);
   const model = genai.getGenerativeModel({ model: 'text-embedding-004' });
   const result = await model.embedContent(prompt);
 
   // Search memories
-  const projectDir = process.env.GEMINI_PROJECT_DIR;
+  const projectDir = process.env.CODEFLY_PROJECT_DIR;
   const client = new ChromaClient({
     path: path.join(projectDir, '.codefly', 'chroma'),
   });
@@ -587,8 +587,8 @@ async function main() {
     .join('\n');
 
   // Use fast model to extract task keywords
-  const genai = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-  const model = genai.getGenerativeModel({ model: 'gemini-2.0-flash-exp' });
+  const genai = new GoogleGenerativeAI(process.env.CODEFLY_API_KEY);
+  const model = genai.getGenerativeModel({ model: 'codefly-2.0-flash-exp' });
 
   const result = await model.generateContent(
     `Extract 3-5 keywords describing needed tool capabilities from this request:\n\n${recentMessages}\n\nKeywords (comma-separated):`,
@@ -765,8 +765,8 @@ const path = require('path');
 async function main() {
   const input = JSON.parse(await readStdin());
   const { llm_request, llm_response } = input;
-  const projectDir = process.env.GEMINI_PROJECT_DIR;
-  const sessionId = process.env.GEMINI_SESSION_ID;
+  const projectDir = process.env.CODEFLY_PROJECT_DIR;
+  const sessionId = process.env.CODEFLY_SESSION_ID;
 
   const tempFile = path.join(
     projectDir,
@@ -825,8 +825,8 @@ const { ChromaClient } = require('chromadb');
 
 async function main() {
   const input = JSON.parse(await readStdin());
-  const projectDir = process.env.GEMINI_PROJECT_DIR;
-  const sessionId = process.env.GEMINI_SESSION_ID;
+  const projectDir = process.env.CODEFLY_PROJECT_DIR;
+  const sessionId = process.env.CODEFLY_SESSION_ID;
 
   const tempFile = path.join(
     projectDir,
@@ -855,8 +855,8 @@ async function main() {
   }
 
   // Extract memories using LLM
-  const genai = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-  const model = genai.getGenerativeModel({ model: 'gemini-2.0-flash-exp' });
+  const genai = new GoogleGenerativeAI(process.env.CODEFLY_API_KEY);
+  const model = genai.getGenerativeModel({ model: 'codefly-2.0-flash-exp' });
 
   const prompt = `Extract important project learnings from this session.
 Focus on: decisions, conventions, gotchas, patterns.
@@ -929,7 +929,7 @@ readStdin().then(main).catch(console.error);
 ### Example session
 
 ```
-> gemini
+> codefly
 
 🧠 3 memories loaded
 
@@ -983,7 +983,7 @@ Demonstrates every hook event with practical use cases in a cohesive workflow.
 
 ### Cost efficiency
 
-- Uses `gemini-2.0-flash-exp` for intent extraction (fast, cheap)
+- Uses `codefly-2.0-flash-exp` for intent extraction (fast, cheap)
 - Uses `text-embedding-004` for RAG (inexpensive)
 - Caches tool descriptions (one-time cost)
 - Minimal overhead per request (<500ms typically)
@@ -1022,5 +1022,5 @@ const SECRET_PATTERNS = [
 
 - [Hooks Reference](index.md) - Complete API reference and configuration
 - [Best Practices](best-practices.md) - Security, performance, and debugging
-- [Configuration](../cli/configuration.md) - Gemini CLI settings
+- [Configuration](../cli/configuration.md) - Codefly CLI settings
 - [Custom Commands](../cli/custom-commands.md) - Create custom commands

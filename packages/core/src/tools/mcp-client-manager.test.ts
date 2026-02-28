@@ -16,7 +16,7 @@ import {
 import { McpClientManager } from './mcp-client-manager.js';
 import { McpClient, MCPDiscoveryState } from './mcp-client.js';
 import type { ToolRegistry } from './tool-registry.js';
-import type { Config, GeminiCLIExtension } from '../config/config.js';
+import type { Config, CodeflyCLIExtension } from '../config/config.js';
 
 vi.mock('./mcp-client.js', async () => {
   const originalModule = await vi.importActual('./mcp-client.js');
@@ -398,7 +398,7 @@ describe('McpClientManager', () => {
       const mcpServers = {
         'test-server': { command: 'node', args: ['server.js'] },
       };
-      const extension: GeminiCLIExtension = {
+      const extension: CodeflyCLIExtension = {
         name: 'test-extension',
         mcpServers,
         isActive: true,
@@ -427,7 +427,7 @@ describe('McpClientManager', () => {
       await manager.startConfiguredMcpServers();
       expect(mockedMcpClient.connect).toHaveBeenCalledTimes(1);
 
-      const extension: GeminiCLIExtension = {
+      const extension: CodeflyCLIExtension = {
         name: 'test-extension',
         mcpServers: {
           'test-server': { command: 'node', args: ['ext-server.js'] },
@@ -451,7 +451,7 @@ describe('McpClientManager', () => {
       const mcpServers = {
         'blocked-server': { command: 'node', args: ['server.js'] },
       };
-      const extension: GeminiCLIExtension = {
+      const extension: CodeflyCLIExtension = {
         name: 'test-extension',
         mcpServers,
         isActive: true,

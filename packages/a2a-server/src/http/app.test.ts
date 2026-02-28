@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type { Config } from '@codeflyai/codefly-core';
 import {
+  type Config,
   CodeflyEventType,
   ApprovalMode,
   type ToolCallConfirmationDetails,

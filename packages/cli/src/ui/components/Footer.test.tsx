@@ -26,7 +26,7 @@ vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
 });
 
 const defaultProps = {
-  model: 'gemini-pro',
+  model: 'codefly-pro',
   targetDir:
     '/Users/test/project/foo/bar/and/some/more/directories/to/make/it/long',
   branchName: 'main',
@@ -275,7 +275,7 @@ describe('<Footer />', () => {
     });
 
     it('should display custom sandbox info when SANDBOX env is set', async () => {
-      vi.stubEnv('SANDBOX', 'gemini-cli-test-sandbox');
+      vi.stubEnv('SANDBOX', 'codefly-cli-test-sandbox');
       const { lastFrame, waitUntilReady, unmount } = renderWithProviders(
         <Footer />,
         {
@@ -325,7 +325,7 @@ describe('<Footer />', () => {
     });
 
     it('should prioritize untrusted message over sandbox info', async () => {
-      vi.stubEnv('SANDBOX', 'gemini-cli-test-sandbox');
+      vi.stubEnv('SANDBOX', 'codefly-cli-test-sandbox');
       const { lastFrame, waitUntilReady, unmount } = renderWithProviders(
         <Footer />,
         {
@@ -507,15 +507,15 @@ describe('fallback mode display', () => {
         width: 120,
         uiState: {
           sessionStats: mockSessionStats,
-          currentModel: 'gemini-2.5-flash', // Fallback active, showing Flash
+          currentModel: 'codefly-2.5-flash', // Fallback active, showing Flash
         },
       },
     );
     await waitUntilReady();
 
     // Footer should show the effective model (Flash), not the config model (Pro)
-    expect(lastFrame()).toContain('gemini-2.5-flash');
-    expect(lastFrame()).not.toContain('gemini-2.5-pro');
+    expect(lastFrame()).toContain('codefly-2.5-flash');
+    expect(lastFrame()).not.toContain('codefly-2.5-pro');
     unmount();
   });
 
@@ -526,13 +526,13 @@ describe('fallback mode display', () => {
         width: 120,
         uiState: {
           sessionStats: mockSessionStats,
-          currentModel: 'gemini-2.5-pro', // Normal mode, showing Pro
+          currentModel: 'codefly-2.5-pro', // Normal mode, showing Pro
         },
       },
     );
     await waitUntilReady();
 
-    expect(lastFrame()).toContain('gemini-2.5-pro');
+    expect(lastFrame()).toContain('codefly-2.5-pro');
     unmount();
   });
 });

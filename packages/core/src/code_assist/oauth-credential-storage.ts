@@ -13,7 +13,7 @@ import { promises as fs } from 'node:fs';
 import { CODEFLY_DIR, homedir } from '../utils/paths.js';
 import { coreEvents } from '../utils/events.js';
 
-const KEYCHAIN_SERVICE_NAME = 'gemini-cli-oauth';
+const KEYCHAIN_SERVICE_NAME = 'codefly-cli-oauth';
 const MAIN_ACCOUNT_KEY = 'main-account';
 
 export class OAuthCredentialStorage {

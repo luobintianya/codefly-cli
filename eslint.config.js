@@ -38,7 +38,7 @@ export default tseslint.config(
       'dist/**',
       'evals/**',
       'packages/test-utils/**',
-      '.gemini/skills/**',
+      '.codefly/skills/**',
     ],
   },
   eslint.configs.recommended,
@@ -171,13 +171,13 @@ export default tseslint.config(
               name: 'node:os',
               importNames: ['homedir', 'tmpdir'],
               message:
-                'Please use the helpers from @google/gemini-cli-core instead of node:os homedir()/tmpdir() to ensure strict environment isolation.',
+                'Please use the helpers from @codeflyai/codefly-core instead of node:os homedir()/tmpdir() to ensure strict environment isolation.',
             },
             {
               name: 'os',
               importNames: ['homedir', 'tmpdir'],
               message:
-                'Please use the helpers from @google/gemini-cli-core instead of os homedir()/tmpdir() to ensure strict environment isolation.',
+                'Please use the helpers from @codeflyai/codefly-core instead of os homedir()/tmpdir() to ensure strict environment isolation.',
             },
           ],
         },
@@ -214,8 +214,8 @@ export default tseslint.config(
       'no-restricted-imports': [
         'error',
         {
-          name: '@google/gemini-cli-core',
-          message: 'Please use relative imports within the @google/gemini-cli-core package.',
+          name: '@codeflyai/codefly-core',
+          message: 'Please use relative imports within the @codeflyai/codefly-core package.',
         },
       ],
     },
@@ -226,8 +226,8 @@ export default tseslint.config(
       'no-restricted-imports': [
         'error',
         {
-          name: '@google/gemini-cli',
-          message: 'Please use relative imports within the @google/gemini-cli package.',
+          name: '@codeflyai/codefly',
+          message: 'Please use relative imports within the @codeflyai/codefly package.',
         },
       ],
     },
@@ -238,8 +238,8 @@ export default tseslint.config(
       'no-restricted-imports': [
         'error',
         {
-          name: '@google/gemini-cli-sdk',
-          message: 'Please use relative imports within the @google/gemini-cli-sdk package.',
+          name: '@codeflyai/codefly-sdk',
+          message: 'Please use relative imports within the @codeflyai/codefly-sdk package.',
         },
       ],
     },

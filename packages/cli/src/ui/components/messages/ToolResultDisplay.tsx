@@ -11,7 +11,7 @@ import { MarkdownDisplay } from '../../utils/MarkdownDisplay.js';
 import { AnsiOutputText, AnsiLineText } from '../AnsiOutput.js';
 import { MaxSizedBox } from '../shared/MaxSizedBox.js';
 import { theme } from '../../semantic-colors.js';
-import type { AnsiOutput } from '@codeflyai/codefly-core';
+import type { AnsiLine, AnsiOutput } from '@codeflyai/codefly-core';
 import { useUIState } from '../../contexts/UIStateContext.js';
 import { tryParseJSON } from '../../../utils/jsonoutput.js';
 import { useAlternateBuffer } from '../../hooks/useAlternateBuffer.js';

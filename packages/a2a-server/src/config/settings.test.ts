@@ -23,7 +23,7 @@ vi.mock('node:os', async (importOriginal) => {
   const path = await import('node:path');
   return {
     ...actual,
-    homedir: () => path.join(actual.tmpdir(), `gemini-home-${mocks.suffix}`),
+    homedir: () => path.join(actual.tmpdir(), `codefly-home-${mocks.suffix}`),
   };
 });
 
@@ -34,32 +34,32 @@ vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
   const os = await import('node:os');
   return {
     ...actual,
-    CODEFLY_DIR: '.gemini',
+    CODEFLY_DIR: '.codefly',
     debugLogger: {
       error: vi.fn(),
     },
     getErrorMessage: (error: unknown) => String(error),
-    homedir: () => path.join(os.tmpdir(), `gemini-home-${mocks.suffix}`),
+    homedir: () => path.join(os.tmpdir(), `codefly-home-${mocks.suffix}`),
   };
 });
 
 describe('loadSettings', () => {
-  const mockHomeDir = path.join(os.tmpdir(), `gemini-home-${mocks.suffix}`);
+  const mockHomeDir = path.join(os.tmpdir(), `codefly-home-${mocks.suffix}`);
   const mockWorkspaceDir = path.join(
     os.tmpdir(),
-    `gemini-workspace-${mocks.suffix}`,
+    `codefly-workspace-${mocks.suffix}`,
   );
-  const mockGeminiHomeDir = path.join(mockHomeDir, '.gemini');
-  const mockGeminiWorkspaceDir = path.join(mockWorkspaceDir, '.gemini');
+  const mockCodeflyHomeDir = path.join(mockHomeDir, '.codefly');
+  const mockCodeflyWorkspaceDir = path.join(mockWorkspaceDir, '.codefly');
 
   beforeEach(() => {
     vi.clearAllMocks();
     // Create the directories using the real fs
-    if (!fs.existsSync(mockGeminiHomeDir)) {
-      fs.mkdirSync(mockGeminiHomeDir, { recursive: true });
+    if (!fs.existsSync(mockCodeflyHomeDir)) {
+      fs.mkdirSync(mockCodeflyHomeDir, { recursive: true });
     }
-    if (!fs.existsSync(mockGeminiWorkspaceDir)) {
-      fs.mkdirSync(mockGeminiWorkspaceDir, { recursive: true });
+    if (!fs.existsSync(mockCodeflyWorkspaceDir)) {
+      fs.mkdirSync(mockCodeflyWorkspaceDir, { recursive: true });
     }
 
     // Clean up settings files before each test
@@ -67,7 +67,7 @@ describe('loadSettings', () => {
       fs.rmSync(USER_SETTINGS_PATH);
     }
     const workspaceSettingsPath = path.join(
-      mockGeminiWorkspaceDir,
+      mockCodeflyWorkspaceDir,
       'settings.json',
     );
     if (fs.existsSync(workspaceSettingsPath)) {
@@ -129,7 +129,7 @@ describe('loadSettings', () => {
       },
     };
     const workspaceSettingsPath = path.join(
-      mockGeminiWorkspaceDir,
+      mockCodeflyWorkspaceDir,
       'settings.json',
     );
     fs.writeFileSync(workspaceSettingsPath, JSON.stringify(workspaceSettings));

@@ -4,11 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {
-  type AuthType,
-  type Config,
-  getErrorMessage,
-} from '@codeflyai/codefly-core';
+import { ValidationRequiredError, getErrorMessage, type AuthType, type Config } from '@codeflyai/codefly-core';
 
 /**
  * Handles the initial authentication flow.

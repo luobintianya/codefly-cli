@@ -11,11 +11,11 @@ import type {
   ModelPolicyStateMap,
 } from './modelPolicy.js';
 import {
-  DEFAULT_GEMINI_FLASH_LITE_MODEL,
-  DEFAULT_GEMINI_FLASH_MODEL,
-  DEFAULT_GEMINI_MODEL,
-  PREVIEW_GEMINI_FLASH_MODEL,
-  PREVIEW_GEMINI_MODEL,
+  DEFAULT_CODEFLY_FLASH_LITE_MODEL,
+  DEFAULT_CODEFLY_FLASH_MODEL,
+  DEFAULT_CODEFLY_MODEL,
+  PREVIEW_CODEFLY_FLASH_MODEL,
+  PREVIEW_CODEFLY_MODEL,
   resolveModel,
 } from '../config/models.js';
 import type { UserTierId } from '../code_assist/types.js';
@@ -29,7 +29,7 @@ type PolicyConfig = Omit<ModelPolicy, 'actions' | 'stateTransitions'> & {
 export interface ModelPolicyOptions {
   previewEnabled: boolean;
   userTier?: UserTierId;
-  useGemini31?: boolean;
+  useCodefly31?: boolean;
   useCustomToolModel?: boolean;
 }
 
@@ -55,21 +55,21 @@ const DEFAULT_STATE: ModelPolicyStateMap = {
 };
 
 const DEFAULT_CHAIN: ModelPolicyChain = [
-  definePolicy({ model: DEFAULT_GEMINI_MODEL }),
-  definePolicy({ model: DEFAULT_GEMINI_FLASH_MODEL, isLastResort: true }),
+  definePolicy({ model: DEFAULT_CODEFLY_MODEL }),
+  definePolicy({ model: DEFAULT_CODEFLY_FLASH_MODEL, isLastResort: true }),
 ];
 
 const FLASH_LITE_CHAIN: ModelPolicyChain = [
   definePolicy({
-    model: DEFAULT_GEMINI_FLASH_LITE_MODEL,
+    model: DEFAULT_CODEFLY_FLASH_LITE_MODEL,
     actions: SILENT_ACTIONS,
   }),
   definePolicy({
-    model: DEFAULT_GEMINI_FLASH_MODEL,
+    model: DEFAULT_CODEFLY_FLASH_MODEL,
     actions: SILENT_ACTIONS,
   }),
   definePolicy({
-    model: DEFAULT_GEMINI_MODEL,
+    model: DEFAULT_CODEFLY_MODEL,
     isLastResort: true,
     actions: SILENT_ACTIONS,
   }),
@@ -83,13 +83,13 @@ export function getModelPolicyChain(
 ): ModelPolicyChain {
   if (options.previewEnabled) {
     const previewModel = resolveModel(
-      PREVIEW_GEMINI_MODEL,
-      options.useGemini31,
+      PREVIEW_CODEFLY_MODEL,
+      options.useCodefly31,
       options.useCustomToolModel,
     );
     return [
       definePolicy({ model: previewModel }),
-      definePolicy({ model: PREVIEW_GEMINI_FLASH_MODEL, isLastResort: true }),
+      definePolicy({ model: PREVIEW_CODEFLY_FLASH_MODEL, isLastResort: true }),
     ];
   }
 

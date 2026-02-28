@@ -12,8 +12,8 @@ scheduler, tool calls, etc.
 Dev traces are verbose and are specifically meant for understanding agent
 behavior and debugging issues. They are disabled by default.
 
-To enable dev traces, set the `GEMINI_DEV_TRACING=true` environment variable
-when running Gemini CLI.
+To enable dev traces, set the `CODEFLY_DEV_TRACING=true` environment variable
+when running Codefly CLI.
 
 ### Viewing dev traces
 
@@ -37,13 +37,13 @@ Genkit provides a web-based UI for viewing traces and other telemetry data.
     Genkit Developer UI: http://localhost:4000
     ```
 
-2.  **Run Gemini CLI with dev tracing:**
+2.  **Run Codefly CLI with dev tracing:**
 
-    In a separate terminal, run your Gemini CLI command with the
-    `GEMINI_DEV_TRACING` environment variable:
+    In a separate terminal, run your Codefly CLI command with the
+    `CODEFLY_DEV_TRACING` environment variable:
 
     ```bash
-    GEMINI_DEV_TRACING=true gemini
+    CODEFLY_DEV_TRACING=true codefly
     ```
 
 3.  **View the traces:**
@@ -67,13 +67,13 @@ You can view dev traces in the Jaeger UI. To get started, follow these steps:
     This command also configures your workspace for local telemetry and provides
     a link to the Jaeger UI (usually `http://localhost:16686`).
 
-2.  **Run Gemini CLI with dev tracing:**
+2.  **Run Codefly CLI with dev tracing:**
 
-    In a separate terminal, run your Gemini CLI command with the
-    `GEMINI_DEV_TRACING` environment variable:
+    In a separate terminal, run your Codefly CLI command with the
+    `CODEFLY_DEV_TRACING` environment variable:
 
     ```bash
-    GEMINI_DEV_TRACING=true gemini
+    CODEFLY_DEV_TRACING=true codefly
     ```
 
 3.  **View the traces:**
@@ -95,14 +95,14 @@ span.
 Here is a basic example:
 
 ```typescript
-import { runInDevTraceSpan } from '@google/gemini-cli-core';
+import { runInDevTraceSpan } from '@codeflyai/codefly-core';
 
 await runInDevTraceSpan({ name: 'my-custom-span' }, async ({ metadata }) => {
   // The `metadata` object allows you to record the input and output of the
   // operation as well as other attributes.
   metadata.input = { key: 'value' };
   // Set custom attributes.
-  metadata.attributes['gen_ai.request.model'] = 'gemini-4.0-mega';
+  metadata.attributes['gen_ai.request.model'] = 'codefly-4.0-mega';
 
   // Your code to be traced goes here
   try {

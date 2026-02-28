@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { GeminiCliAgent, tool, z } from '../src/index.js';
+import { CodeflyCliAgent, tool, z } from '../src/index.js';
 
 async function main() {
   const myTool = tool(
@@ -22,7 +22,7 @@ async function main() {
     },
   );
 
-  const agent = new GeminiCliAgent({
+  const agent = new CodeflyCliAgent({
     instructions: 'Make sure to always talk like a pirate.',
     tools: [myTool],
   });

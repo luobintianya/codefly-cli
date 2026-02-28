@@ -50,7 +50,7 @@ describe('ChatRecordingService', () => {
           .fn()
           .mockReturnValue('/test/project/root/.codefly/tmp'),
       },
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
+      getModel: vi.fn().mockReturnValue('codefly-pro'),
       getDebugMode: vi.fn().mockReturnValue(false),
       getToolRegistry: vi.fn().mockReturnValue({
         getTool: vi.fn().mockReturnValue({
@@ -121,7 +121,7 @@ describe('ChatRecordingService', () => {
         type: 'user',
         content: 'Hello',
         displayContent: 'User Hello',
-        model: 'gemini-pro',
+        model: 'codefly-pro',
       });
 
       const sessionFile = chatRecordingService.getConversationFilePath()!;
@@ -139,7 +139,7 @@ describe('ChatRecordingService', () => {
       chatRecordingService.recordMessage({
         type: 'user',
         content: 'World',
-        model: 'gemini-pro',
+        model: 'codefly-pro',
       });
 
       const sessionFile = chatRecordingService.getConversationFilePath()!;
@@ -172,9 +172,9 @@ describe('ChatRecordingService', () => {
 
     it('should update the last message with token info', () => {
       chatRecordingService.recordMessage({
-        type: 'gemini',
+        type: 'codefly',
         content: 'Response',
-        model: 'gemini-pro',
+        model: 'codefly-pro',
       });
 
       chatRecordingService.recordMessageTokens({
@@ -188,10 +188,10 @@ describe('ChatRecordingService', () => {
       const conversation = JSON.parse(
         fs.readFileSync(sessionFile, 'utf8'),
       ) as ConversationRecord;
-      const geminiMsg = conversation.messages[0] as MessageRecord & {
-        type: 'gemini';
+      const codeflyMsg = conversation.messages[0] as MessageRecord & {
+        type: 'codefly';
       };
-      expect(geminiMsg.tokens).toEqual({
+      expect(codeflyMsg.tokens).toEqual({
         input: 1,
         output: 2,
         total: 3,
@@ -203,9 +203,9 @@ describe('ChatRecordingService', () => {
 
     it('should queue token info if the last message already has tokens', () => {
       chatRecordingService.recordMessage({
-        type: 'gemini',
+        type: 'codefly',
         content: 'Response',
-        model: 'gemini-pro',
+        model: 'codefly-pro',
       });
 
       chatRecordingService.recordMessageTokens({
@@ -241,9 +241,9 @@ describe('ChatRecordingService', () => {
 
     it('should add new tool calls to the last message', () => {
       chatRecordingService.recordMessage({
-        type: 'gemini',
+        type: 'codefly',
         content: '',
-        model: 'gemini-pro',
+        model: 'codefly-pro',
       });
 
       const toolCall: ToolCallRecord = {
@@ -253,24 +253,24 @@ describe('ChatRecordingService', () => {
         status: CoreToolCallStatus.AwaitingApproval,
         timestamp: new Date().toISOString(),
       };
-      chatRecordingService.recordToolCalls('gemini-pro', [toolCall]);
+      chatRecordingService.recordToolCalls('codefly-pro', [toolCall]);
 
       const sessionFile = chatRecordingService.getConversationFilePath()!;
       const conversation = JSON.parse(
         fs.readFileSync(sessionFile, 'utf8'),
       ) as ConversationRecord;
-      const geminiMsg = conversation.messages[0] as MessageRecord & {
-        type: 'gemini';
+      const codeflyMsg = conversation.messages[0] as MessageRecord & {
+        type: 'codefly';
       };
-      expect(geminiMsg.toolCalls).toHaveLength(1);
-      expect(geminiMsg.toolCalls![0].name).toBe('testTool');
+      expect(codeflyMsg.toolCalls).toHaveLength(1);
+      expect(codeflyMsg.toolCalls![0].name).toBe('testTool');
     });
 
-    it('should create a new message if the last message is not from gemini', () => {
+    it('should create a new message if the last message is not from codefly', () => {
       chatRecordingService.recordMessage({
         type: 'user',
         content: 'call a tool',
-        model: 'gemini-pro',
+        model: 'codefly-pro',
       });
 
       const toolCall: ToolCallRecord = {
@@ -280,16 +280,16 @@ describe('ChatRecordingService', () => {
         status: CoreToolCallStatus.AwaitingApproval,
         timestamp: new Date().toISOString(),
       };
-      chatRecordingService.recordToolCalls('gemini-pro', [toolCall]);
+      chatRecordingService.recordToolCalls('codefly-pro', [toolCall]);
 
       const sessionFile = chatRecordingService.getConversationFilePath()!;
       const conversation = JSON.parse(
         fs.readFileSync(sessionFile, 'utf8'),
       ) as ConversationRecord;
       expect(conversation.messages).toHaveLength(2);
-      expect(conversation.messages[1].type).toBe('gemini');
+      expect(conversation.messages[1].type).toBe('codefly');
       expect(
-        (conversation.messages[1] as MessageRecord & { type: 'gemini' })
+        (conversation.messages[1] as MessageRecord & { type: 'codefly' })
           .toolCalls,
       ).toHaveLength(1);
     });
@@ -372,7 +372,7 @@ describe('ChatRecordingService', () => {
         model: 'm',
       });
       chatRecordingService.recordMessage({
-        type: 'gemini',
+        type: 'codefly',
         content: 'msg2',
         model: 'm',
       });
@@ -449,7 +449,7 @@ describe('ChatRecordingService', () => {
         chatRecordingService.recordMessage({
           type: 'user',
           content: 'Hello',
-          model: 'gemini-pro',
+          model: 'codefly-pro',
         }),
       ).not.toThrow();
 
@@ -473,7 +473,7 @@ describe('ChatRecordingService', () => {
       chatRecordingService.recordMessage({
         type: 'user',
         content: 'First message',
-        model: 'gemini-pro',
+        model: 'codefly-pro',
       });
 
       // Reset mock to track subsequent calls
@@ -483,7 +483,7 @@ describe('ChatRecordingService', () => {
       chatRecordingService.recordMessage({
         type: 'user',
         content: 'Second message',
-        model: 'gemini-pro',
+        model: 'codefly-pro',
       });
 
       chatRecordingService.recordThought({
@@ -514,7 +514,7 @@ describe('ChatRecordingService', () => {
       chatRecordingService.recordMessage({
         type: 'user',
         content: 'Hello',
-        model: 'gemini-pro',
+        model: 'codefly-pro',
       });
 
       // getConversation should return null when disabled
@@ -540,7 +540,7 @@ describe('ChatRecordingService', () => {
         chatRecordingService.recordMessage({
           type: 'user',
           content: 'Hello',
-          model: 'gemini-pro',
+          model: 'codefly-pro',
         }),
       ).not.toThrow();
 
@@ -558,14 +558,14 @@ describe('ChatRecordingService', () => {
     it('should update tool results from API history (masking sync)', () => {
       // 1. Record an initial message and tool call
       chatRecordingService.recordMessage({
-        type: 'gemini',
+        type: 'codefly',
         content: 'I will list the files.',
-        model: 'gemini-pro',
+        model: 'codefly-pro',
       });
 
       const callId = 'tool-call-123';
       const originalResult = [{ text: 'a'.repeat(1000) }];
-      chatRecordingService.recordToolCalls('gemini-pro', [
+      chatRecordingService.recordToolCalls('codefly-pro', [
         {
           id: callId,
           name: 'list_files',
@@ -609,13 +609,13 @@ describe('ChatRecordingService', () => {
         fs.readFileSync(sessionFile, 'utf8'),
       ) as ConversationRecord;
 
-      const geminiMsg = conversation.messages[0];
-      if (geminiMsg.type !== 'gemini')
-        throw new Error('Expected gemini message');
-      expect(geminiMsg.toolCalls).toBeDefined();
-      expect(geminiMsg.toolCalls![0].id).toBe(callId);
+      const codeflyMsg = conversation.messages[0];
+      if (codeflyMsg.type !== 'codefly')
+        throw new Error('Expected codefly message');
+      expect(codeflyMsg.toolCalls).toBeDefined();
+      expect(codeflyMsg.toolCalls![0].id).toBe(callId);
       // The implementation stringifies the response object
-      const result = geminiMsg.toolCalls![0].result;
+      const result = codeflyMsg.toolCalls![0].result;
       if (!Array.isArray(result)) throw new Error('Expected array result');
       const firstPart = result[0] as Part;
       expect(firstPart.functionResponse).toBeDefined();
@@ -639,12 +639,12 @@ describe('ChatRecordingService', () => {
       ];
 
       chatRecordingService.recordMessage({
-        type: 'gemini',
+        type: 'codefly',
         content: '',
-        model: 'gemini-pro',
+        model: 'codefly-pro',
       });
 
-      chatRecordingService.recordToolCalls('gemini-pro', [
+      chatRecordingService.recordToolCalls('codefly-pro', [
         {
           id: callId,
           name: 'read_file',
@@ -680,7 +680,7 @@ describe('ChatRecordingService', () => {
       ) as ConversationRecord;
 
       const lastMsg = conversation.messages[0] as MessageRecord & {
-        type: 'gemini';
+        type: 'codefly';
       };
       const result = lastMsg.toolCalls![0].result as Part[];
       expect(result).toHaveLength(2);
@@ -696,12 +696,12 @@ describe('ChatRecordingService', () => {
       const callId = 'prefix-part-call';
 
       chatRecordingService.recordMessage({
-        type: 'gemini',
+        type: 'codefly',
         content: '',
-        model: 'gemini-pro',
+        model: 'codefly-pro',
       });
 
-      chatRecordingService.recordToolCalls('gemini-pro', [
+      chatRecordingService.recordToolCalls('codefly-pro', [
         {
           id: callId,
           name: 'read_file',
@@ -736,7 +736,7 @@ describe('ChatRecordingService', () => {
       ) as ConversationRecord;
 
       const lastMsg = conversation.messages[0] as MessageRecord & {
-        type: 'gemini';
+        type: 'codefly';
       };
       const result = lastMsg.toolCalls![0].result as Part[];
       expect(result).toHaveLength(2);
@@ -755,7 +755,7 @@ describe('ChatRecordingService', () => {
       chatRecordingService.recordMessage({
         type: 'user',
         content: 'Hello after dir cleanup',
-        model: 'gemini-pro',
+        model: 'codefly-pro',
       });
 
       // mkdirSync should be called with the parent directory and recursive option

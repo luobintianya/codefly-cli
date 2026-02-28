@@ -1,6 +1,6 @@
 # File system tools reference
 
-The Gemini CLI core provides a suite of tools for interacting with the local
+The Codefly CLI core provides a suite of tools for interacting with the local
 file system. These tools allow the model to explore and modify your codebase.
 
 ## Technical reference
@@ -17,7 +17,7 @@ Lists the names of files and subdirectories directly within a specified path.
   - `dir_path` (string, required): Absolute or relative path to the directory.
   - `ignore` (array, optional): Glob patterns to exclude.
   - `file_filtering_options` (object, optional): Configuration for `.gitignore`
-    and `.geminiignore` compliance.
+    and `.codeflyignore` compliance.
 
 ### `read_file` (ReadFile)
 

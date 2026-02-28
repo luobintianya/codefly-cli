@@ -161,7 +161,7 @@ export async function formatGrepResults(
   const matchCount = matchesOnly.length; // Count actual matches, not context lines
   const matchTerm = matchCount === 1 ? 'match' : 'matches';
 
-  // If the result count is low and Gemini didn't request before/after lines of context
+  // If the result count is low and Codefly didn't request before/after lines of context
   // add a small amount anyways to enable the agent to avoid one or more extra turns
   // reading the matched files. This optimization reduces turns count by ~10% in SWEBench.
   await enrichWithAutoContext(matchesByFile, matchCount, params);

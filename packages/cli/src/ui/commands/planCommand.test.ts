@@ -14,11 +14,11 @@ import {
   coreEvents,
   processSingleFileContent,
   type ProcessedFileReadResult,
-} from '@google/gemini-cli-core';
+} from '@codeflyai/codefly-core';
 
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
   const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+    await importOriginal<typeof import('@codeflyai/codefly-core')>();
   return {
     ...actual,
     coreEvents: {
@@ -111,7 +111,7 @@ describe('planCommand', () => {
       'Approved Plan: approved-plan.md',
     );
     expect(mockContext.ui.addItem).toHaveBeenCalledWith({
-      type: MessageType.GEMINI,
+      type: MessageType.CODEFLY,
       text: '# Approved Plan Content',
     });
   });

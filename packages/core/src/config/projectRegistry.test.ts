@@ -31,7 +31,7 @@ describe('ProjectRegistry', () => {
   }
 
   beforeEach(() => {
-    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'gemini-registry-test-'));
+    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'codefly-registry-test-'));
     registryPath = path.join(tempDir, 'projects.json');
     baseDir1 = path.join(tempDir, 'base1');
     baseDir2 = path.join(tempDir, 'base2');
@@ -66,15 +66,15 @@ describe('ProjectRegistry', () => {
     const registry = new ProjectRegistry(registryPath);
     await registry.initialize();
 
-    const id1 = await registry.getShortId(path.join(tempDir, 'one', 'gemini'));
-    const id2 = await registry.getShortId(path.join(tempDir, 'two', 'gemini'));
+    const id1 = await registry.getShortId(path.join(tempDir, 'one', 'codefly'));
+    const id2 = await registry.getShortId(path.join(tempDir, 'two', 'codefly'));
     const id3 = await registry.getShortId(
-      path.join(tempDir, 'three', 'gemini'),
+      path.join(tempDir, 'three', 'codefly'),
     );
 
-    expect(id1).toBe('gemini');
-    expect(id2).toBe('gemini-1');
-    expect(id3).toBe('gemini-2');
+    expect(id1).toBe('codefly');
+    expect(id2).toBe('codefly-1');
+    expect(id3).toBe('codefly-2');
   });
 
   it('persists and reloads the registry', async () => {
@@ -144,22 +144,22 @@ describe('ProjectRegistry', () => {
   });
 
   it('handles collisions if a slug is taken on disk by another project', async () => {
-    // 1. project-y takes 'gemini' on disk
+    // 1. project-y takes 'codefly' on disk
     const projectY = normalizePath(path.join(tempDir, 'project-y'));
-    const slug = 'gemini';
+    const slug = 'codefly';
     const slugDir = path.join(baseDir1, slug);
     fs.mkdirSync(slugDir, { recursive: true });
     fs.writeFileSync(path.join(slugDir, '.project_root'), projectY);
 
-    // 2. project-z tries to get shortId for 'gemini'
+    // 2. project-z tries to get shortId for 'codefly'
     const registry = new ProjectRegistry(registryPath, [baseDir1]);
     await registry.initialize();
-    const projectZ = normalizePath(path.join(tempDir, 'gemini'));
+    const projectZ = normalizePath(path.join(tempDir, 'codefly'));
     const shortId = await registry.getShortId(projectZ);
 
-    // 3. It should avoid 'gemini' and pick 'gemini-1' (or similar)
-    expect(shortId).not.toBe('gemini');
-    expect(shortId).toBe('gemini-1');
+    // 3. It should avoid 'codefly' and pick 'codefly-1' (or similar)
+    expect(shortId).not.toBe('codefly');
+    expect(shortId).toBe('codefly-1');
   });
 
   it('invalidates registry mapping if disk ownership changed', async () => {

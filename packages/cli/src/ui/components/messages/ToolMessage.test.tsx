@@ -9,13 +9,12 @@ import { ToolMessage, type ToolMessageProps } from './ToolMessage.js';
 import { describe, it, expect, vi } from 'vitest';
 import { StreamingState } from '../../types.js';
 import { Text } from 'ink';
-import { StreamingContext } from '../../contexts/StreamingContext.js';
-import type { AnsiOutput } from '@codeflyai/codefly-core';
+import { CoreToolCallStatus, type AnsiOutput } from '@codeflyai/codefly-core';
 import { renderWithProviders } from '../../../test-utils/render.js';
 import { tryParseJSON } from '../../../utils/jsonoutput.js';
 
-vi.mock('../GeminiRespondingSpinner.js', () => ({
-  GeminiRespondingSpinner: () => <Text>MockRespondingSpinner</Text>,
+vi.mock('../CodeflyRespondingSpinner.js', () => ({
+  CodeflyRespondingSpinner: () => <Text>MockRespondingSpinner</Text>,
 }));
 
 vi.mock('../TerminalOutput.js', () => ({

@@ -14,7 +14,7 @@ export const DEFAULT_CONFIG_PARAMETERS: ConfigParameters = {
   debugMode: false,
   sessionId: 'test-session-id',
   proxy: undefined,
-  model: 'gemini-test-model',
+  model: 'codefly-test-model',
   targetDir: '/',
   cwd: '/',
 };

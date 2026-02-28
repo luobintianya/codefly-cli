@@ -21,11 +21,11 @@ import {
   getFlashLitePolicyChain,
 } from './policyCatalog.js';
 import {
-  DEFAULT_GEMINI_FLASH_LITE_MODEL,
-  DEFAULT_GEMINI_MODEL,
-  PREVIEW_GEMINI_MODEL_AUTO,
+  DEFAULT_CODEFLY_FLASH_LITE_MODEL,
+  DEFAULT_CODEFLY_MODEL,
+  PREVIEW_CODEFLY_MODEL_AUTO,
   isAutoModel,
-  isGemini3Model,
+  isCodefly3Model,
   resolveModel,
 } from '../config/models.js';
 import type { ModelSelectionResult } from './modelAvailabilityService.js';
@@ -45,45 +45,45 @@ export function resolvePolicyChain(
   const configuredModel = config.getModel();
 
   let chain;
-  const useGemini31 = config.getGemini31LaunchedSync?.() ?? false;
+  const useCodefly31 = config.getCodefly31LaunchedSync?.() ?? false;
   const useCustomToolModel =
-    useGemini31 &&
-    config.getContentGeneratorConfig?.()?.authType === AuthType.USE_GEMINI;
+    useCodefly31 &&
+    config.getContentGeneratorConfig?.()?.authType === AuthType.USE_CODEFLY;
 
   const resolvedModel = resolveModel(
     modelFromConfig,
-    useGemini31,
+    useCodefly31,
     useCustomToolModel,
   );
   const isAutoPreferred = preferredModel ? isAutoModel(preferredModel) : false;
   const isAutoConfigured = isAutoModel(configuredModel);
   const hasAccessToPreview = config.getHasAccessToPreviewModel?.() ?? true;
 
-  if (resolvedModel === DEFAULT_GEMINI_FLASH_LITE_MODEL) {
+  if (resolvedModel === DEFAULT_CODEFLY_FLASH_LITE_MODEL) {
     chain = getFlashLitePolicyChain();
   } else if (
-    isGemini3Model(resolvedModel) ||
+    isCodefly3Model(resolvedModel) ||
     isAutoPreferred ||
     isAutoConfigured
   ) {
     if (hasAccessToPreview) {
       const previewEnabled =
-        isGemini3Model(resolvedModel) ||
-        preferredModel === PREVIEW_GEMINI_MODEL_AUTO ||
-        configuredModel === PREVIEW_GEMINI_MODEL_AUTO;
+        isCodefly3Model(resolvedModel) ||
+        preferredModel === PREVIEW_CODEFLY_MODEL_AUTO ||
+        configuredModel === PREVIEW_CODEFLY_MODEL_AUTO;
       chain = getModelPolicyChain({
         previewEnabled,
         userTier: config.getUserTier(),
-        useGemini31,
+        useCodefly31,
         useCustomToolModel,
       });
     } else {
-      // User requested Gemini 3 but has no access. Proactively downgrade
-      // to the stable Gemini 2.5 chain.
+      // User requested Codefly 3 but has no access. Proactively downgrade
+      // to the stable Codefly 2.5 chain.
       return getModelPolicyChain({
         previewEnabled: false,
         userTier: config.getUserTier(),
-        useGemini31,
+        useCodefly31,
         useCustomToolModel,
       });
     }
@@ -181,7 +181,7 @@ export function selectModelForAvailability(
   if (selection.selectedModel) return selection;
 
   const backupModel =
-    chain.find((p) => p.isLastResort)?.model ?? DEFAULT_GEMINI_MODEL;
+    chain.find((p) => p.isLastResort)?.model ?? DEFAULT_CODEFLY_MODEL;
 
   return { selectedModel: backupModel, skipped: [] };
 }

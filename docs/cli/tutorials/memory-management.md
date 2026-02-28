@@ -1,17 +1,17 @@
 # Manage context and memory
 
-Control what Gemini CLI knows about you and your projects. In this guide, you'll
-learn how to define project-wide rules with `GEMINI.md`, teach the agent
+Control what Codefly CLI knows about you and your projects. In this guide, you'll
+learn how to define project-wide rules with `CODEFLY.md`, teach the agent
 persistent facts, and inspect the active context.
 
 ## Prerequisites
 
-- Gemini CLI installed and authenticated.
+- Codefly CLI installed and authenticated.
 - A project directory where you want to enforce specific rules.
 
 ## Why manage context?
 
-Out of the box, Gemini CLI is smart but generic. It doesn't know your preferred
+Out of the box, Codefly CLI is smart but generic. It doesn't know your preferred
 testing framework, your indentation style, or that you hate using `any` in
 TypeScript. Context management solves this by giving the agent persistent
 memory.
@@ -25,15 +25,15 @@ You'll use these features when you want to:
 - **Remember facts:** Save details like "My database port is 5432" so you don't
   have to repeat them.
 
-## How to define project-wide rules (GEMINI.md)
+## How to define project-wide rules (CODEFLY.md)
 
-The most powerful way to control the agent's behavior is through `GEMINI.md`
+The most powerful way to control the agent's behavior is through `CODEFLY.md`
 files. These are Markdown files containing instructions that are automatically
 loaded into every conversation.
 
 ### Scenario: Create a project context file
 
-1.  In the root of your project, create a file named `GEMINI.md`.
+1.  In the root of your project, create a file named `CODEFLY.md`.
 
 2.  Add your instructions:
 
@@ -46,16 +46,16 @@ loaded into every conversation.
     - **Tone:** Be concise. Don't explain basic React concepts.
     ```
 
-3.  Start a new session. Gemini CLI will now know these rules automatically.
+3.  Start a new session. Codefly CLI will now know these rules automatically.
 
 ### Scenario: Using the hierarchy
 
 Context is loaded hierarchically. This allows you to have general rules for
 everything and specific rules for sub-projects.
 
-1.  **Global:** `~/.gemini/GEMINI.md` (Rules for _every_ project you work on).
-2.  **Project Root:** `./GEMINI.md` (Rules for the current repository).
-3.  **Subdirectory:** `./src/GEMINI.md` (Rules specific to the `src` folder).
+1.  **Global:** `~/.codefly/CODEFLY.md` (Rules for _every_ project you work on).
+2.  **Project Root:** `./CODEFLY.md` (Rules for the current repository).
+3.  **Subdirectory:** `./src/CODEFLY.md` (Rules specific to the `src` folder).
 
 **Example:** You might set "Always use strict typing" in your global config, but
 "Use Python 3.11" only in your backend repository.
@@ -93,7 +93,7 @@ is following.
 ### Scenario: View active context
 
 To see the full, concatenated set of instructions currently loaded (from all
-`GEMINI.md` files and saved memories), use the `/memory show` command.
+`CODEFLY.md` files and saved memories), use the `/memory show` command.
 
 **Command:** `/memory show`
 
@@ -102,19 +102,19 @@ excellent for debugging why the agent might be ignoring a rule.
 
 ### Scenario: Refresh context
 
-If you edit a `GEMINI.md` file while a session is running, the agent won't know
+If you edit a `CODEFLY.md` file while a session is running, the agent won't know
 immediately. Force a reload with:
 
 **Command:** `/memory refresh`
 
 ## Best practices
 
-- **Keep it focused:** Don't dump your entire internal wiki into `GEMINI.md`.
+- **Keep it focused:** Don't dump your entire internal wiki into `CODEFLY.md`.
   Keep instructions actionable and relevant to code generation.
 - **Use negative constraints:** Explicitly telling the agent what _not_ to do
   (e.g., "Do not use class components") is often more effective than vague
   positive instructions.
-- **Review often:** Periodically check your `GEMINI.md` files to remove outdated
+- **Review often:** Periodically check your `CODEFLY.md` files to remove outdated
   rules.
 
 ## Next steps
@@ -123,4 +123,4 @@ immediately. Force a reload with:
   history works.
 - Explore the [Command reference](../../reference/commands.md) for more
   `/memory` options.
-- Read the technical spec for [Project context](../../cli/gemini-md.md).
+- Read the technical spec for [Project context](../../cli/codefly-md.md).

@@ -1,0 +1,100 @@
+src/ui/auth/AuthDialog.test.tsx(7,1): error TS6133: 'act' is declared but its value is never read.
+src/ui/auth/AuthDialog.test.tsx(223,31): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/auth/AuthDialog.test.tsx(241,31): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/auth/AuthDialog.test.tsx(256,31): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/commands/extensionsCommand.test.ts(911,12): error TS2304: Cannot find name 'GeminiCLIExtension'.
+src/ui/commands/hooksCommand.ts(78,18): error TS2304: Cannot find name 'enableHook'.
+src/ui/commands/hooksCommand.ts(84,20): error TS2304: Cannot find name 'renderHookActionFeedback'.
+src/ui/commands/hooksCommand.ts(86,6): error TS7006: Parameter 'label' implicitly has an 'any' type.
+src/ui/commands/hooksCommand.ts(86,13): error TS7006: Parameter 'path' implicitly has an 'any' type.
+src/ui/commands/hooksCommand.ts(133,18): error TS2304: Cannot find name 'disableHook'.
+src/ui/commands/hooksCommand.ts(139,20): error TS2304: Cannot find name 'renderHookActionFeedback'.
+src/ui/commands/hooksCommand.ts(141,6): error TS7006: Parameter 'label' implicitly has an 'any' type.
+src/ui/commands/hooksCommand.ts(141,13): error TS7006: Parameter 'path' implicitly has an 'any' type.
+src/ui/commands/hooksCommand.ts(245,11): error TS2304: Cannot find name 'isLoadableSettingScope'.
+src/ui/commands/hooksCommand.ts(246,27): error TS2345: Argument of type 'SettingScope' is not assignable to parameter of type 'LoadableSettingScope'.
+src/ui/commands/memoryCommand.test.ts(91,27): error TS2339: Property 'length' does not exist on type 'string | HierarchicalMemory'.
+  Property 'length' does not exist on type 'HierarchicalMemory'.
+src/ui/commands/modelCommand.test.ts(107,17): error TS2304: Cannot find name 'MessageType'.
+src/ui/commands/modelCommand.test.ts(139,17): error TS2304: Cannot find name 'MessageType'.
+src/ui/commands/modelCommand.test.ts(153,17): error TS2304: Cannot find name 'MessageType'.
+src/ui/commands/rewindCommand.tsx(54,27): error TS2304: Cannot find name 'convertSessionToClientHistory'.
+src/ui/commands/rewindCommand.tsx(145,15): error TS2304: Cannot find name 'logRewind'.
+src/ui/commands/rewindCommand.tsx(145,37): error TS2304: Cannot find name 'RewindEvent'.
+src/ui/commands/rewindCommand.tsx(184,17): error TS2304: Cannot find name 'checkExhaustive'.
+src/ui/components/AboutBox.tsx(38,52): error TS2339: Property 'showUserIdentity' does not exist on type 'InferMergedSettings<{ readonly language: { readonly type: "string"; readonly label: "Language"; readonly category: "General"; readonly requiresRestart: true; readonly default: "en"; readonly description: "The language for the CLI interface."; readonly showInDialog: true; }; ... 13 more ...; readonly sessionRetention...'.
+src/ui/components/AskUserDialog.test.tsx(1105,33): error TS2304: Cannot find name 'chalk'.
+src/ui/components/AskUserDialog.test.tsx(1137,33): error TS2304: Cannot find name 'chalk'.
+src/ui/components/AskUserDialog.test.tsx(1168,33): error TS2304: Cannot find name 'chalk'.
+src/ui/components/AskUserDialog.test.tsx(1221,10): error TS2304: Cannot find name 'UIState'.
+src/ui/components/AskUserDialog.test.tsx(1224,8): error TS2304: Cannot find name 'UIStateContext'.
+src/ui/components/AskUserDialog.test.tsx(1231,9): error TS2304: Cannot find name 'UIStateContext'.
+src/ui/components/AskUserDialog.test.tsx(1257,10): error TS2304: Cannot find name 'UIState'.
+src/ui/components/AskUserDialog.test.tsx(1260,8): error TS2304: Cannot find name 'UIStateContext'.
+src/ui/components/AskUserDialog.test.tsx(1267,9): error TS2304: Cannot find name 'UIStateContext'.
+src/ui/components/BackgroundShellDisplay.tsx(64,5): error TS2339: Property 'dismissBackgroundShell' does not exist on type 'UIActions'.
+src/ui/components/BackgroundShellDisplay.tsx(65,5): error TS2339: Property 'setActiveBackgroundShellPid' does not exist on type 'UIActions'.
+src/ui/components/BackgroundShellDisplay.tsx(66,5): error TS2339: Property 'setIsBackgroundShellListOpen' does not exist on type 'UIActions'.
+src/ui/components/Composer.test.tsx(62,21): error TS2339: Property 'transientMessage' does not exist on type 'UIState'.
+src/ui/components/Composer.test.tsx(221,44): error TS2304: Cannot find name 'Config'.
+src/ui/components/Composer.test.tsx(241,20): error TS2304: Cannot find name 'Config'.
+src/ui/components/Composer.test.tsx(250,57): error TS2304: Cannot find name 'Config'.
+src/ui/components/Composer.test.tsx(431,25): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/Composer.test.tsx(554,9): error TS2353: Object literal may only specify known properties, and 'transientMessage' does not exist in type 'Partial<UIState>'.
+src/ui/components/Composer.test.tsx(725,44): error TS2304: Cannot find name 'tokenLimit'.
+src/ui/components/Composer.tsx(10,3): error TS2300: Duplicate identifier 'ApprovalMode'.
+src/ui/components/Composer.tsx(37,10): error TS2300: Duplicate identifier 'ApprovalMode'.
+src/ui/components/Composer.tsx(69,27): error TS2304: Cannot find name 'HistoryItemToolGroup'.
+src/ui/components/Composer.tsx(73,14): error TS7006: Parameter 'tool' implicitly has an 'any' type.
+src/ui/components/ContextUsageDisplay.tsx(9,1): error TS6133: 'tokenLimit' is declared but its value is never read.
+src/ui/components/ContextUsageDisplay.tsx(20,22): error TS2304: Cannot find name 'getContextUsagePercentage'.
+src/ui/components/DialogManager.tsx(31,10): error TS2300: Duplicate identifier 'SettingScope'.
+src/ui/components/DialogManager.tsx(40,10): error TS2300: Duplicate identifier 'SettingScope'.
+src/ui/components/DialogManager.tsx(119,15): error TS2339: Property 'newAgents' does not exist on type 'UIState'.
+src/ui/components/DialogManager.tsx(122,25): error TS2339: Property 'newAgents' does not exist on type 'UIState'.
+src/ui/components/DialogManager.tsx(189,15): error TS2339: Property 'permissionConfirmationRequest' does not exist on type 'UIState'.
+src/ui/components/DialogManager.tsx(190,27): error TS2339: Property 'permissionConfirmationRequest' does not exist on type 'UIState'.
+src/ui/components/DialogManager.tsx(191,34): error TS7006: Parameter 'f' implicitly has an 'any' type.
+src/ui/components/DialogManager.tsx(196,19): error TS2339: Property 'permissionConfirmationRequest' does not exist on type 'UIState'.
+src/ui/components/FolderTrustDialog.test.tsx(238,40): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/components/FolderTrustDialog.tsx(32,22): error TS2304: Cannot find name 'FolderDiscoveryResults'.
+src/ui/components/FolderTrustDialog.tsx(41,62): error TS2304: Cannot find name 'useUIState'.
+src/ui/components/FolderTrustDialog.tsx(42,29): error TS2304: Cannot find name 'useAlternateBuffer'.
+src/ui/components/FolderTrustDialog.tsx(149,50): error TS7006: Parameter 'error' implicitly has an 'any' type.
+src/ui/components/FolderTrustDialog.tsx(149,57): error TS7006: Parameter 'i' implicitly has an 'any' type.
+src/ui/components/FolderTrustDialog.tsx(162,51): error TS7006: Parameter 'warning' implicitly has an 'any' type.
+src/ui/components/FolderTrustDialog.tsx(162,60): error TS7006: Parameter 'i' implicitly has an 'any' type.
+src/ui/components/FolderTrustDialog.tsx(180,33): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/ui/components/FolderTrustDialog.tsx(180,39): error TS7006: Parameter 'idx' implicitly has an 'any' type.
+src/ui/components/FolderTrustDialog.tsx(210,12): error TS2304: Cannot find name 'StickyHeader'.
+src/ui/components/FolderTrustDialog.tsx(217,13): error TS2304: Cannot find name 'StickyHeader'.
+src/ui/components/FolderTrustDialog.tsx(287,10): error TS2304: Cannot find name 'ShowMoreLines'.
+src/ui/components/FolderTrustDialog.tsx(309,6): error TS2304: Cannot find name 'OverflowProvider'.
+src/ui/components/FolderTrustDialog.tsx(309,34): error TS2304: Cannot find name 'OverflowProvider'.
+src/ui/components/HistoryItemDisplay.test.tsx(153,24): error TS6133: 'waitUntilReady' is declared but its value is never read.
+src/ui/components/HistoryItemDisplay.test.tsx(153,40): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/components/HistoryItemDisplay.test.tsx(242,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/HistoryItemDisplay.tsx(23,1): error TS6133: 'ModelStatsDisplay' is declared but its value is never read.
+src/ui/components/IdeTrustChangeDialog.test.tsx(20,40): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/components/IdeTrustChangeDialog.test.tsx(33,40): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/components/InputPrompt.test.tsx(3846,33): error TS2339: Property 'terminalCursorFocus' does not exist on type 'Props'.
+src/ui/components/InputPrompt.test.tsx(3850,33): error TS2339: Property 'terminalCursorPosition' does not exist on type 'Props'.
+src/ui/components/InputPrompt.test.tsx(3875,33): error TS2339: Property 'terminalCursorFocus' does not exist on type 'Props'.
+src/ui/components/InputPrompt.test.tsx(3879,33): error TS2339: Property 'terminalCursorPosition' does not exist on type 'Props'.
+src/ui/components/InputPrompt.test.tsx(3904,33): error TS2339: Property 'terminalCursorFocus' does not exist on type 'Props'.
+src/ui/components/InputPrompt.test.tsx(3908,33): error TS2339: Property 'terminalCursorPosition' does not exist on type 'Props'.
+src/ui/components/InputPrompt.test.tsx(3936,27): error TS2339: Property 'terminalCursorPosition' does not exist on type 'Props'.
+src/ui/components/InputPrompt.test.tsx(3941,27): error TS2339: Property 'terminalCursorFocus' does not exist on type 'Props'.
+src/ui/components/InputPrompt.test.tsx(3945,28): error TS2339: Property 'terminalCursorPosition' does not exist on type 'Props'.
+src/ui/components/InputPrompt.test.tsx(3976,27): error TS2339: Property 'terminalCursorPosition' does not exist on type 'Props'.
+src/ui/components/InputPrompt.test.tsx(3984,27): error TS2339: Property 'terminalCursorFocus' does not exist on type 'Props'.
+src/ui/components/InputPrompt.test.tsx(3987,31): error TS2339: Property 'terminalCursorPosition' does not exist on type 'Props'.
+src/ui/components/InputPrompt.test.tsx(4011,33): error TS2339: Property 'terminalCursorFocus' does not exist on type 'Props'.
+src/ui/components/InputPrompt.test.tsx(4014,33): error TS2339: Property 'terminalCursorPosition' does not exist on type 'Props'.
+src/ui/components/InputPrompt.tsx(1462,19): error TS2322: Type '{ children: (string | Element)[]; terminalCursorFocus: true; terminalCursorPosition: number; }' is not assignable to type 'IntrinsicAttributes & Props'.
+  Property 'terminalCursorFocus' does not exist on type 'IntrinsicAttributes & Props'.
+src/ui/components/InputPrompt.tsx(1586,25): error TS2322: Type '{ children: (string | false | Element | ReactNode[])[]; terminalCursorFocus: boolean; terminalCursorPosition: number; }' is not assignable to type 'IntrinsicAttributes & Props'.
+  Property 'terminalCursorFocus' does not exist on type 'IntrinsicAttributes & Props'.
+src/ui/components/messages/ShellToolMessage.test.tsx(12,26): error TS6133: 'ToolCallStatus' is declared but its value is never read.
+src/ui/components/messages/ShellToolMessage.test.tsx(63,13): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ShellToolMessage.test.tsx(118,29): error TS2304: Cannot find name 'CoreToolCallStatus'.

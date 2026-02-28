@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'The expected Gemini binary version that should be released (e.g., 0.5.0-preview-2).'
+        description: 'The expected Codefly binary version that should be released (e.g., 0.5.0-preview-2).'
         required: true
         type: 'string'
       npm-tag:
@@ -49,7 +49,7 @@ jobs:
           npm-package: '${{vars.CLI_PACKAGE_NAME}}@${{github.event.inputs.npm-tag}}'
           expected-version: '${{github.event.inputs.version}}'
           working-directory: '.'
-          gemini_api_key: '${{ secrets.GEMINI_API_KEY }}'
+          codefly_api_key: '${{ secrets.CODEFLY_API_KEY }}'
           npm-registry-url: '${{ vars.NPM_REGISTRY_URL }}'
           github-token: '${{ secrets.GITHUB_TOKEN }}'
           npm-registry-scope: '${{ vars.NPM_REGISTRY_SCOPE }}'

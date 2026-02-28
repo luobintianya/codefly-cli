@@ -36,11 +36,11 @@ export const toolsCommand: SlashCommand = {
 
     const tools = toolRegistry.getAllTools();
     // Filter out MCP tools by checking for the absence of a serverName property
-    const geminiTools = tools.filter((tool) => !('serverName' in tool));
+    const codeflyTools = tools.filter((tool) => !('serverName' in tool));
 
     const toolsListItem: HistoryItemToolsList = {
       type: MessageType.TOOLS_LIST,
-      tools: geminiTools.map((tool) => ({
+      tools: codeflyTools.map((tool) => ({
         name: tool.name,
         displayName: tool.displayName,
         description: tool.description,

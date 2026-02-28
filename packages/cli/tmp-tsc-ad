@@ -1,0 +1,100 @@
+src/ui/components/messages/ShellToolMessage.test.tsx(122,11): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ShellToolMessage.test.tsx(144,22): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ShellToolMessage.test.tsx(159,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ShellToolMessage.test.tsx(164,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ShellToolMessage.test.tsx(169,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ShellToolMessage.test.tsx(175,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ShellToolMessage.test.tsx(189,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ShellToolMessage.test.tsx(218,9): error TS2304: Cannot find name 'ACTIVE_SHELL_MAX_LINES'.
+src/ui/components/messages/ShellToolMessage.test.tsx(230,9): error TS2304: Cannot find name 'ACTIVE_SHELL_MAX_LINES'.
+src/ui/components/messages/ShellToolMessage.test.tsx(240,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ShellToolMessage.test.tsx(263,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ShellToolMessage.test.tsx(281,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ShellToolMessage.test.tsx(307,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ShellToolMessage.tsx(66,7): error TS2304: Cannot find name 'useUIState'.
+src/ui/components/messages/ShellToolMessage.tsx(67,29): error TS2304: Cannot find name 'useAlternateBuffer'.
+src/ui/components/messages/ShellToolMessage.tsx(161,21): error TS2304: Cannot find name 'calculateShellMaxLines'.
+src/ui/components/messages/ShellToolMessage.tsx(174,56): error TS2304: Cannot find name 'ACTIVE_SHELL_MAX_LINES'.
+src/ui/components/messages/Todo.tsx(8,1): error TS6192: All imports in import declaration are unused.
+src/ui/components/messages/Todo.tsx(10,8): error TS6133: 'Todo' is declared but its value is never read.
+src/ui/components/messages/Todo.tsx(12,8): error TS6133: 'TodoStatus' is declared but its value is never read.
+src/ui/components/messages/Todo.tsx(14,1): error TS6133: 'theme' is declared but its value is never read.
+src/ui/components/messages/ToolConfirmationMessage.test.tsx(16,3): error TS2724: '"../../../test-utils/render.js"' has no exported member named 'createMockSettings'. Did you mean 'mockSettings'?
+src/ui/components/messages/ToolGroupMessage.test.tsx(17,1): error TS6133: 'Config' is declared but its value is never read.
+src/ui/components/messages/ToolGroupMessage.test.tsx(31,13): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(49,26): error TS2304: Cannot find name 'makeFakeConfig'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(51,16): error TS2304: Cannot find name 'os'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(85,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(112,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(118,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(124,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(159,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(165,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(171,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(340,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(424,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(449,34): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(453,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(522,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(527,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(532,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(537,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(541,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(543,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(553,19): error TS2304: Cannot find name 'ASK_USER_DISPLAY_NAME'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(580,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(584,17): error TS2304: Cannot find name 'ASK_USER_DISPLAY_NAME'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(585,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(607,17): error TS2304: Cannot find name 'ASK_USER_DISPLAY_NAME'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(608,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(632,15): error TS2304: Cannot find name 'WRITE_FILE_DISPLAY_NAME'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(633,15): error TS2304: Cannot find name 'ApprovalMode'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(636,15): error TS2304: Cannot find name 'EDIT_DISPLAY_NAME'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(636,40): error TS2304: Cannot find name 'ApprovalMode'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(638,15): error TS2304: Cannot find name 'WRITE_FILE_DISPLAY_NAME'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(639,15): error TS2304: Cannot find name 'ApprovalMode'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(642,15): error TS2304: Cannot find name 'READ_FILE_DISPLAY_NAME'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(642,45): error TS2304: Cannot find name 'ApprovalMode'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(643,15): error TS2304: Cannot find name 'GLOB_DISPLAY_NAME'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(643,40): error TS2304: Cannot find name 'ApprovalMode'.
+src/ui/components/messages/ToolGroupMessage.test.tsx(738,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolMessage.test.tsx(12,1): error TS6133: 'StreamingContext' is declared but its value is never read.
+src/ui/components/messages/ToolMessage.test.tsx(41,13): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolMessage.test.tsx(225,45): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolMessage.test.tsx(235,45): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolMessage.test.tsx(247,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolMessage.test.tsx(258,45): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolMessage.test.tsx(268,45): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolMessage.test.tsx(278,45): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolMessage.test.tsx(288,45): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolMessage.test.tsx(298,45): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolMessage.test.tsx(383,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolMessage.test.tsx(405,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolMessage.test.tsx(425,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolMessageFocusHint.test.tsx(37,13): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolResultDisplay.test.tsx(10,1): error TS6192: All imports in import declaration are unused.
+src/ui/components/messages/ToolResultDisplay.tsx(63,9): error TS2304: Cannot find name 'AnsiLine'.
+src/ui/components/messages/ToolResultDisplay.tsx(68,24): error TS2304: Cannot find name 'AnsiLine'.
+src/ui/components/messages/ToolShared.tsx(46,11): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolShared.tsx(51,16): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolShared.tsx(61,11): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolShared.tsx(68,16): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolShared.tsx(137,11): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/messages/ToolShared.tsx(187,11): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/ModelDialog.test.tsx(121,24): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/components/ModelDialog.test.tsx(136,47): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/components/ModelDialog.test.tsx(179,36): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/components/ModelDialog.test.tsx(195,20): error TS6133: 'waitUntilReady' is declared but its value is never read.
+src/ui/components/ModelDialog.test.tsx(214,47): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/components/ModelDialog.test.tsx(257,47): error TS6133: 'unmount' is declared but its value is never read.
+src/ui/components/ModelDialog.test.tsx(286,34): error TS2304: Cannot find name 'DEFAULT_GEMINI_MODEL'.
+src/ui/components/ModelDialog.test.tsx(288,19): error TS2304: Cannot find name 'DEFAULT_GEMINI_MODEL'.
+src/ui/components/ModelDialog.test.tsx(332,32): error TS2304: Cannot find name 'PREVIEW_GEMINI_MODEL'.
+src/ui/components/ModelDialog.test.tsx(333,32): error TS2304: Cannot find name 'PREVIEW_GEMINI_FLASH_MODEL'.
+src/ui/components/ModelDialog.test.tsx(352,32): error TS2304: Cannot find name 'PREVIEW_GEMINI_3_1_MODEL'.
+src/ui/components/ModelDialog.test.tsx(353,32): error TS2304: Cannot find name 'PREVIEW_GEMINI_FLASH_MODEL'.
+src/ui/components/ModelDialog.test.tsx(381,11): error TS2304: Cannot find name 'PREVIEW_GEMINI_3_1_CUSTOM_TOOLS_MODEL'.
+src/ui/components/ModelDialog.tsx(30,1): error TS6133: 'ThemedGradient' is declared but its value is never read.
+src/ui/components/ModelDialog.tsx(38,9): error TS2451: Cannot redeclare block-scoped variable 'settings'.
+src/ui/components/ModelDialog.tsx(41,9): error TS2451: Cannot redeclare block-scoped variable 'settings'.
+src/ui/components/ModelDialog.tsx(49,9): error TS6133: 'useCustomToolModel' is declared but its value is never read.

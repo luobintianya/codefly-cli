@@ -12,7 +12,7 @@ import type {
   RoutingDecision,
   RoutingStrategy,
 } from '../routingStrategy.js';
-import { resolveClassifierModel, isGemini3Model } from '../../config/models.js';
+import { resolveClassifierModel, isCodefly3Model } from '../../config/models.js';
 import { createUserContent, Type } from '@google/genai';
 import type { Config } from '../../config/config.js';
 import {
@@ -138,7 +138,7 @@ export class ClassifierStrategy implements RoutingStrategy {
       const model = context.requestedModel ?? config.getModel();
       if (
         (await config.getNumericalRoutingEnabled()) &&
-        isGemini3Model(model)
+        isCodefly3Model(model)
       ) {
         return null;
       }
@@ -170,14 +170,14 @@ export class ClassifierStrategy implements RoutingStrategy {
 
       const reasoning = routerResponse.reasoning;
       const latencyMs = Date.now() - startTime;
-      const useGemini3_1 = (await config.getGemini31Launched?.()) ?? false;
+      const useCodefly3_1 = (await config.getCodefly31Launched?.()) ?? false;
       const useCustomToolModel =
-        useGemini3_1 &&
-        config.getContentGeneratorConfig().authType === AuthType.USE_GEMINI;
+        useCodefly3_1 &&
+        config.getContentGeneratorConfig().authType === AuthType.USE_CODEFLY;
       const selectedModel = resolveClassifierModel(
         model,
         routerResponse.model_choice,
-        useGemini3_1,
+        useCodefly3_1,
         useCustomToolModel,
       );
 

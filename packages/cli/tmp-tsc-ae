@@ -1,0 +1,100 @@
+src/ui/components/ModelDialog.tsx(50,41): error TS2304: Cannot find name 'AuthType'.
+src/ui/components/ModelStatsDisplay.test.tsx(431,14): error TS2304: Cannot find name 'LlmRole'.
+src/ui/components/ModelStatsDisplay.test.tsx(551,26): error TS2304: Cannot find name 'LlmRole'.
+src/ui/components/ModelStatsDisplay.test.tsx(611,65): error TS2304: Cannot find name 'LlmRole'.
+src/ui/components/Notifications.tsx(55,26): error TS2304: Cannot find name 'WarningPriority'.
+src/ui/components/Notifications.tsx(71,28): error TS2304: Cannot find name 'WarningPriority'.
+src/ui/components/SessionSummaryDisplay.tsx(20,5): error TS2322: Type '{ title: string; duration: string; footer: string; }' is not assignable to type 'IntrinsicAttributes & StatsDisplayProps'.
+  Property 'footer' does not exist on type 'IntrinsicAttributes & StatsDisplayProps'.
+src/ui/components/SettingsDialog.tsx(42,1): error TS6133: 'useUIState' is declared but its value is never read.
+src/ui/components/SettingsDialog.tsx(43,1): error TS6133: 'useTextBuffer' is declared but its value is never read.
+src/ui/components/SettingsDialog.tsx(212,24): error TS2304: Cannot find name 'useSearchBuffer'.
+src/ui/components/shared/BaseSettingsDialog.tsx(565,27): error TS2322: Type '{ children: string; color: string; terminalCursorFocus: boolean; terminalCursorPosition: number; }' is not assignable to type 'IntrinsicAttributes & Props'.
+  Property 'terminalCursorFocus' does not exist on type 'IntrinsicAttributes & Props'.
+src/ui/components/shared/TextInput.tsx(70,17): error TS2322: Type '{ children: (string | Element)[]; terminalCursorFocus: true; terminalCursorPosition: number; }' is not assignable to type 'IntrinsicAttributes & Props'.
+  Property 'terminalCursorFocus' does not exist on type 'IntrinsicAttributes & Props'.
+src/ui/components/shared/TextInput.tsx(105,15): error TS2322: Type '{ children: string; terminalCursorFocus: boolean; terminalCursorPosition: number; }' is not assignable to type 'IntrinsicAttributes & Props'.
+  Property 'terminalCursorFocus' does not exist on type 'IntrinsicAttributes & Props'.
+src/ui/components/ShellInputPrompt.test.tsx(38,15): error TS2304: Cannot find name 'useUIActions'.
+src/ui/components/ShellInputPrompt.test.tsx(40,18): error TS2304: Cannot find name 'UIActions'.
+src/ui/components/ShellInputPrompt.test.tsx(40,32): error TS2304: Cannot find name 'UIActions'.
+src/ui/components/ShellInputPrompt.test.tsx(60,11): error TS2304: Cannot find name 'act'.
+src/ui/components/ShellInputPrompt.test.tsx(89,11): error TS2304: Cannot find name 'act'.
+src/ui/components/ShellInputPrompt.test.tsx(116,11): error TS2304: Cannot find name 'act'.
+src/ui/components/ShellInputPrompt.test.tsx(138,13): error TS2304: Cannot find name 'act'.
+src/ui/components/ShellInputPrompt.test.tsx(167,11): error TS2304: Cannot find name 'act'.
+src/ui/components/ShellInputPrompt.test.tsx(180,11): error TS2304: Cannot find name 'act'.
+src/ui/components/ShellInputPrompt.test.tsx(202,11): error TS2304: Cannot find name 'act'.
+src/ui/components/ShellInputPrompt.test.tsx(226,11): error TS2304: Cannot find name 'act'.
+src/ui/components/ShellInputPrompt.test.tsx(251,11): error TS2304: Cannot find name 'act'.
+src/ui/components/StatsDisplay.tsx(11,26): error TS6133: 'formatResetTime' is declared but its value is never read.
+src/ui/components/StatsDisplay.tsx(84,18): error TS2304: Cannot find name 'getDisplayString'.
+src/ui/components/StatsDisplay.tsx(117,18): error TS2304: Cannot find name 'currentModel'.
+src/ui/components/StatsDisplay.tsx(117,34): error TS2304: Cannot find name 'isAutoModel'.
+src/ui/components/StatsDisplay.tsx(117,46): error TS2304: Cannot find name 'currentModel'.
+src/ui/components/StatsDisplay.tsx(119,10): error TS2304: Cannot find name 'getDisplayString'.
+src/ui/components/StatsDisplay.tsx(119,27): error TS2304: Cannot find name 'currentModel'.
+src/ui/components/StatsDisplay.tsx(134,9): error TS2304: Cannot find name 'showQuotaColumn'.
+src/ui/components/StatsDisplay.tsx(135,9): error TS2304: Cannot find name 'pooledRemaining'.
+src/ui/components/StatsDisplay.tsx(136,9): error TS2304: Cannot find name 'pooledLimit'.
+src/ui/components/StatsDisplay.tsx(137,9): error TS2304: Cannot find name 'pooledLimit'.
+src/ui/components/StatsDisplay.tsx(139,14): error TS2304: Cannot find name 'QuotaStatsInfo'.
+src/ui/components/StatsDisplay.tsx(140,26): error TS2304: Cannot find name 'pooledRemaining'.
+src/ui/components/StatsDisplay.tsx(141,22): error TS2304: Cannot find name 'pooledLimit'.
+src/ui/components/StatsDisplay.tsx(142,26): error TS2304: Cannot find name 'pooledResetTime'.
+src/ui/components/StatsDisplay.tsx(297,20): error TS2304: Cannot find name 'useSettings'.
+src/ui/components/StatsDisplay.tsx(298,18): error TS2304: Cannot find name 'useConfig'.
+src/ui/components/StatsDisplay.tsx(302,53): error TS2304: Cannot find name 'AuthType'.
+src/ui/components/StatsDisplay.tsx(303,27): error TS2304: Cannot find name 'quotaStats'.
+src/ui/components/StatsDisplay.tsx(304,23): error TS2304: Cannot find name 'quotaStats'.
+src/ui/components/StatsDisplay.tsx(305,27): error TS2304: Cannot find name 'quotaStats'.
+src/ui/components/StatsDisplay.tsx(335,10): error TS2304: Cannot find name 'footer'.
+src/ui/components/StatsDisplay.tsx(338,34): error TS2304: Cannot find name 'footer'.
+src/ui/components/StatsDisplay.tsx(357,30): error TS2304: Cannot find name 'selectedAuthType'.
+src/ui/components/StatsDisplay.tsx(360,16): error TS2304: Cannot find name 'selectedAuthType'.
+src/ui/components/StatsDisplay.tsx(361,19): error TS2304: Cannot find name 'userEmail'.
+src/ui/components/StatsDisplay.tsx(362,47): error TS2304: Cannot find name 'userEmail'.
+src/ui/components/StatsDisplay.tsx(364,19): error TS2304: Cannot find name 'selectedAuthType'.
+src/ui/components/StatsDisplay.tsx(368,30): error TS2304: Cannot find name 'tier'.
+src/ui/components/StatsDisplay.tsx(370,47): error TS2304: Cannot find name 'tier'.
+src/ui/components/StatsDisplay.tsx(438,9): error TS2322: Type '{ models: Record<string, ModelMetrics>; cacheEfficiency: number; totalCachedTokens: number; currentModel: any; pooledRemaining: any; pooledLimit: any; pooledResetTime: any; useGemini3_1: any; useCustomToolModel: any; }' is not assignable to type 'IntrinsicAttributes & { models: Record<string, ModelMetrics>; cacheEfficiency: number; totalCachedTokens: number; }'.
+  Property 'currentModel' does not exist on type 'IntrinsicAttributes & { models: Record<string, ModelMetrics>; cacheEfficiency: number; totalCachedTokens: number; }'.
+src/ui/components/StatsDisplay.tsx(438,23): error TS2304: Cannot find name 'currentModel'.
+src/ui/components/Tips.test.tsx(24,7): error TS1308: 'await' expressions are only allowed within async functions and at the top levels of modules.
+src/ui/components/ToastDisplay.test.tsx(32,7): error TS2353: Object literal may only specify known properties, and 'transientMessage' does not exist in type 'Partial<UIState>'.
+src/ui/components/ToastDisplay.test.tsx(130,7): error TS2353: Object literal may only specify known properties, and 'transientMessage' does not exist in type 'Partial<UIState>'.
+src/ui/components/ToastDisplay.test.tsx(141,7): error TS2353: Object literal may only specify known properties, and 'transientMessage' does not exist in type 'Partial<UIState>'.
+src/ui/components/ToastDisplay.test.tsx(186,7): error TS2353: Object literal may only specify known properties, and 'showIsExpandableHint' does not exist in type 'Partial<UIState>'.
+src/ui/components/ToastDisplay.test.tsx(195,7): error TS2353: Object literal may only specify known properties, and 'showIsExpandableHint' does not exist in type 'Partial<UIState>'.
+src/ui/components/ToastDisplay.tsx(16,21): error TS2339: Property 'transientMessage' does not exist on type 'UIState'.
+src/ui/components/ToastDisplay.tsx(21,13): error TS2339: Property 'showIsExpandableHint' does not exist on type 'UIState'.
+src/ui/components/ToastDisplay.tsx(35,13): error TS2339: Property 'transientMessage' does not exist on type 'UIState'.
+src/ui/components/ToastDisplay.tsx(36,13): error TS2339: Property 'transientMessage' does not exist on type 'UIState'.
+src/ui/components/ToastDisplay.tsx(39,51): error TS2339: Property 'transientMessage' does not exist on type 'UIState'.
+src/ui/components/ToastDisplay.tsx(65,13): error TS2339: Property 'transientMessage' does not exist on type 'UIState'.
+src/ui/components/ToastDisplay.tsx(66,13): error TS2339: Property 'transientMessage' does not exist on type 'UIState'.
+src/ui/components/ToastDisplay.tsx(69,51): error TS2339: Property 'transientMessage' does not exist on type 'UIState'.
+src/ui/components/ToastDisplay.tsx(77,15): error TS2339: Property 'showIsExpandableHint' does not exist on type 'UIState'.
+src/ui/components/ToolConfirmationQueue.test.tsx(65,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/ToolConfirmationQueue.test.tsx(109,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/ToolConfirmationQueue.test.tsx(140,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/ToolConfirmationQueue.test.tsx(174,11): error TS2304: Cannot find name 'waitFor'.
+src/ui/components/ToolConfirmationQueue.test.tsx(190,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/ToolConfirmationQueue.test.tsx(229,11): error TS2304: Cannot find name 'waitFor'.
+src/ui/components/ToolConfirmationQueue.test.tsx(240,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/ToolConfirmationQueue.test.tsx(280,11): error TS2304: Cannot find name 'waitFor'.
+src/ui/components/ToolConfirmationQueue.test.tsx(295,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/ToolConfirmationQueue.test.tsx(338,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/ToolConfirmationQueue.test.tsx(376,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/components/ToolConfirmationQueue.test.tsx(399,11): error TS2304: Cannot find name 'waitFor'.
+src/ui/components/views/ExtensionsList.tsx(73,42): error TS2304: Cannot find name 'getFormattedSettingValue'.
+src/ui/contexts/TerminalContext.tsx(68,35): error TS2339: Property 'queryBackgroundColor' does not exist on type 'typeof TerminalCapabilityManager'.
+src/ui/contexts/ToolActionsContext.test.tsx(17,8): error TS6133: 'ToolCallConfirmationDetails' is declared but its value is never read.
+src/ui/contexts/ToolActionsContext.test.tsx(19,10): error TS6133: 'ToolCallStatus' is declared but its value is never read.
+src/ui/contexts/ToolActionsContext.test.tsx(49,15): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/contexts/ToolActionsContext.test.tsx(58,15): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/contexts/ToolActionsContext.test.tsx(192,15): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/contexts/ToolActionsContext.test.tsx(201,23): error TS2304: Cannot find name 'SerializableConfirmationDetails'.
+src/ui/contexts/UIStateContext.tsx(18,3): error TS6196: 'PermissionConfirmationRequest' is declared but never used.
+src/ui/contexts/UIStateContext.tsx(115,27): error TS2304: Cannot find name 'FolderDiscoveryResults'.
+src/ui/contexts/UIStateContext.tsx(117,36): error TS2304: Cannot find name 'PolicyUpdateConfirmationRequest'.

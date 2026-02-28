@@ -28,7 +28,7 @@ export interface BaseAuthConfig {
   agent_card_requires_auth?: boolean;
 }
 
-/** Client config for google-credentials (not in A2A spec, Gemini-specific). */
+/** Client config for google-credentials (not in A2A spec, Codefly-specific). */
 export interface GoogleCredentialsAuthConfig extends BaseAuthConfig {
   type: 'google-credentials';
   scopes?: string[];

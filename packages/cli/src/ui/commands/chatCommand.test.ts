@@ -271,7 +271,7 @@ describe('chatCommand', () => {
     it('should resume a conversation with matching authType', async () => {
       const conversation: Content[] = [
         { role: 'user', parts: [{ text: 'system setup' }] },
-        { role: 'user', parts: [{ text: 'hello gemini' }] },
+        { role: 'user', parts: [{ text: 'hello codefly' }] },
         { role: 'model', parts: [{ text: 'hello world' }] },
       ];
       mockLoadCheckpoint.mockResolvedValue({
@@ -284,8 +284,8 @@ describe('chatCommand', () => {
       expect(result).toEqual({
         type: 'load_history',
         history: [
-          { type: 'user', text: 'hello gemini' },
-          { type: 'gemini', text: 'hello world' },
+          { type: 'user', text: 'hello codefly' },
+          { type: 'codefly', text: 'hello world' },
         ] as HistoryItemWithoutId[],
         clientHistory: conversation,
       });
@@ -294,12 +294,12 @@ describe('chatCommand', () => {
     it('should block resuming a conversation with mismatched authType', async () => {
       const conversation: Content[] = [
         { role: 'user', parts: [{ text: 'system setup' }] },
-        { role: 'user', parts: [{ text: 'hello gemini' }] },
+        { role: 'user', parts: [{ text: 'hello codefly' }] },
         { role: 'model', parts: [{ text: 'hello world' }] },
       ];
       mockLoadCheckpoint.mockResolvedValue({
         history: conversation,
-        authType: AuthType.USE_GEMINI,
+        authType: AuthType.USE_CODEFLY,
       });
 
       const result = await resumeCommand?.action?.(mockContext, goodTag);
@@ -307,14 +307,14 @@ describe('chatCommand', () => {
       expect(result).toEqual({
         type: 'message',
         messageType: 'error',
-        content: `Cannot resume chat. It was saved with a different authentication method (${AuthType.USE_GEMINI}) than the current one (${AuthType.USE_VERTEX_AI}).`,
+        content: `Cannot resume chat. It was saved with a different authentication method (${AuthType.USE_CODEFLY}) than the current one (${AuthType.USE_VERTEX_AI}).`,
       });
     });
 
     it('should resume a legacy conversation without authType', async () => {
       const conversation: Content[] = [
         { role: 'user', parts: [{ text: 'system setup' }] },
-        { role: 'user', parts: [{ text: 'hello gemini' }] },
+        { role: 'user', parts: [{ text: 'hello codefly' }] },
         { role: 'model', parts: [{ text: 'hello world' }] },
       ];
       mockLoadCheckpoint.mockResolvedValue({ history: conversation });
@@ -324,8 +324,8 @@ describe('chatCommand', () => {
       expect(result).toEqual({
         type: 'load_history',
         history: [
-          { type: 'user', text: 'hello gemini' },
-          { type: 'gemini', text: 'hello world' },
+          { type: 'user', text: 'hello codefly' },
+          { type: 'codefly', text: 'hello world' },
         ] as HistoryItemWithoutId[],
         clientHistory: conversation,
       });
@@ -445,7 +445,7 @@ describe('chatCommand', () => {
     beforeEach(() => {
       shareCommand = getSubCommand('share');
       vi.spyOn(process, 'cwd').mockReturnValue(
-        path.resolve('/usr/local/google/home/myuser/gemini-cli'),
+        path.resolve('/usr/local/google/home/myuser/codefly-cli'),
       );
       vi.spyOn(Date, 'now').mockReturnValue(1234567890);
       mockGetHistory.mockReturnValue(mockHistory);
@@ -456,7 +456,7 @@ describe('chatCommand', () => {
       const result = await shareCommand?.action?.(mockContext, '');
       const expectedPath = path.join(
         process.cwd(),
-        'gemini-conversation-1234567890.json',
+        'codefly-conversation-1234567890.json',
       );
       expect(mockExport).toHaveBeenCalledWith({
         history: mockHistory,

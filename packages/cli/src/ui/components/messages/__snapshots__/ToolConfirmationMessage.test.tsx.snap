@@ -13,10 +13,10 @@ Allow execution of 3 commands?
 `;
 
 exports[`ToolConfirmationMessage > should display urls if prompt and url are different 1`] = `
-"fetch https://github.com/google/gemini-react/blob/main/README.md
+"fetch https://github.com/google/codefly-react/blob/main/README.md
 
 URLs to fetch:
- - https://raw.githubusercontent.com/google/gemini-react/main/README.md
+ - https://raw.githubusercontent.com/google/codefly-react/main/README.md
 Do you want to proceed?
 
 ● 1. Allow once

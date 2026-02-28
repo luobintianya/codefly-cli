@@ -35,12 +35,12 @@ describe('SkillManager Alias', () => {
   });
 
   it('should discover skills from .agents/skills directory', async () => {
-    const userGeminiDir = path.join(testRootDir, 'user', '.gemini', 'skills');
+    const userCodeflyDir = path.join(testRootDir, 'user', '.codefly', 'skills');
     const userAgentDir = path.join(testRootDir, 'user', '.agents', 'skills');
-    const projectGeminiDir = path.join(
+    const projectCodeflyDir = path.join(
       testRootDir,
       'workspace',
-      '.gemini',
+      '.codefly',
       'skills',
     );
     const projectAgentDir = path.join(
@@ -50,16 +50,16 @@ describe('SkillManager Alias', () => {
       'skills',
     );
 
-    await fs.mkdir(userGeminiDir, { recursive: true });
+    await fs.mkdir(userCodeflyDir, { recursive: true });
     await fs.mkdir(userAgentDir, { recursive: true });
-    await fs.mkdir(projectGeminiDir, { recursive: true });
+    await fs.mkdir(projectCodeflyDir, { recursive: true });
     await fs.mkdir(projectAgentDir, { recursive: true });
 
     vi.mocked(loadSkillsFromDir).mockImplementation(async (dir) => {
-      if (dir === userGeminiDir) {
+      if (dir === userCodeflyDir) {
         return [
           {
-            name: 'user-gemini',
+            name: 'user-codefly',
             description: 'desc',
             location: 'loc',
             body: '',
@@ -76,10 +76,10 @@ describe('SkillManager Alias', () => {
           },
         ];
       }
-      if (dir === projectGeminiDir) {
+      if (dir === projectCodeflyDir) {
         return [
           {
-            name: 'project-gemini',
+            name: 'project-codefly',
             description: 'desc',
             location: 'loc',
             body: '',
@@ -99,11 +99,11 @@ describe('SkillManager Alias', () => {
       return [];
     });
 
-    vi.spyOn(Storage, 'getUserSkillsDir').mockReturnValue(userGeminiDir);
+    vi.spyOn(Storage, 'getUserSkillsDir').mockReturnValue(userCodeflyDir);
     vi.spyOn(Storage, 'getUserAgentSkillsDir').mockReturnValue(userAgentDir);
 
     const storage = new Storage(path.join(testRootDir, 'workspace'));
-    vi.spyOn(storage, 'getProjectSkillsDir').mockReturnValue(projectGeminiDir);
+    vi.spyOn(storage, 'getProjectSkillsDir').mockReturnValue(projectCodeflyDir);
     vi.spyOn(storage, 'getProjectAgentSkillsDir').mockReturnValue(
       projectAgentDir,
     );
@@ -117,26 +117,26 @@ describe('SkillManager Alias', () => {
     const skills = service.getSkills();
     expect(skills).toHaveLength(4);
     const names = skills.map((s) => s.name);
-    expect(names).toContain('user-gemini');
+    expect(names).toContain('user-codefly');
     expect(names).toContain('user-agent');
-    expect(names).toContain('project-gemini');
+    expect(names).toContain('project-codefly');
     expect(names).toContain('project-agent');
   });
 
-  it('should give .agents precedence over .gemini when in the same tier', async () => {
-    const userGeminiDir = path.join(testRootDir, 'user', '.gemini', 'skills');
+  it('should give .agents precedence over .codefly when in the same tier', async () => {
+    const userCodeflyDir = path.join(testRootDir, 'user', '.codefly', 'skills');
     const userAgentDir = path.join(testRootDir, 'user', '.agents', 'skills');
 
-    await fs.mkdir(userGeminiDir, { recursive: true });
+    await fs.mkdir(userCodeflyDir, { recursive: true });
     await fs.mkdir(userAgentDir, { recursive: true });
 
     vi.mocked(loadSkillsFromDir).mockImplementation(async (dir) => {
-      if (dir === userGeminiDir) {
+      if (dir === userCodeflyDir) {
         return [
           {
             name: 'same-skill',
-            description: 'gemini-desc',
-            location: 'loc-gemini',
+            description: 'codefly-desc',
+            location: 'loc-codefly',
             body: '',
           },
         ];
@@ -154,12 +154,12 @@ describe('SkillManager Alias', () => {
       return [];
     });
 
-    vi.spyOn(Storage, 'getUserSkillsDir').mockReturnValue(userGeminiDir);
+    vi.spyOn(Storage, 'getUserSkillsDir').mockReturnValue(userCodeflyDir);
     vi.spyOn(Storage, 'getUserAgentSkillsDir').mockReturnValue(userAgentDir);
 
     const storage = new Storage('/dummy');
     vi.spyOn(storage, 'getProjectSkillsDir').mockReturnValue(
-      '/non-existent-gemini',
+      '/non-existent-codefly',
     );
     vi.spyOn(storage, 'getProjectAgentSkillsDir').mockReturnValue(
       '/non-existent-agent',

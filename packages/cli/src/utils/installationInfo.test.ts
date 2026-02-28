@@ -94,7 +94,7 @@ describe('getInstallationInfo', () => {
   });
 
   it('should detect running via npx', () => {
-    const npxPath = `/Users/test/.npm/_npx/12345/bin/gemini`;
+    const npxPath = `/Users/test/.npm/_npx/12345/bin/codefly`;
     process.argv[1] = npxPath;
     mockedRealPathSync.mockReturnValue(npxPath);
 
@@ -106,7 +106,7 @@ describe('getInstallationInfo', () => {
   });
 
   it('should detect running via pnpx', () => {
-    const pnpxPath = `/Users/test/.pnpm/_pnpx/12345/bin/gemini`;
+    const pnpxPath = `/Users/test/.pnpm/_pnpx/12345/bin/codefly`;
     process.argv[1] = pnpxPath;
     mockedRealPathSync.mockReturnValue(pnpxPath);
 
@@ -118,7 +118,7 @@ describe('getInstallationInfo', () => {
   });
 
   it('should detect running via bunx', () => {
-    const bunxPath = `/Users/test/.bun/install/cache/12345/bin/gemini`;
+    const bunxPath = `/Users/test/.bun/install/cache/12345/bin/codefly`;
     process.argv[1] = bunxPath;
     mockedRealPathSync.mockReturnValue(bunxPath);
     mockedExecSync.mockImplementation(() => {
@@ -137,20 +137,20 @@ describe('getInstallationInfo', () => {
       value: 'darwin',
     });
     // Use a path that matches what brew would resolve to
-    const cliPath = '/opt/homebrew/Cellar/gemini-cli/1.0.0/bin/gemini';
+    const cliPath = '/opt/homebrew/Cellar/codefly-cli/1.0.0/bin/codefly';
     process.argv[1] = cliPath;
 
     mockedExecSync.mockImplementation((cmd) => {
-      if (typeof cmd === 'string' && cmd.includes('brew --prefix gemini-cli')) {
-        return '/opt/homebrew/opt/gemini-cli';
+      if (typeof cmd === 'string' && cmd.includes('brew --prefix codefly-cli')) {
+        return '/opt/homebrew/opt/codefly-cli';
       }
       throw new Error(`Command failed: ${cmd}`);
     });
 
     mockedRealPathSync.mockImplementation((p) => {
       if (p === cliPath) return cliPath;
-      if (p === '/opt/homebrew/opt/gemini-cli') {
-        return '/opt/homebrew/Cellar/gemini-cli/1.0.0';
+      if (p === '/opt/homebrew/opt/codefly-cli') {
+        return '/opt/homebrew/Cellar/codefly-cli/1.0.0';
       }
       return String(p);
     });
@@ -158,13 +158,13 @@ describe('getInstallationInfo', () => {
     const info = getInstallationInfo(projectRoot, true);
 
     expect(mockedExecSync).toHaveBeenCalledWith(
-      expect.stringContaining('brew --prefix gemini-cli'),
+      expect.stringContaining('brew --prefix codefly-cli'),
       expect.anything(),
     );
     expect(info.packageManager).toBe(PackageManager.HOMEBREW);
     expect(info.isGlobal).toBe(true);
     expect(info.updateMessage).toBe(
-      'Installed via Homebrew. Please update with "brew upgrade gemini-cli".',
+      'Installed via Homebrew. Please update with "brew upgrade codefly-cli".',
     );
   });
 
@@ -172,7 +172,7 @@ describe('getInstallationInfo', () => {
     Object.defineProperty(process, 'platform', {
       value: 'darwin',
     });
-    const cliPath = '/usr/local/bin/gemini';
+    const cliPath = '/usr/local/bin/codefly';
     process.argv[1] = cliPath;
     mockedRealPathSync.mockReturnValue(cliPath);
     mockedExecSync.mockImplementation(() => {
@@ -182,7 +182,7 @@ describe('getInstallationInfo', () => {
     const info = getInstallationInfo(projectRoot, true);
 
     expect(mockedExecSync).toHaveBeenCalledWith(
-      expect.stringContaining('brew --prefix gemini-cli'),
+      expect.stringContaining('brew --prefix codefly-cli'),
       expect.anything(),
     );
     // Should fall back to default global npm
@@ -233,7 +233,7 @@ describe('getInstallationInfo', () => {
   });
 
   it('should detect global bun installation', () => {
-    const bunPath = `/Users/test/.bun/install/global/node_modules/@google/gemini-cli/dist/index.js`;
+    const bunPath = `/Users/test/.bun/install/global/node_modules/@codeflyai/codefly/dist/index.js`;
     process.argv[1] = bunPath;
     mockedRealPathSync.mockReturnValue(bunPath);
     mockedExecSync.mockImplementation(() => {
@@ -253,7 +253,7 @@ describe('getInstallationInfo', () => {
   });
 
   it('should detect local installation and identify yarn from lockfile', () => {
-    const localPath = `${projectRoot}/node_modules/.bin/gemini`;
+    const localPath = `${projectRoot}/node_modules/.bin/codefly`;
     process.argv[1] = localPath;
     mockedRealPathSync.mockReturnValue(localPath);
     mockedExecSync.mockImplementation(() => {
@@ -271,7 +271,7 @@ describe('getInstallationInfo', () => {
   });
 
   it('should detect local installation and identify pnpm from lockfile', () => {
-    const localPath = `${projectRoot}/node_modules/.bin/gemini`;
+    const localPath = `${projectRoot}/node_modules/.bin/codefly`;
     process.argv[1] = localPath;
     mockedRealPathSync.mockReturnValue(localPath);
     mockedExecSync.mockImplementation(() => {
@@ -288,7 +288,7 @@ describe('getInstallationInfo', () => {
   });
 
   it('should detect local installation and identify bun from lockfile', () => {
-    const localPath = `${projectRoot}/node_modules/.bin/gemini`;
+    const localPath = `${projectRoot}/node_modules/.bin/codefly`;
     process.argv[1] = localPath;
     mockedRealPathSync.mockReturnValue(localPath);
     mockedExecSync.mockImplementation(() => {
@@ -305,7 +305,7 @@ describe('getInstallationInfo', () => {
   });
 
   it('should default to local npm installation if no lockfile is found', () => {
-    const localPath = `${projectRoot}/node_modules/.bin/gemini`;
+    const localPath = `${projectRoot}/node_modules/.bin/codefly`;
     process.argv[1] = localPath;
     mockedRealPathSync.mockReturnValue(localPath);
     mockedExecSync.mockImplementation(() => {
@@ -320,7 +320,7 @@ describe('getInstallationInfo', () => {
   });
 
   it('should default to global npm installation for unrecognized paths', () => {
-    const globalPath = `/usr/local/bin/gemini`;
+    const globalPath = `/usr/local/bin/codefly`;
     process.argv[1] = globalPath;
     mockedRealPathSync.mockReturnValue(globalPath);
     mockedExecSync.mockImplementation(() => {
@@ -339,7 +339,7 @@ describe('getInstallationInfo', () => {
     expect(infoDisabled.updateMessage).toContain('Please run npm install');
   });
 
-  it('should NOT detect Homebrew if gemini-cli is installed in brew but running from npm location', () => {
+  it('should NOT detect Homebrew if codefly-cli is installed in brew but running from npm location', () => {
     Object.defineProperty(process, 'platform', {
       value: 'darwin',
     });
@@ -351,11 +351,11 @@ describe('getInstallationInfo', () => {
     // Setup mocks
     mockedExecSync.mockImplementation((cmd) => {
       if (typeof cmd === 'string' && cmd.includes('brew list')) {
-        return Buffer.from('gemini-cli\n');
+        return Buffer.from('codefly-cli\n');
       }
       // Future proofing for the fix:
-      if (typeof cmd === 'string' && cmd.includes('brew --prefix gemini-cli')) {
-        return '/opt/homebrew/opt/gemini-cli';
+      if (typeof cmd === 'string' && cmd.includes('brew --prefix codefly-cli')) {
+        return '/opt/homebrew/opt/codefly-cli';
       }
       throw new Error(`Command failed: ${cmd}`);
     });
@@ -363,8 +363,8 @@ describe('getInstallationInfo', () => {
     mockedRealPathSync.mockImplementation((p) => {
       if (p === cliPath) return cliPath;
       // Future proofing for the fix:
-      if (p === '/opt/homebrew/opt/gemini-cli')
-        return '/opt/homebrew/Cellar/gemini-cli/1.0.0';
+      if (p === '/opt/homebrew/opt/codefly-cli')
+        return '/opt/homebrew/Cellar/codefly-cli/1.0.0';
       return String(p);
     });
 

@@ -4,18 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import * as osActual from 'node:os';
-import { FatalConfigError, ideContextStore } from '@codeflyai/codefly-core';
-import {
-  describe,
-  it,
-  expect,
-  vi,
-  beforeEach,
-  afterEach,
-  type Mocked,
-  type Mock,
-} from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as os from 'node:os';
@@ -23,7 +12,7 @@ import {
   FatalConfigError,
   ideContextStore,
   coreEvents,
-} from '@google/gemini-cli-core';
+} from '@codeflyai/codefly-core';
 import {
   loadTrustedFolders,
   TrustLevel,
@@ -56,11 +45,11 @@ describe('Trusted Folders', () => {
 
   beforeEach(() => {
     // Create a temporary directory for each test
-    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'gemini-cli-test-'));
+    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'codefly-cli-test-'));
     trustedFoldersPath = path.join(tempDir, 'trustedFolders.json');
 
     // Set the environment variable to point to the temp file
-    vi.stubEnv('GEMINI_CLI_TRUSTED_FOLDERS_PATH', trustedFoldersPath);
+    vi.stubEnv('CODEFLY_CLI_TRUSTED_FOLDERS_PATH', trustedFoldersPath);
 
     // Reset the internal state
     resetTrustedFoldersForTesting();
@@ -440,8 +429,8 @@ describe('Trusted Folders', () => {
     };
 
     it('should return true when isHeadlessMode is true, ignoring config', async () => {
-      const geminiCore = await import('@google/gemini-cli-core');
-      vi.spyOn(geminiCore, 'isHeadlessMode').mockReturnValue(true);
+      const codeflyCore = await import('@codeflyai/codefly-core');
+      vi.spyOn(codeflyCore, 'isHeadlessMode').mockReturnValue(true);
 
       expect(isWorkspaceTrusted(mockSettings)).toEqual({
         isTrusted: true,
@@ -450,8 +439,8 @@ describe('Trusted Folders', () => {
     });
 
     it('should fall back to config when isHeadlessMode is false', async () => {
-      const geminiCore = await import('@google/gemini-cli-core');
-      vi.spyOn(geminiCore, 'isHeadlessMode').mockReturnValue(false);
+      const codeflyCore = await import('@codeflyai/codefly-core');
+      vi.spyOn(codeflyCore, 'isHeadlessMode').mockReturnValue(false);
 
       const config = { '/projectA': TrustLevel.DO_NOT_TRUST };
       fs.writeFileSync(trustedFoldersPath, JSON.stringify(config), 'utf-8');
@@ -462,8 +451,8 @@ describe('Trusted Folders', () => {
     });
 
     it('should return true for isPathTrusted when isHeadlessMode is true', async () => {
-      const geminiCore = await import('@google/gemini-cli-core');
-      vi.spyOn(geminiCore, 'isHeadlessMode').mockReturnValue(true);
+      const codeflyCore = await import('@codeflyai/codefly-core');
+      vi.spyOn(codeflyCore, 'isHeadlessMode').mockReturnValue(true);
 
       const folders = loadTrustedFolders();
       expect(folders.isPathTrusted('/any-untrusted-path')).toBe(true);
@@ -540,9 +529,9 @@ describe('Trusted Folders', () => {
       fs.writeFileSync(trustedFoldersPath, JSON.stringify(config), 'utf-8');
 
       const envPath = path.join(untrustedDir, '.env');
-      fs.writeFileSync(envPath, 'GEMINI_API_KEY=secret', 'utf-8');
+      fs.writeFileSync(envPath, 'CODEFLY_API_KEY=secret', 'utf-8');
 
-      vi.stubEnv('GEMINI_API_KEY', '');
+      vi.stubEnv('CODEFLY_API_KEY', '');
 
       const settings = createMockSettings({
         security: { folderTrust: { enabled: true } },
@@ -550,7 +539,7 @@ describe('Trusted Folders', () => {
 
       loadEnvironment(settings.merged, untrustedDir);
 
-      expect(process.env['GEMINI_API_KEY']).toBe('');
+      expect(process.env['CODEFLY_API_KEY']).toBe('');
 
       vi.unstubAllEnvs();
     });

@@ -8,11 +8,10 @@ import { describe, it, expect, vi, type Mock, beforeEach } from 'vitest';
 import type React from 'react';
 import { renderWithProviders } from '../test-utils/render.js';
 import { Text, useIsScreenReaderEnabled, type DOMElement } from 'ink';
-import { type Config } from '@codeflyai/codefly-core';
+import { CoreToolCallStatus, makeFakeConfig } from '@codeflyai/codefly-core';
 import { App } from './App.js';
 import { type UIState } from './contexts/UIStateContext.js';
-import { StreamingState, ToolCallStatus } from './types.js';
-import { makeFakeConfig } from '@codeflyai/codefly-core';
+import { StreamingState } from './types.js';
 
 vi.mock('ink', async (importOriginal) => {
   const original = await importOriginal<typeof import('ink')>();
@@ -85,7 +84,7 @@ describe('App', () => {
     },
     history: [],
     pendingHistoryItems: [],
-    pendingGeminiHistoryItems: [],
+    pendingCodeflyHistoryItems: [],
     bannerData: {
       defaultText: 'Mock Banner Text',
       warningText: '',
@@ -258,7 +257,7 @@ describe('App', () => {
           tools: toolCalls,
         },
       ],
-      pendingGeminiHistoryItems: [
+      pendingCodeflyHistoryItems: [
         {
           type: 'tool_group',
           tools: toolCalls,

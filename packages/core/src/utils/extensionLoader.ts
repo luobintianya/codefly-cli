@@ -73,7 +73,7 @@ export abstract class ExtensionLoader {
     });
     try {
       await this.config.getMcpClientManager()!.startExtension(extension);
-      await this.maybeRefreshGeminiTools(extension);
+      await this.maybeRefreshCodeflyTools(extension);
 
       // Note: Context files are loaded only once all extensions are done
       // loading/unloading to reduce churn, see the `maybeRefreshMemories` call
@@ -99,7 +99,7 @@ export abstract class ExtensionLoader {
   private async maybeRefreshMemories(): Promise<void> {
     if (!this.config) {
       throw new Error(
-        'Cannot refresh gemini memories prior to calling `start`.',
+        'Cannot refresh codefly memories prior to calling `start`.',
       );
     }
     if (
@@ -118,16 +118,16 @@ export abstract class ExtensionLoader {
   }
 
   /**
-   * Refreshes the gemini tools list if it is initialized and the extension has
+   * Refreshes the codefly tools list if it is initialized and the extension has
    * any excludeTools settings.
    */
-  private async maybeRefreshGeminiTools(
+  private async maybeRefreshCodeflyTools(
     extension: CodeflyCLIExtension,
   ): Promise<void> {
     if (extension.excludeTools && extension.excludeTools.length > 0) {
-      const geminiClient = this.config?.getCodeflyClient();
-      if (geminiClient?.isInitialized()) {
-        await geminiClient.setTools();
+      const codeflyClient = this.config?.getCodeflyClient();
+      if (codeflyClient?.isInitialized()) {
+        await codeflyClient.setTools();
       }
     }
   }
@@ -166,7 +166,7 @@ export abstract class ExtensionLoader {
 
     try {
       await this.config.getMcpClientManager()!.stopExtension(extension);
-      await this.maybeRefreshGeminiTools(extension);
+      await this.maybeRefreshCodeflyTools(extension);
 
       // Note: Context files are loaded only once all extensions are done
       // loading/unloading to reduce churn, see the `maybeRefreshMemories` call

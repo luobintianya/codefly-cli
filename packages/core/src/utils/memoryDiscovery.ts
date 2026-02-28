@@ -13,7 +13,7 @@ import type { FileDiscoveryService } from '../services/fileDiscoveryService.js';
 import { processImports } from './memoryImportProcessor.js';
 import type { FileFilteringOptions } from '../config/constants.js';
 import { DEFAULT_MEMORY_FILE_FILTERING_OPTIONS } from '../config/constants.js';
-import { CODEFLY_DIR, homedir } from './paths.js';
+import { CODEFLY_DIR, homedir, normalizePath } from './paths.js';
 import type { ExtensionLoader } from './extensionLoader.js';
 import { debugLogger } from './debugLogger.js';
 import type { Config } from '../config/config.js';
@@ -149,16 +149,18 @@ async function getCodeflyMdFilePathsInternalForEachDir(
   folderTrust: boolean,
   fileFilteringOptions: FileFilteringOptions,
   maxDirs: number,
-): Promise<string[]> {
-  const allPaths = new Set<string>();
+): Promise<{ global: string[]; project: string[] }> {
+  const globalPaths = new Set<string>();
+  const projectPaths = new Set<string>();
   const codeflyMdFilenames = getAllCodeflyMdFilenames();
 
   for (const codeflyMdFilename of codeflyMdFilenames) {
-    const resolvedHome = path.resolve(userHomePath);
-    const globalMemoryPath = path.join(
-      resolvedHome,
-      CODEFLY_DIR,
-      codeflyMdFilename,
+    const resolvedHome = normalizePath(path.resolve(userHomePath));
+    const globalCodeflyDir = normalizePath(
+      path.join(resolvedHome, CODEFLY_DIR),
+    );
+    const globalMemoryPath = normalizePath(
+      path.join(globalCodeflyDir, codeflyMdFilename),
     );
 
     // This part that finds the global file always runs.
@@ -193,11 +195,13 @@ async function getCodeflyMdFilePathsInternalForEachDir(
         : normalizePath(path.dirname(resolvedHome));
 
       while (currentDir && currentDir !== path.dirname(currentDir)) {
-        if (currentDir === path.join(resolvedHome, CODEFLY_DIR)) {
+        if (currentDir === globalCodeflyDir) {
           break;
         }
 
-        const potentialPath = path.join(currentDir, codeflyMdFilename);
+        const potentialPath = normalizePath(
+          path.join(currentDir, codeflyMdFilename),
+        );
         try {
           await fs.access(potentialPath, fsSync.constants.R_OK);
           if (potentialPath !== globalMemoryPath) {
@@ -234,18 +238,13 @@ async function getCodeflyMdFilePathsInternalForEachDir(
     }
   }
 
-  const finalPaths = Array.from(allPaths);
-
-  if (debugMode)
-    logger.debug(
-      `Final ordered ${getAllCodeflyMdFilenames()} paths to read: ${JSON.stringify(
-        finalPaths,
-      )}`,
-    );
-  return finalPaths;
+  return {
+    global: Array.from(globalPaths),
+    project: Array.from(projectPaths),
+  };
 }
 
-async function readCodeflyMdFiles(
+export async function readCodeflyMdFiles(
   filePaths: string[],
   debugMode: boolean,
   importFormat: 'flat' | 'tree' = 'tree',
@@ -361,7 +360,53 @@ export async function getGlobalMemoryPaths(
   );
 }
 
-  const contents = await readCodeflyMdFiles(foundPaths, debugMode, 'tree');
+export function getExtensionMemoryPaths(
+  extensionLoader: ExtensionLoader,
+): string[] {
+  const extensionPaths = extensionLoader
+    .getExtensions()
+    .filter((ext) => ext.isActive)
+    .flatMap((ext) => ext.contextFiles)
+    .map((p) => normalizePath(p));
+
+  return Array.from(new Set(extensionPaths)).sort();
+}
+
+export async function getEnvironmentMemoryPaths(
+  trustedRoots: string[],
+  debugMode: boolean = false,
+): Promise<string[]> {
+  const allPaths = new Set<string>();
+
+  // Trusted Roots Upward Traversal (Parallelized)
+  const traversalPromises = trustedRoots.map(async (root) => {
+    const resolvedRoot = normalizePath(root);
+    if (debugMode) {
+      logger.debug(
+        `Loading environment memory for trusted root: ${resolvedRoot} (Stopping exactly here)`,
+      );
+    }
+    return findUpwardCodeflyFiles(resolvedRoot, resolvedRoot, debugMode);
+  });
+
+  const pathArrays = await Promise.all(traversalPromises);
+  pathArrays.flat().forEach((p) => allPaths.add(p));
+
+  return Array.from(allPaths).sort();
+}
+
+export function categorizeAndConcatenate(
+  paths: { global: string[]; extension: string[]; project: string[] },
+  contentsMap: Map<string, CodeflyFileContent>,
+  workingDir: string,
+): HierarchicalMemory {
+  const getConcatenated = (pList: string[]) =>
+    concatenateInstructions(
+      pList
+        .map((p) => contentsMap.get(p))
+        .filter((c): c is CodeflyFileContent => !!c),
+      workingDir,
+    );
 
   return {
     global: getConcatenated(paths.global),
@@ -505,24 +550,42 @@ export async function loadServerHierarchicalMemory(
   // For the server, homedir() refers to the server process's home.
   // This is consistent with how MemoryTool already finds the global path.
   const userHomePath = homedir();
-  const filePaths = await getCodeflyMdFilePathsInternal(
-    currentWorkingDirectory,
-    includeDirectoriesToReadCodefly,
-    userHomePath,
-    debugMode,
-    fileService,
-    folderTrust,
-    fileFilteringOptions || DEFAULT_MEMORY_FILE_FILTERING_OPTIONS,
-    maxDirs,
+  // 1. SCATTER: Gather all paths
+  const [discoveryResult, extensionPaths] = await Promise.all([
+    getCodeflyMdFilePathsInternal(
+      currentWorkingDirectory,
+      includeDirectoriesToReadCodefly,
+      userHomePath,
+      debugMode,
+      fileService,
+      folderTrust,
+      fileFilteringOptions || DEFAULT_MEMORY_FILE_FILTERING_OPTIONS,
+      maxDirs,
+    ),
+    Promise.resolve(getExtensionMemoryPaths(extensionLoader)),
+  ]);
+
+  const allFilePaths = Array.from(
+    new Set([
+      ...discoveryResult.global,
+      ...discoveryResult.project,
+      ...extensionPaths,
+    ]),
   );
 
   if (allFilePaths.length === 0) {
     if (debugMode)
       logger.debug('No CODEFLY.md files found in hierarchy of the workspace.');
-    return { memoryContent: '', fileCount: 0, filePaths: [] };
+    return {
+      memoryContent: { global: '', extension: '', project: '' },
+      fileCount: 0,
+      filePaths: [],
+    };
   }
-  const contentsWithPaths = await readCodeflyMdFiles(
-    filePaths,
+
+  // 2. GATHER: Read all files in parallel
+  const allContents = await readCodeflyMdFiles(
+    allFilePaths,
     debugMode,
     importFormat,
   );

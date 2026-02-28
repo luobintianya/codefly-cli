@@ -34,19 +34,19 @@ const getSavedChatTags = async (
   mtSortDesc: boolean,
 ): Promise<ChatDetail[]> => {
   const cfg = context.services.config;
-  const geminiDir = cfg?.storage?.getProjectTempDir();
-  if (!geminiDir) {
+  const codeflyDir = cfg?.storage?.getProjectTempDir();
+  if (!codeflyDir) {
     return [];
   }
   try {
     const file_head = 'checkpoint-';
     const file_tail = '.json';
-    const files = await fsPromises.readdir(geminiDir);
+    const files = await fsPromises.readdir(codeflyDir);
     const chatDetails: ChatDetail[] = [];
 
     for (const file of files) {
       if (file.startsWith(file_head) && file.endsWith(file_tail)) {
-        const filePath = path.join(geminiDir, file);
+        const filePath = path.join(codeflyDir, file);
         const stats = await fsPromises.stat(filePath);
         const tagName = file.slice(file_head.length, -file_tail.length);
         chatDetails.push({
@@ -198,7 +198,7 @@ const resumeCommand: SlashCommand = {
 
     const rolemap: { [key: string]: MessageType } = {
       user: MessageType.USER,
-      model: MessageType.GEMINI,
+      model: MessageType.CODEFLY,
     };
 
     const uiHistory: HistoryItemWithoutId[] = [];
@@ -215,7 +215,7 @@ const resumeCommand: SlashCommand = {
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       uiHistory.push({
-        type: (item.role && rolemap[item.role]) || MessageType.GEMINI,
+        type: (item.role && rolemap[item.role]) || MessageType.CODEFLY,
         text,
       } as HistoryItemWithoutId);
     }
@@ -283,7 +283,7 @@ const shareCommand: SlashCommand = {
   action: async (context, args): Promise<MessageActionReturn> => {
     let filePathArg = args.trim();
     if (!filePathArg) {
-      filePathArg = `gemini-conversation-${Date.now()}.json`;
+      filePathArg = `codefly-conversation-${Date.now()}.json`;
     }
 
     const filePath = path.resolve(filePathArg);

@@ -8,7 +8,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { renderHook } from '../../test-utils/render.js';
 import { useTurnActivityMonitor } from './useTurnActivityMonitor.js';
 import { StreamingState } from '../types.js';
-import { hasRedirection } from '@codeflyai/codefly-core';
+import { CoreToolCallStatus, hasRedirection } from '@codeflyai/codefly-core';
 import { type TrackedToolCall } from './useReactToolScheduler.js';
 
 vi.mock('@codeflyai/codefly-core', async (importOriginal) => {

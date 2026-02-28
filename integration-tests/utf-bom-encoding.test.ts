@@ -120,10 +120,10 @@ describe('BOM end-to-end integraion', () => {
   it('Can describe a PNG file', async () => {
     const imagePath = resolve(
       process.cwd(),
-      'docs/assets/gemini-screenshot.png',
+      'docs/assets/codefly-screenshot.png',
     );
     const imageContent = readFileSync(imagePath);
-    const filename = 'gemini-screenshot.png';
+    const filename = 'codefly-screenshot.png';
     writeFileSync(join(rig.testDir!, filename), imageContent);
     const prompt = `What is shown in the image ${filename}?`;
     const output = await rig.run({ args: prompt });
@@ -131,6 +131,6 @@ describe('BOM end-to-end integraion', () => {
     const lower = output.toLowerCase();
     // The response is non-deterministic, so we just check for some
     // keywords that are very likely to be in the response.
-    expect(lower.includes('gemini')).toBeTruthy();
+    expect(lower.includes('codefly')).toBeTruthy();
   });
 });

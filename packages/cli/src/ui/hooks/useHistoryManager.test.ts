@@ -47,7 +47,7 @@ describe('useHistoryManager', () => {
       text: 'First',
     };
     const itemData2: Omit<HistoryItem, 'id'> = {
-      type: 'gemini', // Replaced HistoryItemType.Gemini
+      type: 'codefly', // Replaced HistoryItemType.Codefly
       text: 'Second',
     };
 
@@ -71,7 +71,7 @@ describe('useHistoryManager', () => {
     const { result } = renderHook(() => useHistory());
     const timestamp = Date.now();
     const initialItem: Omit<HistoryItem, 'id'> = {
-      type: 'gemini', // Replaced HistoryItemType.Gemini
+      type: 'codefly', // Replaced HistoryItemType.Codefly
       text: 'Initial content',
     };
     let itemId!: number;
@@ -122,7 +122,7 @@ describe('useHistoryManager', () => {
       text: 'First',
     };
     const itemData2: Omit<HistoryItem, 'id'> = {
-      type: 'gemini', // Replaced HistoryItemType.Gemini
+      type: 'codefly', // Replaced HistoryItemType.Codefly
       text: 'Second',
     };
 
@@ -152,8 +152,8 @@ describe('useHistoryManager', () => {
       text: 'Duplicate message',
     };
     const itemData3: Omit<HistoryItem, 'id'> = {
-      type: 'gemini', // Replaced HistoryItemType.Gemini
-      text: 'Gemini response',
+      type: 'codefly', // Replaced HistoryItemType.Codefly
+      text: 'Codefly response',
     };
     const itemData4: Omit<HistoryItem, 'id'> = {
       type: 'user', // Replaced HistoryItemType.User
@@ -169,7 +169,7 @@ describe('useHistoryManager', () => {
 
     expect(result.current.history).toHaveLength(3);
     expect(result.current.history[0].text).toBe('Duplicate message');
-    expect(result.current.history[1].text).toBe('Gemini response');
+    expect(result.current.history[1].text).toBe('Codefly response');
     expect(result.current.history[2].text).toBe('Another user message');
   });
 
@@ -181,8 +181,8 @@ describe('useHistoryManager', () => {
       text: 'Message 1',
     };
     const itemData2: Omit<HistoryItem, 'id'> = {
-      type: 'gemini', // Replaced HistoryItemType.Gemini
-      text: 'Gemini response',
+      type: 'codefly', // Replaced HistoryItemType.Codefly
+      text: 'Codefly response',
     };
     const itemData3: Omit<HistoryItem, 'id'> = {
       type: 'user', // Replaced HistoryItemType.User
@@ -197,7 +197,7 @@ describe('useHistoryManager', () => {
 
     expect(result.current.history).toHaveLength(3);
     expect(result.current.history[0].text).toBe('Message 1');
-    expect(result.current.history[1].text).toBe('Gemini response');
+    expect(result.current.history[1].text).toBe('Codefly response');
     expect(result.current.history[2].text).toBe('Message 1');
   });
 

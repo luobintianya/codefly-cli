@@ -294,8 +294,8 @@ ${testRootDir}${path.sep}
     });
   });
 
-  describe('with geminiignore', () => {
-    it('should ignore geminiignore files by default', async () => {
+  describe('with codeflyignore', () => {
+    it('should ignore codeflyignore files by default', async () => {
       await fsPromises.writeFile(
         nodePath.join(testRootDir, '.codeflyignore'),
         `ignored.txt\nnode_modules/\n${CODEFLY_DIR}/\n!/${CODEFLY_DIR}/config.yaml`,
@@ -331,7 +331,7 @@ ${testRootDir}${path.sep}
         fileService,
         fileFilteringOptions: {
           respectCodeflyIgnore: false,
-          respectGitIgnore: true, // Explicitly disable gemini ignore only
+          respectGitIgnore: true, // Explicitly disable codefly ignore only
           customIgnoreFilePaths: [],
         },
       });

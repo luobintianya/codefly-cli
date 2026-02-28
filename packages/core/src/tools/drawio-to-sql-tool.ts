@@ -13,6 +13,7 @@ import type { ToolInvocation, ToolResult } from './tools.js';
 import type { Config } from '../config/config.js';
 import { ToolErrorType } from './tool-error.js';
 import { DRAWIO_TO_SQL_TOOL_NAME } from './tool-names.js';
+import { LlmRole } from '../telemetry/types.js';
 import type { MessageBus } from '../confirmation-bus/message-bus.js';
 import { getResponseText } from '../utils/partUtils.js';
 
@@ -91,6 +92,7 @@ export class DrawioToSqlToolInvocation extends BaseToolInvocation<
           text: 'You are a SQL generation expert. Generate complete and correct SQL CREATE TABLE and ALTER TABLE statements based on the provided DrawIO diagram structure.',
         },
         promptId: 'drawio-to-sql',
+        role: LlmRole.UTILITY_TOOL,
         abortSignal: _signal,
       });
 

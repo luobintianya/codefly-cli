@@ -17,7 +17,7 @@ describe('IdeTrustChangeDialog', () => {
   });
 
   it('renders the correct message for CONNECTION_CHANGE', async () => {
-    const { lastFrame, waitUntilReady, unmount } = renderWithProviders(
+    const { lastFrame, waitUntilReady } = renderWithProviders(
       <IdeTrustChangeDialog reason="CONNECTION_CHANGE" />,
     );
     await waitUntilReady();
@@ -30,7 +30,7 @@ describe('IdeTrustChangeDialog', () => {
   });
 
   it('renders the correct message for TRUST_CHANGE', async () => {
-    const { lastFrame, waitUntilReady, unmount } = renderWithProviders(
+    const { lastFrame, waitUntilReady } = renderWithProviders(
       <IdeTrustChangeDialog reason="TRUST_CHANGE" />,
     );
     await waitUntilReady();

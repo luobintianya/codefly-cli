@@ -165,7 +165,7 @@ describe('computeSessionStats', () => {
   it('should correctly calculate API and tool time percentages', () => {
     const metrics: SessionMetrics = {
       models: {
-        'gemini-pro': {
+        'codefly-pro': {
           api: { totalRequests: 1, totalErrors: 0, totalLatencyMs: 750 },
           tokens: {
             input: 10,
@@ -205,7 +205,7 @@ describe('computeSessionStats', () => {
   it('should correctly calculate cache efficiency', () => {
     const metrics: SessionMetrics = {
       models: {
-        'gemini-pro': {
+        'codefly-pro': {
           api: { totalRequests: 2, totalErrors: 0, totalLatencyMs: 1000 },
           tokens: {
             input: 100,

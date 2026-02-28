@@ -1,6 +1,6 @@
 # Model routing
 
-Gemini CLI includes a model routing feature that automatically switches to a
+Codefly CLI includes a model routing feature that automatically switches to a
 fallback model in case of a model failure. This feature is enabled by default
 and provides resilience when the primary model is unavailable.
 
@@ -18,8 +18,8 @@ policies.
     you).
 
     Some internal utility calls (such as prompt completion and classification)
-    use a silent fallback chain for `gemini-2.5-flash-lite` and will fall back
-    to `gemini-2.5-flash` and `gemini-2.5-pro` without prompting or changing the
+    use a silent fallback chain for `codefly-2.5-flash-lite` and will fall back
+    to `codefly-2.5-flash` and `codefly-2.5-pro` without prompting or changing the
     configured model.
 
 3.  **Model switch:** If approved, or if the policy allows for silent fallback,
@@ -28,12 +28,12 @@ policies.
 
 ### Model selection precedence
 
-The model used by Gemini CLI is determined by the following order of precedence:
+The model used by Codefly CLI is determined by the following order of precedence:
 
 1.  **`--model` command-line flag:** A model specified with the `--model` flag
     when launching the CLI will always be used.
-2.  **`GEMINI_MODEL` environment variable:** If the `--model` flag is not used,
-    the CLI will use the model specified in the `GEMINI_MODEL` environment
+2.  **`CODEFLY_MODEL` environment variable:** If the `--model` flag is not used,
+    the CLI will use the model specified in the `CODEFLY_MODEL` environment
     variable.
 3.  **`model.name` in `settings.json`:** If neither of the above are set, the
     model specified in the `model.name` property of your `settings.json` file

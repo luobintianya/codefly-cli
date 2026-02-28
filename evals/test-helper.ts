@@ -57,7 +57,7 @@ export function evalTest(policy: EvalPolicy, evalCase: EvalCase) {
 
           // If it's an agent file, calculate hash for acknowledgement
           if (
-            filePath.startsWith('.gemini/agents/') &&
+            filePath.startsWith('.codefly/agents/') &&
             filePath.endsWith('.md')
           ) {
             const hash = crypto
@@ -87,7 +87,7 @@ export function evalTest(policy: EvalPolicy, evalCase: EvalCase) {
         if (Object.keys(acknowledgedAgents).length > 0) {
           const ackPath = path.join(
             rig.homeDir!,
-            '.gemini',
+            '.codefly',
             'acknowledgments',
             'agents.json',
           );
@@ -118,7 +118,7 @@ export function evalTest(policy: EvalPolicy, evalCase: EvalCase) {
         approvalMode: evalCase.approvalMode ?? 'yolo',
         timeout: evalCase.timeout,
         env: {
-          GEMINI_CLI_ACTIVITY_LOG_TARGET: activityLogFile,
+          CODEFLY_CLI_ACTIVITY_LOG_TARGET: activityLogFile,
         },
       });
 

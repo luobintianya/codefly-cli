@@ -1,21 +1,21 @@
-# @google/gemini-cli-sdk
+# @codeflyai/codefly-sdk
 
-The Gemini CLI SDK provides a programmatic interface to interact with Gemini
+The Codefly CLI SDK provides a programmatic interface to interact with Codefly
 models and tools.
 
 ## Installation
 
 ```bash
-npm install @google/gemini-cli-sdk
+npm install @codeflyai/codefly-sdk
 ```
 
 ## Usage
 
 ```typescript
-import { GeminiCliAgent } from '@google/gemini-cli-sdk';
+import { CodeflyCliAgent } from '@codeflyai/codefly-sdk';
 
 async function main() {
-  const agent = new GeminiCliAgent({
+  const agent = new CodeflyCliAgent({
     instructions: 'You are a helpful assistant.',
   });
 

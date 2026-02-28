@@ -6,7 +6,7 @@
 
 import type {
   ClientMetadata,
-  GeminiUserTier,
+  CodeflyUserTier,
   IneligibleTier,
   LoadCodeAssistResponse,
   OnboardUserRequest,
@@ -22,7 +22,7 @@ import { ValidationRequiredError } from '../utils/googleQuotaErrors.js';
 export class ProjectIdRequiredError extends Error {
   constructor() {
     super(
-      'This account requires setting the GOOGLE_CLOUD_PROJECT or GOOGLE_CLOUD_PROJECT_ID env var. See https://goo.gle/gemini-cli-auth-docs#workspace-gca',
+      'This account requires setting the GOOGLE_CLOUD_PROJECT or GOOGLE_CLOUD_PROJECT_ID env var. See https://goo.gle/codefly-cli-auth-docs#workspace-gca',
     );
   }
 }
@@ -95,7 +95,7 @@ export async function setupUser(
   const coreClientMetadata: ClientMetadata = {
     ideType: 'IDE_UNSPECIFIED',
     platform: 'PLATFORM_UNSPECIFIED',
-    pluginType: 'GEMINI',
+    pluginType: 'CODEFLY',
   };
 
   let loadRes: LoadCodeAssistResponse;
@@ -205,7 +205,7 @@ function throwIneligibleOrProjectIdError(res: LoadCodeAssistResponse): never {
   throw new ProjectIdRequiredError();
 }
 
-function getOnboardTier(res: LoadCodeAssistResponse): GeminiUserTier {
+function getOnboardTier(res: LoadCodeAssistResponse): CodeflyUserTier {
   for (const tier of res.allowedTiers || []) {
     if (tier.isDefault) {
       return tier;

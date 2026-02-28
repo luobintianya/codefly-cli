@@ -9,12 +9,12 @@ import { ApprovalModeStrategy } from './approvalModeStrategy.js';
 import type { RoutingContext } from '../routingStrategy.js';
 import type { Config } from '../../config/config.js';
 import {
-  DEFAULT_GEMINI_MODEL,
-  DEFAULT_GEMINI_FLASH_MODEL,
-  PREVIEW_GEMINI_MODEL,
-  PREVIEW_GEMINI_FLASH_MODEL,
-  DEFAULT_GEMINI_MODEL_AUTO,
-  PREVIEW_GEMINI_MODEL_AUTO,
+  DEFAULT_CODEFLY_MODEL,
+  DEFAULT_CODEFLY_FLASH_MODEL,
+  PREVIEW_CODEFLY_MODEL,
+  PREVIEW_CODEFLY_FLASH_MODEL,
+  DEFAULT_CODEFLY_MODEL_AUTO,
+  PREVIEW_CODEFLY_MODEL_AUTO,
 } from '../../config/models.js';
 import { ApprovalMode } from '../../policy/types.js';
 import type { BaseLlmClient } from '../../core/baseLlmClient.js';
@@ -36,7 +36,7 @@ describe('ApprovalModeStrategy', () => {
     };
 
     mockConfig = {
-      getModel: vi.fn().mockReturnValue(DEFAULT_GEMINI_MODEL_AUTO),
+      getModel: vi.fn().mockReturnValue(DEFAULT_CODEFLY_MODEL_AUTO),
       getApprovalMode: vi.fn().mockReturnValue(ApprovalMode.DEFAULT),
       getApprovedPlanPath: vi.fn().mockReturnValue(undefined),
       getPlanModeRoutingEnabled: vi.fn().mockResolvedValue(true),
@@ -46,7 +46,7 @@ describe('ApprovalModeStrategy', () => {
   });
 
   it('should return null if the model is not an auto model', async () => {
-    vi.mocked(mockConfig.getModel).mockReturnValue(DEFAULT_GEMINI_MODEL);
+    vi.mocked(mockConfig.getModel).mockReturnValue(DEFAULT_CODEFLY_MODEL);
 
     const decision = await strategy.route(
       mockContext,
@@ -70,8 +70,8 @@ describe('ApprovalModeStrategy', () => {
     expect(decision).toBeNull();
   });
 
-  it('should route to PRO model if ApprovalMode is PLAN (Gemini 2.5)', async () => {
-    vi.mocked(mockConfig.getModel).mockReturnValue(DEFAULT_GEMINI_MODEL_AUTO);
+  it('should route to PRO model if ApprovalMode is PLAN (Codefly 2.5)', async () => {
+    vi.mocked(mockConfig.getModel).mockReturnValue(DEFAULT_CODEFLY_MODEL_AUTO);
     vi.mocked(mockConfig.getApprovalMode).mockReturnValue(ApprovalMode.PLAN);
 
     const decision = await strategy.route(
@@ -81,7 +81,7 @@ describe('ApprovalModeStrategy', () => {
     );
 
     expect(decision).toEqual({
-      model: DEFAULT_GEMINI_MODEL,
+      model: DEFAULT_CODEFLY_MODEL,
       metadata: {
         source: 'approval-mode',
         latencyMs: expect.any(Number),
@@ -90,8 +90,8 @@ describe('ApprovalModeStrategy', () => {
     });
   });
 
-  it('should route to PRO model if ApprovalMode is PLAN (Gemini 3)', async () => {
-    vi.mocked(mockConfig.getModel).mockReturnValue(PREVIEW_GEMINI_MODEL_AUTO);
+  it('should route to PRO model if ApprovalMode is PLAN (Codefly 3)', async () => {
+    vi.mocked(mockConfig.getModel).mockReturnValue(PREVIEW_CODEFLY_MODEL_AUTO);
     vi.mocked(mockConfig.getApprovalMode).mockReturnValue(ApprovalMode.PLAN);
 
     const decision = await strategy.route(
@@ -101,7 +101,7 @@ describe('ApprovalModeStrategy', () => {
     );
 
     expect(decision).toEqual({
-      model: PREVIEW_GEMINI_MODEL,
+      model: PREVIEW_CODEFLY_MODEL,
       metadata: {
         source: 'approval-mode',
         latencyMs: expect.any(Number),
@@ -110,8 +110,8 @@ describe('ApprovalModeStrategy', () => {
     });
   });
 
-  it('should route to FLASH model if an approved plan exists (Gemini 2.5)', async () => {
-    vi.mocked(mockConfig.getModel).mockReturnValue(DEFAULT_GEMINI_MODEL_AUTO);
+  it('should route to FLASH model if an approved plan exists (Codefly 2.5)', async () => {
+    vi.mocked(mockConfig.getModel).mockReturnValue(DEFAULT_CODEFLY_MODEL_AUTO);
     vi.mocked(mockConfig.getApprovalMode).mockReturnValue(ApprovalMode.DEFAULT);
     vi.mocked(mockConfig.getApprovedPlanPath).mockReturnValue(
       '/path/to/plan.md',
@@ -124,7 +124,7 @@ describe('ApprovalModeStrategy', () => {
     );
 
     expect(decision).toEqual({
-      model: DEFAULT_GEMINI_FLASH_MODEL,
+      model: DEFAULT_CODEFLY_FLASH_MODEL,
       metadata: {
         source: 'approval-mode',
         latencyMs: expect.any(Number),
@@ -134,8 +134,8 @@ describe('ApprovalModeStrategy', () => {
     });
   });
 
-  it('should route to FLASH model if an approved plan exists (Gemini 3)', async () => {
-    vi.mocked(mockConfig.getModel).mockReturnValue(PREVIEW_GEMINI_MODEL_AUTO);
+  it('should route to FLASH model if an approved plan exists (Codefly 3)', async () => {
+    vi.mocked(mockConfig.getModel).mockReturnValue(PREVIEW_CODEFLY_MODEL_AUTO);
     vi.mocked(mockConfig.getApprovalMode).mockReturnValue(ApprovalMode.DEFAULT);
     vi.mocked(mockConfig.getApprovedPlanPath).mockReturnValue(
       '/path/to/plan.md',
@@ -148,7 +148,7 @@ describe('ApprovalModeStrategy', () => {
     );
 
     expect(decision).toEqual({
-      model: PREVIEW_GEMINI_FLASH_MODEL,
+      model: PREVIEW_CODEFLY_FLASH_MODEL,
       metadata: {
         source: 'approval-mode',
         latencyMs: expect.any(Number),
@@ -172,8 +172,8 @@ describe('ApprovalModeStrategy', () => {
   });
 
   it('should prioritize requestedModel over config model if it is an auto model', async () => {
-    mockContext.requestedModel = PREVIEW_GEMINI_MODEL_AUTO;
-    vi.mocked(mockConfig.getModel).mockReturnValue(DEFAULT_GEMINI_MODEL_AUTO);
+    mockContext.requestedModel = PREVIEW_CODEFLY_MODEL_AUTO;
+    vi.mocked(mockConfig.getModel).mockReturnValue(DEFAULT_CODEFLY_MODEL_AUTO);
     vi.mocked(mockConfig.getApprovalMode).mockReturnValue(ApprovalMode.PLAN);
 
     const decision = await strategy.route(
@@ -182,6 +182,6 @@ describe('ApprovalModeStrategy', () => {
       mockBaseLlmClient,
     );
 
-    expect(decision?.model).toBe(PREVIEW_GEMINI_MODEL);
+    expect(decision?.model).toBe(PREVIEW_CODEFLY_MODEL);
   });
 });

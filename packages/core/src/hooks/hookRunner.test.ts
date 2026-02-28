@@ -335,7 +335,7 @@ describe('HookRunner', () => {
       it('should expand environment variables in commands', async () => {
         const configWithEnvVar: HookConfig = {
           type: HookType.Command,
-          command: '$GEMINI_PROJECT_DIR/hooks/test.sh',
+          command: '$CODEFLY_PROJECT_DIR/hooks/test.sh',
         };
 
         mockSpawn.mockProcessOn.mockImplementation(
@@ -360,14 +360,14 @@ describe('HookRunner', () => {
           expect.objectContaining({
             shell: false,
             env: expect.objectContaining({
-              GEMINI_PROJECT_DIR: '/test/project',
+              CODEFLY_PROJECT_DIR: '/test/project',
               CLAUDE_PROJECT_DIR: '/test/project',
             }),
           }),
         );
       });
 
-      it('should not allow command injection via GEMINI_PROJECT_DIR', async () => {
+      it('should not allow command injection via CODEFLY_PROJECT_DIR', async () => {
         const maliciousCwd = '/test/project; echo "pwned" > /tmp/pwned';
         const mockMaliciousInput: HookInput = {
           ...mockInput,
@@ -376,7 +376,7 @@ describe('HookRunner', () => {
 
         const config: HookConfig = {
           type: HookType.Command,
-          command: 'ls $GEMINI_PROJECT_DIR',
+          command: 'ls $CODEFLY_PROJECT_DIR',
         };
 
         // Mock the process closing immediately
@@ -665,7 +665,7 @@ describe('HookRunner', () => {
       const mockBeforeModelInput = {
         ...mockInput,
         llm_request: {
-          model: 'gemini-1.5-pro',
+          model: 'codefly-1.5-pro',
           messages: [{ role: 'user', content: 'Hello' }],
         },
       };
@@ -714,7 +714,7 @@ describe('HookRunner', () => {
       const secondHookInput = JSON.parse(
         vi.mocked(mockSpawn.stdin.write).mock.calls[1][0],
       );
-      expect(secondHookInput.llm_request.model).toBe('gemini-1.5-pro');
+      expect(secondHookInput.llm_request.model).toBe('codefly-1.5-pro');
       expect(secondHookInput.llm_request.temperature).toBe(0.7);
     });
 

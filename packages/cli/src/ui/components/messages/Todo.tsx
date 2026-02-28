@@ -5,13 +5,7 @@
  */
 
 import type React from 'react';
-import { Box, Text } from 'ink';
-import {
-  type Todo,
-  type TodoList,
-  type TodoStatus,
-} from '@codeflyai/codefly-core';
-import { theme } from '../../semantic-colors.js';
+import { type TodoList } from '@codeflyai/codefly-core';
 import { useUIState } from '../../contexts/UIStateContext.js';
 import { useMemo } from 'react';
 import type { HistoryItemToolGroup } from '../../types.js';

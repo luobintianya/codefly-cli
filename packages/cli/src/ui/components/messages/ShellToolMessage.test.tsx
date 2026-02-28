@@ -9,14 +9,14 @@ import {
   ShellToolMessage,
   type ShellToolMessageProps,
 } from './ShellToolMessage.js';
-import { StreamingState, ToolCallStatus } from '../../types.js';
+import { StreamingState } from '../../types.js';
+import { ACTIVE_SHELL_MAX_LINES , SHELL_COMMAND_NAME } from '../../constants.js';
 import { Text } from 'ink';
 import type { Config } from '@codeflyai/codefly-core';
 import { renderWithProviders } from '../../../test-utils/render.js';
 import { waitFor } from '../../../test-utils/async.js';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { SHELL_TOOL_NAME } from '@codeflyai/codefly-core';
-import { SHELL_COMMAND_NAME } from '../../constants.js';
+import { CoreToolCallStatus, SHELL_TOOL_NAME } from '@codeflyai/codefly-core';
 import { StreamingContext } from '../../contexts/StreamingContext.js';
 
 vi.mock('../TerminalOutput.js', () => ({
@@ -34,8 +34,8 @@ vi.mock('../TerminalOutput.js', () => ({
 }));
 
 // Mock child components or utilities if they are complex or have side effects
-vi.mock('../GeminiRespondingSpinner.js', () => ({
-  GeminiRespondingSpinner: ({
+vi.mock('../CodeflyRespondingSpinner.js', () => ({
+  CodeflyRespondingSpinner: ({
     nonRespondingDisplay,
   }: {
     nonRespondingDisplay?: string;

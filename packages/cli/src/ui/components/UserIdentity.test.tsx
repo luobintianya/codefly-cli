@@ -12,12 +12,12 @@ import {
   AuthType,
   UserAccountManager,
   type ContentGeneratorConfig,
-} from '@google/gemini-cli-core';
+} from '@codeflyai/codefly-core';
 
 // Mock UserAccountManager to control cached account
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
   const original =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+    await importOriginal<typeof import('@codeflyai/codefly-core')>();
   return {
     ...original,
     UserAccountManager: vi.fn().mockImplementation(() => ({
@@ -35,7 +35,7 @@ describe('<UserIdentity />', () => {
     const mockConfig = makeFakeConfig();
     vi.spyOn(mockConfig, 'getContentGeneratorConfig').mockReturnValue({
       authType: AuthType.LOGIN_WITH_GOOGLE,
-      model: 'gemini-pro',
+      model: 'codefly-pro',
     } as unknown as ContentGeneratorConfig);
     vi.spyOn(mockConfig, 'getUserTierName').mockReturnValue(undefined);
 
@@ -62,7 +62,7 @@ describe('<UserIdentity />', () => {
     const mockConfig = makeFakeConfig();
     vi.spyOn(mockConfig, 'getContentGeneratorConfig').mockReturnValue({
       authType: AuthType.LOGIN_WITH_GOOGLE,
-      model: 'gemini-pro',
+      model: 'codefly-pro',
     } as unknown as ContentGeneratorConfig);
     vi.spyOn(mockConfig, 'getUserTierName').mockReturnValue(undefined);
 
@@ -82,7 +82,7 @@ describe('<UserIdentity />', () => {
     const mockConfig = makeFakeConfig();
     vi.spyOn(mockConfig, 'getContentGeneratorConfig').mockReturnValue({
       authType: AuthType.LOGIN_WITH_GOOGLE,
-      model: 'gemini-pro',
+      model: 'codefly-pro',
     } as unknown as ContentGeneratorConfig);
     vi.spyOn(mockConfig, 'getUserTierName').mockReturnValue('Premium Plan');
 
@@ -126,8 +126,8 @@ describe('<UserIdentity />', () => {
   it('should render non-Google auth message', async () => {
     const mockConfig = makeFakeConfig();
     vi.spyOn(mockConfig, 'getContentGeneratorConfig').mockReturnValue({
-      authType: AuthType.USE_GEMINI,
-      model: 'gemini-pro',
+      authType: AuthType.USE_CODEFLY,
+      model: 'codefly-pro',
     } as unknown as ContentGeneratorConfig);
     vi.spyOn(mockConfig, 'getUserTierName').mockReturnValue(undefined);
 
@@ -137,7 +137,7 @@ describe('<UserIdentity />', () => {
     await waitUntilReady();
 
     const output = lastFrame();
-    expect(output).toContain(`Authenticated with ${AuthType.USE_GEMINI}`);
+    expect(output).toContain(`Authenticated with ${AuthType.USE_CODEFLY}`);
     expect(output).toContain('/auth');
     unmount();
   });

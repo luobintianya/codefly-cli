@@ -45,12 +45,12 @@ export const WORKSPACE_SETTINGS_FILE = path.join(
 export function getJson(url) {
   const tmpFile = path.join(
     os.tmpdir(),
-    `gemini-cli-releases-${Date.now()}.json`,
+    `codefly-cli-releases-${Date.now()}.json`,
   );
   try {
     const result = spawnSync(
       'curl',
-      ['-sL', '-H', 'User-Agent: gemini-cli-dev-script', '-o', tmpFile, url],
+      ['-sL', '-H', 'User-Agent: codefly-cli-dev-script', '-o', tmpFile, url],
       { stdio: 'pipe', encoding: 'utf-8' },
     );
     if (result.status !== 0) {
@@ -255,7 +255,7 @@ export async function ensureBinary(
 
   const downloadUrl = asset.browser_download_url;
   const tmpDir = fs.mkdtempSync(
-    path.join(os.tmpdir(), 'gemini-cli-telemetry-'),
+    path.join(os.tmpdir(), 'codefly-cli-telemetry-'),
   );
   const archivePath = path.join(tmpDir, asset.name);
 

@@ -18,7 +18,7 @@ describe('AboutBox', () => {
     cliVersion: '1.0.0',
     osVersion: 'macOS',
     sandboxEnv: 'default',
-    modelVersion: 'gemini-pro',
+    modelVersion: 'codefly-pro',
     selectedAuthType: 'oauth',
     gcpProject: '',
     ideClient: '',
@@ -33,7 +33,7 @@ describe('AboutBox', () => {
     expect(output).toContain('About Codefly');
     expect(output).toContain('1.0.0');
     expect(output).toContain('mock-commit-hash');
-    expect(output).toContain('gemini-pro');
+    expect(output).toContain('codefly-pro');
     expect(output).toContain('default');
     expect(output).toContain('macOS');
     expect(output).toContain('Logged in with Google');

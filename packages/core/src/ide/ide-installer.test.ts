@@ -229,7 +229,7 @@ describe('ide-installer', () => {
         'positron',
         [
           '--install-extension',
-          'google.gemini-cli-vscode-ide-companion',
+          'google.codefly-cli-vscode-ide-companion',
           '--force',
         ],
         { stdio: 'pipe', shell: false },

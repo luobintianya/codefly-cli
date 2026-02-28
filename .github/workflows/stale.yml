@@ -15,7 +15,7 @@ jobs:
           - 'ubuntu-latest' # GitHub-hosted
     runs-on: '${{ matrix.runner }}'
     if: |-
-      ${{ github.repository == 'google-gemini/gemini-cli' }}
+      ${{ github.repository == 'google-codefly/codefly-cli' }}
     permissions:
       issues: 'write'
       pull-requests: 'write'

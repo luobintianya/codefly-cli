@@ -20,13 +20,13 @@ import {
   type AnyToolInvocation,
   ROOT_SCHEDULER_ID,
   CoreToolCallStatus,
-} from '@google/gemini-cli-core';
-import { createMockMessageBus } from '@google/gemini-cli-core/src/test-utils/mock-message-bus.js';
+} from '@codeflyai/codefly-core';
+import { createMockMessageBus } from '@codeflyai/codefly-core/src/test-utils/mock-message-bus.js';
 
 // Mock Core Scheduler
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
+vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
   const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+    await importOriginal<typeof import('@codeflyai/codefly-core')>();
   return {
     ...actual,
     Scheduler: vi.fn().mockImplementation(() => ({
@@ -128,11 +128,11 @@ describe('useToolScheduler', () => {
       request: { callId: 'call-1', name: 'test_tool' },
       status: CoreToolCallStatus.Executing,
       liveOutput: 'Loading...',
-      responseSubmittedToGemini: false,
+      responseSubmittedToCodefly: false,
     });
   });
 
-  it('preserves responseSubmittedToGemini flag across updates', () => {
+  it('preserves responseSubmittedToCodefly flag across updates', () => {
     const { result } = renderHook(() =>
       useToolScheduler(
         vi.fn().mockResolvedValue(undefined),
@@ -176,7 +176,7 @@ describe('useToolScheduler', () => {
       markAsSubmitted(['call-1']);
     });
 
-    expect(result.current[0][0].responseSubmittedToGemini).toBe(true);
+    expect(result.current[0][0].responseSubmittedToCodefly).toBe(true);
 
     // 3. Receive another update (should preserve the true flag)
     act(() => {
@@ -187,7 +187,7 @@ describe('useToolScheduler', () => {
       } as ToolCallsUpdateMessage);
     });
 
-    expect(result.current[0][0].responseSubmittedToGemini).toBe(true);
+    expect(result.current[0][0].responseSubmittedToCodefly).toBe(true);
   });
 
   it('updates lastToolOutputTime when tools are executing', () => {
@@ -274,7 +274,7 @@ describe('useToolScheduler', () => {
     };
 
     // Mock the specific return value for this test
-    const { Scheduler } = await import('@google/gemini-cli-core');
+    const { Scheduler } = await import('@codeflyai/codefly-core');
     vi.mocked(Scheduler).mockImplementation(
       () =>
         ({
@@ -372,7 +372,7 @@ describe('useToolScheduler', () => {
     act(() => {
       const [, , , setToolCalls] = result.current;
       setToolCalls((prev) =>
-        prev.map((t) => ({ ...t, responseSubmittedToGemini: true })),
+        prev.map((t) => ({ ...t, responseSubmittedToCodefly: true })),
       );
     });
 
@@ -380,7 +380,7 @@ describe('useToolScheduler', () => {
     // The internal map should have been re-grouped.
     [toolCalls] = result.current;
     expect(toolCalls).toHaveLength(2);
-    expect(toolCalls.every((t) => t.responseSubmittedToGemini)).toBe(true);
+    expect(toolCalls.every((t) => t.responseSubmittedToCodefly)).toBe(true);
 
     const updatedRoot = toolCalls.find((t) => t.request.callId === 'call-root');
     const updatedSub = toolCalls.find((t) => t.request.callId === 'call-sub');

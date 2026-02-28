@@ -1,6 +1,6 @@
 # Policy engine
 
-The Gemini CLI includes a powerful policy engine that provides fine-grained
+The Codefly CLI includes a powerful policy engine that provides fine-grained
 control over tool execution. It allows users and administrators to define rules
 that determine whether a tool call should be allowed, denied, or require user
 confirmation.
@@ -23,7 +23,7 @@ To create your first policy:
     decision = "allow"
     priority = 100
     ```
-3.  **Run a command** that triggers the policy (e.g., ask Gemini CLI to
+3.  **Run a command** that triggers the policy (e.g., ask Codefly CLI to
     `git status`). The tool will now execute automatically without prompting for
     confirmation.
 
@@ -96,7 +96,7 @@ has a designated number that forms the base of the final priority calculation.
 
 | Tier      | Base | Description                                                                |
 | :-------- | :--- | :------------------------------------------------------------------------- |
-| Default   | 1    | Built-in policies that ship with the Gemini CLI.                           |
+| Default   | 1    | Built-in policies that ship with the Codefly CLI.                           |
 | Workspace | 2    | Policies defined in the current workspace's configuration directory.       |
 | User      | 3    | Custom policies defined by the user.                                       |
 | Admin     | 4    | Policies managed by an administrator (e.g., in an enterprise environment). |
@@ -163,8 +163,8 @@ User, and (if configured) Admin directories.
 
 | Tier          | Type   | Location                                  |
 | :------------ | :----- | :---------------------------------------- |
-| **User**      | Custom | `~/.gemini/policies/*.toml`               |
-| **Workspace** | Custom | `$WORKSPACE_ROOT/.gemini/policies/*.toml` |
+| **User**      | Custom | `~/.codefly/policies/*.toml`               |
+| **Workspace** | Custom | `$WORKSPACE_ROOT/.codefly/policies/*.toml` |
 | **Admin**     | System | _See below (OS specific)_                 |
 
 #### System-wide policies (Admin)
@@ -175,9 +175,9 @@ directories:
 
 | OS          | Policy Directory Path                             |
 | :---------- | :------------------------------------------------ |
-| **Linux**   | `/etc/gemini-cli/policies`                        |
-| **macOS**   | `/Library/Application Support/GeminiCli/policies` |
-| **Windows** | `C:\ProgramData\gemini-cli\policies`              |
+| **Linux**   | `/etc/codefly-cli/policies`                        |
+| **macOS**   | `/Library/Application Support/CodeflyCli/policies` |
+| **Windows** | `C:\ProgramData\codefly-cli\policies`              |
 
 **Security Requirements:**
 
@@ -337,7 +337,7 @@ priority = 50
 
 ## Default policies
 
-The Gemini CLI ships with a set of default policies to provide a safe
+The Codefly CLI ships with a set of default policies to provide a safe
 out-of-the-box experience.
 
 - **Read-only tools** (like `read_file`, `glob`) are generally **allowed**.

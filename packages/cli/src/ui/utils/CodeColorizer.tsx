@@ -22,7 +22,7 @@ import {
 } from '../components/shared/MaxSizedBox.js';
 import type { LoadedSettings } from '../../config/settings.js';
 import { debugLogger } from '@codeflyai/codefly-core';
-import { isAlternateBufferEnabled } from '../hooks/useAlternateBuffer.js';
+
 
 // Configure theming and parsing utilities.
 const lowlight = createLowlight(common);

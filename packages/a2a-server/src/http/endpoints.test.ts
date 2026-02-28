@@ -33,9 +33,9 @@ vi.mock('../agent/task.js', () => {
     config = {
       getContentGeneratorConfig: vi
         .fn()
-        .mockReturnValue({ model: 'gemini-pro' }),
+        .mockReturnValue({ model: 'codefly-pro' }),
     };
-    geminiClient = {
+    codeflyClient = {
       initialize: vi.fn().mockResolvedValue(undefined),
     };
     constructor(id: string, contextId: string) {
@@ -51,7 +51,7 @@ vi.mock('../agent/task.js', () => {
       id: this.id,
       contextId: this.contextId,
       taskState: this.taskState,
-      model: 'gemini-pro',
+      model: 'codefly-pro',
       mcpServers: [],
       availableTools: [],
     }));
@@ -89,7 +89,7 @@ describe('Agent Server Endpoints', () => {
   beforeAll(async () => {
     // Create a unique temporary directory for the workspace to avoid conflicts
     testWorkspace = fs.mkdtempSync(
-      path.join(os.tmpdir(), 'gemini-agent-test-'),
+      path.join(os.tmpdir(), 'codefly-agent-test-'),
     );
     app = await createApp();
     await new Promise<void>((resolve) => {
@@ -156,7 +156,7 @@ describe('Agent Server Endpoints', () => {
     const response = await request(app).get('/.well-known/agent-card.json');
     const port = (server.address() as AddressInfo).port;
     expect(response.status).toBe(200);
-    expect(response.body.name).toBe('Gemini SDLC Agent');
+    expect(response.body.name).toBe('Codefly SDLC Agent');
     expect(response.body.url).toBe(`http://localhost:${port}/`);
   });
 });

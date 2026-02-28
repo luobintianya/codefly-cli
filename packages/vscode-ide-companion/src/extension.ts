@@ -15,9 +15,9 @@ import {
   type IdeInfo,
 } from '@codeflyai/codefly-core/src/ide/detect-ide.js';
 
-const CLI_IDE_COMPANION_IDENTIFIER = 'Google.gemini-cli-vscode-ide-companion';
-const INFO_MESSAGE_SHOWN_KEY = 'geminiCliInfoMessageShown';
-export const DIFF_SCHEME = 'gemini-diff';
+const CLI_IDE_COMPANION_IDENTIFIER = 'Google.codefly-cli-vscode-ide-companion';
+const INFO_MESSAGE_SHOWN_KEY = 'codeflyCliInfoMessageShown';
+export const DIFF_SCHEME = 'codefly-diff';
 
 /**
  * In these environments the companion extension is installed and managed by the IDE instead of the user.
@@ -134,7 +134,7 @@ export async function activate(context: vscode.ExtensionContext) {
       diffContentProvider,
     ),
     (vscode.commands.registerCommand(
-      'gemini.diff.accept',
+      'codefly.diff.accept',
       (uri?: vscode.Uri) => {
         const docUri = uri ?? vscode.window.activeTextEditor?.document.uri;
         if (docUri && docUri.scheme === DIFF_SCHEME) {
@@ -144,7 +144,7 @@ export async function activate(context: vscode.ExtensionContext) {
       },
     ),
     vscode.commands.registerCommand(
-      'gemini.diff.cancel',
+      'codefly.diff.cancel',
       (uri?: vscode.Uri) => {
         const docUri = uri ?? vscode.window.activeTextEditor?.document.uri;
         if (docUri && docUri.scheme === DIFF_SCHEME) {
@@ -182,7 +182,7 @@ export async function activate(context: vscode.ExtensionContext) {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       ideServer.syncEnvVars();
     })),
-    vscode.commands.registerCommand('gemini-cli.runGeminiCLI', async () => {
+    vscode.commands.registerCommand('codefly-cli.runCodeflyCLI', async () => {
       const workspaceFolders = vscode.workspace.workspaceFolders;
       if (!workspaceFolders || workspaceFolders.length === 0) {
         vscode.window.showInformationMessage(
@@ -201,16 +201,16 @@ export async function activate(context: vscode.ExtensionContext) {
       }
 
       if (selectedFolder) {
-        const geminiCmd = 'gemini';
+        const codeflyCmd = 'codefly';
         const terminal = vscode.window.createTerminal({
           name: `Codefly CLI (${selectedFolder.name})`,
           cwd: selectedFolder.uri.fsPath,
         });
         terminal.show();
-        terminal.sendText(geminiCmd);
+        terminal.sendText(codeflyCmd);
       }
     }),
-    vscode.commands.registerCommand('gemini-cli.showNotices', async () => {
+    vscode.commands.registerCommand('codefly-cli.showNotices', async () => {
       const noticePath = vscode.Uri.joinPath(
         context.extensionUri,
         'NOTICES.txt',

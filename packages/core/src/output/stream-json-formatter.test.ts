@@ -40,7 +40,7 @@ describe('StreamJsonFormatter', () => {
         type: JsonStreamEventType.INIT,
         timestamp: '2025-10-10T12:00:00.000Z',
         session_id: 'test-session-123',
-        model: 'gemini-2.0-flash-exp',
+        model: 'codefly-2.0-flash-exp',
       };
 
       const result = formatter.formatEvent(event);
@@ -211,7 +211,7 @@ describe('StreamJsonFormatter', () => {
         type: JsonStreamEventType.INIT,
         timestamp: '2025-10-10T12:00:00.000Z',
         session_id: 'test-session',
-        model: 'gemini-2.0-flash-exp',
+        model: 'codefly-2.0-flash-exp',
       };
 
       formatter.emitEvent(event);
@@ -225,7 +225,7 @@ describe('StreamJsonFormatter', () => {
         type: JsonStreamEventType.INIT,
         timestamp: '2025-10-10T12:00:00.000Z',
         session_id: 'test-session',
-        model: 'gemini-2.0-flash-exp',
+        model: 'codefly-2.0-flash-exp',
       };
 
       const event2: MessageEvent = {
@@ -274,7 +274,7 @@ describe('StreamJsonFormatter', () => {
 
     it('should aggregate token counts from single model', () => {
       const metrics = createMockMetrics();
-      metrics.models['gemini-2.0-flash'] = {
+      metrics.models['codefly-2.0-flash'] = {
         api: {
           totalRequests: 1,
           totalErrors: 0,
@@ -309,7 +309,7 @@ describe('StreamJsonFormatter', () => {
 
     it('should aggregate token counts from multiple models', () => {
       const metrics = createMockMetrics();
-      metrics.models['gemini-pro'] = {
+      metrics.models['codefly-pro'] = {
         api: { totalRequests: 1, totalErrors: 0, totalLatencyMs: 1000 },
         tokens: {
           input: 50,
@@ -322,7 +322,7 @@ describe('StreamJsonFormatter', () => {
         },
         roles: {},
       };
-      metrics.models['gemini-ultra'] = {
+      metrics.models['codefly-ultra'] = {
         api: { totalRequests: 1, totalErrors: 0, totalLatencyMs: 2000 },
         tokens: {
           input: 100,
@@ -352,7 +352,7 @@ describe('StreamJsonFormatter', () => {
 
     it('should aggregate cached token counts correctly', () => {
       const metrics = createMockMetrics();
-      metrics.models['gemini-pro'] = {
+      metrics.models['codefly-pro'] = {
         api: { totalRequests: 1, totalErrors: 0, totalLatencyMs: 1000 },
         tokens: {
           input: 20, // 50 prompt - 30 cached
@@ -482,7 +482,7 @@ describe('StreamJsonFormatter', () => {
           type: JsonStreamEventType.INIT,
           timestamp: '2025-10-10T12:00:00.000Z',
           session_id: 'test',
-          model: 'gemini-2.0-flash',
+          model: 'codefly-2.0-flash',
         } as InitEvent,
         {
           type: JsonStreamEventType.MESSAGE,

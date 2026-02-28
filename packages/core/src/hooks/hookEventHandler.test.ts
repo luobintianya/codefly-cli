@@ -751,7 +751,7 @@ describe('HookEventHandler', () => {
       );
 
       const llmRequest = {
-        model: 'gemini-pro',
+        model: 'codefly-pro',
         config: { temperature: 0.7 },
         contents: [{ role: 'user', parts: [{ text: 'Hello' }] }],
       };
@@ -763,7 +763,7 @@ describe('HookEventHandler', () => {
         HookEventName.BeforeModel,
         expect.objectContaining({
           llm_request: expect.objectContaining({
-            model: 'gemini-pro',
+            model: 'codefly-pro',
             messages: expect.arrayContaining([
               expect.objectContaining({
                 role: 'user',

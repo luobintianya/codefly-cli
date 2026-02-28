@@ -10,14 +10,15 @@ import type {
   MessageRecord,
 } from '@codeflyai/codefly-core';
 import {
+  CoreToolCallStatus,
+  SESSION_FILE_PREFIX,
   checkExhaustive,
   partListUnionToString,
-  SESSION_FILE_PREFIX,
 } from '@codeflyai/codefly-core';
 import * as fs from 'node:fs/promises';
 import path from 'node:path';
 import { stripUnsafeCharacters } from '../ui/utils/textUtils.js';
-import { MessageType, type HistoryItemWithoutId } from '../ui/types.js';
+import { type HistoryItemWithoutId } from '../ui/types.js';
 
 /**
  * Constant for the resume "latest" identifier.
@@ -136,13 +137,13 @@ export interface SessionSelectionResult {
 }
 
 /**
- * Checks if a session has at least one user or assistant (gemini) message.
+ * Checks if a session has at least one user or assistant (codefly) message.
  * Sessions with only system messages (info, error, warning) are considered empty.
  * @param messages - The array of message records to check
  * @returns true if the session has meaningful content
  */
 export const hasUserOrAssistantMessage = (messages: MessageRecord[]): boolean =>
-  messages.some((msg) => msg.type === 'user' || msg.type === 'gemini');
+  messages.some((msg) => msg.type === 'user' || msg.type === 'codefly');
 
 /**
  * Cleans and sanitizes message content for display by:
@@ -544,33 +545,27 @@ export function convertSessionToHistoryFormats(
     const uiText = displayContentString || contentString;
 
     if (uiText.trim()) {
-      let messageType: MessageType;
       switch (msg.type) {
         case 'user':
-          messageType = MessageType.USER;
+          uiHistory.push({ type: 'user', text: uiText });
           break;
         case 'info':
-          messageType = MessageType.INFO;
+          uiHistory.push({ type: 'info', text: uiText });
           break;
         case 'error':
-          messageType = MessageType.ERROR;
+          uiHistory.push({ type: 'error', text: uiText });
           break;
         case 'warning':
-          messageType = MessageType.WARNING;
+          uiHistory.push({ type: 'warning', text: uiText });
           break;
-        case 'gemini':
-          messageType = MessageType.GEMINI;
+        case 'codefly':
+          uiHistory.push({ type: 'codefly', text: uiText });
           break;
         default:
           checkExhaustive(msg);
-          messageType = MessageType.GEMINI;
+          uiHistory.push({ type: 'codefly', text: uiText });
           break;
       }
-
-      uiHistory.push({
-        type: messageType,
-        text: uiText,
-      });
     }
 
     // Add tool calls if present

@@ -12,7 +12,7 @@ import type { Todo } from '@codeflyai/codefly-core';
 import type { UIState } from '../../contexts/UIStateContext.js';
 import { UIStateContext } from '../../contexts/UIStateContext.js';
 import type { HistoryItem } from '../../types.js';
-import { CoreToolCallStatus } from '@google/gemini-cli-core';
+import { CoreToolCallStatus } from '@codeflyai/codefly-core';
 
 const createTodoHistoryItem = (todos: Todo[]): HistoryItem =>
   ({

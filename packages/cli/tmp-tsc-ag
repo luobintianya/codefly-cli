@@ -1,0 +1,100 @@
+src/ui/hooks/toolMapping.ts(70,12): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.ts(71,12): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.ts(72,30): error TS2339: Property 'response' does not exist on type 'ToolCall'.
+  Property 'response' does not exist on type 'ValidatingToolCall'.
+src/ui/hooks/toolMapping.ts(74,12): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.ts(75,30): error TS2339: Property 'correlationId' does not exist on type 'ToolCall'.
+  Property 'correlationId' does not exist on type 'ValidatingToolCall'.
+src/ui/hooks/toolMapping.ts(77,36): error TS2339: Property 'confirmationDetails' does not exist on type 'ToolCall'.
+  Property 'confirmationDetails' does not exist on type 'ValidatingToolCall'.
+src/ui/hooks/toolMapping.ts(79,12): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.ts(80,30): error TS2339: Property 'liveOutput' does not exist on type 'ToolCall'.
+  Property 'liveOutput' does not exist on type 'ValidatingToolCall'.
+src/ui/hooks/toolMapping.ts(81,22): error TS2339: Property 'pid' does not exist on type 'ToolCall'.
+  Property 'pid' does not exist on type 'ValidatingToolCall'.
+src/ui/hooks/toolMapping.ts(82,32): error TS2339: Property 'progressMessage' does not exist on type 'ToolCall'.
+  Property 'progressMessage' does not exist on type 'ValidatingToolCall'.
+src/ui/hooks/toolMapping.ts(83,25): error TS2339: Property 'progress' does not exist on type 'ToolCall'.
+  Property 'progress' does not exist on type 'ValidatingToolCall'.
+src/ui/hooks/toolMapping.ts(84,30): error TS2339: Property 'progressTotal' does not exist on type 'ToolCall'.
+  Property 'progressTotal' does not exist on type 'ValidatingToolCall'.
+src/ui/hooks/toolMapping.ts(86,12): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.ts(87,12): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/toolMapping.ts(90,15): error TS2322: Type 'ToolCall' is not assignable to type 'never'.
+  Type 'ValidatingToolCall' is not assignable to type 'never'.
+src/ui/hooks/useApprovalModeIndicator.ts(52,22): error TS2304: Cannot find name 'getAdminErrorMessage'.
+src/ui/hooks/useAtCompletion.test.ts(91,12): error TS2304: Cannot find name 'escapePath'.
+src/ui/hooks/useAtCompletion.test.ts(152,35): error TS2304: Cannot find name 'FileDiscoveryService'.
+src/ui/hooks/useAtCompletion.test.ts(277,35): error TS2304: Cannot find name 'FileDiscoveryService'.
+src/ui/hooks/useAtCompletion.test.ts(622,11): error TS2304: Cannot find name 'escapePath'.
+src/ui/hooks/useAtCompletion.test.ts(669,11): error TS2304: Cannot find name 'escapePath'.
+src/ui/hooks/useAtCompletion.test.ts(700,11): error TS2304: Cannot find name 'escapePath'.
+src/ui/hooks/useAtCompletion.ts(275,11): error TS2353: Object literal may only specify known properties, and 'useGitignore' does not exist in type 'FileSearchOptions'.
+src/ui/hooks/useAtCompletion.ts(288,9): error TS2304: Cannot find name 'fileSearch'.
+src/ui/hooks/useAtCompletion.ts(348,49): error TS2304: Cannot find name 'path'.
+src/ui/hooks/useBanner.test.ts(18,1): error TS6133: 'Config' is declared but its value is never read.
+src/ui/hooks/useBanner.ts(9,1): error TS6133: 'Config' is declared but its value is never read.
+src/ui/hooks/useEditorSettings.ts(69,9): error TS2304: Cannot find name 'coreEvents'.
+src/ui/hooks/useEditorSettings.ts(69,25): error TS2304: Cannot find name 'CoreEvent'.
+src/ui/hooks/useEditorSettings.ts(79,5): error TS2304: Cannot find name 'coreEvents'.
+src/ui/hooks/useEditorSettings.ts(79,21): error TS2304: Cannot find name 'CoreEvent'.
+src/ui/hooks/useFolderTrust.test.ts(363,17): error TS2304: Cannot find name 'isHeadlessMode'.
+src/ui/hooks/useFolderTrust.test.ts(377,17): error TS2304: Cannot find name 'MessageType'.
+src/ui/hooks/useFolderTrust.ts(28,14): error TS2304: Cannot find name 'FolderDiscoveryResults'.
+src/ui/hooks/useFolderTrust.ts(39,12): error TS2304: Cannot find name 'FolderTrustDiscoveryService'.
+src/ui/hooks/useFolderTrust.ts(40,16): error TS7006: Parameter 'results' implicitly has an 'any' type.
+src/ui/hooks/useFolderTrust.ts(64,9): error TS2304: Cannot find name 'isHeadlessMode'.
+src/ui/hooks/useGeminiStream.test.tsx(33,3): error TS2305: Module '"@codeflyai/codefly-core"' has no exported member 'GeminiEventType'.
+src/ui/hooks/useGeminiStream.test.tsx(334,47): error TS2339: Property 'getGeminiClient' does not exist on type 'Config'.
+src/ui/hooks/useGeminiStream.test.tsx(1276,22): error TS2339: Property 'getGeminiClient' does not exist on type 'Config'.
+src/ui/hooks/useGeminiStream.test.tsx(1317,22): error TS2339: Property 'getGeminiClient' does not exist on type 'Config'.
+src/ui/hooks/useGeminiStream.test.tsx(2473,20): error TS2339: Property 'getGeminiClient' does not exist on type 'Config'.
+src/ui/hooks/useGeminiStream.test.tsx(2821,22): error TS2339: Property 'getGeminiClient' does not exist on type 'Config'.
+src/ui/hooks/useGeminiStream.test.tsx(3056,18): error TS2339: Property 'getGeminiClient' does not exist on type 'Config'.
+src/ui/hooks/useGeminiStream.test.tsx(3097,18): error TS2339: Property 'getGeminiClient' does not exist on type 'Config'.
+src/ui/hooks/useGeminiStream.test.tsx(3177,18): error TS2339: Property 'getGeminiClient' does not exist on type 'Config'.
+src/ui/hooks/useGeminiStream.ts(9,3): error TS2305: Module '"@codeflyai/codefly-core"' has no exported member 'GeminiEventType'.
+src/ui/hooks/useGeminiStream.ts(44,3): error TS2305: Module '"@codeflyai/codefly-core"' has no exported member 'GeminiClient'.
+src/ui/hooks/useGeminiStream.ts(45,3): error TS2724: '"@codeflyai/codefly-core"' has no exported member named 'ServerGeminiChatCompressedEvent'. Did you mean 'ServerCodeflyChatCompressedEvent'?
+src/ui/hooks/useGeminiStream.ts(275,20): error TS2339: Property 'getGeminiClient' does not exist on type 'Config'.
+src/ui/hooks/useGeminiStream.ts(278,14): error TS2339: Property 'getGeminiClient' does not exist on type 'Config'.
+src/ui/hooks/useGeminiStream.ts(918,13): error TS2554: Expected 1-4 arguments, but got 5.
+src/ui/hooks/useGeminiStream.ts(974,23): error TS2339: Property 'IMAGE_RECITATION' does not exist on type 'typeof FinishReason'.
+src/ui/hooks/useGeminiStream.ts(976,23): error TS2339: Property 'IMAGE_OTHER' does not exist on type 'typeof FinishReason'.
+src/ui/hooks/useGeminiStream.ts(1152,38): error TS2339: Property 'value' does not exist on type 'ServerGeminiStreamEvent'.
+  Property 'value' does not exist on type 'ServerGeminiLoopDetectedEvent'.
+src/ui/hooks/useGeminiStream.ts(1157,21): error TS2339: Property 'value' does not exist on type 'ServerGeminiStreamEvent'.
+  Property 'value' does not exist on type 'ServerGeminiLoopDetectedEvent'.
+src/ui/hooks/useGeminiStream.ts(1163,41): error TS2339: Property 'value' does not exist on type 'ServerGeminiStreamEvent'.
+  Property 'value' does not exist on type 'ServerGeminiLoopDetectedEvent'.
+src/ui/hooks/useGeminiStream.ts(1169,36): error TS2339: Property 'value' does not exist on type 'ServerGeminiStreamEvent'.
+  Property 'value' does not exist on type 'ServerGeminiLoopDetectedEvent'.
+src/ui/hooks/useGeminiStream.ts(1173,21): error TS2339: Property 'value' does not exist on type 'ServerGeminiStreamEvent'.
+  Property 'value' does not exist on type 'ServerGeminiLoopDetectedEvent'.
+src/ui/hooks/useGeminiStream.ts(1175,21): error TS2339: Property 'value' does not exist on type 'ServerGeminiStreamEvent'.
+  Property 'value' does not exist on type 'ServerGeminiLoopDetectedEvent'.
+src/ui/hooks/useGeminiStream.ts(1176,21): error TS2339: Property 'value' does not exist on type 'ServerGeminiStreamEvent'.
+  Property 'value' does not exist on type 'ServerGeminiLoopDetectedEvent'.
+src/ui/hooks/useGeminiStream.ts(1181,21): error TS2339: Property 'value' does not exist on type 'ServerGeminiStreamEvent'.
+  Property 'value' does not exist on type 'ServerGeminiLoopDetectedEvent'.
+src/ui/hooks/useGeminiStream.ts(1183,21): error TS2339: Property 'value' does not exist on type 'ServerGeminiStreamEvent'.
+  Property 'value' does not exist on type 'ServerGeminiLoopDetectedEvent'.
+src/ui/hooks/useGeminiStream.ts(1184,21): error TS2339: Property 'value' does not exist on type 'ServerGeminiStreamEvent'.
+  Property 'value' does not exist on type 'ServerGeminiLoopDetectedEvent'.
+src/ui/hooks/useGeminiStream.ts(1188,46): error TS2339: Property 'value' does not exist on type 'ServerGeminiStreamEvent'.
+  Property 'value' does not exist on type 'ServerGeminiLoopDetectedEvent'.
+src/ui/hooks/useGeminiStream.ts(1199,21): error TS2339: Property 'value' does not exist on type 'ServerGeminiStreamEvent'.
+  Property 'value' does not exist on type 'ServerGeminiLoopDetectedEvent'.
+src/ui/hooks/useGeminiStream.ts(1200,21): error TS2339: Property 'value' does not exist on type 'ServerGeminiStreamEvent'.
+  Property 'value' does not exist on type 'ServerGeminiLoopDetectedEvent'.
+src/ui/hooks/useGeminiStream.ts(1204,33): error TS2345: Argument of type 'ServerGeminiStreamEvent' is not assignable to parameter of type 'ServerGeminiFinishedEvent'.
+  Type 'ServerCodeflyChatCompressedEvent' is not assignable to type 'ServerGeminiFinishedEvent'.
+    Types of property 'type' are incompatible.
+      Type 'CodeflyEventType.ChatCompressed' is not assignable to type 'CodeflyEventType.Finished'.
+src/ui/hooks/useGeminiStream.ts(1207,39): error TS2339: Property 'value' does not exist on type 'ServerGeminiStreamEvent'.
+  Property 'value' does not exist on type 'ServerGeminiLoopDetectedEvent'.
+src/ui/hooks/useGeminiStream.ts(1210,40): error TS2339: Property 'value' does not exist on type 'ServerGeminiStreamEvent'.
+  Property 'value' does not exist on type 'ServerGeminiLoopDetectedEvent'.
+src/ui/hooks/useGeminiStream.ts(1223,19): error TS2322: Type 'ServerGeminiStreamEvent' is not assignable to type 'never'.
+  Type 'ServerCodeflyChatCompressedEvent' is not assignable to type 'never'.
+src/ui/hooks/useGeminiStream.ts(1364,26): error TS2339: Property 'getGeminiClient' does not exist on type 'Config'.

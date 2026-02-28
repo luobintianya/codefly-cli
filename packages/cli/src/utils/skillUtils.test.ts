@@ -48,7 +48,7 @@ describe('skillUtils', () => {
         expect(skills.length).toBe(1);
         expect(skills[0].name).toBe('test-skill');
 
-        const linkedPath = path.join(tempDir, '.gemini/skills', 'test-skill');
+        const linkedPath = path.join(tempDir, '.codefly/skills', 'test-skill');
         const stats = await fs.lstat(linkedPath);
         expect(stats.isSymbolicLink()).toBe(true);
 
@@ -68,7 +68,7 @@ describe('skillUtils', () => {
           '---\nname: test-skill\ndescription: test\n---\nbody',
         );
 
-        const targetDir = path.join(tempDir, '.gemini/skills');
+        const targetDir = path.join(tempDir, '.codefly/skills');
         await fs.mkdir(targetDir, { recursive: true });
         const existingPath = path.join(targetDir, 'test-skill');
         await fs.mkdir(existingPath);
@@ -103,7 +103,7 @@ describe('skillUtils', () => {
       expect(requestConsent).toHaveBeenCalled();
 
       // Verify it was NOT linked
-      const linkedPath = path.join(tempDir, '.gemini/skills', 'test-skill');
+      const linkedPath = path.join(tempDir, '.codefly/skills', 'test-skill');
       const exists = await fs.lstat(linkedPath).catch(() => null);
       expect(exists).toBeNull();
     });

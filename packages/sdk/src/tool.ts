@@ -13,7 +13,7 @@ import {
   type ToolInvocation,
   Kind,
   type MessageBus,
-} from '@google/gemini-cli-core';
+} from '@codeflyai/codefly-core';
 import type { SessionContext } from './types.js';
 
 export { z };
@@ -93,7 +93,7 @@ export class SdkTool<T extends z.ZodTypeAny> extends BaseDeclarativeTool<
 > {
   constructor(
     private readonly definition: Tool<T>,
-    messageBus: MessageBus,
+    messageBus: MessageBus | undefined,
     _agent?: unknown,
     private readonly context?: SessionContext,
   ) {

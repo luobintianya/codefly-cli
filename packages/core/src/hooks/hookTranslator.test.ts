@@ -35,7 +35,7 @@ describe('HookTranslator', () => {
   describe('LLM Request Translation', () => {
     it('should convert SDK request to hook format', () => {
       const sdkRequest: GenerateContentParameters = {
-        model: 'gemini-1.5-flash',
+        model: 'codefly-1.5-flash',
         contents: [
           {
             role: 'user',
@@ -51,7 +51,7 @@ describe('HookTranslator', () => {
       const hookRequest = translator.toHookLLMRequest(sdkRequest);
 
       expect(hookRequest).toEqual({
-        model: 'gemini-1.5-flash',
+        model: 'codefly-1.5-flash',
         messages: [
           {
             role: 'user',
@@ -69,7 +69,7 @@ describe('HookTranslator', () => {
 
     it('should handle string contents', () => {
       const sdkRequest: GenerateContentParameters = {
-        model: 'gemini-1.5-flash',
+        model: 'codefly-1.5-flash',
         contents: ['Simple string message'],
       } as unknown as GenerateContentParameters;
 
@@ -85,7 +85,7 @@ describe('HookTranslator', () => {
 
     it('should handle conversion errors gracefully', () => {
       const sdkRequest: GenerateContentParameters = {
-        model: 'gemini-1.5-flash',
+        model: 'codefly-1.5-flash',
         contents: [null as unknown as ContentListUnion], // Invalid content
       } as unknown as GenerateContentParameters;
 
@@ -93,12 +93,12 @@ describe('HookTranslator', () => {
 
       // When contents are invalid, the translator skips them and returns empty messages
       expect(hookRequest.messages).toEqual([]);
-      expect(hookRequest.model).toBe('gemini-1.5-flash');
+      expect(hookRequest.model).toBe('codefly-1.5-flash');
     });
 
     it('should convert hook request back to SDK format', () => {
       const hookRequest: LLMRequest = {
-        model: 'gemini-1.5-flash',
+        model: 'codefly-1.5-flash',
         messages: [
           {
             role: 'user',
@@ -113,7 +113,7 @@ describe('HookTranslator', () => {
 
       const sdkRequest = translator.fromHookLLMRequest(hookRequest);
 
-      expect(sdkRequest.model).toBe('gemini-1.5-flash');
+      expect(sdkRequest.model).toBe('codefly-1.5-flash');
       expect(sdkRequest.contents).toEqual([
         {
           role: 'user',

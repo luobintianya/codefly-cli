@@ -76,7 +76,7 @@ expect.extend({
   ) {
     const event = JSON.parse(received[0].source_extension_json) as LogEvent;
     const metadata = event['event_metadata'][0];
-    const data = metadata.find((m) => m.gemini_cli_key === key)?.value;
+    const data = metadata.find((m) => m.codefly_cli_key === key)?.value;
 
     const pass = data !== undefined && data === value;
 
@@ -91,7 +91,7 @@ expect.extend({
     const event = JSON.parse(received[0].source_extension_json) as LogEvent;
     const metadata = event['event_metadata'][0];
 
-    const pass = metadata.some((m) => m.gemini_cli_key === key);
+    const pass = metadata.some((m) => m.codefly_cli_key === key);
 
     return {
       pass,
@@ -272,7 +272,7 @@ describe('ClearcutLogger', () => {
       const event = logger?.createLogEvent(EventNames.API_ERROR, []);
 
       expect(event?.event_metadata[0]).toContainEqual({
-        gemini_cli_key: EventMetadataKey.GEMINI_CLI_GOOGLE_ACCOUNTS_COUNT,
+        codefly_cli_key: EventMetadataKey.CODEFLY_CLI_GOOGLE_ACCOUNTS_COUNT,
         value: '9001',
       });
     });
@@ -280,7 +280,7 @@ describe('ClearcutLogger', () => {
     it('logs default metadata', () => {
       // Define expected values
       const session_id = 'my-session-id';
-      const auth_type = AuthType.USE_GEMINI;
+      const auth_type = AuthType.USE_CODEFLY;
       const google_accounts = 123;
       const surface = 'ide-1234';
       const cli_version = CLI_VERSION;
@@ -306,43 +306,43 @@ describe('ClearcutLogger', () => {
       expect(event?.event_metadata[0]).toEqual(
         expect.arrayContaining([
           {
-            gemini_cli_key: EventMetadataKey.GEMINI_CLI_SESSION_ID,
+            codefly_cli_key: EventMetadataKey.CODEFLY_CLI_SESSION_ID,
             value: session_id,
           },
           {
-            gemini_cli_key: EventMetadataKey.GEMINI_CLI_AUTH_TYPE,
+            codefly_cli_key: EventMetadataKey.CODEFLY_CLI_AUTH_TYPE,
             value: JSON.stringify(auth_type),
           },
           {
-            gemini_cli_key: EventMetadataKey.GEMINI_CLI_GOOGLE_ACCOUNTS_COUNT,
+            codefly_cli_key: EventMetadataKey.CODEFLY_CLI_GOOGLE_ACCOUNTS_COUNT,
             value: `${google_accounts}`,
           },
           {
-            gemini_cli_key: EventMetadataKey.GEMINI_CLI_SURFACE,
+            codefly_cli_key: EventMetadataKey.CODEFLY_CLI_SURFACE,
             value: surface,
           },
           {
-            gemini_cli_key: EventMetadataKey.GEMINI_CLI_VERSION,
+            codefly_cli_key: EventMetadataKey.CODEFLY_CLI_VERSION,
             value: cli_version,
           },
           {
-            gemini_cli_key: EventMetadataKey.GEMINI_CLI_GIT_COMMIT_HASH,
+            codefly_cli_key: EventMetadataKey.CODEFLY_CLI_GIT_COMMIT_HASH,
             value: git_commit_hash,
           },
           {
-            gemini_cli_key: EventMetadataKey.GEMINI_CLI_PROMPT_ID,
+            codefly_cli_key: EventMetadataKey.CODEFLY_CLI_PROMPT_ID,
             value: prompt_id,
           },
           {
-            gemini_cli_key: EventMetadataKey.GEMINI_CLI_OS,
+            codefly_cli_key: EventMetadataKey.CODEFLY_CLI_OS,
             value: process.platform,
           },
           {
-            gemini_cli_key: EventMetadataKey.GEMINI_CLI_USER_SETTINGS,
+            codefly_cli_key: EventMetadataKey.CODEFLY_CLI_USER_SETTINGS,
             value: logger?.getConfigJson(),
           },
           {
-            gemini_cli_key: EventMetadataKey.GEMINI_CLI_ACTIVE_APPROVAL_MODE,
+            codefly_cli_key: EventMetadataKey.CODEFLY_CLI_ACTIVE_APPROVAL_MODE,
             value: 'default',
           },
         ]),
@@ -355,7 +355,7 @@ describe('ClearcutLogger', () => {
       const event = logger?.createLogEvent(EventNames.API_ERROR, []);
 
       expect(event?.event_metadata[0]).toContainEqual({
-        gemini_cli_key: EventMetadataKey.GEMINI_CLI_NODE_VERSION,
+        codefly_cli_key: EventMetadataKey.CODEFLY_CLI_NODE_VERSION,
         value: process.versions.node,
       });
     });
@@ -371,7 +371,7 @@ describe('ClearcutLogger', () => {
       const event = logger?.createLogEvent(EventNames.TOOL_CALL, []);
 
       expect(event?.event_metadata[0]).toContainEqual({
-        gemini_cli_key: EventMetadataKey.GEMINI_CLI_USER_SETTINGS,
+        codefly_cli_key: EventMetadataKey.CODEFLY_CLI_USER_SETTINGS,
         value: logger?.getConfigJson(),
       });
     });
@@ -387,7 +387,7 @@ describe('ClearcutLogger', () => {
       const event = logger?.createLogEvent(EventNames.API_ERROR, []);
 
       const gpuInfoEntry = event?.event_metadata[0].find(
-        (item) => item.gemini_cli_key === EventMetadataKey.GEMINI_CLI_GPU_INFO,
+        (item) => item.codefly_cli_key === EventMetadataKey.CODEFLY_CLI_GPU_INFO,
       );
       expect(gpuInfoEntry).toBeDefined();
       expect(gpuInfoEntry?.value).toBe('Single GPU');
@@ -405,7 +405,7 @@ describe('ClearcutLogger', () => {
       const metadata = event?.event_metadata[0];
 
       const gpuInfoEntry = metadata?.find(
-        (m) => m.gemini_cli_key === EventMetadataKey.GEMINI_CLI_GPU_INFO,
+        (m) => m.codefly_cli_key === EventMetadataKey.CODEFLY_CLI_GPU_INFO,
       );
       expect(gpuInfoEntry?.value).toBe('GPU 1, GPU 2');
     });
@@ -422,7 +422,7 @@ describe('ClearcutLogger', () => {
       const metadata = event?.event_metadata[0];
 
       const gpuInfoEntry = metadata?.find(
-        (m) => m.gemini_cli_key === EventMetadataKey.GEMINI_CLI_GPU_INFO,
+        (m) => m.codefly_cli_key === EventMetadataKey.CODEFLY_CLI_GPU_INFO,
       );
       expect(gpuInfoEntry?.value).toBe('NA');
     });
@@ -438,7 +438,7 @@ describe('ClearcutLogger', () => {
       const event = logger?.createLogEvent(EventNames.API_ERROR, []);
 
       expect(event?.event_metadata[0]).toContainEqual({
-        gemini_cli_key: EventMetadataKey.GEMINI_CLI_GPU_INFO,
+        codefly_cli_key: EventMetadataKey.CODEFLY_CLI_GPU_INFO,
         value: 'FAILED',
       });
     });
@@ -453,12 +453,12 @@ describe('ClearcutLogger', () => {
       const metadata = event?.event_metadata[0];
 
       const cpuInfoEntry = metadata?.find(
-        (m) => m.gemini_cli_key === EventMetadataKey.GEMINI_CLI_CPU_INFO,
+        (m) => m.codefly_cli_key === EventMetadataKey.CODEFLY_CLI_CPU_INFO,
       );
       expect(cpuInfoEntry).toBeUndefined();
 
       const cpuCoresEntry = metadata?.find(
-        (m) => m.gemini_cli_key === EventMetadataKey.GEMINI_CLI_CPU_CORES,
+        (m) => m.codefly_cli_key === EventMetadataKey.CODEFLY_CLI_CPU_CORES,
       );
       expect(cpuCoresEntry?.value).toBe('8');
     });
@@ -560,7 +560,7 @@ describe('ClearcutLogger', () => {
         }
         const event = logger?.createLogEvent(EventNames.API_ERROR, []);
         expect(event?.event_metadata[0]).toContainEqual({
-          gemini_cli_key: EventMetadataKey.GEMINI_CLI_SURFACE,
+          codefly_cli_key: EventMetadataKey.CODEFLY_CLI_SURFACE,
           value: expected,
         });
       },
@@ -574,7 +574,7 @@ describe('ClearcutLogger', () => {
 
       const event = logger?.createLogEvent(EventNames.API_ERROR, []);
       expect(event?.event_metadata[0]).toContainEqual({
-        gemini_cli_key: EventMetadataKey.GEMINI_CLI_GH_WORKFLOW_NAME,
+        codefly_cli_key: EventMetadataKey.CODEFLY_CLI_GH_WORKFLOW_NAME,
         value: 'test-workflow',
       });
     });
@@ -586,7 +586,7 @@ describe('ClearcutLogger', () => {
       const event = logger?.createLogEvent(EventNames.API_ERROR, []);
       const hasWorkflowName = event?.event_metadata[0].some(
         (item) =>
-          item.gemini_cli_key === EventMetadataKey.GEMINI_CLI_GH_WORKFLOW_NAME,
+          item.codefly_cli_key === EventMetadataKey.CODEFLY_CLI_GH_WORKFLOW_NAME,
       );
       expect(hasWorkflowName).toBe(false);
     });
@@ -594,22 +594,22 @@ describe('ClearcutLogger', () => {
 
   describe('GITHUB_REPOSITORY metadata', () => {
     it('includes hashed repository when GITHUB_REPOSITORY is set', () => {
-      vi.stubEnv('GITHUB_REPOSITORY', 'google/gemini-cli');
+      vi.stubEnv('GITHUB_REPOSITORY', 'google/codefly-cli');
       const { logger } = setup({});
 
       const event = logger?.createLogEvent(EventNames.API_ERROR, []);
       const repositoryMetadata = event?.event_metadata[0].find(
         (item) =>
-          item.gemini_cli_key ===
-          EventMetadataKey.GEMINI_CLI_GH_REPOSITORY_NAME_HASH,
+          item.codefly_cli_key ===
+          EventMetadataKey.CODEFLY_CLI_GH_REPOSITORY_NAME_HASH,
       );
       expect(repositoryMetadata).toBeDefined();
       expect(repositoryMetadata?.value).toMatch(/^[a-f0-9]{64}$/);
-      expect(repositoryMetadata?.value).not.toBe('google/gemini-cli');
+      expect(repositoryMetadata?.value).not.toBe('google/codefly-cli');
     });
 
     it('hashes repository name consistently', () => {
-      vi.stubEnv('GITHUB_REPOSITORY', 'google/gemini-cli');
+      vi.stubEnv('GITHUB_REPOSITORY', 'google/codefly-cli');
       const { logger } = setup({});
 
       const event1 = logger?.createLogEvent(EventNames.API_ERROR, []);
@@ -617,13 +617,13 @@ describe('ClearcutLogger', () => {
 
       const hash1 = event1?.event_metadata[0].find(
         (item) =>
-          item.gemini_cli_key ===
-          EventMetadataKey.GEMINI_CLI_GH_REPOSITORY_NAME_HASH,
+          item.codefly_cli_key ===
+          EventMetadataKey.CODEFLY_CLI_GH_REPOSITORY_NAME_HASH,
       )?.value;
       const hash2 = event2?.event_metadata[0].find(
         (item) =>
-          item.gemini_cli_key ===
-          EventMetadataKey.GEMINI_CLI_GH_REPOSITORY_NAME_HASH,
+          item.codefly_cli_key ===
+          EventMetadataKey.CODEFLY_CLI_GH_REPOSITORY_NAME_HASH,
       )?.value;
 
       expect(hash1).toBeDefined();
@@ -632,13 +632,13 @@ describe('ClearcutLogger', () => {
     });
 
     it('produces different hashes for different repositories', () => {
-      vi.stubEnv('GITHUB_REPOSITORY', 'google/gemini-cli');
+      vi.stubEnv('GITHUB_REPOSITORY', 'google/codefly-cli');
       const { logger: logger1 } = setup({});
       const event1 = logger1?.createLogEvent(EventNames.API_ERROR, []);
       const hash1 = event1?.event_metadata[0].find(
         (item) =>
-          item.gemini_cli_key ===
-          EventMetadataKey.GEMINI_CLI_GH_REPOSITORY_NAME_HASH,
+          item.codefly_cli_key ===
+          EventMetadataKey.CODEFLY_CLI_GH_REPOSITORY_NAME_HASH,
       )?.value;
 
       vi.stubEnv('GITHUB_REPOSITORY', 'google/other-repo');
@@ -647,8 +647,8 @@ describe('ClearcutLogger', () => {
       const event2 = logger2?.createLogEvent(EventNames.API_ERROR, []);
       const hash2 = event2?.event_metadata[0].find(
         (item) =>
-          item.gemini_cli_key ===
-          EventMetadataKey.GEMINI_CLI_GH_REPOSITORY_NAME_HASH,
+          item.codefly_cli_key ===
+          EventMetadataKey.CODEFLY_CLI_GH_REPOSITORY_NAME_HASH,
       )?.value;
 
       expect(hash1).toBeDefined();
@@ -663,8 +663,8 @@ describe('ClearcutLogger', () => {
       const event = logger?.createLogEvent(EventNames.API_ERROR, []);
       const hasRepository = event?.event_metadata[0].some(
         (item) =>
-          item.gemini_cli_key ===
-          EventMetadataKey.GEMINI_CLI_GH_REPOSITORY_NAME_HASH,
+          item.codefly_cli_key ===
+          EventMetadataKey.CODEFLY_CLI_GH_REPOSITORY_NAME_HASH,
       );
       expect(hasRepository).toBe(false);
     });
@@ -684,11 +684,11 @@ describe('ClearcutLogger', () => {
       expect(events.length).toBe(1);
       expect(events[0]).toHaveEventName(EventNames.CHAT_COMPRESSION);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_COMPRESSION_TOKENS_BEFORE,
+        EventMetadataKey.CODEFLY_CLI_COMPRESSION_TOKENS_BEFORE,
         '9001',
       ]);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_COMPRESSION_TOKENS_AFTER,
+        EventMetadataKey.CODEFLY_CLI_COMPRESSION_TOKENS_AFTER,
         '8000',
       ]);
     });
@@ -726,7 +726,7 @@ describe('ClearcutLogger', () => {
         logger!.enqueueLogEvent(
           logger!.createLogEvent(EventNames.API_ERROR, [
             {
-              gemini_cli_key: EventMetadataKey.GEMINI_CLI_AI_ADDED_LINES,
+              codefly_cli_key: EventMetadataKey.CODEFLY_CLI_AI_ADDED_LINES,
               value: `${i}`,
             },
           ]),
@@ -736,7 +736,7 @@ describe('ClearcutLogger', () => {
       let events = getEvents(logger!);
       expect(events.length).toBe(TEST_ONLY.MAX_EVENTS);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_AI_ADDED_LINES,
+        EventMetadataKey.CODEFLY_CLI_AI_ADDED_LINES,
         '0',
       ]);
 
@@ -744,7 +744,7 @@ describe('ClearcutLogger', () => {
       logger!.enqueueLogEvent(
         logger!.createLogEvent(EventNames.API_ERROR, [
           {
-            gemini_cli_key: EventMetadataKey.GEMINI_CLI_AI_ADDED_LINES,
+            codefly_cli_key: EventMetadataKey.CODEFLY_CLI_AI_ADDED_LINES,
             value: `${TEST_ONLY.MAX_EVENTS}`,
           },
         ]),
@@ -752,12 +752,12 @@ describe('ClearcutLogger', () => {
       events = getEvents(logger!);
       expect(events.length).toBe(TEST_ONLY.MAX_EVENTS);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_AI_ADDED_LINES,
+        EventMetadataKey.CODEFLY_CLI_AI_ADDED_LINES,
         '1',
       ]);
 
       expect(events.at(TEST_ONLY.MAX_EVENTS - 1)).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_AI_ADDED_LINES,
+        EventMetadataKey.CODEFLY_CLI_AI_ADDED_LINES,
         `${TEST_ONLY.MAX_EVENTS}`,
       ]);
     });
@@ -902,7 +902,7 @@ describe('ClearcutLogger', () => {
     it('logs a successful routing event', () => {
       const { logger } = setup();
       const event = new ModelRoutingEvent(
-        'gemini-pro',
+        'codefly-pro',
         'default-strategy',
         123,
         'some reasoning',
@@ -917,19 +917,19 @@ describe('ClearcutLogger', () => {
       expect(events.length).toBe(1);
       expect(events[0]).toHaveEventName(EventNames.MODEL_ROUTING);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_ROUTING_DECISION,
-        'gemini-pro',
+        EventMetadataKey.CODEFLY_CLI_ROUTING_DECISION,
+        'codefly-pro',
       ]);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_ROUTING_DECISION_SOURCE,
+        EventMetadataKey.CODEFLY_CLI_ROUTING_DECISION_SOURCE,
         'default-strategy',
       ]);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_ROUTING_LATENCY_MS,
+        EventMetadataKey.CODEFLY_CLI_ROUTING_LATENCY_MS,
         '123',
       ]);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_ROUTING_FAILURE,
+        EventMetadataKey.CODEFLY_CLI_ROUTING_FAILURE,
         'false',
       ]);
     });
@@ -937,7 +937,7 @@ describe('ClearcutLogger', () => {
     it('logs a failed routing event with a reason', () => {
       const { logger } = setup();
       const event = new ModelRoutingEvent(
-        'gemini-pro',
+        'codefly-pro',
         'router-exception',
         234,
         'some reasoning',
@@ -952,23 +952,23 @@ describe('ClearcutLogger', () => {
       expect(events.length).toBe(1);
       expect(events[0]).toHaveEventName(EventNames.MODEL_ROUTING);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_ROUTING_DECISION,
-        'gemini-pro',
+        EventMetadataKey.CODEFLY_CLI_ROUTING_DECISION,
+        'codefly-pro',
       ]);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_ROUTING_DECISION_SOURCE,
+        EventMetadataKey.CODEFLY_CLI_ROUTING_DECISION_SOURCE,
         'router-exception',
       ]);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_ROUTING_LATENCY_MS,
+        EventMetadataKey.CODEFLY_CLI_ROUTING_LATENCY_MS,
         '234',
       ]);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_ROUTING_FAILURE,
+        EventMetadataKey.CODEFLY_CLI_ROUTING_FAILURE,
         'true',
       ]);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_ROUTING_FAILURE_REASON,
+        EventMetadataKey.CODEFLY_CLI_ROUTING_FAILURE_REASON,
         'Something went wrong',
       ]);
     });
@@ -976,7 +976,7 @@ describe('ClearcutLogger', () => {
     it('logs a successful routing event with numerical routing fields', () => {
       const { logger } = setup();
       const event = new ModelRoutingEvent(
-        'gemini-pro',
+        'codefly-pro',
         'NumericalClassifier (Strict)',
         123,
         '[Score: 90 / Threshold: 80] reasoning',
@@ -993,15 +993,15 @@ describe('ClearcutLogger', () => {
       expect(events.length).toBe(1);
       expect(events[0]).toHaveEventName(EventNames.MODEL_ROUTING);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_ROUTING_REASONING,
+        EventMetadataKey.CODEFLY_CLI_ROUTING_REASONING,
         '[Score: 90 / Threshold: 80] reasoning',
       ]);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_ROUTING_NUMERICAL_ENABLED,
+        EventMetadataKey.CODEFLY_CLI_ROUTING_NUMERICAL_ENABLED,
         'true',
       ]);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_ROUTING_CLASSIFIER_THRESHOLD,
+        EventMetadataKey.CODEFLY_CLI_ROUTING_CLASSIFIER_THRESHOLD,
         '80',
       ]);
     });
@@ -1018,11 +1018,11 @@ describe('ClearcutLogger', () => {
       expect(events.length).toBe(1);
       expect(events[0]).toHaveEventName(EventNames.AGENT_START);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_AGENT_ID,
+        EventMetadataKey.CODEFLY_CLI_AGENT_ID,
         'agent-123',
       ]);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_AGENT_NAME,
+        EventMetadataKey.CODEFLY_CLI_AGENT_NAME,
         'TestAgent',
       ]);
     });
@@ -1041,7 +1041,7 @@ describe('ClearcutLogger', () => {
       expect(events[0]).toHaveEventName(EventNames.START_SESSION);
       // Both metadata and exp.gws_experiment should be populated
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_EXPERIMENT_IDS,
+        EventMetadataKey.CODEFLY_CLI_EXPERIMENT_IDS,
         '123,456,789',
       ]);
       expect(events[0]).toHaveGwsExperiments([123, 456, 789]);
@@ -1096,23 +1096,23 @@ describe('ClearcutLogger', () => {
       expect(events.length).toBe(1);
       expect(events[0]).toHaveEventName(EventNames.AGENT_FINISH);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_AGENT_ID,
+        EventMetadataKey.CODEFLY_CLI_AGENT_ID,
         'agent-123',
       ]);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_AGENT_NAME,
+        EventMetadataKey.CODEFLY_CLI_AGENT_NAME,
         'TestAgent',
       ]);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_AGENT_DURATION_MS,
+        EventMetadataKey.CODEFLY_CLI_AGENT_DURATION_MS,
         '1000',
       ]);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_AGENT_TURN_COUNT,
+        EventMetadataKey.CODEFLY_CLI_AGENT_TURN_COUNT,
         '5',
       ]);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_AGENT_TERMINATE_REASON,
+        EventMetadataKey.CODEFLY_CLI_AGENT_TERMINATE_REASON,
         'GOAL',
       ]);
     });
@@ -1133,7 +1133,7 @@ describe('ClearcutLogger', () => {
       expect(events.length).toBe(1);
       expect(events[0]).toHaveEventName(EventNames.AGENT_FINISH);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_AGENT_TERMINATE_REASON,
+        EventMetadataKey.CODEFLY_CLI_AGENT_TERMINATE_REASON,
         'ERROR',
       ]);
     });
@@ -1167,35 +1167,35 @@ describe('ClearcutLogger', () => {
       expect(events.length).toBe(1);
       expect(events[0]).toHaveEventName(EventNames.TOOL_CALL);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_AI_ADDED_LINES,
+        EventMetadataKey.CODEFLY_CLI_AI_ADDED_LINES,
         '1',
       ]);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_AI_REMOVED_LINES,
+        EventMetadataKey.CODEFLY_CLI_AI_REMOVED_LINES,
         '2',
       ]);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_AI_ADDED_CHARS,
+        EventMetadataKey.CODEFLY_CLI_AI_ADDED_CHARS,
         '3',
       ]);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_AI_REMOVED_CHARS,
+        EventMetadataKey.CODEFLY_CLI_AI_REMOVED_CHARS,
         '4',
       ]);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_USER_ADDED_LINES,
+        EventMetadataKey.CODEFLY_CLI_USER_ADDED_LINES,
         '5',
       ]);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_USER_REMOVED_LINES,
+        EventMetadataKey.CODEFLY_CLI_USER_REMOVED_LINES,
         '6',
       ]);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_USER_ADDED_CHARS,
+        EventMetadataKey.CODEFLY_CLI_USER_ADDED_CHARS,
         '7',
       ]);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_USER_REMOVED_CHARS,
+        EventMetadataKey.CODEFLY_CLI_USER_REMOVED_CHARS,
         '8',
       ]);
     });
@@ -1223,32 +1223,32 @@ describe('ClearcutLogger', () => {
       expect(events.length).toBe(1);
       expect(events[0]).toHaveEventName(EventNames.TOOL_CALL);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_AI_ADDED_LINES,
+        EventMetadataKey.CODEFLY_CLI_AI_ADDED_LINES,
         '1',
       ]);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_AI_REMOVED_LINES,
+        EventMetadataKey.CODEFLY_CLI_AI_REMOVED_LINES,
         '2',
       ]);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_AI_ADDED_CHARS,
+        EventMetadataKey.CODEFLY_CLI_AI_ADDED_CHARS,
         '3',
       ]);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_AI_REMOVED_CHARS,
+        EventMetadataKey.CODEFLY_CLI_AI_REMOVED_CHARS,
         '4',
       ]);
       expect(events[0]).not.toHaveMetadataKey(
-        EventMetadataKey.GEMINI_CLI_USER_ADDED_LINES,
+        EventMetadataKey.CODEFLY_CLI_USER_ADDED_LINES,
       );
       expect(events[0]).not.toHaveMetadataKey(
-        EventMetadataKey.GEMINI_CLI_USER_REMOVED_LINES,
+        EventMetadataKey.CODEFLY_CLI_USER_REMOVED_LINES,
       );
       expect(events[0]).not.toHaveMetadataKey(
-        EventMetadataKey.GEMINI_CLI_USER_ADDED_CHARS,
+        EventMetadataKey.CODEFLY_CLI_USER_ADDED_CHARS,
       );
       expect(events[0]).not.toHaveMetadataKey(
-        EventMetadataKey.GEMINI_CLI_USER_REMOVED_CHARS,
+        EventMetadataKey.CODEFLY_CLI_USER_REMOVED_CHARS,
       );
     });
 
@@ -1268,7 +1268,7 @@ describe('ClearcutLogger', () => {
       expect(events.length).toBe(1);
       expect(events[0]).toHaveEventName(EventNames.TOOL_CALL);
       expect(events[0]).not.toHaveMetadataKey(
-        EventMetadataKey.GEMINI_CLI_AI_ADDED_LINES,
+        EventMetadataKey.CODEFLY_CLI_AI_ADDED_LINES,
       );
     });
 
@@ -1300,19 +1300,19 @@ describe('ClearcutLogger', () => {
       expect(events.length).toBe(1);
       expect(events[0]).toHaveEventName(EventNames.TOOL_CALL);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_ASK_USER_QUESTION_TYPES,
+        EventMetadataKey.CODEFLY_CLI_ASK_USER_QUESTION_TYPES,
         JSON.stringify(['choice', 'text']),
       ]);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_ASK_USER_DISMISSED,
+        EventMetadataKey.CODEFLY_CLI_ASK_USER_DISMISSED,
         'false',
       ]);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_ASK_USER_EMPTY_SUBMISSION,
+        EventMetadataKey.CODEFLY_CLI_ASK_USER_EMPTY_SUBMISSION,
         'false',
       ]);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_ASK_USER_ANSWER_COUNT,
+        EventMetadataKey.CODEFLY_CLI_ASK_USER_ANSWER_COUNT,
         '2',
       ]);
     });
@@ -1343,16 +1343,16 @@ describe('ClearcutLogger', () => {
       expect(events.length).toBe(1);
       expect(events[0]).toHaveEventName(EventNames.TOOL_CALL);
       expect(events[0]).not.toHaveMetadataKey(
-        EventMetadataKey.GEMINI_CLI_ASK_USER_QUESTION_TYPES,
+        EventMetadataKey.CODEFLY_CLI_ASK_USER_QUESTION_TYPES,
       );
       expect(events[0]).not.toHaveMetadataKey(
-        EventMetadataKey.GEMINI_CLI_ASK_USER_DISMISSED,
+        EventMetadataKey.CODEFLY_CLI_ASK_USER_DISMISSED,
       );
       expect(events[0]).not.toHaveMetadataKey(
-        EventMetadataKey.GEMINI_CLI_ASK_USER_EMPTY_SUBMISSION,
+        EventMetadataKey.CODEFLY_CLI_ASK_USER_EMPTY_SUBMISSION,
       );
       expect(events[0]).not.toHaveMetadataKey(
-        EventMetadataKey.GEMINI_CLI_ASK_USER_ANSWER_COUNT,
+        EventMetadataKey.CODEFLY_CLI_ASK_USER_ANSWER_COUNT,
       );
     });
   });
@@ -1395,7 +1395,7 @@ describe('ClearcutLogger', () => {
       expect(events.length).toBe(1);
       expect(events[0]).toHaveEventName(EventNames.WEB_FETCH_FALLBACK_ATTEMPT);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_WEB_FETCH_FALLBACK_REASON,
+        EventMetadataKey.CODEFLY_CLI_WEB_FETCH_FALLBACK_REASON,
         'private_ip',
       ]);
     });
@@ -1423,19 +1423,19 @@ describe('ClearcutLogger', () => {
       expect(events.length).toBe(1);
       expect(events[0]).toHaveEventName(EventNames.HOOK_CALL);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_HOOK_EVENT_NAME,
+        EventMetadataKey.CODEFLY_CLI_HOOK_EVENT_NAME,
         'before-tool',
       ]);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_HOOK_DURATION_MS,
+        EventMetadataKey.CODEFLY_CLI_HOOK_DURATION_MS,
         '150',
       ]);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_HOOK_SUCCESS,
+        EventMetadataKey.CODEFLY_CLI_HOOK_SUCCESS,
         'true',
       ]);
       expect(events[0]).toHaveMetadataValue([
-        EventMetadataKey.GEMINI_CLI_HOOK_EXIT_CODE,
+        EventMetadataKey.CODEFLY_CLI_HOOK_EXIT_CODE,
         '0',
       ]);
     });

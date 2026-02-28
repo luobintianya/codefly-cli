@@ -6,7 +6,7 @@
 
 import type { MessageRecord } from './chatRecordingService.js';
 import type { BaseLlmClient } from '../core/baseLlmClient.js';
-import { partListUnionToString } from '../core/geminiRequest.js';
+import { partListUnionToString } from '../core/codeflyRequest.js';
 import { debugLogger } from '../utils/debugLogger.js';
 import type { Content } from '@google/genai';
 import { getResponseText } from '../utils/partUtils.js';
@@ -42,7 +42,7 @@ export interface GenerateSummaryOptions {
 
 /**
  * Service for generating AI summaries of chat sessions.
- * Uses Gemini Flash Lite to create concise, user-intent-focused summaries.
+ * Uses Codefly Flash Lite to create concise, user-intent-focused summaries.
  */
 export class SessionSummaryService {
   constructor(private readonly baseLlmClient: BaseLlmClient) {}
@@ -61,10 +61,10 @@ export class SessionSummaryService {
     } = options;
 
     try {
-      // Filter to user/gemini messages only (exclude system messages)
+      // Filter to user/codefly messages only (exclude system messages)
       const filteredMessages = messages.filter((msg) => {
         // Skip system messages (info, error, warning)
-        if (msg.type !== 'user' && msg.type !== 'gemini') {
+        if (msg.type !== 'user' && msg.type !== 'codefly') {
           return false;
         }
         const content = partListUnionToString(msg.content);

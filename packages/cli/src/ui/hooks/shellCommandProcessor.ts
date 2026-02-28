@@ -8,15 +8,17 @@ import type {
   HistoryItemWithoutId,
   IndividualToolCallDisplay,
 } from '../types.js';
-import { ToolCallStatus } from '../types.js';
-import { useCallback, useState } from 'react';
+import { useCallback, useReducer, useEffect, useRef } from 'react';
 import type {
   AnsiOutput,
   Config,
   CodeflyClient,
-  ShellExecutionResult,
 } from '@codeflyai/codefly-core';
-import { isBinary, ShellExecutionService } from '@codeflyai/codefly-core';
+import {
+  CoreToolCallStatus,
+  ShellExecutionService,
+  isBinary,
+} from '@codeflyai/codefly-core';
 import { type PartListUnion } from '@google/genai';
 import type { UseHistoryManagerReturn } from './useHistoryManager.js';
 import { SHELL_COMMAND_NAME } from '../constants.js';
@@ -37,8 +39,8 @@ export const OUTPUT_UPDATE_INTERVAL_MS = 1000;
 const RESTORE_VISIBILITY_DELAY_MS = 300;
 const MAX_OUTPUT_LENGTH = 10000;
 
-function addShellCommandToGeminiHistory(
-  geminiClient: CodeflyClient,
+function addShellCommandToCodeflyHistory(
+  codeflyClient: CodeflyClient,
   rawQuery: string,
   resultText: string,
 ) {
@@ -48,7 +50,7 @@ function addShellCommandToGeminiHistory(
       : resultText;
 
   // eslint-disable-next-line @typescript-eslint/no-floating-promises
-  geminiClient.addHistory({
+  codeflyClient.addHistory({
     role: 'user',
     parts: [
       {
@@ -78,7 +80,7 @@ export const useShellCommandProcessor = (
   onExec: (command: Promise<void>) => void,
   onDebugMessage: (message: string) => void,
   config: Config,
-  geminiClient: CodeflyClient,
+  codeflyClient: CodeflyClient,
   setShellInputFocused: (value: boolean) => void,
   terminalWidth?: number,
   terminalHeight?: number,
@@ -495,7 +497,7 @@ export const useShellCommandProcessor = (
             );
           }
 
-          addShellCommandToGeminiHistory(geminiClient, rawQuery, finalOutput);
+          addShellCommandToCodeflyHistory(codeflyClient, rawQuery, finalOutput);
         } catch (err) {
           setPendingHistoryItem(null);
           const errorMessage = err instanceof Error ? err.message : String(err);
@@ -526,7 +528,7 @@ export const useShellCommandProcessor = (
       addItemToHistory,
       setPendingHistoryItem,
       onExec,
-      geminiClient,
+      codeflyClient,
       setShellInputFocused,
       terminalHeight,
       terminalWidth,

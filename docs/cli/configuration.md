@@ -1,6 +1,6 @@
-# Gemini CLI configuration
+# Codefly CLI configuration
 
-Gemini CLI offers several ways to configure its behavior, including environment
+Codefly CLI offers several ways to configure its behavior, including environment
 variables, command-line arguments, and settings files. This document outlines
 the different configuration methods and available settings.
 
@@ -19,25 +19,25 @@ overridden by higher numbers):
 
 ## Settings files
 
-Gemini CLI uses `settings.json` files for persistent configuration. There are
+Codefly CLI uses `settings.json` files for persistent configuration. There are
 three locations for these files:
 
 - **User settings file:**
   - **Location:** `~/.codefly/settings.json` (where `~` is your home directory).
-  - **Scope:** Applies to all Gemini CLI sessions for the current user.
+  - **Scope:** Applies to all Codefly CLI sessions for the current user.
 - **Project settings file:**
   - **Location:** `.codefly/settings.json` within your project's root directory.
-  - **Scope:** Applies only when running Gemini CLI from that specific project.
+  - **Scope:** Applies only when running Codefly CLI from that specific project.
     Project settings override user settings.
 - **System settings file:**
-  - **Location:** `/etc/gemini-cli/settings.json` (Linux),
-    `C:\ProgramData\gemini-cli\settings.json` (Windows) or
-    `/Library/Application Support/GeminiCli/settings.json` (macOS). The path can
-    be overridden using the `GEMINI_CLI_SYSTEM_SETTINGS_PATH` environment
+  - **Location:** `/etc/codefly-cli/settings.json` (Linux),
+    `C:\ProgramData\codefly-cli\settings.json` (Windows) or
+    `/Library/Application Support/CodeflyCli/settings.json` (macOS). The path can
+    be overridden using the `CODEFLY_CLI_SYSTEM_SETTINGS_PATH` environment
     variable.
-  - **Scope:** Applies to all Gemini CLI sessions on the system, for all users.
+  - **Scope:** Applies to all Codefly CLI sessions on the system, for all users.
     System settings override user and project settings. May be useful for system
-    administrators at enterprises to have controls over users' Gemini CLI
+    administrators at enterprises to have controls over users' Codefly CLI
     setups.
 
 **Note on environment variables in settings:** String values within your
@@ -50,7 +50,7 @@ variable `MY_API_TOKEN`, you could use it in `settings.json` like this:
 ### The `.codefly` directory in your project
 
 In addition to a project settings file, a project's `.codefly` directory can
-contain other project-specific files related to Gemini CLI's operation, such as:
+contain other project-specific files related to Codefly CLI's operation, such as:
 
 - [Custom sandbox profiles](#sandboxing) (e.g.,
   `.codefly/sandbox-macos-custom.sb`, `.codefly/sandbox.Dockerfile`).
@@ -67,7 +67,7 @@ contain other project-specific files related to Gemini CLI's operation, such as:
 - **`bugCommand`** (object):
   - **Description:** Overrides the default URL for the `/bug` command.
   - **Default:**
-    `"urlTemplate": "https://github.com/google-gemini/gemini-cli/issues/new?template=bug_report.yml&title={title}&info={info}"`
+    `"urlTemplate": "https://github.com/google-codefly/codefly-cli/issues/new?template=bug_report.yml&title={title}&info={info}"`
   - **Properties:**
     - **`urlTemplate`** (string): A URL that can contain `{title}` and `{info}`
       placeholders.
@@ -106,7 +106,7 @@ contain other project-specific files related to Gemini CLI's operation, such as:
     for tools that support it, like the `ShellTool`. For example,
     `"coreTools": ["ShellTool(ls -l)"]` will only allow the `ls -l` command to
     be executed.
-  - **Default:** All tools available for use by the Gemini model.
+  - **Default:** All tools available for use by the Codefly model.
   - **Example:** `"coreTools": ["ReadFileTool", "GlobTool", "ShellTool(ls)"]`.
 
 - **`excludeTools`** (array of strings):
@@ -128,7 +128,7 @@ contain other project-specific files related to Gemini CLI's operation, such as:
     should be made available to the model. This can be used to restrict the set
     of MCP servers to connect to. Note that this will be ignored if
     `--allowed-mcp-server-names` is set.
-  - **Default:** All MCP servers are available for use by the Gemini model.
+  - **Default:** All MCP servers are available for use by the Codefly model.
   - **Example:** `"allowMCPServers": ["myPythonServer"]`.
   - **Security Note:** This uses simple string matching on MCP server names,
     which can be modified. If you're a system administrator looking to prevent
@@ -160,7 +160,7 @@ contain other project-specific files related to Gemini CLI's operation, such as:
   - **Example:** `"autoAccept": true`
 
 - **`theme`** (string):
-  - **Description:** Sets the visual [theme](./themes.md) for Gemini CLI.
+  - **Description:** Sets the visual [theme](./themes.md) for Codefly CLI.
   - **Default:** `"Default"`
   - **Example:** `"theme": "GitHub"`
 
@@ -174,8 +174,8 @@ contain other project-specific files related to Gemini CLI's operation, such as:
 
 - **`sandbox`** (boolean or string):
   - **Description:** Controls whether and how to use sandboxing for tool
-    execution. If set to `true`, Gemini CLI uses a pre-built
-    `gemini-cli-sandbox` Docker image. For more information, see
+    execution. If set to `true`, Codefly CLI uses a pre-built
+    `codefly-cli-sandbox` Docker image. For more information, see
     [Sandboxing](#sandboxing).
   - **Default:** `false`
   - **Example:** `"sandbox": "docker"`
@@ -183,7 +183,7 @@ contain other project-specific files related to Gemini CLI's operation, such as:
 - **`toolDiscoveryCommand`** (string):
   - **Description:** Defines a custom shell command for discovering tools from
     your project. The shell command must return on `stdout` a JSON array of
-    [function declarations](https://ai.google.dev/gemini-api/docs/function-calling#function-declarations).
+    [function declarations](https://ai.google.dev/codefly-api/docs/function-calling#function-declarations).
     Tool wrappers are optional.
   - **Default:** Empty
   - **Example:** `"toolDiscoveryCommand": "bin/get_tools"`
@@ -193,7 +193,7 @@ contain other project-specific files related to Gemini CLI's operation, such as:
     that was discovered using `toolDiscoveryCommand`. The shell command must
     meet the following criteria:
     - It must take function `name` (exactly as in
-      [function declaration](https://ai.google.dev/gemini-api/docs/function-calling#function-declarations))
+      [function declaration](https://ai.google.dev/codefly-api/docs/function-calling#function-declarations))
       as first command line argument.
     - It must read function arguments as JSON on `stdin`, analogous to
       [`functionCall.args`](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/inference#functioncall).
@@ -204,7 +204,7 @@ contain other project-specific files related to Gemini CLI's operation, such as:
 
 - **`mcpServers`** (object):
   - **Description:** Configures connections to one or more Model-Context
-    Protocol (MCP) servers for discovering and using custom tools. Gemini CLI
+    Protocol (MCP) servers for discovering and using custom tools. Codefly CLI
     attempts to connect to each configured MCP server to discover available
     tools. If multiple MCP servers expose a tool with the same name, the tool
     names will be prefixed with the server alias you defined in the
@@ -274,7 +274,7 @@ contain other project-specific files related to Gemini CLI's operation, such as:
   - **Example:** `"preferredEditor": "vscode"`
 
 - **`telemetry`** (object)
-  - **Description:** Configures logging and metrics collection for Gemini CLI.
+  - **Description:** Configures logging and metrics collection for Codefly CLI.
     For more information, see [Telemetry](./telemetry.md).
   - **Default:**
     `{"enabled": false, "target": "local", "otlpEndpoint": "http://localhost:4317", "logPrompts": true}`
@@ -350,7 +350,7 @@ contain other project-specific files related to Gemini CLI's operation, such as:
 - **`excludedProjectEnvVars`** (array of strings):
   - **Description:** Specifies environment variables that should be excluded
     from being loaded from project `.env` files. This prevents project-specific
-    environment variables (like `DEBUG=true`) from interfering with gemini-cli
+    environment variables (like `DEBUG=true`) from interfering with codefly-cli
     behavior. Variables from `.codefly/.env` files are never excluded.
   - **Default:** `["DEBUG", "DEBUG_MODE"]`
   - **Example:**
@@ -451,31 +451,31 @@ loading order is:
 
 **Environment variable exclusion:** Some environment variables (like `DEBUG` and
 `DEBUG_MODE`) are automatically excluded from being loaded from project `.env`
-files to prevent interference with gemini-cli behavior. Variables from
+files to prevent interference with codefly-cli behavior. Variables from
 `.codefly/.env` files are never excluded. You can customize this behavior using
 the `excludedProjectEnvVars` setting in your `settings.json` file.
 
-- **`GEMINI_API_KEY`** (Required):
-  - Your API key for the Gemini API.
+- **`CODEFLY_API_KEY`** (Required):
+  - Your API key for the Codefly API.
   - **Crucial for operation.** The CLI will not function without it.
   - Set this in your shell profile (e.g., `~/.bashrc`, `~/.zshrc`) or an `.env`
     file.
-- **`GEMINI_MODEL`**:
-  - Specifies the default Gemini model to use.
+- **`CODEFLY_MODEL`**:
+  - Specifies the default Codefly model to use.
   - Overrides the hardcoded default
-  - Example: `export GEMINI_MODEL="gemini-2.5-flash"`
-- **`GEMINI_CLI_CUSTOM_HEADERS`**:
-  - Adds extra HTTP headers to Gemini API and Code Assist requests.
+  - Example: `export CODEFLY_MODEL="codefly-2.5-flash"`
+- **`CODEFLY_CLI_CUSTOM_HEADERS`**:
+  - Adds extra HTTP headers to Codefly API and Code Assist requests.
   - Accepts a comma-separated list of `Name: value` pairs.
   - Example:
-    `export GEMINI_CLI_CUSTOM_HEADERS="X-My-Header: foo, X-Trace-ID: abc123"`.
-- **`GEMINI_API_KEY_AUTH_MECHANISM`**:
+    `export CODEFLY_CLI_CUSTOM_HEADERS="X-My-Header: foo, X-Trace-ID: abc123"`.
+- **`CODEFLY_API_KEY_AUTH_MECHANISM`**:
   - Specifies how the API key should be sent for authentication when using
-    `AuthType.USE_GEMINI` or `AuthType.USE_VERTEX_AI`.
+    `AuthType.USE_CODEFLY` or `AuthType.USE_VERTEX_AI`.
   - Valid values are `x-goog-api-key` (default) or `bearer`.
   - If set to `bearer`, the API key will be sent in the
     `Authorization: Bearer <key>` header.
-  - Example: `export GEMINI_API_KEY_AUTH_MECHANISM="bearer"`
+  - Example: `export CODEFLY_API_KEY_AUTH_MECHANISM="bearer"`
 - **`GOOGLE_API_KEY`**:
   - Your Google Cloud API key.
   - Required for using Vertex AI in express mode.
@@ -503,7 +503,7 @@ the `excludedProjectEnvVars` setting in your `settings.json` file.
   - Your Google Cloud Project Location (e.g., us-central1).
   - Required for using Vertex AI in non express mode.
   - Example: `export GOOGLE_CLOUD_LOCATION="YOUR_PROJECT_LOCATION"`.
-- **`GEMINI_SANDBOX`**:
+- **`CODEFLY_SANDBOX`**:
   - Alternative to the `sandbox` setting in `settings.json`.
   - Accepts `true`, `false`, `docker`, `podman`, or a custom command string.
 - **`HTTP_PROXY` / `HTTPS_PROXY`**:
@@ -524,8 +524,8 @@ the `excludedProjectEnvVars` setting in your `settings.json` file.
   - Set to `true` or `1` to enable verbose debug logging, which can be helpful
     for troubleshooting.
   - **Note:** These variables are automatically excluded from project `.env`
-    files by default to prevent interference with gemini-cli behavior. Use
-    `.codefly/.env` files if you need to set these for gemini-cli specifically.
+    files by default to prevent interference with codefly-cli behavior. Use
+    `.codefly/.env` files if you need to set these for codefly-cli specifically.
 - **`NO_COLOR`**:
   - Set to any value to disable all color output in the CLI.
 - **`CLI_TITLE`**:
@@ -533,13 +533,13 @@ the `excludedProjectEnvVars` setting in your `settings.json` file.
 - **`CODE_ASSIST_ENDPOINT`**:
   - Specifies the endpoint for the code assist server.
   - This is useful for development and testing.
-- **`GEMINI_SYSTEM_MD`**:
+- **`CODEFLY_SYSTEM_MD`**:
   - Overrides the base system prompt with the contents of a Markdown file.
   - If set to `1` or `true`, it uses the file at `.codefly/system.md`.
   - If set to a file path, it uses that file. The path can be absolute or
     relative. `~` is supported for the home directory.
   - The specified file must exist.
-- **`GEMINI_WRITE_SYSTEM_MD`**:
+- **`CODEFLY_WRITE_SYSTEM_MD`**:
   - Writes the default system prompt to a file. This is useful for getting a
     template to customize.
   - If set to `1` or `true`, it writes to `.codefly/system.md`.
@@ -553,16 +553,16 @@ Arguments passed directly when running the CLI can override other configurations
 for that specific session.
 
 - **`--model <model_name>`** (**`-m <model_name>`**):
-  - Specifies the Gemini model to use for this session.
-  - Example: `npm start -- --model gemini-1.5-pro-latest`
+  - Specifies the Codefly model to use for this session.
+  - Example: `npm start -- --model codefly-1.5-pro-latest`
 - **`--prompt <your_prompt>`** (**`-p <your_prompt>`**):
-  - Used to pass a prompt directly to the command. This invokes Gemini CLI in a
+  - Used to pass a prompt directly to the command. This invokes Codefly CLI in a
     non-interactive mode.
 - **`--prompt-interactive <your_prompt>`** (**`-i <your_prompt>`**):
   - Starts an interactive session with the provided prompt as the initial input.
   - The prompt is processed within the interactive session, not before it.
   - Cannot be used when piping input from stdin.
-  - Example: `gemini -i "explain this code"`
+  - Example: `codefly -i "explain this code"`
 - **`--sandbox`** (**`-s`**):
   - Enables sandbox mode for this session.
 - **`--sandbox-image`**:
@@ -592,8 +592,8 @@ for that specific session.
 - **`--extensions <extension_name ...>`** (**`-e <extension_name ...>`**):
   - Specifies a list of extensions to use for the session. If not provided, all
     available extensions are used.
-  - Use the special term `gemini -e none` to disable all extensions.
-  - Example: `gemini -e my-extension -e my-other-extension`
+  - Use the special term `codefly -e none` to disable all extensions.
+  - Example: `codefly -e my-extension -e my-other-extension`
 - **`--list-extensions`** (**`-l`**):
   - Lists all available extensions and exits.
 - **`--include-directories <dir1,dir2,...>`**:
@@ -611,7 +611,7 @@ for that specific session.
 While not strictly configuration for the CLI's _behavior_, context files
 (defaulting to `CODEFLY.md` but configurable via the `contextFileName` setting)
 are crucial for configuring the _instructional context_ (also referred to as
-"memory") provided to the Gemini model. This powerful feature allows you to give
+"memory") provided to the Codefly model. This powerful feature allows you to give
 project-specific instructions, coding style guides, or any relevant background
 information to the AI, making its responses more tailored and accurate to your
 needs. The CLI includes UI elements, such as an indicator in the footer showing
@@ -619,7 +619,7 @@ the number of loaded context files, to keep you informed about the active
 context.
 
 - **Purpose:** These Markdown files contain instructions, guidelines, or context
-  that you want the Gemini model to be aware of during your interactions. The
+  that you want the Codefly model to be aware of during your interactions. The
   system is designed to manage this instructional context hierarchically.
 
 ### Example context file content (e.g., `CODEFLY.md`)
@@ -689,7 +689,7 @@ conventions and context.
         component, module, or subsection of your project.
 - **Concatenation and UI indication:** The contents of all found context files
   are concatenated (with separators indicating their origin and path) and
-  provided as part of the system prompt to the Gemini model. The CLI footer
+  provided as part of the system prompt to the Codefly model. The CLI footer
   displays the count of loaded context files, giving you a quick visual cue
   about the active instructional context.
 - **Importing content:** You can modularize your context files by importing
@@ -706,27 +706,27 @@ conventions and context.
 
 By understanding and utilizing these configuration layers and the hierarchical
 nature of context files, you can effectively manage the AI's memory and tailor
-the Gemini CLI's responses to your specific needs and projects.
+the Codefly CLI's responses to your specific needs and projects.
 
 ## Sandboxing
 
-The Gemini CLI can execute potentially unsafe operations (like shell commands
+The Codefly CLI can execute potentially unsafe operations (like shell commands
 and file modifications) within a sandboxed environment to protect your system.
 
 Sandboxing is disabled by default, but you can enable it in a few ways:
 
 - Using `--sandbox` or `-s` flag.
-- Setting `GEMINI_SANDBOX` environment variable.
+- Setting `CODEFLY_SANDBOX` environment variable.
 - Sandbox is enabled in `--yolo` mode by default.
 
-By default, it uses a pre-built `gemini-cli-sandbox` Docker image.
+By default, it uses a pre-built `codefly-cli-sandbox` Docker image.
 
 For project-specific sandboxing needs, you can create a custom Dockerfile at
 `.codefly/sandbox.Dockerfile` in your project's root directory. This Dockerfile
 can be based on the base sandbox image:
 
 ```dockerfile
-FROM gemini-cli-sandbox
+FROM codefly-cli-sandbox
 
 # Add your custom dependencies or configurations here
 # For example:
@@ -735,16 +735,16 @@ FROM gemini-cli-sandbox
 ```
 
 When `.codefly/sandbox.Dockerfile` exists, you can use `BUILD_SANDBOX`
-environment variable when running Gemini CLI to automatically build the custom
+environment variable when running Codefly CLI to automatically build the custom
 sandbox image:
 
 ```bash
-BUILD_SANDBOX=1 gemini -s
+BUILD_SANDBOX=1 codefly -s
 ```
 
 ## Usage statistics
 
-To help us improve the Gemini CLI, we collect anonymized usage statistics. This
+To help us improve the Codefly CLI, we collect anonymized usage statistics. This
 data helps us understand how the CLI is used, identify common issues, and
 prioritize new features.
 
@@ -753,7 +753,7 @@ prioritize new features.
 - **Tool calls:** We log the names of the tools that are called, whether they
   succeed or fail, and how long they take to execute. We do not collect the
   arguments passed to the tools or any data returned by them.
-- **API requests:** We log the Gemini model used for each request, the duration
+- **API requests:** We log the Codefly model used for each request, the duration
   of the request, and whether it was successful. We do not collect the content
   of the prompts or responses.
 - **Session information:** We collect information about the configuration of the
@@ -764,7 +764,7 @@ prioritize new features.
 - **Personally identifiable information (PII):** We do not collect any personal
   information, such as your name, email address, or API keys.
 - **Prompt and response content:** We do not log the content of your prompts or
-  the responses from the Gemini model.
+  the responses from the Codefly model.
 - **File content:** We do not log the content of any files that are read or
   written by the CLI.
 

@@ -69,7 +69,7 @@ export interface ReadManyFilesParams {
    */
   file_filtering_options?: {
     respect_git_ignore?: boolean;
-    respect_gemini_ignore?: boolean;
+    respect_codefly_ignore?: boolean;
   };
 }
 
@@ -213,7 +213,7 @@ ${finalExclusionPatternsForDescription
             this.config.getFileFilteringOptions().respectGitIgnore ??
             DEFAULT_FILE_FILTERING_OPTIONS.respectGitIgnore,
           respectCodeflyIgnore:
-            this.params.file_filtering_options?.respect_gemini_ignore ??
+            this.params.file_filtering_options?.respect_codefly_ignore ??
             this.config.getFileFilteringOptions().respectCodeflyIgnore ??
             DEFAULT_FILE_FILTERING_OPTIONS.respectCodeflyIgnore,
         });
@@ -510,7 +510,7 @@ export class ReadManyFilesTool extends BaseDeclarativeTool<
                 'Optional: Whether to respect .gitignore patterns when listing files. Only available in git repositories. Defaults to true.',
               type: 'boolean',
             },
-            respect_gemini_ignore: {
+            respect_codefly_ignore: {
               description:
                 'Optional: Whether to respect .codeflyignore patterns when listing files. Defaults to true.',
               type: 'boolean',

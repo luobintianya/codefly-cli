@@ -24,7 +24,10 @@ vi.mock('fs', async (importOriginal) => {
 });
 
 import { Storage } from './storage.js';
-import { CODEFLY_DIR } from '../utils/paths.js';
+import { CODEFLY_DIR, homedir } from '../utils/paths.js';
+import { ProjectRegistry } from './projectRegistry.js';
+
+const PROJECT_SLUG = 'test-slug';
 
 describe('Storage – getGlobalSettingsPath', () => {
   it('returns path to ~/.codefly/settings.json', () => {
@@ -34,12 +37,12 @@ describe('Storage – getGlobalSettingsPath', () => {
 });
 
 describe('Storage - Security', () => {
-  it('falls back to tmp for gemini but returns empty for agents if the home directory cannot be determined', () => {
+  it('falls back to tmp for codefly but returns empty for agents if the home directory cannot be determined', () => {
     vi.mocked(homedir).mockReturnValue('');
 
-    // .gemini falls back for backward compatibility
-    expect(Storage.getGlobalGeminiDir()).toBe(
-      path.join(os.tmpdir(), GEMINI_DIR),
+    // .codefly falls back for backward compatibility
+    expect(Storage.getGlobalCodeflyDir()).toBe(
+      path.join(os.tmpdir(), CODEFLY_DIR),
     );
 
     // .agents returns empty to avoid insecure fallback WITHOUT throwing error
@@ -102,14 +105,14 @@ describe('Storage – additional helpers', () => {
     expect(Storage.getGlobalBinDir()).toBe(expected);
   });
 
-  it('getProjectTempPlansDir returns ~/.gemini/tmp/<identifier>/plans when no sessionId is provided', async () => {
+  it('getProjectTempPlansDir returns ~/.codefly/tmp/<identifier>/plans when no sessionId is provided', async () => {
     await storage.initialize();
     const tempDir = storage.getProjectTempDir();
     const expected = path.join(tempDir, 'plans');
     expect(storage.getProjectTempPlansDir()).toBe(expected);
   });
 
-  it('getProjectTempPlansDir returns ~/.gemini/tmp/<identifier>/<sessionId>/plans when sessionId is provided', async () => {
+  it('getProjectTempPlansDir returns ~/.codefly/tmp/<identifier>/<sessionId>/plans when sessionId is provided', async () => {
     const sessionId = 'test-session-id';
     const storageWithSession = new Storage(projectRoot, sessionId);
     ProjectRegistry.prototype.getShortId = vi
@@ -298,41 +301,41 @@ describe('Storage – additional helpers', () => {
 });
 
 describe('Storage - System Paths', () => {
-  const originalEnv = process.env['GEMINI_CLI_SYSTEM_SETTINGS_PATH'];
+  const originalEnv = process.env['CODEFLY_CLI_SYSTEM_SETTINGS_PATH'];
 
   afterEach(() => {
     if (originalEnv !== undefined) {
-      process.env['GEMINI_CLI_SYSTEM_SETTINGS_PATH'] = originalEnv;
+      process.env['CODEFLY_CLI_SYSTEM_SETTINGS_PATH'] = originalEnv;
     } else {
-      delete process.env['GEMINI_CLI_SYSTEM_SETTINGS_PATH'];
+      delete process.env['CODEFLY_CLI_SYSTEM_SETTINGS_PATH'];
     }
   });
 
   it('getSystemSettingsPath returns correct path based on platform (default)', () => {
-    delete process.env['GEMINI_CLI_SYSTEM_SETTINGS_PATH'];
+    delete process.env['CODEFLY_CLI_SYSTEM_SETTINGS_PATH'];
 
     const platform = os.platform();
     const result = Storage.getSystemSettingsPath();
 
     if (platform === 'darwin') {
       expect(result).toBe(
-        '/Library/Application Support/GeminiCli/settings.json',
+        '/Library/Application Support/CodeflyCli/settings.json',
       );
     } else if (platform === 'win32') {
-      expect(result).toBe('C:\\ProgramData\\gemini-cli\\settings.json');
+      expect(result).toBe('C:\\ProgramData\\codefly-cli\\settings.json');
     } else {
-      expect(result).toBe('/etc/gemini-cli/settings.json');
+      expect(result).toBe('/etc/codefly-cli/settings.json');
     }
   });
 
-  it('getSystemSettingsPath follows GEMINI_CLI_SYSTEM_SETTINGS_PATH if set', () => {
+  it('getSystemSettingsPath follows CODEFLY_CLI_SYSTEM_SETTINGS_PATH if set', () => {
     const customPath = '/custom/path/settings.json';
-    process.env['GEMINI_CLI_SYSTEM_SETTINGS_PATH'] = customPath;
+    process.env['CODEFLY_CLI_SYSTEM_SETTINGS_PATH'] = customPath;
     expect(Storage.getSystemSettingsPath()).toBe(customPath);
   });
 
   it('getSystemPoliciesDir returns correct path based on platform and ignores env var', () => {
-    process.env['GEMINI_CLI_SYSTEM_SETTINGS_PATH'] =
+    process.env['CODEFLY_CLI_SYSTEM_SETTINGS_PATH'] =
       '/custom/path/settings.json';
     const platform = os.platform();
     const result = Storage.getSystemPoliciesDir();
@@ -340,11 +343,11 @@ describe('Storage - System Paths', () => {
     expect(result).not.toContain('/custom/path');
 
     if (platform === 'darwin') {
-      expect(result).toBe('/Library/Application Support/GeminiCli/policies');
+      expect(result).toBe('/Library/Application Support/CodeflyCli/policies');
     } else if (platform === 'win32') {
-      expect(result).toBe('C:\\ProgramData\\gemini-cli\\policies');
+      expect(result).toBe('C:\\ProgramData\\codefly-cli\\policies');
     } else {
-      expect(result).toBe('/etc/gemini-cli/policies');
+      expect(result).toBe('/etc/codefly-cli/policies');
     }
   });
 });

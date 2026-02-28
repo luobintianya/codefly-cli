@@ -66,7 +66,7 @@ class AnalyzeScreenshotInvocation extends BaseToolInvocation<
     private readonly browserManager: BrowserManager,
     private readonly config: Config,
     params: Record<string, unknown>,
-    messageBus: MessageBus,
+    messageBus: MessageBus | undefined,
   ) {
     super(params, messageBus, 'analyze_screenshot', 'Analyze Screenshot');
   }
@@ -202,7 +202,7 @@ class AnalyzeScreenshotTool extends DeclarativeTool<
   constructor(
     private readonly browserManager: BrowserManager,
     private readonly config: Config,
-    messageBus: MessageBus,
+    messageBus: MessageBus | undefined,
   ) {
     super(
       'analyze_screenshot',
@@ -244,7 +244,7 @@ class AnalyzeScreenshotTool extends DeclarativeTool<
 export function createAnalyzeScreenshotTool(
   browserManager: BrowserManager,
   config: Config,
-  messageBus: MessageBus,
+  messageBus: MessageBus | undefined,
 ): AnalyzeScreenshotTool {
   return new AnalyzeScreenshotTool(browserManager, config, messageBus);
 }

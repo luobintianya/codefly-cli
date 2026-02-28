@@ -1,32 +1,32 @@
-# Gemini CLI documentation
+# Codefly CLI documentation
 
-Gemini CLI brings the power of Gemini models directly into your terminal. Use it
+Codefly CLI brings the power of Codefly models directly into your terminal. Use it
 to understand code, automate tasks, and build workflows with your local project
 context.
 
 ## Install
 
 ```bash
-npm install -g @google/gemini-cli
+npm install -g @codeflyai/codefly
 ```
 
 ## Get started
 
-Jump in to Gemini CLI.
+Jump in to Codefly CLI.
 
-- **[Quickstart](./get-started/index.md):** Your first session with Gemini CLI.
-- **[Installation](./get-started/installation.md):** How to install Gemini CLI
+- **[Quickstart](./get-started/index.md):** Your first session with Codefly CLI.
+- **[Installation](./get-started/installation.md):** How to install Codefly CLI
   on your system.
 - **[Authentication](./get-started/authentication.md):** Setup instructions for
   personal and enterprise accounts.
-- **[Examples](./get-started/examples.md):** Practical examples of Gemini CLI in
+- **[Examples](./get-started/examples.md):** Practical examples of Codefly CLI in
   action.
 - **[CLI cheatsheet](./cli/cli-reference.md):** A quick reference for common
   commands and options.
-- **[Gemini 3 on Gemini CLI](./get-started/gemini-3.md):** Learn about Gemini 3
-  support in Gemini CLI.
+- **[Codefly 3 on Codefly CLI](./get-started/codefly-3.md):** Learn about Codefly 3
+  support in Codefly CLI.
 
-## Use Gemini CLI
+## Use Codefly CLI
 
 User-focused guides and tutorials for daily development workflows.
 
@@ -50,16 +50,16 @@ User-focused guides and tutorials for daily development workflows.
 
 ## Features
 
-Technical documentation for each capability of Gemini CLI.
+Technical documentation for each capability of Codefly CLI.
 
-- **[Extensions](./extensions/index.md):** Extend Gemini CLI with new tools and
+- **[Extensions](./extensions/index.md):** Extend Codefly CLI with new tools and
   capabilities.
 - **[Agent Skills](./cli/skills.md):** Use specialized agents for specific
   tasks.
 - **[Checkpointing](./cli/checkpointing.md):** Automatic session snapshots.
 - **[Headless mode](./cli/headless.md):** Programmatic and scripting interface.
-- **[Hooks](./hooks/index.md):** Customize Gemini CLI behavior with scripts.
-- **[IDE integration](./ide-integration/index.md):** Integrate Gemini CLI with
+- **[Hooks](./hooks/index.md):** Customize Codefly CLI behavior with scripts.
+- **[IDE integration](./ide-integration/index.md):** Integrate Codefly CLI with
   your favorite IDE.
 - **[MCP servers](./tools/mcp-server.md):** Connect to and use remote agents.
 - **[Model routing](./cli/model-routing.md):** Automatic fallback resilience.
@@ -78,16 +78,16 @@ Technical documentation for each capability of Gemini CLI.
 
 ## Configuration
 
-Settings and customization options for Gemini CLI.
+Settings and customization options for Codefly CLI.
 
 - **[Custom commands](./cli/custom-commands.md):** Personalized shortcuts.
 - **[Enterprise configuration](./cli/enterprise.md):** Professional environment
   controls.
-- **[Ignore files (.geminiignore)](./cli/gemini-ignore.md):** Exclusion pattern
+- **[Ignore files (.codeflyignore)](./cli/codefly-ignore.md):** Exclusion pattern
   reference.
 - **[Model configuration](./cli/generation-settings.md):** Fine-tune generation
   parameters like temperature and thinking budget.
-- **[Project context (GEMINI.md)](./cli/gemini-md.md):** Technical hierarchy of
+- **[Project context (CODEFLY.md)](./cli/codefly-md.md):** Technical hierarchy of
   context files.
 - **[System prompt override](./cli/system-prompt.md):** Instruction replacement
   logic.
@@ -104,7 +104,7 @@ Deep technical documentation and API specifications.
   environment variables.
 - **[Keyboard shortcuts](./reference/keyboard-shortcuts.md):** Productivity
   tips.
-- **[Memory import processor](./reference/memport.md):** How Gemini CLI
+- **[Memory import processor](./reference/memport.md):** How Codefly CLI
   processes memory from various sources.
 - **[Policy engine](./reference/policy-engine.md):** Fine-grained execution
   control.
@@ -122,11 +122,11 @@ Support, release history, and legal information.
   terms.
 - **[Troubleshooting](./resources/troubleshooting.md):** Common issues and
   solutions.
-- **[Uninstall](./resources/uninstall.md):** How to uninstall Gemini CLI.
+- **[Uninstall](./resources/uninstall.md):** How to uninstall Codefly CLI.
 
 ## Development
 
-- **[Contribution guide](/docs/contributing):** How to contribute to Gemini CLI.
+- **[Contribution guide](/docs/contributing):** How to contribute to Codefly CLI.
 - **[Integration testing](./integration-tests.md):** Running integration tests.
 - **[Issue and PR automation](./issue-and-pr-automation.md):** Automation for
   issues and pull requests.

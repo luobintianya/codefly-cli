@@ -51,6 +51,15 @@ import {
 // } from './gcp-exporters.js';
 import { TelemetryTarget } from './index.js';
 import { debugLogger } from '../utils/debugLogger.js';
+import { CoreEvent, coreEvents } from '../utils/events.js';
+import type {
+  KeychainAvailabilityEvent,
+  TokenStorageInitializationEvent,
+} from './types.js';
+import {
+  logKeychainAvailability,
+  logTokenStorageInitialization,
+} from './loggers.js';
 
 // For troubleshooting, set the log level to DiagLogLevel.DEBUG
 class DiagLoggerAdapter {

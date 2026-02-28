@@ -10,7 +10,7 @@ jobs:
   no-response:
     runs-on: 'ubuntu-latest'
     if: |-
-      ${{ github.repository == 'google-gemini/gemini-cli' }}
+      ${{ github.repository == 'google-codefly/codefly-cli' }}
     permissions:
       issues: 'write'
       pull-requests: 'write'

@@ -289,7 +289,7 @@ async function exploreAction(
     }
   }
 
-  const extensionsUrl = 'https://geminicli.com/extensions/';
+  const extensionsUrl = 'https://codeflycli.com/extensions/';
 
   // Only check for NODE_ENV for explicit test mode, not for unit test framework
   if (process.env['NODE_ENV'] === 'test') {

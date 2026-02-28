@@ -811,7 +811,7 @@ describe('ShellTool', () => {
     });
 
     it('should return the schema from the resolver when modelId is provided', () => {
-      const modelId = 'gemini-2.0-flash';
+      const modelId = 'codefly-2.0-flash';
       const schema = shellTool.getSchema(modelId);
       expect(schema.name).toBe(SHELL_TOOL_NAME);
       expect(schema.description).toMatchSnapshot();

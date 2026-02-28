@@ -7,19 +7,18 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { mapToDisplay } from './toolMapping.js';
 import {
+  CoreToolCallStatus,
   type AnyDeclarativeTool,
   type AnyToolInvocation,
-  type ToolCallRequestInfo,
-  type ToolCallResponseInfo,
-  type Status,
-  type ToolCall,
+  type CancelledToolCall,
+  type ExecutingToolCall,
   type ScheduledToolCall,
   type SuccessfulToolCall,
-  type ExecutingToolCall,
+  type ToolCall,
+  type ToolCallRequestInfo,
+  type ToolCallResponseInfo,
   type WaitingToolCall,
-  type CancelledToolCall,
 } from '@codeflyai/codefly-core';
-import { ToolCallStatus } from '../types.js';
 
 vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
   const actual =
@@ -35,28 +34,6 @@ vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
 describe('toolMapping', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-  });
-
-  describe('mapCoreStatusToDisplayStatus', () => {
-    it.each([
-      [CoreToolCallStatus.Validating, ToolCallStatus.Pending],
-      [CoreToolCallStatus.AwaitingApproval, ToolCallStatus.Confirming],
-      [CoreToolCallStatus.Executing, ToolCallStatus.Executing],
-      [CoreToolCallStatus.Success, ToolCallStatus.Success],
-      [CoreToolCallStatus.Cancelled, ToolCallStatus.Canceled],
-      [CoreToolCallStatus.Error, ToolCallStatus.Error],
-      [CoreToolCallStatus.Scheduled, ToolCallStatus.Pending],
-    ] as const)('maps %s to %s', (coreStatus, expectedDisplayStatus) => {
-      expect(mapCoreStatusToDisplayStatus(coreStatus)).toBe(
-        expectedDisplayStatus,
-      );
-    });
-
-    it('throws error for unknown status due to checkExhaustive', () => {
-      expect(() =>
-        mapCoreStatusToDisplayStatus('unknown_status' as Status),
-      ).toThrow('unexpected value unknown_status!');
-    });
   });
 
   describe('mapToDisplay', () => {

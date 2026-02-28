@@ -67,7 +67,7 @@ describe('useSessionResume', () => {
 
       const uiHistory: HistoryItemWithoutId[] = [
         { type: 'user', text: 'Hello' },
-        { type: 'gemini', text: 'Hi there!' },
+        { type: 'codefly', text: 'Hi there!' },
       ];
 
       const clientHistory = [
@@ -105,7 +105,7 @@ describe('useSessionResume', () => {
       );
       expect(mockHistoryManager.addItem).toHaveBeenNthCalledWith(
         2,
-        { type: 'gemini', text: 'Hi there!' },
+        { type: 'codefly', text: 'Hi there!' },
         1,
         true,
       );
@@ -116,7 +116,7 @@ describe('useSessionResume', () => {
       );
     });
 
-    it('should not load history if Gemini client is not initialized', async () => {
+    it('should not load history if Codefly client is not initialized', async () => {
       const { result } = renderHook(() =>
         useSessionResume({
           ...getDefaultProps(),
@@ -338,7 +338,7 @@ describe('useSessionResume', () => {
       expect(mockCodeflyClient.resumeChat).not.toHaveBeenCalled();
     });
 
-    it('should not resume when Gemini client is not initialized', () => {
+    it('should not resume when Codefly client is not initialized', () => {
       const conversation: ConversationRecord = {
         sessionId: 'auto-resume-123',
         projectHash: 'project-123',
@@ -387,7 +387,7 @@ describe('useSessionResume', () => {
             id: 'msg-2',
             timestamp: '2025-01-01T00:02:00Z',
             content: 'Welcome back!',
-            type: 'gemini',
+            type: 'codefly',
           },
         ] as MessageRecord[],
       };
@@ -417,7 +417,7 @@ describe('useSessionResume', () => {
       );
       expect(mockHistoryManager.addItem).toHaveBeenNthCalledWith(
         2,
-        { type: 'gemini', text: 'Welcome back!' },
+        { type: 'codefly', text: 'Welcome back!' },
         1,
         true,
       );

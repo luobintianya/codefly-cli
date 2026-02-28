@@ -9,14 +9,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook } from '../../test-utils/render.js';
 import { waitFor } from '../../test-utils/async.js';
 import { ToolActionsProvider, useToolActions } from './ToolActionsContext.js';
-import {
-  type Config,
-  ToolConfirmationOutcome,
-  MessageBusType,
-  IdeClient,
-  type ToolCallConfirmationDetails,
-} from '@codeflyai/codefly-core';
-import { ToolCallStatus, type IndividualToolCallDisplay } from '../types.js';
+import { CoreToolCallStatus, IdeClient, MessageBusType, ToolConfirmationOutcome, type SerializableConfirmationDetails, type Config } from '@codeflyai/codefly-core';
+import { type IndividualToolCallDisplay } from '../types.js';
 
 // Mock IdeClient
 vi.mock('@codeflyai/codefly-core', async (importOriginal) => {

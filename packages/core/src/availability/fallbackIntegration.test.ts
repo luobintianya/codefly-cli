@@ -61,7 +61,7 @@ describe('Fallback Integration', () => {
     );
   });
 
-  it('should fallback for Gemini 3 models even if config is NOT in AUTO mode', () => {
+  it('should fallback for Codefly 3 models even if config is NOT in AUTO mode', () => {
     // 1. Config is explicitly set to Pro, not Auto
     vi.spyOn(config, 'getModel').mockReturnValue(PREVIEW_CODEFLY_MODEL);
 

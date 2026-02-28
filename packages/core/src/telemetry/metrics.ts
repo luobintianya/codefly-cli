@@ -20,57 +20,57 @@ import { AuthType } from '../core/contentGenerator.js';
 import { getCommonAttributes } from './telemetryAttributes.js';
 import { sanitizeHookName } from './sanitize.js';
 
-const EVENT_CHAT_COMPRESSION = 'gemini_cli.chat_compression';
-const TOOL_CALL_COUNT = 'gemini_cli.tool.call.count';
-const TOOL_CALL_LATENCY = 'gemini_cli.tool.call.latency';
-const API_REQUEST_COUNT = 'gemini_cli.api.request.count';
-const API_REQUEST_LATENCY = 'gemini_cli.api.request.latency';
-const TOKEN_USAGE = 'gemini_cli.token.usage';
-const SESSION_COUNT = 'gemini_cli.session.count';
-const FILE_OPERATION_COUNT = 'gemini_cli.file.operation.count';
-const LINES_CHANGED = 'gemini_cli.lines.changed';
-const INVALID_CHUNK_COUNT = 'gemini_cli.chat.invalid_chunk.count';
-const CONTENT_RETRY_COUNT = 'gemini_cli.chat.content_retry.count';
+const EVENT_CHAT_COMPRESSION = 'codefly_cli.chat_compression';
+const TOOL_CALL_COUNT = 'codefly_cli.tool.call.count';
+const TOOL_CALL_LATENCY = 'codefly_cli.tool.call.latency';
+const API_REQUEST_COUNT = 'codefly_cli.api.request.count';
+const API_REQUEST_LATENCY = 'codefly_cli.api.request.latency';
+const TOKEN_USAGE = 'codefly_cli.token.usage';
+const SESSION_COUNT = 'codefly_cli.session.count';
+const FILE_OPERATION_COUNT = 'codefly_cli.file.operation.count';
+const LINES_CHANGED = 'codefly_cli.lines.changed';
+const INVALID_CHUNK_COUNT = 'codefly_cli.chat.invalid_chunk.count';
+const CONTENT_RETRY_COUNT = 'codefly_cli.chat.content_retry.count';
 const CONTENT_RETRY_FAILURE_COUNT =
-  'gemini_cli.chat.content_retry_failure.count';
-const MODEL_ROUTING_LATENCY = 'gemini_cli.model_routing.latency';
-const MODEL_ROUTING_FAILURE_COUNT = 'gemini_cli.model_routing.failure.count';
+  'codefly_cli.chat.content_retry_failure.count';
+const MODEL_ROUTING_LATENCY = 'codefly_cli.model_routing.latency';
+const MODEL_ROUTING_FAILURE_COUNT = 'codefly_cli.model_routing.failure.count';
 const MODEL_SLASH_COMMAND_CALL_COUNT =
-  'gemini_cli.slash_command.model.call_count';
-const EVENT_HOOK_CALL_COUNT = 'gemini_cli.hook_call.count';
-const EVENT_HOOK_CALL_LATENCY = 'gemini_cli.hook_call.latency';
-const KEYCHAIN_AVAILABILITY_COUNT = 'gemini_cli.keychain.availability.count';
-const TOKEN_STORAGE_TYPE_COUNT = 'gemini_cli.token_storage.type.count';
+  'codefly_cli.slash_command.model.call_count';
+const EVENT_HOOK_CALL_COUNT = 'codefly_cli.hook_call.count';
+const EVENT_HOOK_CALL_LATENCY = 'codefly_cli.hook_call.latency';
+const KEYCHAIN_AVAILABILITY_COUNT = 'codefly_cli.keychain.availability.count';
+const TOKEN_STORAGE_TYPE_COUNT = 'codefly_cli.token_storage.type.count';
 
 // Agent Metrics
-const AGENT_RUN_COUNT = 'gemini_cli.agent.run.count';
-const AGENT_DURATION_MS = 'gemini_cli.agent.duration';
-const AGENT_TURNS = 'gemini_cli.agent.turns';
-const AGENT_RECOVERY_ATTEMPT_COUNT = 'gemini_cli.agent.recovery_attempt.count';
+const AGENT_RUN_COUNT = 'codefly_cli.agent.run.count';
+const AGENT_DURATION_MS = 'codefly_cli.agent.duration';
+const AGENT_TURNS = 'codefly_cli.agent.turns';
+const AGENT_RECOVERY_ATTEMPT_COUNT = 'codefly_cli.agent.recovery_attempt.count';
 const AGENT_RECOVERY_ATTEMPT_DURATION =
-  'gemini_cli.agent.recovery_attempt.duration';
+  'codefly_cli.agent.recovery_attempt.duration';
 
 // OpenTelemetry GenAI Semantic Convention Metrics
 const GEN_AI_CLIENT_TOKEN_USAGE = 'gen_ai.client.token.usage';
 const GEN_AI_CLIENT_OPERATION_DURATION = 'gen_ai.client.operation.duration';
 
 // Performance Monitoring Metrics
-const STARTUP_TIME = 'gemini_cli.startup.duration';
-const MEMORY_USAGE = 'gemini_cli.memory.usage';
-const CPU_USAGE = 'gemini_cli.cpu.usage';
-const TOOL_QUEUE_DEPTH = 'gemini_cli.tool.queue.depth';
-const TOOL_EXECUTION_BREAKDOWN = 'gemini_cli.tool.execution.breakdown';
-const TOKEN_EFFICIENCY = 'gemini_cli.token.efficiency';
-const API_REQUEST_BREAKDOWN = 'gemini_cli.api.request.breakdown';
-const PERFORMANCE_SCORE = 'gemini_cli.performance.score';
-const REGRESSION_DETECTION = 'gemini_cli.performance.regression';
+const STARTUP_TIME = 'codefly_cli.startup.duration';
+const MEMORY_USAGE = 'codefly_cli.memory.usage';
+const CPU_USAGE = 'codefly_cli.cpu.usage';
+const TOOL_QUEUE_DEPTH = 'codefly_cli.tool.queue.depth';
+const TOOL_EXECUTION_BREAKDOWN = 'codefly_cli.tool.execution.breakdown';
+const TOKEN_EFFICIENCY = 'codefly_cli.token.efficiency';
+const API_REQUEST_BREAKDOWN = 'codefly_cli.api.request.breakdown';
+const PERFORMANCE_SCORE = 'codefly_cli.performance.score';
+const REGRESSION_DETECTION = 'codefly_cli.performance.regression';
 const REGRESSION_PERCENTAGE_CHANGE =
-  'gemini_cli.performance.regression.percentage_change';
-const BASELINE_COMPARISON = 'gemini_cli.performance.baseline.comparison';
-const FLICKER_FRAME_COUNT = 'gemini_cli.ui.flicker.count';
-const SLOW_RENDER_LATENCY = 'gemini_cli.ui.slow_render.latency';
-const EXIT_FAIL_COUNT = 'gemini_cli.exit.fail.count';
-const PLAN_EXECUTION_COUNT = 'gemini_cli.plan.execution.count';
+  'codefly_cli.performance.regression.percentage_change';
+const BASELINE_COMPARISON = 'codefly_cli.performance.baseline.comparison';
+const FLICKER_FRAME_COUNT = 'codefly_cli.ui.flicker.count';
+const SLOW_RENDER_LATENCY = 'codefly_cli.ui.slow_render.latency';
+const EXIT_FAIL_COUNT = 'codefly_cli.exit.fail.count';
+const PLAN_EXECUTION_COUNT = 'codefly_cli.plan.execution.count';
 
 const baseMetricDefinition = {
   getCommonAttributes,
@@ -1006,7 +1006,7 @@ function getGenAiProvider(authType?: string): GenAiProviderName {
   switch (authType) {
     case AuthType.USE_VERTEX_AI:
       return GenAiProviderName.GCP_VERTEX_AI;
-    case AuthType.USE_GEMINI:
+    case AuthType.USE_CODEFLY:
     default:
       return GenAiProviderName.GCP_GEN_AI;
   }

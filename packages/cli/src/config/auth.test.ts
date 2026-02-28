@@ -17,7 +17,7 @@ vi.mock('./settings.js', () => ({
 
 describe('validateAuthMethod', () => {
   beforeEach(() => {
-    vi.stubEnv('GEMINI_API_KEY', undefined);
+    vi.stubEnv('CODEFLY_API_KEY', undefined);
     vi.stubEnv('GOOGLE_CLOUD_PROJECT', undefined);
     vi.stubEnv('GOOGLE_CLOUD_LOCATION', undefined);
     vi.stubEnv('GOOGLE_API_KEY', undefined);
@@ -29,18 +29,18 @@ describe('validateAuthMethod', () => {
 
   it.each([
     {
-      description: 'should return null for USE_GEMINI if GEMINI_API_KEY is set',
-      authType: AuthType.USE_GEMINI,
-      envs: { GEMINI_API_KEY: 'test-key' },
+      description: 'should return null for USE_CODEFLY if CODEFLY_API_KEY is set',
+      authType: AuthType.USE_CODEFLY,
+      envs: { CODEFLY_API_KEY: 'test-key' },
       expected: null,
     },
     {
       description:
-        'should return an error message for USE_GEMINI if GEMINI_API_KEY is not set',
-      authType: AuthType.USE_GEMINI,
+        'should return an error message for USE_CODEFLY if CODEFLY_API_KEY is not set',
+      authType: AuthType.USE_CODEFLY,
       envs: {},
       expected:
-        'When using Gemini API, you must specify the GEMINI_API_KEY environment variable.\n' +
+        'When using Codefly API, you must specify the CODEFLY_API_KEY environment variable.\n' +
         'Update your environment and try again (no reload needed if using .env)!',
     },
     {

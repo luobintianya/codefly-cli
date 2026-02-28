@@ -31,7 +31,7 @@ import { exec } from 'node:child_process';
 import { promisify } from 'node:util';
 import { terminalCapabilityManager } from './terminalCapabilityManager.js';
 
-import { debugLogger, homedir } from '@google/gemini-cli-core';
+import { debugLogger, homedir } from '@codeflyai/codefly-core';
 import { useEffect } from 'react';
 import { persistentState } from '../../utils/persistentState.js';
 import { requestConsentInteractive } from '../../config/extensions/consent.js';
@@ -471,7 +471,7 @@ export async function terminalSetup(): Promise<TerminalSetupResult> {
 }
 
 export const TERMINAL_SETUP_CONSENT_MESSAGE =
-  'Gemini CLI works best with Shift+Enter/Ctrl+Enter for multiline input. ' +
+  'Codefly CLI works best with Shift+Enter/Ctrl+Enter for multiline input. ' +
   'Would you like to automatically configure your terminal keybindings?';
 
 export function formatTerminalSetupResultMessage(

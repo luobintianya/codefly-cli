@@ -19,11 +19,11 @@ describe('experiments', () => {
   beforeEach(() => {
     // Reset modules to clear the cached `experimentsPromise`
     vi.resetModules();
-    delete process.env['GEMINI_EXP'];
+    delete process.env['CODEFLY_EXP'];
 
     // Mock the dependencies that `getExperiments` relies on
     vi.mocked(getClientMetadata).mockResolvedValue({
-      ideName: 'GEMINI_CLI',
+      ideName: 'CODEFLY_CLI',
       ideVersion: '1.0.0',
       platform: 'LINUX_AMD64',
       updateChannel: 'stable',

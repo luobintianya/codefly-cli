@@ -8,7 +8,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import * as os from 'node:os';
-import { GitService, Storage } from '@google/gemini-cli-core';
+import { GitService, Storage } from '@codeflyai/codefly-core';
 
 describe('Checkpointing Integration', () => {
   let tmpDir: string;
@@ -18,7 +18,7 @@ describe('Checkpointing Integration', () => {
 
   beforeEach(async () => {
     tmpDir = await fs.mkdtemp(
-      path.join(os.tmpdir(), 'gemini-checkpoint-test-'),
+      path.join(os.tmpdir(), 'codefly-checkpoint-test-'),
     );
     projectRoot = path.join(tmpDir, 'project');
     fakeHome = path.join(tmpDir, 'home');
@@ -149,7 +149,7 @@ describe('Checkpointing Integration', () => {
       },
     );
 
-    expect(logOutput).toBe('Gemini CLI <gemini-cli@google.com>');
+    expect(logOutput).toBe('Codefly CLI <codefly-cli@google.com>');
     expect(logOutput).not.toContain('Global User');
   });
 });

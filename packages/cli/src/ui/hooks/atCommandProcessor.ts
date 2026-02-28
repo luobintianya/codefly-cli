@@ -7,21 +7,18 @@
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import type { PartListUnion, PartUnion } from '@google/genai';
-import type {
-  AnyToolInvocation,
-  Config,
-  DiscoveredMCPResource,
-} from '@codeflyai/codefly-core';
+import type { AnyToolInvocation, Config } from '@codeflyai/codefly-core';
 import {
+  CoreToolCallStatus,
+  REFERENCE_CONTENT_END,
+  REFERENCE_CONTENT_START,
+  ReadManyFilesTool,
   debugLogger,
+  fileExists,
   getErrorMessage,
   isNodeError,
-  unescapePath,
   resolveToRealPath,
-  fileExists,
-  ReadManyFilesTool,
-  REFERENCE_CONTENT_START,
-  REFERENCE_CONTENT_END,
+  unescapePath,
 } from '@codeflyai/codefly-core';
 import { Buffer } from 'node:buffer';
 import type {
@@ -182,7 +179,7 @@ interface ResolvedFile {
 
 interface IgnoredFile {
   path: string;
-  reason: 'git' | 'gemini' | 'both';
+  reason: 'git' | 'codefly' | 'both';
 }
 
 /**
@@ -216,23 +213,23 @@ async function resolveFilePaths(
         respectGitIgnore: true,
         respectCodeflyIgnore: false,
       });
-    const geminiIgnored =
+    const codeflyIgnored =
       respectFileIgnore.respectCodeflyIgnore &&
       fileDiscovery.shouldIgnoreFile(pathName, {
         respectGitIgnore: false,
         respectCodeflyIgnore: true,
       });
 
-    if (gitIgnored || geminiIgnored) {
+    if (gitIgnored || codeflyIgnored) {
       const reason =
-        gitIgnored && geminiIgnored ? 'both' : gitIgnored ? 'git' : 'gemini';
+        gitIgnored && codeflyIgnored ? 'both' : gitIgnored ? 'git' : 'codefly';
       ignoredFiles.push({ path: pathName, reason });
       const reasonText =
         reason === 'both'
-          ? 'ignored by both git and gemini'
+          ? 'ignored by both git and codefly'
           : reason === 'git'
             ? 'git-ignored'
-            : 'gemini-ignored';
+            : 'codefly-ignored';
       onDebugMessage(`Path ${pathName} is ${reasonText} and will be skipped.`);
       continue;
     }
@@ -496,7 +493,7 @@ async function readLocalFiles(
     include: pathSpecsToRead,
     file_filtering_options: {
       respect_git_ignore: respectFileIgnore.respectGitIgnore,
-      respect_gemini_ignore: respectFileIgnore.respectCodeflyIgnore,
+      respect_codefly_ignore: respectFileIgnore.respectCodeflyIgnore,
     },
   };
 
@@ -593,7 +590,7 @@ function reportIgnoredFiles(
 
   const ignoredByReason: Record<string, string[]> = {
     git: [],
-    gemini: [],
+    codefly: [],
     both: [],
   };
 
@@ -605,8 +602,8 @@ function reportIgnoredFiles(
   if (ignoredByReason['git'].length) {
     messages.push(`Git-ignored: ${ignoredByReason['git'].join(', ')}`);
   }
-  if (ignoredByReason['gemini'].length) {
-    messages.push(`Gemini-ignored: ${ignoredByReason['gemini'].join(', ')}`);
+  if (ignoredByReason['codefly'].length) {
+    messages.push(`Codefly-ignored: ${ignoredByReason['codefly'].join(', ')}`);
   }
   if (ignoredByReason['both'].length) {
     messages.push(`Ignored by both: ${ignoredByReason['both'].join(', ')}`);

@@ -54,7 +54,7 @@ describe('FolderTrustDialog', () => {
 
     expect(lastFrame()).toContain('Do you trust the files in this folder?');
     expect(lastFrame()).toContain(
-      'Trusting a folder allows Gemini CLI to load its local configurations',
+      'Trusting a folder allows Codefly CLI to load its local configurations',
     );
     unmount();
   });
@@ -235,7 +235,7 @@ describe('FolderTrustDialog', () => {
   });
 
   it('should display restart message when isRestarting is true', async () => {
-    const { lastFrame, waitUntilReady, unmount } = renderWithProviders(
+    const { lastFrame, waitUntilReady } = renderWithProviders(
       <FolderTrustDialog onSelect={vi.fn()} isRestarting={true} />,
     );
     await waitUntilReady();

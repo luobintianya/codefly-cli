@@ -5,14 +5,14 @@
  */
 
 import { vi } from 'vitest';
-import type { Config } from '@google/gemini-cli-core';
+import type { Config } from '@codeflyai/codefly-core';
 import type { LoadedSettings, Settings } from '../config/settings.js';
 import { createTestMergedSettings } from '../config/settings.js';
 
 /**
  * Creates a mocked Config object with default values and allows overrides.
  */
-export const createMockConfig = (overrides: Partial<Config> = {}): Config =>
+export const createMockConfig = (overrides: Record<string, any> = {}): Config =>
   // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
   ({
     getSandbox: vi.fn(() => undefined),
@@ -21,7 +21,7 @@ export const createMockConfig = (overrides: Partial<Config> = {}): Config =>
     isInitialized: vi.fn(() => true),
     setTerminalBackground: vi.fn(),
     storage: {
-      getProjectTempDir: vi.fn().mockReturnValue('/tmp/gemini-test'),
+      getProjectTempDir: vi.fn().mockReturnValue('/tmp/codefly-test'),
       initialize: vi.fn().mockResolvedValue(undefined),
     },
     getDebugMode: vi.fn(() => false),
@@ -56,11 +56,11 @@ export const createMockConfig = (overrides: Partial<Config> = {}): Config =>
     getOutputFormat: vi.fn(() => 'text'),
     getUsageStatisticsEnabled: vi.fn(() => true),
     getScreenReader: vi.fn(() => false),
-    getGeminiMdFileCount: vi.fn(() => 0),
+    getCodeflyMdFileCount: vi.fn(() => 0),
     getDeferredCommand: vi.fn(() => undefined),
     getFileSystemService: vi.fn(() => ({})),
     clientVersion: '1.0.0',
-    getModel: vi.fn().mockReturnValue('gemini-pro'),
+    getModel: vi.fn().mockReturnValue('codefly-pro'),
     getWorkingDir: vi.fn().mockReturnValue('/mock/cwd'),
     getToolRegistry: vi.fn().mockReturnValue({
       getTools: vi.fn().mockReturnValue([]),
@@ -75,7 +75,7 @@ export const createMockConfig = (overrides: Partial<Config> = {}): Config =>
     getFileService: vi.fn().mockReturnValue({}),
     getGitService: vi.fn().mockResolvedValue({}),
     getUserMemory: vi.fn().mockReturnValue(''),
-    getGeminiMdFilePaths: vi.fn().mockReturnValue([]),
+    getCodeflyMdFilePaths: vi.fn().mockReturnValue([]),
     getShowMemoryUsage: vi.fn().mockReturnValue(false),
     getAccessibility: vi.fn().mockReturnValue({}),
     getTelemetryEnabled: vi.fn().mockReturnValue(false),
@@ -86,7 +86,7 @@ export const createMockConfig = (overrides: Partial<Config> = {}): Config =>
     getTelemetryOutfile: vi.fn().mockReturnValue(undefined),
     getTelemetryUseCollector: vi.fn().mockReturnValue(false),
     getTelemetryUseCliAuth: vi.fn().mockReturnValue(false),
-    getGeminiClient: vi.fn().mockReturnValue({
+    getCodeflyClient: vi.fn().mockReturnValue({
       isInitialized: vi.fn().mockReturnValue(true),
     }),
     updateSystemInstructionIfInitialized: vi.fn().mockResolvedValue(undefined),
@@ -94,7 +94,7 @@ export const createMockConfig = (overrides: Partial<Config> = {}): Config =>
     getModelAvailabilityService: vi.fn().mockReturnValue({}),
     getEnableRecursiveFileSearch: vi.fn().mockReturnValue(true),
     getFileFilteringEnableFuzzySearch: vi.fn().mockReturnValue(true),
-    getFileFilteringRespectGeminiIgnore: vi.fn().mockReturnValue(true),
+    getFileFilteringRespectCodeflyIgnore: vi.fn().mockReturnValue(true),
     getFileFilteringOptions: vi.fn().mockReturnValue({}),
     getCustomExcludes: vi.fn().mockReturnValue([]),
     getCheckpointingEnabled: vi.fn().mockReturnValue(false),

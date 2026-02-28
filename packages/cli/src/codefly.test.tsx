@@ -23,7 +23,15 @@ import {
 } from './codefly.js';
 import os from 'node:os';
 import v8 from 'node:v8';
-import { type CliArgs } from './config/config.js';
+import { type CliArgs, parseArguments, loadCliConfig } from './config/config.js';
+import { loadSandboxConfig } from './config/sandboxConfig.js';
+import { start_sandbox } from './utils/sandbox.js';
+import { buildRunEventNotificationContent, notifyViaTerminal } from './utils/terminalNotifications.js';
+
+vi.mock('./utils/terminalNotifications.js', () => ({
+  notifyViaTerminal: vi.fn(),
+  buildRunEventNotificationContent: vi.fn(),
+}));
 import { type LoadedSettings, loadSettings } from './config/settings.js';
 import {
   createMockConfig,
@@ -228,14 +236,14 @@ vi.mock('./validateNonInterActiveAuth.js', () => ({
   validateNonInteractiveAuth: vi.fn().mockResolvedValue('google'),
 }));
 
-describe('gemini.tsx main function', () => {
+describe('codefly.tsx main function', () => {
   let originalIsTTY: boolean | undefined;
   let initialUnhandledRejectionListeners: NodeJS.UnhandledRejectionListener[] =
     [];
 
   beforeEach(() => {
     // Store and clear sandbox-related env variables to ensure a consistent test environment
-    vi.stubEnv('GEMINI_SANDBOX', '');
+    vi.stubEnv('CODEFLY_SANDBOX', '');
     vi.stubEnv('SANDBOX', '');
     vi.stubEnv('SHPOOL_SESSION_NAME', '');
 
@@ -341,15 +349,15 @@ describe('getNodeMemoryArgs', () => {
   beforeEach(() => {
     osTotalMemSpy = vi.spyOn(os, 'totalmem');
     v8GetHeapStatisticsSpy = vi.spyOn(v8, 'getHeapStatistics');
-    delete process.env['GEMINI_CLI_NO_RELAUNCH'];
+    delete process.env['CODEFLY_CLI_NO_RELAUNCH'];
   });
 
   afterEach(() => {
     vi.restoreAllMocks();
   });
 
-  it('should return empty array if GEMINI_CLI_NO_RELAUNCH is set', () => {
-    process.env['GEMINI_CLI_NO_RELAUNCH'] = 'true';
+  it('should return empty array if CODEFLY_CLI_NO_RELAUNCH is set', () => {
+    process.env['CODEFLY_CLI_NO_RELAUNCH'] = 'true';
     expect(getNodeMemoryArgs(false)).toEqual([]);
   });
 
@@ -387,7 +395,7 @@ describe('getNodeMemoryArgs', () => {
   });
 });
 
-describe('gemini.tsx main function kitty protocol', () => {
+describe('codefly.tsx main function kitty protocol', () => {
   let originalEnvNoRelaunch: string | undefined;
   let originalIsTTY: boolean | undefined;
   let originalIsRaw: boolean | undefined;
@@ -397,8 +405,8 @@ describe('gemini.tsx main function kitty protocol', () => {
 
   beforeEach(() => {
     // Set no relaunch in tests since process spawning causing issues in tests
-    originalEnvNoRelaunch = process.env['GEMINI_CLI_NO_RELAUNCH'];
-    process.env['GEMINI_CLI_NO_RELAUNCH'] = 'true';
+    originalEnvNoRelaunch = process.env['CODEFLY_CLI_NO_RELAUNCH'];
+    process.env['CODEFLY_CLI_NO_RELAUNCH'] = 'true';
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (!(process.stdin as any).setRawMode) {
@@ -418,9 +426,9 @@ describe('gemini.tsx main function kitty protocol', () => {
   afterEach(() => {
     // Restore original env variables
     if (originalEnvNoRelaunch !== undefined) {
-      process.env['GEMINI_CLI_NO_RELAUNCH'] = originalEnvNoRelaunch;
+      process.env['CODEFLY_CLI_NO_RELAUNCH'] = originalEnvNoRelaunch;
     } else {
-      delete process.env['GEMINI_CLI_NO_RELAUNCH'];
+      delete process.env['CODEFLY_CLI_NO_RELAUNCH'];
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (process.stdin as any).isTTY = originalIsTTY;
@@ -456,7 +464,7 @@ describe('gemini.tsx main function kitty protocol', () => {
       getMessageBus: () => ({
         subscribe: vi.fn(),
       }),
-    );
+    } as unknown as Config);
     vi.mocked(loadSettings).mockReturnValue(
       createMockSettings({
         merged: {
@@ -558,7 +566,7 @@ describe('gemini.tsx main function kitty protocol', () => {
       getRemoteAdminSettings: () => undefined,
       setTerminalBackground: vi.fn(),
       refreshAuth: vi.fn(),
-    } as unknown as Config;
+    }) as unknown as Config;
 
     vi.mocked(loadCliConfig).mockResolvedValue(mockConfig);
     vi.mock('./utils/sessions.js', () => ({
@@ -570,13 +578,13 @@ describe('gemini.tsx main function kitty protocol', () => {
       .spyOn(debugLogger, 'log')
       .mockImplementation(() => {});
 
-    process.env['GEMINI_API_KEY'] = 'test-key';
+    process.env['CODEFLY_API_KEY'] = 'test-key';
     try {
       await main();
     } catch (e) {
       if (!(e instanceof MockProcessExitError)) throw e;
     } finally {
-      delete process.env['GEMINI_API_KEY'];
+      delete process.env['CODEFLY_API_KEY'];
     }
 
     if (flag === 'listExtensions') {
@@ -643,7 +651,7 @@ describe('gemini.tsx main function kitty protocol', () => {
       getRemoteAdminSettings: () => undefined,
       setTerminalBackground: vi.fn(),
       getToolRegistry: () => ({ getAllTools: () => [] }),
-      getModel: () => 'gemini-pro',
+      getModel: () => 'codefly-pro',
       getEmbeddingModel: () => 'embedding-model',
       getCoreTools: () => [],
       getApprovalMode: () => 'default',
@@ -678,7 +686,7 @@ describe('gemini.tsx main function kitty protocol', () => {
       isYoloModeDisabled: () => true,
       isPlanEnabled: () => false,
       isEventDrivenSchedulerEnabled: () => false,
-    } as unknown as Config;
+    }) as unknown as Config;
 
     vi.mocked(loadCliConfig).mockResolvedValue(mockConfig);
     vi.mocked(loadSandboxConfig).mockResolvedValue({
@@ -686,13 +694,13 @@ describe('gemini.tsx main function kitty protocol', () => {
       image: 'test-image',
     });
 
-    process.env['GEMINI_API_KEY'] = 'test-key';
+    process.env['CODEFLY_API_KEY'] = 'test-key';
     try {
       await main();
     } catch (e) {
       if (!(e instanceof MockProcessExitError)) throw e;
     } finally {
-      delete process.env['GEMINI_API_KEY'];
+      delete process.env['CODEFLY_API_KEY'];
     }
 
     expect(start_sandbox).toHaveBeenCalled();
@@ -750,7 +758,7 @@ describe('gemini.tsx main function kitty protocol', () => {
       getDeleteSession: () => undefined,
       getToolRegistry: vi.fn(),
       getExtensions: () => [],
-      getModel: () => 'gemini-pro',
+      getModel: () => 'codefly-pro',
       getEmbeddingModel: () => 'embedding-001',
       getApprovalMode: () => 'default',
       getCoreTools: () => [],
@@ -766,13 +774,13 @@ describe('gemini.tsx main function kitty protocol', () => {
 
     vi.spyOn(themeManager, 'setActiveTheme').mockReturnValue(false);
 
-    process.env['GEMINI_API_KEY'] = 'test-key';
+    process.env['CODEFLY_API_KEY'] = 'test-key';
     try {
       await main();
     } catch (e) {
       if (!(e instanceof MockProcessExitError)) throw e;
     } finally {
-      delete process.env['GEMINI_API_KEY'];
+      delete process.env['CODEFLY_API_KEY'];
     }
 
     expect(debugLoggerWarnSpy).toHaveBeenCalledWith(
@@ -835,7 +843,7 @@ describe('gemini.tsx main function kitty protocol', () => {
       getDeleteSession: () => undefined,
       getToolRegistry: vi.fn(),
       getExtensions: () => [],
-      getModel: () => 'gemini-pro',
+      getModel: () => 'codefly-pro',
       getEmbeddingModel: () => 'embedding-001',
       getApprovalMode: () => 'default',
       getCoreTools: () => [],
@@ -847,7 +855,7 @@ describe('gemini.tsx main function kitty protocol', () => {
       getRemoteAdminSettings: () => undefined,
       setTerminalBackground: vi.fn(),
       storage: {
-        getProjectTempDir: vi.fn().mockReturnValue('/tmp/gemini-test'),
+        getProjectTempDir: vi.fn().mockReturnValue('/tmp/codefly-test'),
       },
     } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
 
@@ -917,7 +925,7 @@ describe('gemini.tsx main function kitty protocol', () => {
       getDeleteSession: () => undefined,
       getToolRegistry: vi.fn(),
       getExtensions: () => [],
-      getModel: () => 'gemini-pro',
+      getModel: () => 'codefly-pro',
       getEmbeddingModel: () => 'embedding-001',
       getApprovalMode: () => 'default',
       getCoreTools: () => [],
@@ -929,7 +937,7 @@ describe('gemini.tsx main function kitty protocol', () => {
       getRemoteAdminSettings: () => undefined,
       setTerminalBackground: vi.fn(),
       storage: {
-        getProjectTempDir: vi.fn().mockReturnValue('/tmp/gemini-test'),
+        getProjectTempDir: vi.fn().mockReturnValue('/tmp/codefly-test'),
       },
     } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
 
@@ -998,7 +1006,7 @@ describe('gemini.tsx main function kitty protocol', () => {
       getDeleteSession: () => undefined,
       getToolRegistry: vi.fn(),
       getExtensions: () => [],
-      getModel: () => 'gemini-pro',
+      getModel: () => 'codefly-pro',
       getEmbeddingModel: () => 'embedding-001',
       getApprovalMode: () => 'default',
       getCoreTools: () => [],
@@ -1020,13 +1028,13 @@ describe('gemini.tsx main function kitty protocol', () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (process.stdin as any).isTTY = false;
 
-    process.env['GEMINI_API_KEY'] = 'test-key';
+    process.env['CODEFLY_API_KEY'] = 'test-key';
     try {
       await main();
     } catch (e) {
       if (!(e instanceof MockProcessExitError)) throw e;
     } finally {
-      delete process.env['GEMINI_API_KEY'];
+      delete process.env['CODEFLY_API_KEY'];
     }
 
     expect(readStdinSpy).toHaveBeenCalled();
@@ -1037,21 +1045,21 @@ describe('gemini.tsx main function kitty protocol', () => {
     const callArgs = vi.mocked(runNonInteractive).mock.calls[0][0];
     expect(callArgs.input).toBe('stdin-data\n\ntest-question');
     expect(
-      terminalNotificationMocks.buildRunEventNotificationContent,
+      buildRunEventNotificationContent,
     ).not.toHaveBeenCalled();
-    expect(terminalNotificationMocks.notifyViaTerminal).not.toHaveBeenCalled();
+    expect(notifyViaTerminal).not.toHaveBeenCalled();
     expect(processExitSpy).toHaveBeenCalledWith(0);
     processExitSpy.mockRestore();
   });
 });
 
-describe('gemini.tsx main function exit codes', () => {
+describe('codefly.tsx main function exit codes', () => {
   let originalEnvNoRelaunch: string | undefined;
   let originalIsTTY: boolean | undefined;
 
   beforeEach(() => {
-    originalEnvNoRelaunch = process.env['GEMINI_CLI_NO_RELAUNCH'];
-    process.env['GEMINI_CLI_NO_RELAUNCH'] = 'true';
+    originalEnvNoRelaunch = process.env['CODEFLY_CLI_NO_RELAUNCH'];
+    process.env['CODEFLY_CLI_NO_RELAUNCH'] = 'true';
     vi.spyOn(process, 'exit').mockImplementation((code) => {
       throw new MockProcessExitError(code);
     });
@@ -1063,9 +1071,9 @@ describe('gemini.tsx main function exit codes', () => {
 
   afterEach(() => {
     if (originalEnvNoRelaunch !== undefined) {
-      process.env['GEMINI_CLI_NO_RELAUNCH'] = originalEnvNoRelaunch;
+      process.env['CODEFLY_CLI_NO_RELAUNCH'] = originalEnvNoRelaunch;
     } else {
-      delete process.env['GEMINI_CLI_NO_RELAUNCH'];
+      delete process.env['CODEFLY_CLI_NO_RELAUNCH'];
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (process.stdin as any).isTTY = originalIsTTY;
@@ -1156,7 +1164,7 @@ describe('gemini.tsx main function exit codes', () => {
       getHookSystem: () => undefined,
       getToolRegistry: vi.fn(),
       getContentGeneratorConfig: vi.fn(),
-      getModel: () => 'gemini-pro',
+      getModel: () => 'codefly-pro',
       getEmbeddingModel: () => 'embedding-001',
       getApprovalMode: () => 'default',
       getCoreTools: () => [],
@@ -1169,7 +1177,7 @@ describe('gemini.tsx main function exit codes', () => {
       getRemoteAdminSettings: () => undefined,
       setTerminalBackground: vi.fn(),
       storage: {
-        getProjectTempDir: vi.fn().mockReturnValue('/tmp/gemini-test'),
+        getProjectTempDir: vi.fn().mockReturnValue('/tmp/codefly-test'),
       },
       refreshAuth: vi.fn(),
     } as unknown as Config);
@@ -1190,7 +1198,7 @@ describe('gemini.tsx main function exit codes', () => {
       })),
     }));
 
-    process.env['GEMINI_API_KEY'] = 'test-key';
+    process.env['CODEFLY_API_KEY'] = 'test-key';
     try {
       await main();
       expect.fail('Should have thrown MockProcessExitError');
@@ -1198,7 +1206,7 @@ describe('gemini.tsx main function exit codes', () => {
       expect(e).toBeInstanceOf(MockProcessExitError);
       expect((e as MockProcessExitError).code).toBe(42);
     } finally {
-      delete process.env['GEMINI_API_KEY'];
+      delete process.env['CODEFLY_API_KEY'];
     }
   });
 
@@ -1233,7 +1241,7 @@ describe('gemini.tsx main function exit codes', () => {
       getHookSystem: () => undefined,
       getToolRegistry: vi.fn(),
       getContentGeneratorConfig: vi.fn(),
-      getModel: () => 'gemini-pro',
+      getModel: () => 'codefly-pro',
       getEmbeddingModel: () => 'embedding-001',
       getApprovalMode: () => 'default',
       getCoreTools: () => [],
@@ -1245,7 +1253,7 @@ describe('gemini.tsx main function exit codes', () => {
       getUsageStatisticsEnabled: () => false,
       setTerminalBackground: vi.fn(),
       storage: {
-        getProjectTempDir: vi.fn().mockReturnValue('/tmp/gemini-test'),
+        getProjectTempDir: vi.fn().mockReturnValue('/tmp/codefly-test'),
       },
       refreshAuth: vi.fn(),
       getRemoteAdminSettings: () => undefined,
@@ -1259,7 +1267,7 @@ describe('gemini.tsx main function exit codes', () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (process.stdin as any).isTTY = true;
 
-    process.env['GEMINI_API_KEY'] = 'test-key';
+    process.env['CODEFLY_API_KEY'] = 'test-key';
     try {
       await main();
       expect.fail('Should have thrown MockProcessExitError');
@@ -1267,7 +1275,7 @@ describe('gemini.tsx main function exit codes', () => {
       expect(e).toBeInstanceOf(MockProcessExitError);
       expect((e as MockProcessExitError).code).toBe(42);
     } finally {
-      delete process.env['GEMINI_API_KEY'];
+      delete process.env['CODEFLY_API_KEY'];
     }
   });
 
@@ -1301,7 +1309,7 @@ describe('gemini.tsx main function exit codes', () => {
       getHookSystem: () => undefined,
       getToolRegistry: vi.fn(),
       getContentGeneratorConfig: vi.fn(),
-      getModel: () => 'gemini-pro',
+      getModel: () => 'codefly-pro',
       getEmbeddingModel: () => 'embedding-001',
       getApprovalMode: () => 'default',
       getCoreTools: () => [],
@@ -1313,7 +1321,7 @@ describe('gemini.tsx main function exit codes', () => {
       getUsageStatisticsEnabled: () => false,
       setTerminalBackground: vi.fn(),
       storage: {
-        getProjectTempDir: vi.fn().mockReturnValue('/tmp/gemini-test'),
+        getProjectTempDir: vi.fn().mockReturnValue('/tmp/codefly-test'),
       },
       refreshAuth: refreshAuthSpy,
       getRemoteAdminSettings: () => undefined,
@@ -1326,7 +1334,7 @@ describe('gemini.tsx main function exit codes', () => {
     );
     vi.mocked(parseArguments).mockResolvedValue({} as unknown as CliArgs);
 
-    runNonInteractiveSpy.mockImplementation(() => Promise.resolve());
+    vi.mocked(runNonInteractive).mockImplementation(async () => {});
 
     const processExitSpy = vi
       .spyOn(process, 'exit')
@@ -1334,17 +1342,17 @@ describe('gemini.tsx main function exit codes', () => {
         throw new MockProcessExitError(code);
       });
 
-    process.env['GEMINI_API_KEY'] = 'test-key';
+    process.env['CODEFLY_API_KEY'] = 'test-key';
     try {
       await main();
     } catch (e) {
       if (!(e instanceof MockProcessExitError)) throw e;
     } finally {
-      delete process.env['GEMINI_API_KEY'];
+      delete process.env['CODEFLY_API_KEY'];
       processExitSpy.mockRestore();
     }
 
-    expect(refreshAuthSpy).toHaveBeenCalledWith(AuthType.USE_GEMINI);
+    expect(refreshAuthSpy).toHaveBeenCalledWith(AuthType.USE_CODEFLY);
   });
 });
 

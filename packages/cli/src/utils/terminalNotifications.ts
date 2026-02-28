@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { debugLogger, writeToStdout } from '@google/gemini-cli-core';
+import { debugLogger, writeToStdout } from '@codeflyai/codefly-core';
 import type { LoadedSettings } from '../config/settings.js';
 import { sanitizeForDisplay } from '../ui/utils/textUtils.js';
 import { TerminalCapabilityManager } from '../ui/utils/terminalCapabilityManager.js';
@@ -49,9 +49,9 @@ function sanitizeNotificationContent(
   const body = sanitizeForDisplay(content.body, MAX_NOTIFICATION_BODY_CHARS);
 
   return {
-    title: title || 'Gemini CLI',
+    title: title || 'Codefly CLI',
     subtitle: subtitle || undefined,
-    body: body || 'Open Gemini CLI for details.',
+    body: body || 'Open Codefly CLI for details.',
   };
 }
 
@@ -60,14 +60,14 @@ export function buildRunEventNotificationContent(
 ): RunEventNotificationContent {
   if (event.type === 'attention') {
     return sanitizeNotificationContent({
-      title: 'Gemini CLI needs your attention',
+      title: 'Codefly CLI needs your attention',
       subtitle: event.heading ?? 'Action required',
-      body: event.detail ?? 'Open Gemini CLI to continue.',
+      body: event.detail ?? 'Open Codefly CLI to continue.',
     });
   }
 
   return sanitizeNotificationContent({
-    title: 'Gemini CLI session complete',
+    title: 'Codefly CLI session complete',
     subtitle: 'Run finished',
     body: event.detail ?? 'The session finished successfully.',
   });

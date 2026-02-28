@@ -7,7 +7,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Text } from 'ink';
 import { ToolCallStatus, mapCoreStatusToDisplayStatus } from '../../types.js';
-import { GeminiRespondingSpinner } from '../GeminiRespondingSpinner.js';
+import { CodeflyRespondingSpinner } from '../CodeflyRespondingSpinner.js';
 import {
   SHELL_COMMAND_NAME,
   SHELL_NAME,
@@ -15,12 +15,7 @@ import {
   SHELL_FOCUS_HINT_DELAY_MS,
 } from '../../constants.js';
 import { theme } from '../../semantic-colors.js';
-import {
-  type Config,
-  SHELL_TOOL_NAME,
-  isCompletedAskUserTool,
-  type ToolResultDisplay,
-} from '@codeflyai/codefly-core';
+import { CoreToolCallStatus, SHELL_TOOL_NAME, isCompletedAskUserTool, type Config, type ToolResultDisplay } from '@codeflyai/codefly-core';
 import { useInactivityTimer } from '../../hooks/useInactivityTimer.js';
 import { formatCommand } from '../../utils/keybindingUtils.js';
 import { Command } from '../../../config/keyBindings.js';
@@ -152,7 +147,7 @@ export const ToolStatusIndicator: React.FC<ToolStatusIndicatorProps> = ({
         <Text color={theme.status.success}>{TOOL_STATUS.PENDING}</Text>
       )}
       {status === ToolCallStatus.Executing && (
-        <GeminiRespondingSpinner
+        <CodeflyRespondingSpinner
           spinnerType="toggle"
           nonRespondingDisplay={TOOL_STATUS.EXECUTING}
         />

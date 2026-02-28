@@ -9,7 +9,7 @@ import { TestRig } from './test-helper.js';
 import { TestMcpServer } from './test-mcp-server.js';
 import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { safeJsonStringify } from '@google/gemini-cli-core/src/utils/safeJsonStringify.js';
+import { safeJsonStringify } from '@codeflyai/codefly-core/src/utils/safeJsonStringify.js';
 import { env } from 'node:process';
 import { platform } from 'node:os';
 
@@ -26,7 +26,7 @@ describe('extension reloading', () => {
 
   afterEach(async () => await rig.cleanup());
 
-  const sandboxEnv = env['GEMINI_SANDBOX'];
+  const sandboxEnv = env['CODEFLY_SANDBOX'];
   // Fails in linux non-sandbox e2e tests
   // TODO(#14527): Re-enable this once fixed
   // Fails in sandbox mode, can't check for local extension updates.
@@ -56,7 +56,7 @@ describe('extension reloading', () => {
           experimental: { extensionReloading: true },
         },
       });
-      const testServerPath = join(rig.testDir!, 'gemini-extension.json');
+      const testServerPath = join(rig.testDir!, 'codefly-extension.json');
       writeFileSync(testServerPath, safeJsonStringify(extension, 2));
       // defensive cleanup from previous tests.
       try {

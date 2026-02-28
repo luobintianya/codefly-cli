@@ -22,16 +22,15 @@ import {
   type ToolConfirmationPayload,
   type CompletedToolCall,
   type ToolCallRequestInfo,
-  type ServerGeminiErrorEvent,
-  type ServerGeminiStreamEvent,
+  type ServerCodeflyErrorEvent,
+  type ServerCodeflyStreamEvent,
   type ToolCallConfirmationDetails,
   type Config,
   type AnsiOutput,
   EDIT_TOOL_NAMES,
   processRestorableToolCalls,
 } from '@codeflyai/codefly-core';
-import type { RequestContext } from '@a2a-js/sdk/server';
-import { type ExecutionEventBus } from '@a2a-js/sdk/server';
+import type { ExecutionEventBus, RequestContext } from '@a2a-js/sdk/server';
 import type {
   TaskStatusUpdateEvent,
   TaskArtifactUpdateEvent,
@@ -91,7 +90,7 @@ export class Task {
   contextId: string;
   scheduler: CoreToolScheduler;
   config: Config;
-  geminiClient: CodeflyClient;
+  codeflyClient: CodeflyClient;
   pendingToolConfirmationDetails: Map<string, ToolCallConfirmationDetails>;
   taskState: TaskState;
   eventBus?: ExecutionEventBus;
@@ -121,7 +120,7 @@ export class Task {
     this.contextId = contextId;
     this.config = config;
     this.scheduler = this.createScheduler();
-    this.geminiClient = this.config.getCodeflyClient();
+    this.codeflyClient = this.config.getCodeflyClient();
     this.pendingToolConfirmationDetails = new Map();
     this.taskState = 'submitted';
     this.eventBus = eventBus;
@@ -148,7 +147,7 @@ export class Task {
 
   // Note: `getAllMCPServerStatuses` retrieves the status of all MCP servers for the entire
   // process. This is not scoped to the individual task but reflects the global connection
-  // state managed within the @gemini-cli/core module.
+  // state managed within the @codefly-cli/core module.
   async getMetadata(): Promise<TaskMetadata> {
     const toolRegistry = this.config.getToolRegistry();
     const mcpServers = this.config.getMcpClientManager()?.getMcpServers() || {};
@@ -622,7 +621,7 @@ export class Task {
           await processRestorableToolCalls(
             restorableToolCalls,
             gitService,
-            this.geminiClient,
+            this.codeflyClient,
           );
 
         if (errors.length > 0) {
@@ -700,7 +699,7 @@ export class Task {
     await this.scheduler.schedule(updatedRequests, abortSignal);
   }
 
-  async acceptAgentMessage(event: ServerGeminiStreamEvent): Promise<void> {
+  async acceptAgentMessage(event: ServerCodeflyStreamEvent): Promise<void> {
     const stateChange: StateChange = {
       kind: CoderAgentEvent.StateChangeEvent,
     };
@@ -720,7 +719,7 @@ export class Task {
         );
         break;
       case CodeflyEventType.ToolCallResponse:
-        // This event type from ServerGeminiStreamEvent might be for when LLM *generates* a tool response part.
+        // This event type from ServerCodeflyStreamEvent might be for when LLM *generates* a tool response part.
         // The actual execution result comes via user message.
         logger.info(
           '[Task] Received tool call response from LLM (part of generation):',
@@ -776,14 +775,16 @@ export class Task {
       case CodeflyEventType.Error:
       default: {
         // Use type guard instead of unsafe type assertion
-        let errorEvent: ServerGeminiErrorEvent | undefined;
+        let errorEvent: ServerCodeflyErrorEvent | undefined;
         if (
-          event.type === GeminiEventType.Error &&
+          event.type === CodeflyEventType.Error &&
+          'value' in event &&
           event.value &&
           typeof event.value === 'object' &&
           'error' in event.value
         ) {
-          errorEvent = event;
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+          errorEvent = event as unknown as ServerCodeflyErrorEvent;
         }
         const errorMessage = errorEvent?.value?.error
           ? getErrorMessage(errorEvent.value.error)
@@ -957,7 +958,7 @@ export class Task {
         parts = [response];
       }
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      this.geminiClient.addHistory({
+      this.codeflyClient.addHistory({
         role: 'user',
         parts,
       });
@@ -967,7 +968,7 @@ export class Task {
   async *sendCompletedToolsToLlm(
     completedToolCalls: CompletedToolCall[],
     aborted: AbortSignal,
-  ): AsyncGenerator<ServerGeminiStreamEvent> {
+  ): AsyncGenerator<ServerCodeflyStreamEvent> {
     if (completedToolCalls.length === 0) {
       yield* (async function* () {})(); // Yield nothing
       return;
@@ -995,7 +996,7 @@ export class Task {
     };
     // Set task state to working as we are about to call LLM
     this.setTaskStateAndPublishUpdate('working', stateChange);
-    yield* this.geminiClient.sendMessageStream(
+    yield* this.codeflyClient.sendMessageStream(
       llmParts,
       aborted,
       completedToolCalls[0]?.request.prompt_id ?? '',
@@ -1005,7 +1006,7 @@ export class Task {
   async *acceptUserMessage(
     requestContext: RequestContext,
     aborted: AbortSignal,
-  ): AsyncGenerator<ServerGeminiStreamEvent> {
+  ): AsyncGenerator<ServerCodeflyStreamEvent> {
     const userMessage = requestContext.userMessage;
     const llmParts: PartUnion[] = [];
     let anyConfirmationHandled = false;
@@ -1036,7 +1037,7 @@ export class Task {
       };
       // Set task state to working as we are about to call LLM
       this.setTaskStateAndPublishUpdate('working', stateChange);
-      yield* this.geminiClient.sendMessageStream(
+      yield* this.codeflyClient.sendMessageStream(
         llmParts,
         aborted,
         this.currentPromptId,

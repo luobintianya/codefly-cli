@@ -1,18 +1,18 @@
 # Creating Agent Skills
 
 This guide provides an overview of how to create your own Agent Skills to extend
-the capabilities of Gemini CLI.
+the capabilities of Codefly CLI.
 
 ## Getting started: The `skill-creator` skill
 
 The recommended way to create a new skill is to use the built-in `skill-creator`
-skill. To use it, ask Gemini CLI to create a new skill for you.
+skill. To use it, ask Codefly CLI to create a new skill for you.
 
 **Example prompt:**
 
 > "create a new skill called 'code-reviewer'"
 
-Gemini CLI will then use the `skill-creator` to generate the skill:
+Codefly CLI will then use the `skill-creator` to generate the skill:
 
 1.  Generate a new directory for your skill (e.g., `my-new-skill/`).
 2.  Create a `SKILL.md` file with the necessary YAML frontmatter (`name` and
@@ -74,7 +74,7 @@ This skill guides the agent in conducting thorough code reviews.
 
 - **`name`**: A unique identifier for the skill. This should match the directory
   name.
-- **`description`**: A description of what the skill does and when Gemini should
+- **`description`**: A description of what the skill does and when Codefly should
   use it.
 - **Body**: The Markdown body of the file contains the instructions that guide
   the agent's behavior when the skill is active.

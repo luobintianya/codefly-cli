@@ -237,14 +237,14 @@ describe('Server Config (config.ts)', () => {
   const MODEL = DEFAULT_CODEFLY_MODEL;
   const SANDBOX: SandboxConfig = {
     command: 'docker',
-    image: 'gemini-cli-sandbox',
+    image: 'codefly-cli-sandbox',
   };
   const TARGET_DIR = '/path/to/target';
   const DEBUG_MODE = false;
   const QUESTION = 'test question';
   const USER_MEMORY = 'Test User Memory';
   const TELEMETRY_SETTINGS = { enabled: false };
-  const EMBEDDING_MODEL = 'gemini-embedding';
+  const EMBEDDING_MODEL = 'codefly-embedding';
   const SESSION_ID = 'test-session-id';
   const baseParams: ConfigParameters = {
     cwd: '/tmp',
@@ -485,7 +485,7 @@ describe('Server Config (config.ts)', () => {
   describe('refreshAuth', () => {
     it('should refresh auth and update config', async () => {
       const config = new Config(baseParams);
-      const authType = AuthType.USE_GEMINI;
+      const authType = AuthType.USE_CODEFLY;
       const mockContentConfig = {
         apiKey: 'test-key',
       };
@@ -517,7 +517,7 @@ describe('Server Config (config.ts)', () => {
           }) as Partial<ContentGeneratorConfig> as ContentGeneratorConfig,
       );
 
-      await config.refreshAuth(AuthType.USE_GEMINI);
+      await config.refreshAuth(AuthType.USE_CODEFLY);
 
       expect(spy).toHaveBeenCalled();
     });
@@ -532,7 +532,7 @@ describe('Server Config (config.ts)', () => {
           }) as Partial<ContentGeneratorConfig> as ContentGeneratorConfig,
       );
 
-      await config.refreshAuth(AuthType.USE_GEMINI);
+      await config.refreshAuth(AuthType.USE_CODEFLY);
 
       await config.refreshAuth(AuthType.LOGIN_WITH_GOOGLE);
 
@@ -551,7 +551,7 @@ describe('Server Config (config.ts)', () => {
           }) as Partial<ContentGeneratorConfig> as ContentGeneratorConfig,
       );
 
-      await config.refreshAuth(AuthType.USE_GEMINI);
+      await config.refreshAuth(AuthType.USE_CODEFLY);
 
       await config.refreshAuth(AuthType.USE_VERTEX_AI);
 
@@ -572,7 +572,7 @@ describe('Server Config (config.ts)', () => {
 
       await config.refreshAuth(AuthType.USE_VERTEX_AI);
 
-      await config.refreshAuth(AuthType.USE_GEMINI);
+      await config.refreshAuth(AuthType.USE_CODEFLY);
 
       expect(
         config.getCodeflyClient().stripThoughtsFromHistory,
@@ -734,7 +734,7 @@ describe('Server Config (config.ts)', () => {
       ...baseParams,
       fileFiltering: {
         respectGitIgnore: false,
-        respectGeminiIgnore: false,
+        respectCodeflyIgnore: false,
         customIgnoreFilePaths: ['.myignore'],
       },
     };
@@ -746,7 +746,7 @@ describe('Server Config (config.ts)', () => {
       path.resolve(TARGET_DIR),
       {
         respectGitIgnore: false,
-        respectGeminiIgnore: false,
+        respectCodeflyIgnore: false,
         customIgnoreFilePaths: ['.myignore'],
       },
     );
@@ -942,7 +942,7 @@ describe('Server Config (config.ts)', () => {
     it('should default useWriteTodos to true when not provided', () => {
       const config = new Config({
         ...baseParams,
-        model: 'gemini-2.5-flash',
+        model: 'codefly-2.5-flash',
       });
       expect(config.getUseWriteTodos()).toBe(true);
     });
@@ -959,7 +959,7 @@ describe('Server Config (config.ts)', () => {
     it('should disable useWriteTodos for preview models', () => {
       const params: ConfigParameters = {
         ...baseParams,
-        model: 'gemini-3-pro-preview',
+        model: 'codefly-3-pro-preview',
       };
       const config = new Config(params);
       expect(config.getUseWriteTodos()).toBe(false);
@@ -968,7 +968,7 @@ describe('Server Config (config.ts)', () => {
     it('should NOT disable useWriteTodos for non-preview models', () => {
       const params: ConfigParameters = {
         ...baseParams,
-        model: 'gemini-2.5-pro',
+        model: 'codefly-2.5-pro',
       };
       const config = new Config(params);
       expect(config.getUseWriteTodos()).toBe(true);
@@ -1728,17 +1728,17 @@ describe('isYoloModeDisabled', () => {
 });
 
 describe('BaseLlmClient Lifecycle', () => {
-  const MODEL = 'gemini-pro';
+  const MODEL = 'codefly-pro';
   const SANDBOX: SandboxConfig = {
     command: 'docker',
-    image: 'gemini-cli-sandbox',
+    image: 'codefly-cli-sandbox',
   };
   const TARGET_DIR = '/path/to/target';
   const DEBUG_MODE = false;
   const QUESTION = 'test question';
   const USER_MEMORY = 'Test User Memory';
   const TELEMETRY_SETTINGS = { enabled: false };
-  const EMBEDDING_MODEL = 'gemini-embedding';
+  const EMBEDDING_MODEL = 'codefly-embedding';
   const SESSION_ID = 'test-session-id';
   const baseParams: ConfigParameters = {
     cwd: '/tmp',
@@ -1763,8 +1763,8 @@ describe('BaseLlmClient Lifecycle', () => {
 
   it('should successfully initialize BaseLlmClient after refreshAuth is called', async () => {
     const config = new Config(baseParams);
-    const authType = AuthType.USE_GEMINI;
-    const mockContentConfig = { model: 'gemini-flash', apiKey: 'test-key' };
+    const authType = AuthType.USE_CODEFLY;
+    const mockContentConfig = { model: 'codefly-flash', apiKey: 'test-key' };
 
     vi.mocked(createContentGeneratorConfig).mockResolvedValue(
       mockContentConfig,
@@ -1783,17 +1783,17 @@ describe('BaseLlmClient Lifecycle', () => {
 });
 
 describe('Generation Config Merging (HACK)', () => {
-  const MODEL = 'gemini-pro';
+  const MODEL = 'codefly-pro';
   const SANDBOX: SandboxConfig = {
     command: 'docker',
-    image: 'gemini-cli-sandbox',
+    image: 'codefly-cli-sandbox',
   };
   const TARGET_DIR = '/path/to/target';
   const DEBUG_MODE = false;
   const QUESTION = 'test question';
   const USER_MEMORY = 'Test User Memory';
   const TELEMETRY_SETTINGS = { enabled: false };
-  const EMBEDDING_MODEL = 'gemini-embedding';
+  const EMBEDDING_MODEL = 'codefly-embedding';
   const SESSION_ID = 'test-session-id';
   const baseParams: ConfigParameters = {
     cwd: '/tmp',
@@ -1910,7 +1910,7 @@ describe('Config getHooks', () => {
     targetDir: '/path/to/target',
     debugMode: false,
     sessionId: 'test-session-id',
-    model: 'gemini-pro',
+    model: 'codefly-pro',
     usageStatisticsEnabled: false,
   };
 
@@ -1993,7 +1993,7 @@ describe('Config getHooks', () => {
       const service = config.getModelAvailabilityService();
       const spy = vi.spyOn(service, 'reset');
 
-      const proModel = 'gemini-2.5-pro';
+      const proModel = 'codefly-2.5-pro';
       await config.setModel(proModel);
 
       expect(config.getModel()).toBe(proModel);
@@ -2077,7 +2077,7 @@ describe('Config getExperiments', () => {
     targetDir: '/path/to/target',
     debugMode: false,
     sessionId: 'test-session-id',
-    model: 'gemini-pro',
+    model: 'codefly-pro',
     usageStatisticsEnabled: false,
   };
 
@@ -2122,7 +2122,7 @@ describe('Config setExperiments logging', () => {
     targetDir: '/path/to/target',
     debugMode: false,
     sessionId: 'test-session-id',
-    model: 'gemini-pro',
+    model: 'codefly-pro',
     usageStatisticsEnabled: false,
   };
 
@@ -2263,12 +2263,12 @@ describe('Config Quota & Preview Model Access', () => {
     targetDir: '/tmp',
     debugMode: false,
     sessionId: 'test-session',
-    model: 'gemini-pro',
+    model: 'codefly-pro',
     usageStatisticsEnabled: false,
-    embeddingModel: 'gemini-embedding',
+    embeddingModel: 'codefly-embedding',
     sandbox: {
       command: 'docker',
-      image: 'gemini-cli-sandbox',
+      image: 'codefly-cli-sandbox',
     },
   };
 
@@ -2313,19 +2313,19 @@ describe('Config Quota & Preview Model Access', () => {
       mockCodeAssistServer.retrieveUserQuota.mockResolvedValue({
         buckets: [
           {
-            modelId: 'gemini-2.5-pro',
+            modelId: 'codefly-2.5-pro',
             remainingAmount: '10',
             remainingFraction: 0.2,
           },
           {
-            modelId: 'gemini-2.5-flash',
+            modelId: 'codefly-2.5-flash',
             remainingAmount: '80',
             remainingFraction: 0.8,
           },
         ],
       });
 
-      config.setModel('auto-gemini-2.5');
+      config.setModel('auto-codefly-2.5');
       await config.refreshUserQuota();
 
       const pooled = (
@@ -2349,14 +2349,14 @@ describe('Config Quota & Preview Model Access', () => {
       mockCodeAssistServer.retrieveUserQuota.mockResolvedValue({
         buckets: [
           {
-            modelId: 'gemini-2.5-pro',
+            modelId: 'codefly-2.5-pro',
             remainingAmount: '10',
             remainingFraction: 0.2,
           },
         ],
       });
 
-      config.setModel('gemini-2.5-pro');
+      config.setModel('codefly-2.5-pro');
       await config.refreshUserQuota();
 
       expect(
@@ -2410,7 +2410,7 @@ describe('Config Quota & Preview Model Access', () => {
 
     it('should NOT reset model if disabling preview features while NOT using a preview model', async () => {
       config.setPreviewFeatures(true);
-      const nonPreviewModel = 'gemini-1.5-pro';
+      const nonPreviewModel = 'codefly-1.5-pro';
       await config.setModel(nonPreviewModel);
 
       config.setPreviewFeatures(false);
@@ -2837,11 +2837,11 @@ describe('syncPlanModeTools', () => {
     expect(registeredTool).toBeUndefined();
   });
 
-  it('should call geminiClient.setTools if initialized', async () => {
+  it('should call codeflyClient.setTools if initialized', async () => {
     const config = new Config(baseParams);
     const registry = new ToolRegistry(config, config.getMessageBus());
     vi.spyOn(config, 'getToolRegistry').mockReturnValue(registry);
-    const client = config.getGeminiClient();
+    const client = config.getCodeflyClient();
     vi.spyOn(client, 'isInitialized').mockReturnValue(true);
     const setToolsSpy = vi
       .spyOn(client, 'setTools')
@@ -2859,7 +2859,7 @@ describe('Model Persistence Bug Fix (#19864)', () => {
     cwd: '/tmp',
     targetDir: '/path/to/target',
     debugMode: false,
-    model: PREVIEW_GEMINI_3_1_MODEL, // User saved preview model
+    model: PREVIEW_CODEFLY_3_1_MODEL, // User saved preview model
   };
 
   it('should NOT reset preview model for CodeAssist auth when refreshUserQuota is not called (no projectId)', async () => {
@@ -2880,19 +2880,19 @@ describe('Model Persistence Bug Fix (#19864)', () => {
     const config = new Config(baseParams);
 
     // Verify initial model is the preview model
-    expect(config.getModel()).toBe(PREVIEW_GEMINI_3_1_MODEL);
+    expect(config.getModel()).toBe(PREVIEW_CODEFLY_3_1_MODEL);
 
     // Call refreshAuth to simulate restart (CodeAssist auth, no projectId)
     await config.refreshAuth(AuthType.LOGIN_WITH_GOOGLE);
 
     // Verify the model was NOT reset (bug fix)
-    expect(config.getModel()).toBe(PREVIEW_GEMINI_3_1_MODEL);
-    expect(config.getModel()).not.toBe(DEFAULT_GEMINI_MODEL_AUTO);
+    expect(config.getModel()).toBe(PREVIEW_CODEFLY_3_1_MODEL);
+    expect(config.getModel()).not.toBe(DEFAULT_CODEFLY_MODEL_AUTO);
   });
 
-  it('should NOT reset preview model for USE_GEMINI (hasAccessToPreviewModel is set to true)', async () => {
+  it('should NOT reset preview model for USE_CODEFLY (hasAccessToPreviewModel is set to true)', async () => {
     const mockContentConfig = {
-      authType: AuthType.USE_GEMINI,
+      authType: AuthType.USE_CODEFLY,
     } as Partial<ContentGeneratorConfig> as ContentGeneratorConfig;
 
     const mockContentGenerator = {
@@ -2907,14 +2907,14 @@ describe('Model Persistence Bug Fix (#19864)', () => {
     const config = new Config(baseParams);
 
     // Verify initial model is the preview model
-    expect(config.getModel()).toBe(PREVIEW_GEMINI_3_1_MODEL);
+    expect(config.getModel()).toBe(PREVIEW_CODEFLY_3_1_MODEL);
 
     // Call refreshAuth
-    await config.refreshAuth(AuthType.USE_GEMINI);
+    await config.refreshAuth(AuthType.USE_CODEFLY);
 
-    // For USE_GEMINI, hasAccessToPreviewModel should be set to true
+    // For USE_CODEFLY, hasAccessToPreviewModel should be set to true
     // So the model should NOT be reset
-    expect(config.getModel()).toBe(PREVIEW_GEMINI_3_1_MODEL);
+    expect(config.getModel()).toBe(PREVIEW_CODEFLY_3_1_MODEL);
     expect(config.getHasAccessToPreviewModel()).toBe(true);
   });
 
@@ -2922,15 +2922,15 @@ describe('Model Persistence Bug Fix (#19864)', () => {
     const onModelChange = vi.fn();
     const config = new Config({
       ...baseParams,
-      model: DEFAULT_GEMINI_MODEL_AUTO, // Initial model
+      model: DEFAULT_CODEFLY_MODEL_AUTO, // Initial model
       onModelChange,
     });
 
     // User selects preview model with persist mode enabled
-    config.setModel(PREVIEW_GEMINI_3_1_MODEL, false); // isTemporary = false
+    config.setModel(PREVIEW_CODEFLY_3_1_MODEL, false); // isTemporary = false
 
     // Verify onModelChange was called to persist the model
-    expect(onModelChange).toHaveBeenCalledWith(PREVIEW_GEMINI_3_1_MODEL);
-    expect(config.getModel()).toBe(PREVIEW_GEMINI_3_1_MODEL);
+    expect(onModelChange).toHaveBeenCalledWith(PREVIEW_CODEFLY_3_1_MODEL);
+    expect(config.getModel()).toBe(PREVIEW_CODEFLY_3_1_MODEL);
   });
 });

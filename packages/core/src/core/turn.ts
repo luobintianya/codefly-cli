@@ -71,11 +71,11 @@ export enum CodeflyEventType {
   AgentExecutionBlocked = 'agent_execution_blocked',
 }
 
-export type ServerGeminiRetryEvent = {
+export type ServerCodeflyRetryEvent = {
   type: CodeflyEventType.Retry;
 };
 
-export type ServerGeminiAgentExecutionStoppedEvent = {
+export type ServerCodeflyAgentExecutionStoppedEvent = {
   type: CodeflyEventType.AgentExecutionStopped;
   value: {
     reason: string;
@@ -84,7 +84,7 @@ export type ServerGeminiAgentExecutionStoppedEvent = {
   };
 };
 
-export type ServerGeminiAgentExecutionBlockedEvent = {
+export type ServerCodeflyAgentExecutionBlockedEvent = {
   type: CodeflyEventType.AgentExecutionBlocked;
   value: {
     reason: string;
@@ -93,7 +93,7 @@ export type ServerGeminiAgentExecutionBlockedEvent = {
   };
 };
 
-export type ServerGeminiContextWindowWillOverflowEvent = {
+export type ServerCodeflyContextWindowWillOverflowEvent = {
   type: CodeflyEventType.ContextWindowWillOverflow;
   value: {
     estimatedRequestTokenCount: number;
@@ -101,11 +101,11 @@ export type ServerGeminiContextWindowWillOverflowEvent = {
   };
 };
 
-export type ServerGeminiInvalidStreamEvent = {
+export type ServerCodeflyInvalidStreamEvent = {
   type: CodeflyEventType.InvalidStream;
 };
 
-export type ServerGeminiModelInfoEvent = {
+export type ServerCodeflyModelInfoEvent = {
   type: CodeflyEventType.ModelInfo;
   value: string;
 };
@@ -115,11 +115,11 @@ export interface StructuredError {
   status?: number;
 }
 
-export interface GeminiErrorEventValue {
+export interface CodeflyErrorEventValue {
   error: unknown;
 }
 
-export interface GeminiFinishedEventValue {
+export interface CodeflyFinishedEventValue {
   reason: FinishReason | undefined;
   usageMetadata: GenerateContentResponseUsageMetadata | undefined;
 }
@@ -129,40 +129,40 @@ export interface ServerToolCallConfirmationDetails {
   details: ToolCallConfirmationDetails;
 }
 
-export type ServerGeminiContentEvent = {
+export type ServerCodeflyContentEvent = {
   type: CodeflyEventType.Content;
   value: string;
   traceId?: string;
 };
 
-export type ServerGeminiThoughtEvent = {
+export type ServerCodeflyThoughtEvent = {
   type: CodeflyEventType.Thought;
   value: ThoughtSummary;
   traceId?: string;
 };
 
-export type ServerGeminiToolCallRequestEvent = {
+export type ServerCodeflyToolCallRequestEvent = {
   type: CodeflyEventType.ToolCallRequest;
   value: ToolCallRequestInfo;
 };
 
-export type ServerGeminiToolCallResponseEvent = {
+export type ServerCodeflyToolCallResponseEvent = {
   type: CodeflyEventType.ToolCallResponse;
   value: ToolCallResponseInfo;
 };
 
-export type ServerGeminiToolCallConfirmationEvent = {
+export type ServerCodeflyToolCallConfirmationEvent = {
   type: CodeflyEventType.ToolCallConfirmation;
   value: ServerToolCallConfirmationDetails;
 };
 
-export type ServerGeminiUserCancelledEvent = {
+export type ServerCodeflyUserCancelledEvent = {
   type: CodeflyEventType.UserCancelled;
 };
 
-export type ServerGeminiErrorEvent = {
+export type ServerCodeflyErrorEvent = {
   type: CodeflyEventType.Error;
-  value: GeminiErrorEventValue;
+  value: CodeflyErrorEventValue;
 };
 
 export enum CompressionStatus {
@@ -196,44 +196,44 @@ export type ServerCodeflyChatCompressedEvent = {
   value: ChatCompressionInfo | null;
 };
 
-export type ServerGeminiMaxSessionTurnsEvent = {
+export type ServerCodeflyMaxSessionTurnsEvent = {
   type: CodeflyEventType.MaxSessionTurns;
 };
 
-export type ServerGeminiFinishedEvent = {
+export type ServerCodeflyFinishedEvent = {
   type: CodeflyEventType.Finished;
-  value: GeminiFinishedEventValue;
+  value: CodeflyFinishedEventValue;
 };
 
-export type ServerGeminiLoopDetectedEvent = {
+export type ServerCodeflyLoopDetectedEvent = {
   type: CodeflyEventType.LoopDetected;
 };
 
-export type ServerGeminiCitationEvent = {
+export type ServerCodeflyCitationEvent = {
   type: CodeflyEventType.Citation;
   value: string;
 };
 
 // The original union type, now composed of the individual types
-export type ServerGeminiStreamEvent =
+export type ServerCodeflyStreamEvent =
   | ServerCodeflyChatCompressedEvent
-  | ServerGeminiCitationEvent
-  | ServerGeminiContentEvent
-  | ServerGeminiErrorEvent
-  | ServerGeminiFinishedEvent
-  | ServerGeminiLoopDetectedEvent
-  | ServerGeminiMaxSessionTurnsEvent
-  | ServerGeminiThoughtEvent
-  | ServerGeminiToolCallConfirmationEvent
-  | ServerGeminiToolCallRequestEvent
-  | ServerGeminiToolCallResponseEvent
-  | ServerGeminiUserCancelledEvent
-  | ServerGeminiRetryEvent
-  | ServerGeminiContextWindowWillOverflowEvent
-  | ServerGeminiInvalidStreamEvent
-  | ServerGeminiModelInfoEvent
-  | ServerGeminiAgentExecutionStoppedEvent
-  | ServerGeminiAgentExecutionBlockedEvent;
+  | ServerCodeflyCitationEvent
+  | ServerCodeflyContentEvent
+  | ServerCodeflyErrorEvent
+  | ServerCodeflyFinishedEvent
+  | ServerCodeflyLoopDetectedEvent
+  | ServerCodeflyMaxSessionTurnsEvent
+  | ServerCodeflyThoughtEvent
+  | ServerCodeflyToolCallConfirmationEvent
+  | ServerCodeflyToolCallRequestEvent
+  | ServerCodeflyToolCallResponseEvent
+  | ServerCodeflyUserCancelledEvent
+  | ServerCodeflyRetryEvent
+  | ServerCodeflyContextWindowWillOverflowEvent
+  | ServerCodeflyInvalidStreamEvent
+  | ServerCodeflyModelInfoEvent
+  | ServerCodeflyAgentExecutionStoppedEvent
+  | ServerCodeflyAgentExecutionBlockedEvent;
 
 // A turn manages the agentic loop turn within the server context.
 export class Turn {
@@ -256,7 +256,7 @@ export class Turn {
     signal: AbortSignal,
     displayContent?: PartListUnion,
     role: LlmRole = LlmRole.MAIN,
-  ): AsyncGenerator<ServerGeminiStreamEvent> {
+  ): AsyncGenerator<ServerCodeflyStreamEvent> {
     try {
       // Note: This assumes `sendMessageStream` yields events like
       // { type: StreamEventType.RETRY } or { type: StreamEventType.CHUNK, value: GenerateContentResponse }
@@ -381,7 +381,7 @@ export class Turn {
       ];
       await reportError(
         error,
-        'Error when talking to Gemini API',
+        'Error when talking to Codefly API',
         contextForReport,
         'Turn.run-sendMessageStream',
       );
@@ -406,7 +406,7 @@ export class Turn {
   private handlePendingFunctionCall(
     fnCall: FunctionCall,
     traceId?: string,
-  ): ServerGeminiStreamEvent | null {
+  ): ServerCodeflyStreamEvent | null {
     const name = fnCall.name || 'undefined_tool_name';
     const args = fnCall.args || {};
     const callId = fnCall.id ?? `${name}_${Date.now()}_${this.callCounter++}`;

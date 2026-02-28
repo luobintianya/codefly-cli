@@ -6,8 +6,8 @@
 
 import type { CommandActionReturn } from './types.js';
 
-export function performInit(doesGeminiMdExist: boolean): CommandActionReturn {
-  if (doesGeminiMdExist) {
+export function performInit(doesCodeflyMdExist: boolean): CommandActionReturn {
+  if (doesCodeflyMdExist) {
     return {
       type: 'message',
       messageType: 'info',
@@ -19,7 +19,7 @@ export function performInit(doesGeminiMdExist: boolean): CommandActionReturn {
   return {
     type: 'submit_prompt',
     content: `
-You are an AI agent that brings the power of Gemini directly into the terminal. Your task is to analyze the current directory and generate a comprehensive CODEFLY.md file to be used as instructional context for future interactions.
+You are an AI agent that brings the power of Codefly directly into the terminal. Your task is to analyze the current directory and generate a comprehensive CODEFLY.md file to be used as instructional context for future interactions.
 
 **Analysis Process:**
 

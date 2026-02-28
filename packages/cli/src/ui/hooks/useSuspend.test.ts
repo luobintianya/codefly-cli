@@ -24,14 +24,14 @@ import {
   exitAlternateScreen,
   enableLineWrapping,
   disableLineWrapping,
-} from '@google/gemini-cli-core';
+} from '@codeflyai/codefly-core';
 import {
   cleanupTerminalOnExit,
   terminalCapabilityManager,
 } from '../utils/terminalCapabilityManager.js';
 
-vi.mock('@google/gemini-cli-core', async () => {
-  const actual = await vi.importActual('@google/gemini-cli-core');
+vi.mock('@codeflyai/codefly-core', async () => {
+  const actual = await vi.importActual('@codeflyai/codefly-core');
   return {
     ...actual,
     writeToStdout: vi.fn(),

@@ -4,10 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type {
-  MCPServerConfig,
-  ExtensionInstallMetadata,
-} from '@codeflyai/codefly-core';
+import type { CustomTheme, ExtensionInstallMetadata, MCPServerConfig } from '@codeflyai/codefly-core';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { INSTALL_METADATA_FILENAME } from './extensions/variables.js';

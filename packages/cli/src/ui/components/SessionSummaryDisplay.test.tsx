@@ -49,7 +49,7 @@ describe('<SessionSummaryDisplay />', () => {
   it('renders the summary display with a title', async () => {
     const metrics: SessionMetrics = {
       models: {
-        'gemini-2.5-pro': {
+        'codefly-2.5-pro': {
           api: { totalRequests: 10, totalErrors: 1, totalLatencyMs: 50234 },
           tokens: {
             input: 500,

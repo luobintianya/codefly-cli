@@ -11,7 +11,7 @@ import {
   ExtensionSettingScope,
   getScopedEnvContents,
 } from '../../config/extensions/extensionSettings.js';
-import { getExtensionAndManager } from './utils.js';
+import { getExtensionAndManager, getExtensionManager } from './utils.js';
 import { debugLogger } from '@codeflyai/codefly-core';
 import { exitCli } from '../utils.js';
 
@@ -45,7 +45,8 @@ const setCommand: CommandModule<object, SetArgs> = {
       }),
   handler: async (args) => {
     const { name, setting, scope } = args;
-    const { extension, extensionManager } = await getExtensionAndManager(name);
+    const extensionManager = await getExtensionManager();
+    const { extension } = await getExtensionAndManager(extensionManager, name);
     if (!extension || !extensionManager) {
       return;
     }
@@ -64,6 +65,7 @@ const setCommand: CommandModule<object, SetArgs> = {
       setting,
       promptForSetting,
       scope as ExtensionSettingScope,
+      process.cwd(),
     );
     await exitCli();
   },
@@ -85,7 +87,8 @@ const listCommand: CommandModule<object, ListArgs> = {
     }),
   handler: async (args) => {
     const { name } = args;
-    const { extension, extensionManager } = await getExtensionAndManager(name);
+    const extensionManager = await getExtensionManager();
+    const { extension } = await getExtensionAndManager(extensionManager, name);
     if (!extension || !extensionManager) {
       return;
     }

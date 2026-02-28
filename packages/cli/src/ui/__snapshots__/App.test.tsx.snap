@@ -14,7 +14,7 @@ exports[`App > Snapshots > renders default layout correctly 1`] = `
 Tips for getting started:
 1. Ask questions, edit files, or run commands.
 2. Be specific for the best results.
-3. Create GEMINI.md files to customize your interactions with Gemini.
+3. Create CODEFLY.md files to customize your interactions with Codefly.
 4. /help for more information.
 
 
@@ -59,7 +59,7 @@ Footer
 Tips for getting started:
 1. Ask questions, edit files, or run commands.
 2. Be specific for the best results.
-3. Create GEMINI.md files to customize your interactions with Gemini.
+3. Create CODEFLY.md files to customize your interactions with Codefly.
 4. /help for more information.
 Composer
 "
@@ -122,7 +122,7 @@ exports[`App > should render ToolConfirmationQueue along with Composer when tool
 Tips for getting started:
 1. Ask questions, edit files, or run commands.
 2. Be specific for the best results.
-3. Create GEMINI.md files to customize your interactions with Gemini.
+3. Create CODEFLY.md files to customize your interactions with Codefly.
 4. /help for more information.
 HistoryItemDisplay
 ╭──────────────────────────────────────────────────────────────────────────────────────────────────╮

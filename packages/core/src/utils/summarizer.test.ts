@@ -31,7 +31,7 @@ describe('summarizers', () => {
   let mockConfigInstance: Config;
   const abortSignal = new AbortController().signal;
   const mockResolvedConfig = {
-    model: 'gemini-pro',
+    model: 'codefly-pro',
     generateContentConfig: {
       maxOutputTokens: 2000,
     },
@@ -41,7 +41,7 @@ describe('summarizers', () => {
     MockConfig = vi.mocked(Config);
     mockConfigInstance = new MockConfig(
       'test-api-key',
-      'gemini-pro',
+      'codefly-pro',
       false,
       '.',
       false,
@@ -137,7 +137,7 @@ describe('summarizers', () => {
       (mockConfigInstance.modelConfigService as unknown) = {
         getResolvedConfig() {
           return {
-            model: 'gemini-pro-limited',
+            model: 'codefly-pro-limited',
             generateContentConfig: {
               maxOutputTokens: 1000,
             },
@@ -147,7 +147,7 @@ describe('summarizers', () => {
 
       await summarizeToolOutput(
         mockConfigInstance,
-        { model: 'gemini-pro-limited' },
+        { model: 'codefly-pro-limited' },
         longText,
         mockCodeflyClient,
         abortSignal,

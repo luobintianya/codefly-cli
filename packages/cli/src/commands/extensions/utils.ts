@@ -6,7 +6,49 @@
 import { ExtensionManager } from '../../config/extension-manager.js';
 import { loadSettings } from '../../config/settings.js';
 import { requestConsentNonInteractive } from '../../config/extensions/consent.js';
-import { debugLogger } from '@codeflyai/codefly-core';
+import {
+  debugLogger,
+  type ResolvedExtensionSetting,
+} from '@codeflyai/codefly-core';
+import type { ExtensionConfig } from '../../config/extension.js';
+import prompts from 'prompts';
+import {
+  promptForSetting,
+  updateSetting,
+  type ExtensionSetting,
+  getScopedEnvContents,
+  ExtensionSettingScope,
+} from '../../config/extensions/extensionSettings.js';
+
+export interface ConfigLogger {
+  log(message: string): void;
+  error(message: string): void;
+}
+
+export type RequestSettingCallback = (
+  setting: ExtensionSetting,
+) => Promise<string>;
+export type RequestConfirmationCallback = (message: string) => Promise<boolean>;
+
+export const defaultLogger: ConfigLogger = {
+  log: (message: string) => debugLogger.log(message),
+  error: (message: string) => debugLogger.error(message),
+};
+
+export const defaultRequestSetting: RequestSettingCallback = async (setting) =>
+  promptForSetting(setting);
+
+export const defaultRequestConfirmation: RequestConfirmationCallback = async (
+  message,
+) => {
+  const response = await prompts({
+    type: 'confirm',
+    name: 'confirm',
+    message,
+    initial: false,
+  });
+  return response.confirm;
+};
 
 export async function getExtensionManager() {
   const workspaceDir = process.cwd();

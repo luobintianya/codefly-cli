@@ -7,11 +7,13 @@
 import * as fs from 'node:fs';
 import {
   debugLogger,
-  enableKittyKeyboardProtocol,
-  disableKittyKeyboardProtocol,
-  enableBracketedPasteMode,
   disableBracketedPasteMode,
+  disableKittyKeyboardProtocol,
+  disableModifyOtherKeys,
+  enableBracketedPasteMode,
+  enableKittyKeyboardProtocol,
 } from '@codeflyai/codefly-core';
+import { parseColor } from '../themes/color-utils.js';
 
 export type TerminalBackgroundColor = string | undefined;
 
@@ -36,6 +38,7 @@ export class TerminalCapabilityManager {
   private static instance: TerminalCapabilityManager | undefined;
 
   private static readonly KITTY_QUERY = '\x1b[?u';
+  private static readonly HIDDEN_MODE = '\x1b[8m';
   private static readonly OSC_11_QUERY = '\x1b]11;?\x1b\\';
   private static readonly TERMINAL_NAME_QUERY = '\x1b[>q';
   private static readonly DEVICE_ATTRIBUTES_QUERY = '\x1b[c';

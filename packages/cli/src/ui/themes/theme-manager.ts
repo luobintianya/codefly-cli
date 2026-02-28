@@ -21,7 +21,7 @@ import { XCode } from './xcode.js';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import type { Theme, ThemeType, ColorsTheme } from './theme.js';
-import type { CustomTheme } from '@google/gemini-cli-core';
+import type { CustomTheme } from '@codeflyai/codefly-core';
 import { createCustomTheme, validateCustomTheme } from './theme.js';
 import type { SemanticColors } from './semantic-tokens.js';
 import {

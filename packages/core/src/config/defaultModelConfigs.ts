@@ -54,58 +54,58 @@ export const DEFAULT_MODEL_CONFIGS: ModelConfigServiceConfig = {
         },
       },
     },
-    // Because `gemini-2.5-pro` and related model configs are "user-facing"
+    // Because `codefly-2.5-pro` and related model configs are "user-facing"
     // today, i.e. they could be passed via `--model`, we have to be careful to
     // ensure these model configs can be used interactively.
     // TODO(joshualitt): Introduce internal base configs for the various models,
     // note: we will have to think carefully about names.
-    'gemini-3-pro-preview': {
+    'codefly-3-pro-preview': {
       extends: 'chat-base-3',
       modelConfig: {
-        model: 'gemini-3-pro-preview',
+        model: 'codefly-3-pro-preview',
       },
     },
-    'gemini-3-flash-preview': {
+    'codefly-3-flash-preview': {
       extends: 'chat-base-3',
       modelConfig: {
-        model: 'gemini-3-flash-preview',
+        model: 'codefly-3-flash-preview',
       },
     },
-    'gemini-2.5-pro': {
+    'codefly-2.5-pro': {
       extends: 'chat-base-2.5',
       modelConfig: {
-        model: 'gemini-2.5-pro',
+        model: 'codefly-2.5-pro',
       },
     },
-    'gemini-2.5-flash': {
+    'codefly-2.5-flash': {
       extends: 'chat-base-2.5',
       modelConfig: {
-        model: 'gemini-2.5-flash',
+        model: 'codefly-2.5-flash',
       },
     },
-    'gemini-2.5-flash-lite': {
+    'codefly-2.5-flash-lite': {
       extends: 'chat-base-2.5',
       modelConfig: {
-        model: 'gemini-2.5-flash-lite',
+        model: 'codefly-2.5-flash-lite',
       },
     },
     // Bases for the internal model configs.
-    'gemini-2.5-flash-base': {
+    'codefly-2.5-flash-base': {
       extends: 'base',
       modelConfig: {
-        model: 'gemini-2.5-flash',
+        model: 'codefly-2.5-flash',
       },
     },
-    'gemini-3-flash-base': {
+    'codefly-3-flash-base': {
       extends: 'base',
       modelConfig: {
-        model: 'gemini-3-flash-preview',
+        model: 'codefly-3-flash-preview',
       },
     },
     classifier: {
       extends: 'base',
       modelConfig: {
-        model: 'gemini-2.5-flash-lite',
+        model: 'codefly-2.5-flash-lite',
         generateContentConfig: {
           maxOutputTokens: 1024,
           thinkingConfig: {
@@ -117,7 +117,7 @@ export const DEFAULT_MODEL_CONFIGS: ModelConfigServiceConfig = {
     'prompt-completion': {
       extends: 'base',
       modelConfig: {
-        model: 'gemini-2.5-flash-lite',
+        model: 'codefly-2.5-flash-lite',
         generateContentConfig: {
           temperature: 0.3,
           maxOutputTokens: 16000,
@@ -130,7 +130,7 @@ export const DEFAULT_MODEL_CONFIGS: ModelConfigServiceConfig = {
     'fast-ack-helper': {
       extends: 'base',
       modelConfig: {
-        model: 'gemini-2.5-flash-lite',
+        model: 'codefly-2.5-flash-lite',
         generateContentConfig: {
           temperature: 0.2,
           maxOutputTokens: 120,
@@ -143,7 +143,7 @@ export const DEFAULT_MODEL_CONFIGS: ModelConfigServiceConfig = {
     'edit-corrector': {
       extends: 'base',
       modelConfig: {
-        model: 'gemini-2.5-flash-lite',
+        model: 'codefly-2.5-flash-lite',
         generateContentConfig: {
           thinkingConfig: {
             thinkingBudget: 0,
@@ -154,7 +154,7 @@ export const DEFAULT_MODEL_CONFIGS: ModelConfigServiceConfig = {
     'summarizer-default': {
       extends: 'base',
       modelConfig: {
-        model: 'gemini-2.5-flash-lite',
+        model: 'codefly-2.5-flash-lite',
         generateContentConfig: {
           maxOutputTokens: 2000,
         },
@@ -163,14 +163,14 @@ export const DEFAULT_MODEL_CONFIGS: ModelConfigServiceConfig = {
     'summarizer-shell': {
       extends: 'base',
       modelConfig: {
-        model: 'gemini-2.5-flash-lite',
+        model: 'codefly-2.5-flash-lite',
         generateContentConfig: {
           maxOutputTokens: 2000,
         },
       },
     },
     'web-search': {
-      extends: 'gemini-3-flash-base',
+      extends: 'codefly-3-flash-base',
       modelConfig: {
         generateContentConfig: {
           tools: [{ googleSearch: {} }],
@@ -178,7 +178,7 @@ export const DEFAULT_MODEL_CONFIGS: ModelConfigServiceConfig = {
       },
     },
     'web-fetch': {
-      extends: 'gemini-3-flash-base',
+      extends: 'codefly-3-flash-base',
       modelConfig: {
         generateContentConfig: {
           tools: [{ urlContext: {} }],
@@ -187,55 +187,55 @@ export const DEFAULT_MODEL_CONFIGS: ModelConfigServiceConfig = {
     },
     // TODO(joshualitt): During cleanup, make modelConfig optional.
     'web-fetch-fallback': {
-      extends: 'gemini-3-flash-base',
+      extends: 'codefly-3-flash-base',
       modelConfig: {},
     },
     'loop-detection': {
-      extends: 'gemini-3-flash-base',
+      extends: 'codefly-3-flash-base',
       modelConfig: {},
     },
     'loop-detection-double-check': {
       extends: 'base',
       modelConfig: {
-        model: 'gemini-3-pro-preview',
+        model: 'codefly-3-pro-preview',
       },
     },
     'llm-edit-fixer': {
-      extends: 'gemini-3-flash-base',
+      extends: 'codefly-3-flash-base',
       modelConfig: {},
     },
     'next-speaker-checker': {
-      extends: 'gemini-3-flash-base',
+      extends: 'codefly-3-flash-base',
       modelConfig: {},
     },
     'chat-compression-3-pro': {
       modelConfig: {
-        model: 'gemini-3-flash-preview',
+        model: 'codefly-3-flash-preview',
       },
     },
     'chat-compression-3-flash': {
       modelConfig: {
-        model: 'gemini-3-flash-preview',
+        model: 'codefly-3-flash-preview',
       },
     },
     'chat-compression-2.5-pro': {
       modelConfig: {
-        model: 'gemini-2.5-flash',
+        model: 'codefly-2.5-flash',
       },
     },
     'chat-compression-2.5-flash': {
       modelConfig: {
-        model: 'gemini-2.5-flash',
+        model: 'codefly-2.5-flash',
       },
     },
     'chat-compression-2.5-flash-lite': {
       modelConfig: {
-        model: 'gemini-2.5-flash-lite',
+        model: 'codefly-2.5-flash-lite',
       },
     },
     'chat-compression-default': {
       modelConfig: {
-        model: 'gemini-2.5-flash',
+        model: 'codefly-2.5-flash',
       },
     },
   },

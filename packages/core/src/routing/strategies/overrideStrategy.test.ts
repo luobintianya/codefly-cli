@@ -27,7 +27,7 @@ describe('OverrideStrategy', () => {
   });
 
   it('should return a decision with the override model when one is specified', async () => {
-    const overrideModel = 'gemini-2.5-pro-custom';
+    const overrideModel = 'codefly-2.5-pro-custom';
     const mockConfig = {
       getModel: () => overrideModel,
     } as Config;
@@ -44,7 +44,7 @@ describe('OverrideStrategy', () => {
   });
 
   it('should handle different override model names', async () => {
-    const overrideModel = 'gemini-2.5-flash-experimental';
+    const overrideModel = 'codefly-2.5-flash-experimental';
     const mockConfig = {
       getModel: () => overrideModel,
     } as Config;

@@ -291,7 +291,7 @@ export interface PolicySettings {
     allowed?: string[];
   };
   mcpServers?: Record<string, { trust?: boolean }>;
-  // User provided policies that will replace the USER level policies in ~/.gemini/policies
+  // User provided policies that will replace the USER level policies in ~/.codefly/policies
   policyPaths?: string[];
   workspacePoliciesDir?: string;
 }

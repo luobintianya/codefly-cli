@@ -82,10 +82,10 @@ function getTimestampFromFunctionId(fcnId: string): number {
 }
 
 /**
- * Will look through the gemini client history and determine when the most recent
+ * Will look through the codefly client history and determine when the most recent
  * edit to a target file occurred. If no edit happened, it will return -1
  * @param filePath the path to the file
- * @param client the geminiClient, so that we can get the history
+ * @param client the codeflyClient, so that we can get the history
  * @returns a DateTime (as a number) of when the last edit occurred, or -1 if no edit was found.
  */
 async function findLastEditTimestamp(
@@ -169,7 +169,7 @@ export async function ensureCorrectEdit(
   filePath: string,
   currentContent: string,
   originalParams: EditToolParams, // This is the EditToolParams from edit.ts, without 'corrected'
-  geminiClient: CodeflyClient,
+  codeflyClient: CodeflyClient,
   baseLlmClient: BaseLlmClient,
   abortSignal: AbortSignal,
   disableLLMCorrection: boolean,
@@ -182,7 +182,7 @@ export async function ensureCorrectEdit(
 
   let finalNewString = originalParams.new_string;
   const newStringPotentiallyEscaped =
-    unescapeStringForGeminiBug(originalParams.new_string) !==
+    unescapeStringForCodeflyBug(originalParams.new_string) !==
     originalParams.new_string;
 
   const allowMultiple = originalParams.allow_multiple ?? false;
@@ -213,7 +213,7 @@ export async function ensureCorrectEdit(
     return result;
   } else {
     // occurrences is 0 or some other unexpected state initially
-    const unescapedOldStringAttempt = unescapeStringForGeminiBug(
+    const unescapedOldStringAttempt = unescapeStringForCodeflyBug(
       originalParams.old_string,
     );
     occurrences = countOccurrences(currentContent, unescapedOldStringAttempt);
@@ -240,7 +240,7 @@ export async function ensureCorrectEdit(
         // our system has done
         const lastEditedByUsTime = await findLastEditTimestamp(
           filePath,
-          geminiClient,
+          codeflyClient,
         );
 
         // Add a 1-second buffer to account for timing inaccuracies. If the file
@@ -291,7 +291,7 @@ export async function ensureCorrectEdit(
         occurrences = llmOldOccurrences;
 
         if (newStringPotentiallyEscaped) {
-          const baseNewStringForLLMCorrection = unescapeStringForGeminiBug(
+          const baseNewStringForLLMCorrection = unescapeStringForCodeflyBug(
             originalParams.new_string,
           );
           finalNewString = await correctNewString(
@@ -356,7 +356,7 @@ export async function ensureCorrectFileContent(
   }
 
   const contentPotentiallyEscaped =
-    unescapeStringForGeminiBug(content) !== content;
+    unescapeStringForCodeflyBug(content) !== content;
   if (!contentPotentiallyEscaped) {
     fileContentCorrectionCache.set(content, content);
     return content;
@@ -365,8 +365,8 @@ export async function ensureCorrectFileContent(
   if (disableLLMCorrection) {
     // If we can't use LLM, we should at least use the unescaped content
     // as it's likely better than the original if it was detected as potentially escaped.
-    // unescapeStringForGeminiBug is a heuristic, not an LLM call.
-    const unescaped = unescapeStringForGeminiBug(content);
+    // unescapeStringForCodeflyBug is a heuristic, not an LLM call.
+    const unescaped = unescapeStringForCodeflyBug(content);
     fileContentCorrectionCache.set(content, unescaped);
     return unescaped;
   }
@@ -727,7 +727,7 @@ function trimPairIfPossible(
 /**
  * Unescapes a string that might have been overly escaped by an LLM.
  */
-export function unescapeStringForGeminiBug(inputString: string): string {
+export function unescapeStringForCodeflyBug(inputString: string): string {
   // Regex explanation:
   // \\ : Matches exactly one literal backslash character.
   // (n|t|r|'|"|`|\\|\n) : This is a capturing group. It matches one of the following:

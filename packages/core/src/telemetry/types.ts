@@ -53,7 +53,7 @@ export interface BaseTelemetryEvent {
 
 type CommonFields = keyof BaseTelemetryEvent;
 
-export const EVENT_CLI_CONFIG = 'gemini_cli.config';
+export const EVENT_CLI_CONFIG = 'codefly_cli.config';
 export class StartSessionEvent implements BaseTelemetryEvent {
   'event.name': 'cli_config';
   'event.timestamp': string;
@@ -83,10 +83,10 @@ export class StartSessionEvent implements BaseTelemetryEvent {
     const mcpServers =
       config.getMcpClientManager()?.getMcpServers() ?? config.getMcpServers();
 
-    let useGemini = false;
+    let useCodefly = false;
     let useVertex = false;
     if (generatorConfig && generatorConfig.authType) {
-      useGemini = generatorConfig.authType === AuthType.USE_GEMINI;
+      useCodefly = generatorConfig.authType === AuthType.USE_CODEFLY;
       useVertex = generatorConfig.authType === AuthType.USE_VERTEX_AI;
     }
 
@@ -98,7 +98,7 @@ export class StartSessionEvent implements BaseTelemetryEvent {
       typeof config.getSandbox() === 'string' || !!config.getSandbox();
     this.core_tools_enabled = (config.getCoreTools() ?? []).join(',');
     this.approval_mode = config.getApprovalMode();
-    this.api_key_enabled = useGemini || useVertex;
+    this.api_key_enabled = useCodefly || useVertex;
     this.vertex_ai_enabled = useVertex;
     this.debug_enabled = config.getDebugMode();
     this.mcp_servers = mcpServers ? Object.keys(mcpServers).join(',') : '';
@@ -180,7 +180,7 @@ export class EndSessionEvent implements BaseTelemetryEvent {
   }
 }
 
-export const EVENT_USER_PROMPT = 'gemini_cli.user_prompt';
+export const EVENT_USER_PROMPT = 'codefly_cli.user_prompt';
 export class UserPromptEvent implements BaseTelemetryEvent {
   'event.name': 'user_prompt';
   'event.timestamp': string;
@@ -227,7 +227,7 @@ export class UserPromptEvent implements BaseTelemetryEvent {
   }
 }
 
-export const EVENT_TOOL_CALL = 'gemini_cli.tool_call';
+export const EVENT_TOOL_CALL = 'codefly_cli.tool_call';
 export class ToolCallEvent implements BaseTelemetryEvent {
   'event.name': 'tool_call';
   'event.timestamp': string;
@@ -383,7 +383,7 @@ export class ToolCallEvent implements BaseTelemetryEvent {
   }
 }
 
-export const EVENT_API_REQUEST = 'gemini_cli.api_request';
+export const EVENT_API_REQUEST = 'codefly_cli.api_request';
 export class ApiRequestEvent implements BaseTelemetryEvent {
   'event.name': 'api_request';
   'event.timestamp': string;
@@ -455,7 +455,7 @@ export class ApiRequestEvent implements BaseTelemetryEvent {
   }
 }
 
-export const EVENT_API_ERROR = 'gemini_cli.api_error';
+export const EVENT_API_ERROR = 'codefly_cli.api_error';
 export class ApiErrorEvent implements BaseTelemetryEvent {
   'event.name': 'api_error';
   'event.timestamp': string;
@@ -587,7 +587,7 @@ export interface GenAIUsageDetails {
   context_breakdown?: ContextBreakdown;
 }
 
-export const EVENT_API_RESPONSE = 'gemini_cli.api_response';
+export const EVENT_API_RESPONSE = 'codefly_cli.api_response';
 export const EVENT_GEN_AI_OPERATION_DETAILS =
   'gen_ai.client.inference.operation.details';
 
@@ -736,7 +736,7 @@ export class ApiResponseEvent implements BaseTelemetryEvent {
   }
 }
 
-export const EVENT_FLASH_FALLBACK = 'gemini_cli.flash_fallback';
+export const EVENT_FLASH_FALLBACK = 'codefly_cli.flash_fallback';
 export class FlashFallbackEvent implements BaseTelemetryEvent {
   'event.name': 'flash_fallback';
   'event.timestamp': string;
@@ -762,7 +762,7 @@ export class FlashFallbackEvent implements BaseTelemetryEvent {
   }
 }
 
-export const EVENT_RIPGREP_FALLBACK = 'gemini_cli.ripgrep_fallback';
+export const EVENT_RIPGREP_FALLBACK = 'codefly_cli.ripgrep_fallback';
 export class RipgrepFallbackEvent implements BaseTelemetryEvent {
   'event.name': 'ripgrep_fallback';
   'event.timestamp': string;
@@ -857,7 +857,7 @@ export class LoopDetectionDisabledEvent implements BaseTelemetryEvent {
   }
 }
 
-export const EVENT_NEXT_SPEAKER_CHECK = 'gemini_cli.next_speaker_check';
+export const EVENT_NEXT_SPEAKER_CHECK = 'codefly_cli.next_speaker_check';
 export class NextSpeakerCheckEvent implements BaseTelemetryEvent {
   'event.name': 'next_speaker_check';
   'event.timestamp': string;
@@ -890,7 +890,7 @@ export class NextSpeakerCheckEvent implements BaseTelemetryEvent {
 }
 
 export const EVENT_CONSECA_POLICY_GENERATION =
-  'gemini_cli.conseca.policy_generation';
+  'codefly_cli.conseca.policy_generation';
 export class ConsecaPolicyGenerationEvent implements BaseTelemetryEvent {
   'event.name': 'conseca_policy_generation';
   'event.timestamp': string;
@@ -935,7 +935,7 @@ export class ConsecaPolicyGenerationEvent implements BaseTelemetryEvent {
   }
 }
 
-export const EVENT_CONSECA_VERDICT = 'gemini_cli.conseca.verdict';
+export const EVENT_CONSECA_VERDICT = 'codefly_cli.conseca.verdict';
 export class ConsecaVerdictEvent implements BaseTelemetryEvent {
   'event.name': 'conseca_verdict';
   'event.timestamp': string;
@@ -988,7 +988,7 @@ export class ConsecaVerdictEvent implements BaseTelemetryEvent {
   }
 }
 
-export const EVENT_SLASH_COMMAND = 'gemini_cli.slash_command';
+export const EVENT_SLASH_COMMAND = 'codefly_cli.slash_command';
 export interface SlashCommandEvent extends BaseTelemetryEvent {
   'event.name': 'slash_command';
   'event.timestamp': string;
@@ -1038,7 +1038,7 @@ export enum SlashCommandStatus {
   ERROR = CoreToolCallStatus.Error,
 }
 
-export const EVENT_REWIND = 'gemini_cli.rewind';
+export const EVENT_REWIND = 'codefly_cli.rewind';
 export class RewindEvent implements BaseTelemetryEvent {
   'event.name': 'rewind';
   'event.timestamp': string;
@@ -1064,7 +1064,7 @@ export class RewindEvent implements BaseTelemetryEvent {
   }
 }
 
-export const EVENT_CHAT_COMPRESSION = 'gemini_cli.chat_compression';
+export const EVENT_CHAT_COMPRESSION = 'codefly_cli.chat_compression';
 export interface ChatCompressionEvent extends BaseTelemetryEvent {
   'event.name': 'chat_compression';
   'event.timestamp': string;
@@ -1102,7 +1102,7 @@ export function makeChatCompressionEvent({
 }
 
 export const EVENT_MALFORMED_JSON_RESPONSE =
-  'gemini_cli.malformed_json_response';
+  'codefly_cli.malformed_json_response';
 export class MalformedJsonResponseEvent implements BaseTelemetryEvent {
   'event.name': 'malformed_json_response';
   'event.timestamp': string;
@@ -1133,7 +1133,7 @@ export enum IdeConnectionType {
   SESSION = 'session',
 }
 
-export const EVENT_IDE_CONNECTION = 'gemini_cli.ide_connection';
+export const EVENT_IDE_CONNECTION = 'codefly_cli.ide_connection';
 export class IdeConnectionEvent {
   'event.name': 'ide_connection';
   'event.timestamp': string;
@@ -1159,7 +1159,7 @@ export class IdeConnectionEvent {
   }
 }
 
-export const EVENT_CONVERSATION_FINISHED = 'gemini_cli.conversation_finished';
+export const EVENT_CONVERSATION_FINISHED = 'codefly_cli.conversation_finished';
 export class ConversationFinishedEvent {
   'event_name': 'conversation_finished';
   'event.timestamp': string; // ISO 8601;
@@ -1188,7 +1188,7 @@ export class ConversationFinishedEvent {
   }
 }
 
-export const EVENT_FILE_OPERATION = 'gemini_cli.file_operation';
+export const EVENT_FILE_OPERATION = 'codefly_cli.file_operation';
 export class FileOperationEvent implements BaseTelemetryEvent {
   'event.name': 'file_operation';
   'event.timestamp': string;
@@ -1246,7 +1246,7 @@ export class FileOperationEvent implements BaseTelemetryEvent {
   }
 }
 
-export const EVENT_INVALID_CHUNK = 'gemini_cli.chat.invalid_chunk';
+export const EVENT_INVALID_CHUNK = 'codefly_cli.chat.invalid_chunk';
 // Add these new event interfaces
 export class InvalidChunkEvent implements BaseTelemetryEvent {
   'event.name': 'invalid_chunk';
@@ -1277,7 +1277,7 @@ export class InvalidChunkEvent implements BaseTelemetryEvent {
   }
 }
 
-export const EVENT_CONTENT_RETRY = 'gemini_cli.chat.content_retry';
+export const EVENT_CONTENT_RETRY = 'codefly_cli.chat.content_retry';
 export class ContentRetryEvent implements BaseTelemetryEvent {
   'event.name': 'content_retry';
   'event.timestamp': string;
@@ -1318,7 +1318,7 @@ export class ContentRetryEvent implements BaseTelemetryEvent {
 }
 
 export const EVENT_CONTENT_RETRY_FAILURE =
-  'gemini_cli.chat.content_retry_failure';
+  'codefly_cli.chat.content_retry_failure';
 export class ContentRetryFailureEvent implements BaseTelemetryEvent {
   'event.name': 'content_retry_failure';
   'event.timestamp': string;
@@ -1358,7 +1358,7 @@ export class ContentRetryFailureEvent implements BaseTelemetryEvent {
   }
 }
 
-export const EVENT_MODEL_ROUTING = 'gemini_cli.model_routing';
+export const EVENT_MODEL_ROUTING = 'codefly_cli.model_routing';
 export class ModelRoutingEvent implements BaseTelemetryEvent {
   'event.name': 'model_routing';
   'event.timestamp': string;
@@ -1432,7 +1432,7 @@ export class ModelRoutingEvent implements BaseTelemetryEvent {
   }
 }
 
-export const EVENT_EXTENSION_INSTALL = 'gemini_cli.extension_install';
+export const EVENT_EXTENSION_INSTALL = 'codefly_cli.extension_install';
 export class ExtensionInstallEvent implements BaseTelemetryEvent {
   'event.name': 'extension_install';
   'event.timestamp': string;
@@ -1478,7 +1478,7 @@ export class ExtensionInstallEvent implements BaseTelemetryEvent {
   }
 }
 
-export const EVENT_TOOL_OUTPUT_TRUNCATED = 'gemini_cli.tool_output_truncated';
+export const EVENT_TOOL_OUTPUT_TRUNCATED = 'codefly_cli.tool_output_truncated';
 export class ToolOutputTruncatedEvent implements BaseTelemetryEvent {
   readonly eventName = 'tool_output_truncated';
   readonly 'event.timestamp' = new Date().toISOString();
@@ -1525,7 +1525,7 @@ export class ToolOutputTruncatedEvent implements BaseTelemetryEvent {
   }
 }
 
-export const EVENT_TOOL_OUTPUT_MASKING = 'gemini_cli.tool_output_masking';
+export const EVENT_TOOL_OUTPUT_MASKING = 'codefly_cli.tool_output_masking';
 
 export class ToolOutputMaskingEvent implements BaseTelemetryEvent {
   'event.name': 'tool_output_masking';
@@ -1568,7 +1568,7 @@ export class ToolOutputMaskingEvent implements BaseTelemetryEvent {
   }
 }
 
-export const EVENT_EXTENSION_UNINSTALL = 'gemini_cli.extension_uninstall';
+export const EVENT_EXTENSION_UNINSTALL = 'codefly_cli.extension_uninstall';
 export class ExtensionUninstallEvent implements BaseTelemetryEvent {
   'event.name': 'extension_uninstall';
   'event.timestamp': string;
@@ -1606,7 +1606,7 @@ export class ExtensionUninstallEvent implements BaseTelemetryEvent {
   }
 }
 
-export const EVENT_EXTENSION_UPDATE = 'gemini_cli.extension_update';
+export const EVENT_EXTENSION_UPDATE = 'codefly_cli.extension_update';
 export class ExtensionUpdateEvent implements BaseTelemetryEvent {
   'event.name': 'extension_update';
   'event.timestamp': string;
@@ -1656,7 +1656,7 @@ export class ExtensionUpdateEvent implements BaseTelemetryEvent {
   }
 }
 
-export const EVENT_EXTENSION_ENABLE = 'gemini_cli.extension_enable';
+export const EVENT_EXTENSION_ENABLE = 'codefly_cli.extension_enable';
 export class ExtensionEnableEvent implements BaseTelemetryEvent {
   'event.name': 'extension_enable';
   'event.timestamp': string;
@@ -1694,7 +1694,7 @@ export class ExtensionEnableEvent implements BaseTelemetryEvent {
   }
 }
 
-export const EVENT_MODEL_SLASH_COMMAND = 'gemini_cli.slash_command.model';
+export const EVENT_MODEL_SLASH_COMMAND = 'codefly_cli.slash_command.model';
 export class ModelSlashCommandEvent implements BaseTelemetryEvent {
   'event.name': 'model_slash_command';
   'event.timestamp': string;
@@ -1720,7 +1720,7 @@ export class ModelSlashCommandEvent implements BaseTelemetryEvent {
   }
 }
 
-export const EVENT_LLM_LOOP_CHECK = 'gemini_cli.llm_loop_check';
+export const EVENT_LLM_LOOP_CHECK = 'codefly_cli.llm_loop_check';
 export class LlmLoopCheckEvent implements BaseTelemetryEvent {
   'event.name': 'llm_loop_check';
   'event.timestamp': string;
@@ -1800,7 +1800,7 @@ export type TelemetryEvent =
   | RewindEvent
   | EditCorrectionEvent;
 
-export const EVENT_EXTENSION_DISABLE = 'gemini_cli.extension_disable';
+export const EVENT_EXTENSION_DISABLE = 'codefly_cli.extension_disable';
 export class ExtensionDisableEvent implements BaseTelemetryEvent {
   'event.name': 'extension_disable';
   'event.timestamp': string;
@@ -1838,7 +1838,7 @@ export class ExtensionDisableEvent implements BaseTelemetryEvent {
   }
 }
 
-export const EVENT_EDIT_STRATEGY = 'gemini_cli.edit_strategy';
+export const EVENT_EDIT_STRATEGY = 'codefly_cli.edit_strategy';
 export class EditStrategyEvent implements BaseTelemetryEvent {
   'event.name': 'edit_strategy';
   'event.timestamp': string;
@@ -1864,7 +1864,7 @@ export class EditStrategyEvent implements BaseTelemetryEvent {
   }
 }
 
-export const EVENT_EDIT_CORRECTION = 'gemini_cli.edit_correction';
+export const EVENT_EDIT_CORRECTION = 'codefly_cli.edit_correction';
 export class EditCorrectionEvent implements BaseTelemetryEvent {
   'event.name': 'edit_correction';
   'event.timestamp': string;
@@ -1899,7 +1899,7 @@ export interface StartupPhaseStats {
   end_time_usec: number;
 }
 
-export const EVENT_STARTUP_STATS = 'gemini_cli.startup_stats';
+export const EVENT_STARTUP_STATS = 'codefly_cli.startup_stats';
 export class StartupStatsEvent implements BaseTelemetryEvent {
   'event.name': 'startup_stats';
   'event.timestamp': string;
@@ -1966,7 +1966,7 @@ abstract class BaseAgentEvent implements BaseTelemetryEvent {
   abstract toLogBody(): string;
 }
 
-export const EVENT_AGENT_START = 'gemini_cli.agent.start';
+export const EVENT_AGENT_START = 'codefly_cli.agent.start';
 export class AgentStartEvent extends BaseAgentEvent {
   'event.name' = 'agent_start' as const;
 
@@ -1986,7 +1986,7 @@ export class AgentStartEvent extends BaseAgentEvent {
   }
 }
 
-export const EVENT_AGENT_FINISH = 'gemini_cli.agent.finish';
+export const EVENT_AGENT_FINISH = 'codefly_cli.agent.finish';
 export class AgentFinishEvent extends BaseAgentEvent {
   'event.name' = 'agent_finish' as const;
   duration_ms: number;
@@ -2021,7 +2021,7 @@ export class AgentFinishEvent extends BaseAgentEvent {
   }
 }
 
-export const EVENT_AGENT_RECOVERY_ATTEMPT = 'gemini_cli.agent.recovery_attempt';
+export const EVENT_AGENT_RECOVERY_ATTEMPT = 'codefly_cli.agent.recovery_attempt';
 export class RecoveryAttemptEvent extends BaseAgentEvent {
   'event.name' = 'agent_recovery_attempt' as const;
   reason: AgentTerminateMode;
@@ -2061,7 +2061,7 @@ export class RecoveryAttemptEvent extends BaseAgentEvent {
 }
 
 export const EVENT_WEB_FETCH_FALLBACK_ATTEMPT =
-  'gemini_cli.web_fetch_fallback_attempt';
+  'codefly_cli.web_fetch_fallback_attempt';
 export class WebFetchFallbackAttemptEvent implements BaseTelemetryEvent {
   'event.name': 'web_fetch_fallback_attempt';
   'event.timestamp': string;
@@ -2087,10 +2087,10 @@ export class WebFetchFallbackAttemptEvent implements BaseTelemetryEvent {
   }
 }
 
-export const EVENT_HOOK_CALL = 'gemini_cli.hook_call';
+export const EVENT_HOOK_CALL = 'codefly_cli.hook_call';
 
 export const EVENT_APPROVAL_MODE_SWITCH =
-  'gemini_cli.plan.approval_mode_switch';
+  'codefly_cli.plan.approval_mode_switch';
 export class ApprovalModeSwitchEvent implements BaseTelemetryEvent {
   eventName = 'approval_mode_switch';
   from_mode: ApprovalMode;
@@ -2120,7 +2120,7 @@ export class ApprovalModeSwitchEvent implements BaseTelemetryEvent {
 }
 
 export const EVENT_APPROVAL_MODE_DURATION =
-  'gemini_cli.plan.approval_mode_duration';
+  'codefly_cli.plan.approval_mode_duration';
 export class ApprovalModeDurationEvent implements BaseTelemetryEvent {
   eventName = 'approval_mode_duration';
   mode: ApprovalMode;
@@ -2149,7 +2149,7 @@ export class ApprovalModeDurationEvent implements BaseTelemetryEvent {
   }
 }
 
-export const EVENT_PLAN_EXECUTION = 'gemini_cli.plan.execution';
+export const EVENT_PLAN_EXECUTION = 'codefly_cli.plan.execution';
 export class PlanExecutionEvent implements BaseTelemetryEvent {
   eventName = 'plan_execution';
   approval_mode: ApprovalMode;
@@ -2258,7 +2258,7 @@ export class HookCallEvent implements BaseTelemetryEvent {
   }
 }
 
-export const EVENT_KEYCHAIN_AVAILABILITY = 'gemini_cli.keychain.availability';
+export const EVENT_KEYCHAIN_AVAILABILITY = 'codefly_cli.keychain.availability';
 export class KeychainAvailabilityEvent implements BaseTelemetryEvent {
   'event.name': 'keychain_availability';
   'event.timestamp': string;
@@ -2286,7 +2286,7 @@ export class KeychainAvailabilityEvent implements BaseTelemetryEvent {
 }
 
 export const EVENT_TOKEN_STORAGE_INITIALIZATION =
-  'gemini_cli.token_storage.initialization';
+  'codefly_cli.token_storage.initialization';
 export class TokenStorageInitializationEvent implements BaseTelemetryEvent {
   'event.name': 'token_storage_initialization';
   'event.timestamp': string;

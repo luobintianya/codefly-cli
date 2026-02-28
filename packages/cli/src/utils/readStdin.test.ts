@@ -66,7 +66,7 @@ describe('readStdin', () => {
   it('should read and accumulate data from stdin', async () => {
     mockStdin.read
       .mockReturnValueOnce('I love ')
-      .mockReturnValueOnce('Gemini!')
+      .mockReturnValueOnce('Codefly!')
       .mockReturnValueOnce(null);
 
     const promise = readStdin();
@@ -77,7 +77,7 @@ describe('readStdin', () => {
     // Trigger end to resolve
     onEndHandler();
 
-    await expect(promise).resolves.toBe('I love Gemini!');
+    await expect(promise).resolves.toBe('I love Codefly!');
   });
 
   it('should handle empty stdin input', async () => {

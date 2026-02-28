@@ -20,17 +20,7 @@ import { act, useContext, type ReactElement } from 'react';
 import { AppContainer } from './AppContainer.js';
 import { SettingsContext } from './contexts/SettingsContext.js';
 import { type TrackedToolCall } from './hooks/useToolScheduler.js';
-import {
-  type Config,
-  makeFakeConfig,
-  CoreEvent,
-  type UserFeedbackPayload,
-  type ResumedSessionData,
-  type StartupWarning,
-  WarningPriority,
-  AuthType,
-  type AgentDefinition,
-} from '@codeflyai/codefly-core';
+import { AuthType, CoreEvent, CoreToolCallStatus, ShellExecutionService, WarningPriority, disableMouseEvents, enableMouseEvents, makeFakeConfig, writeToStdout, type AgentDefinition, type Config, type ResumedSessionData, type StartupWarning, type UserFeedbackPayload } from '@codeflyai/codefly-core';
 
 // Mock coreEvents
 const mockCoreEvents = vi.hoisted(() => ({
@@ -148,7 +138,7 @@ vi.mock('./hooks/useConsoleMessages.js');
 vi.mock('./hooks/useTerminalSize.js', () => ({
   useTerminalSize: vi.fn(() => ({ columns: 80, rows: 24 })),
 }));
-vi.mock('./hooks/useGeminiStream.js');
+vi.mock('./hooks/useCodeflyStream.js');
 vi.mock('./hooks/vim.js');
 vi.mock('./hooks/useFocus.js');
 vi.mock('./hooks/useBracketedPaste.js');
@@ -210,7 +200,7 @@ import { useSettingsCommand } from './hooks/useSettingsCommand.js';
 import { useModelCommand } from './hooks/useModelCommand.js';
 import { useSlashCommandProcessor } from './hooks/slashCommandProcessor.js';
 import { useConsoleMessages } from './hooks/useConsoleMessages.js';
-import { useGeminiStream } from './hooks/useGeminiStream.js';
+import { useCodeflyStream } from './hooks/useCodeflyStream.js';
 import { useVim } from './hooks/vim.js';
 import { useFolderTrust } from './hooks/useFolderTrust.js';
 import { useIdeTrustListener } from './hooks/useIdeTrustListener.js';
@@ -228,12 +218,6 @@ import * as useKeypressModule from './hooks/useKeypress.js';
 import { useSuspend } from './hooks/useSuspend.js';
 import { measureElement } from 'ink';
 import { useTerminalSize } from './hooks/useTerminalSize.js';
-import {
-  ShellExecutionService,
-  writeToStdout,
-  enableMouseEvents,
-  disableMouseEvents,
-} from '@codeflyai/codefly-core';
 import { type ExtensionManager } from '../config/extension-manager.js';
 import {
   WARNING_PROMPT_DURATION_MS,
@@ -291,7 +275,7 @@ describe('AppContainer State Management', () => {
   const mockedUseModelCommand = useModelCommand as Mock;
   const mockedUseSlashCommandProcessor = useSlashCommandProcessor as Mock;
   const mockedUseConsoleMessages = useConsoleMessages as Mock;
-  const mockedUseGeminiStream = useGeminiStream as Mock;
+  const mockedUseCodeflyStream = useCodeflyStream as Mock;
   const mockedUseVim = useVim as Mock;
   const mockedUseFolderTrust = useFolderTrust as Mock;
   const mockedUseIdeTrustListener = useIdeTrustListener as Mock;
@@ -310,7 +294,7 @@ describe('AppContainer State Management', () => {
   const mockedUseShellInactivityStatus = useShellInactivityStatus as Mock;
   const mockedUseFocusState = useFocus as Mock;
 
-  const DEFAULT_GEMINI_STREAM_MOCK = {
+  const DEFAULT_CODEFLY_STREAM_MOCK = {
     streamingState: 'idle',
     submitQuery: vi.fn(),
     initError: null,
@@ -394,7 +378,7 @@ describe('AppContainer State Management', () => {
       handleNewMessage: vi.fn(),
       clearConsoleMessages: vi.fn(),
     });
-    mockedUseGeminiStream.mockReturnValue(DEFAULT_GEMINI_STREAM_MOCK);
+    mockedUseCodeflyStream.mockReturnValue(DEFAULT_CODEFLY_STREAM_MOCK);
     mockedUseVim.mockReturnValue({ handleInput: vi.fn() });
     mockedUseFolderTrust.mockReturnValue({
       isFolderTrustDialogOpen: false,
@@ -574,8 +558,8 @@ describe('AppContainer State Management', () => {
         isFocused: false,
         hasReceivedFocusEvent: true,
       });
-      mockedUseGeminiStream.mockReturnValue({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+      mockedUseCodeflyStream.mockReturnValue({
+        ...DEFAULT_CODEFLY_STREAM_MOCK,
         pendingHistoryItems: [
           {
             type: 'tool_group',
@@ -626,8 +610,8 @@ describe('AppContainer State Management', () => {
         isFocused: true,
         hasReceivedFocusEvent: true,
       });
-      mockedUseGeminiStream.mockReturnValue({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+      mockedUseCodeflyStream.mockReturnValue({
+        ...DEFAULT_CODEFLY_STREAM_MOCK,
         pendingHistoryItems: [
           {
             type: 'tool_group',
@@ -671,8 +655,8 @@ describe('AppContainer State Management', () => {
         isFocused: true,
         hasReceivedFocusEvent: false,
       });
-      mockedUseGeminiStream.mockReturnValue({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+      mockedUseCodeflyStream.mockReturnValue({
+        ...DEFAULT_CODEFLY_STREAM_MOCK,
         pendingHistoryItems: [
           {
             type: 'tool_group',
@@ -717,8 +701,8 @@ describe('AppContainer State Management', () => {
         hasReceivedFocusEvent: true,
       });
       let currentStreamingState: 'idle' | 'responding' = 'responding';
-      mockedUseGeminiStream.mockImplementation(() => ({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+      mockedUseCodeflyStream.mockImplementation(() => ({
+        ...DEFAULT_CODEFLY_STREAM_MOCK,
         streamingState: currentStreamingState,
       }));
 
@@ -742,7 +726,7 @@ describe('AppContainer State Management', () => {
         ).toHaveBeenCalledWith(
           expect.objectContaining({
             type: 'session_complete',
-            detail: 'Gemini CLI finished responding.',
+            detail: 'Codefly CLI finished responding.',
           }),
         ),
       );
@@ -759,8 +743,8 @@ describe('AppContainer State Management', () => {
         hasReceivedFocusEvent: false,
       });
       let currentStreamingState: 'idle' | 'responding' = 'responding';
-      mockedUseGeminiStream.mockImplementation(() => ({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+      mockedUseCodeflyStream.mockImplementation(() => ({
+        ...DEFAULT_CODEFLY_STREAM_MOCK,
         streamingState: currentStreamingState,
       }));
 
@@ -784,7 +768,7 @@ describe('AppContainer State Management', () => {
         ).toHaveBeenCalledWith(
           expect.objectContaining({
             type: 'session_complete',
-            detail: 'Gemini CLI finished responding.',
+            detail: 'Codefly CLI finished responding.',
           }),
         ),
       );
@@ -804,8 +788,8 @@ describe('AppContainer State Management', () => {
         handleProQuotaChoice: vi.fn(),
       });
       let currentStreamingState: 'idle' | 'responding' = 'responding';
-      mockedUseGeminiStream.mockImplementation(() => ({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+      mockedUseCodeflyStream.mockImplementation(() => ({
+        ...DEFAULT_CODEFLY_STREAM_MOCK,
         streamingState: currentStreamingState,
       }));
 
@@ -860,8 +844,8 @@ describe('AppContainer State Management', () => {
         },
       ];
 
-      mockedUseGeminiStream.mockImplementation(() => ({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+      mockedUseCodeflyStream.mockImplementation(() => ({
+        ...DEFAULT_CODEFLY_STREAM_MOCK,
         pendingHistoryItems,
       }));
 
@@ -1105,7 +1089,7 @@ describe('AppContainer State Management', () => {
             },
             {
               id: 'msg-2',
-              type: 'gemini' as const,
+              type: 'codefly' as const,
               content: 'Hi there!',
               role: 'model' as const,
               parts: [{ text: 'Hi there!' }],
@@ -1292,7 +1276,7 @@ describe('AppContainer State Management', () => {
             },
             {
               id: 'msg-2',
-              type: 'gemini' as const,
+              type: 'codefly' as const,
               content: 'Previous answer',
               role: 'model' as const,
               parts: [{ text: 'Previous answer' }],
@@ -1418,8 +1402,8 @@ describe('AppContainer State Management', () => {
     it('passes a valid proQuotaRequest to UIStateContext when provided by the hook', async () => {
       // Arrange: Create a mock request object that a UI dialog would receive
       const mockRequest = {
-        failedModel: 'gemini-pro',
-        fallbackModel: 'gemini-flash',
+        failedModel: 'codefly-pro',
+        fallbackModel: 'codefly-flash',
         resolve: vi.fn(),
       };
       mockedUseQuotaAndFallback.mockReturnValue({
@@ -1496,8 +1480,8 @@ describe('AppContainer State Management', () => {
       } as unknown as LoadedSettings;
 
       // Mock the streaming state as Active
-      mockedUseGeminiStream.mockReturnValue({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+      mockedUseCodeflyStream.mockReturnValue({
+        ...DEFAULT_CODEFLY_STREAM_MOCK,
         streamingState: 'responding',
         thought: { subject: 'Some thought' },
       });
@@ -1534,8 +1518,8 @@ describe('AppContainer State Management', () => {
       } as unknown as LoadedSettings;
 
       // Mock the streaming state
-      mockedUseGeminiStream.mockReturnValue({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+      mockedUseCodeflyStream.mockReturnValue({
+        ...DEFAULT_CODEFLY_STREAM_MOCK,
         streamingState: 'responding',
         thought: { subject: 'Some thought' },
       });
@@ -1603,8 +1587,8 @@ describe('AppContainer State Management', () => {
 
       // Mock the streaming state and thought
       const thoughtSubject = 'Processing request';
-      mockedUseGeminiStream.mockReturnValue({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+      mockedUseCodeflyStream.mockReturnValue({
+        ...DEFAULT_CODEFLY_STREAM_MOCK,
         streamingState: 'responding',
         thought: { subject: thoughtSubject },
       });
@@ -1642,7 +1626,7 @@ describe('AppContainer State Management', () => {
       } as unknown as LoadedSettings;
 
       // Mock the streaming state as Idle with no thought
-      mockedUseGeminiStream.mockReturnValue(DEFAULT_GEMINI_STREAM_MOCK);
+      mockedUseCodeflyStream.mockReturnValue(DEFAULT_CODEFLY_STREAM_MOCK);
 
       // Act: Render the container
       const { unmount } = renderAppContainer({
@@ -1678,8 +1662,8 @@ describe('AppContainer State Management', () => {
 
       // Mock the streaming state and thought
       const thoughtSubject = 'Confirm tool execution';
-      mockedUseGeminiStream.mockReturnValue({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+      mockedUseCodeflyStream.mockReturnValue({
+        ...DEFAULT_CODEFLY_STREAM_MOCK,
         streamingState: 'waiting_for_confirmation',
         thought: { subject: thoughtSubject },
       });
@@ -1739,8 +1723,8 @@ describe('AppContainer State Management', () => {
         } as unknown as LoadedSettings;
 
         // Mock an active shell pty but not focused
-        mockedUseGeminiStream.mockReturnValue({
-          ...DEFAULT_GEMINI_STREAM_MOCK,
+        mockedUseCodeflyStream.mockReturnValue({
+          ...DEFAULT_CODEFLY_STREAM_MOCK,
           streamingState: 'responding',
           thought: { subject: 'Executing shell command' },
           pendingToolCalls: [],
@@ -1798,8 +1782,8 @@ describe('AppContainer State Management', () => {
         } as unknown as LoadedSettings;
 
         // Mock an active shell pty with redirection active
-        mockedUseGeminiStream.mockReturnValue({
-          ...DEFAULT_GEMINI_STREAM_MOCK,
+        mockedUseCodeflyStream.mockReturnValue({
+          ...DEFAULT_CODEFLY_STREAM_MOCK,
           streamingState: 'responding',
           thought: { subject: 'Executing shell command' },
           pendingToolCalls: [
@@ -1868,8 +1852,8 @@ describe('AppContainer State Management', () => {
         } as unknown as LoadedSettings;
 
         // Mock an active shell pty with NO output since operation started (silent)
-        mockedUseGeminiStream.mockReturnValue({
-          ...DEFAULT_GEMINI_STREAM_MOCK,
+        mockedUseCodeflyStream.mockReturnValue({
+          ...DEFAULT_CODEFLY_STREAM_MOCK,
           streamingState: 'responding',
           thought: { subject: 'Executing shell command' },
           pendingToolCalls: [],
@@ -1919,8 +1903,8 @@ describe('AppContainer State Management', () => {
 
         // Mock an active shell pty but not focused
         let lastOutputTime = startTime + 1000;
-        mockedUseGeminiStream.mockImplementation(() => ({
-          ...DEFAULT_GEMINI_STREAM_MOCK,
+        mockedUseCodeflyStream.mockImplementation(() => ({
+          ...DEFAULT_CODEFLY_STREAM_MOCK,
           streamingState: 'responding',
           thought: { subject: 'Executing shell command' },
           activePtyId: 'pty-1',
@@ -1942,8 +1926,8 @@ describe('AppContainer State Management', () => {
 
         // Update lastOutputTime to simulate new output
         lastOutputTime = startTime + 21000;
-        mockedUseGeminiStream.mockImplementation(() => ({
-          ...DEFAULT_GEMINI_STREAM_MOCK,
+        mockedUseCodeflyStream.mockImplementation(() => ({
+          ...DEFAULT_CODEFLY_STREAM_MOCK,
           streamingState: 'responding',
           thought: { subject: 'Executing shell command' },
           activePtyId: 'pty-1',
@@ -2004,8 +1988,8 @@ describe('AppContainer State Management', () => {
 
       // Mock the streaming state and thought with a short subject
       const shortTitle = 'Short';
-      mockedUseGeminiStream.mockReturnValue({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+      mockedUseCodeflyStream.mockReturnValue({
+        ...DEFAULT_CODEFLY_STREAM_MOCK,
         streamingState: 'responding',
         thought: { subject: shortTitle },
       });
@@ -2045,8 +2029,8 @@ describe('AppContainer State Management', () => {
 
       // Mock the streaming state and thought
       const title = 'Test Title';
-      mockedUseGeminiStream.mockReturnValue({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+      mockedUseCodeflyStream.mockReturnValue({
+        ...DEFAULT_CODEFLY_STREAM_MOCK,
         streamingState: 'responding',
         thought: { subject: title },
       });
@@ -2082,11 +2066,11 @@ describe('AppContainer State Management', () => {
       } as unknown as LoadedSettings;
 
       // Mock CLI_TITLE environment variable
-      vi.stubEnv('CLI_TITLE', 'Custom Gemini Title');
+      vi.stubEnv('CLI_TITLE', 'Custom Codefly Title');
 
       // Mock the streaming state
-      mockedUseGeminiStream.mockReturnValue({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+      mockedUseCodeflyStream.mockReturnValue({
+        ...DEFAULT_CODEFLY_STREAM_MOCK,
         streamingState: 'responding',
       });
 
@@ -2102,7 +2086,7 @@ describe('AppContainer State Management', () => {
 
       expect(titleWrites).toHaveLength(1);
       expect(titleWrites[0][0]).toBe(
-        `\x1b]0;${'✦  Working… (Custom Gemini Title)'.padEnd(80, ' ')}\x07`,
+        `\x1b]0;${'✦  Working… (Custom Codefly Title)'.padEnd(80, ' ')}\x07`,
       );
       unmount();
     });
@@ -2188,8 +2172,8 @@ describe('AppContainer State Management', () => {
       mockedUseTerminalSize.mockReturnValue({ columns: 80, rows: 5 });
       mockedMeasureElement.mockReturnValue({ width: 80, height: 10 }); // Footer is taller than the screen
 
-      mockedUseGeminiStream.mockReturnValue({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+      mockedUseCodeflyStream.mockReturnValue({
+        ...DEFAULT_CODEFLY_STREAM_MOCK,
         activePtyId: 'some-id',
       });
 
@@ -2251,8 +2235,8 @@ describe('AppContainer State Management', () => {
 
       // Mock request cancellation
       mockCancelOngoingRequest = vi.fn();
-      mockedUseGeminiStream.mockReturnValue({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+      mockedUseCodeflyStream.mockReturnValue({
+        ...DEFAULT_CODEFLY_STREAM_MOCK,
         cancelOngoingRequest: mockCancelOngoingRequest,
       });
 
@@ -2275,8 +2259,8 @@ describe('AppContainer State Management', () => {
 
     describe('CTRL+C', () => {
       it('should cancel ongoing request on first press', async () => {
-        mockedUseGeminiStream.mockReturnValue({
-          ...DEFAULT_GEMINI_STREAM_MOCK,
+        mockedUseCodeflyStream.mockReturnValue({
+          ...DEFAULT_CODEFLY_STREAM_MOCK,
           streamingState: 'responding',
           cancelOngoingRequest: mockCancelOngoingRequest,
         });
@@ -2395,8 +2379,8 @@ describe('AppContainer State Management', () => {
     describe('Focus Handling (Tab / Shift+Tab)', () => {
       beforeEach(() => {
         // Mock activePtyId to enable focus
-        mockedUseGeminiStream.mockReturnValue({
-          ...DEFAULT_GEMINI_STREAM_MOCK,
+        mockedUseCodeflyStream.mockReturnValue({
+          ...DEFAULT_CODEFLY_STREAM_MOCK,
           activePtyId: 1,
         });
       });
@@ -2425,8 +2409,8 @@ describe('AppContainer State Management', () => {
 
       it('should auto-unfocus when activePtyId becomes null', async () => {
         // Start with active pty and focused
-        mockedUseGeminiStream.mockReturnValue({
-          ...DEFAULT_GEMINI_STREAM_MOCK,
+        mockedUseCodeflyStream.mockReturnValue({
+          ...DEFAULT_CODEFLY_STREAM_MOCK,
           activePtyId: 1,
         });
 
@@ -2442,8 +2426,8 @@ describe('AppContainer State Management', () => {
         expect(capturedUIState.embeddedShellFocused).toBe(true);
 
         // Now mock activePtyId becoming null
-        mockedUseGeminiStream.mockReturnValue({
-          ...DEFAULT_GEMINI_STREAM_MOCK,
+        mockedUseCodeflyStream.mockReturnValue({
+          ...DEFAULT_CODEFLY_STREAM_MOCK,
           activePtyId: null,
         });
 
@@ -2458,8 +2442,8 @@ describe('AppContainer State Management', () => {
 
       it('should focus background shell on Tab when already visible (not toggle it off)', async () => {
         const mockToggleBackgroundShell = vi.fn();
-        mockedUseGeminiStream.mockReturnValue({
-          ...DEFAULT_GEMINI_STREAM_MOCK,
+        mockedUseCodeflyStream.mockReturnValue({
+          ...DEFAULT_CODEFLY_STREAM_MOCK,
           activePtyId: null,
           isBackgroundShellVisible: true,
           backgroundShells: new Map([[123, { pid: 123, status: 'running' }]]),
@@ -2486,8 +2470,8 @@ describe('AppContainer State Management', () => {
     describe('Background Shell Toggling (CTRL+B)', () => {
       it('should toggle background shell on Ctrl+B even if visible but not focused', async () => {
         const mockToggleBackgroundShell = vi.fn();
-        mockedUseGeminiStream.mockReturnValue({
-          ...DEFAULT_GEMINI_STREAM_MOCK,
+        mockedUseCodeflyStream.mockReturnValue({
+          ...DEFAULT_CODEFLY_STREAM_MOCK,
           activePtyId: null,
           isBackgroundShellVisible: true,
           backgroundShells: new Map([[123, { pid: 123, status: 'running' }]]),
@@ -2512,20 +2496,20 @@ describe('AppContainer State Management', () => {
 
       it('should show and focus background shell on Ctrl+B if hidden', async () => {
         const mockToggleBackgroundShell = vi.fn();
-        const geminiStreamMock = {
-          ...DEFAULT_GEMINI_STREAM_MOCK,
+        const codeflyStreamMock = {
+          ...DEFAULT_CODEFLY_STREAM_MOCK,
           activePtyId: null,
           isBackgroundShellVisible: false,
           backgroundShells: new Map([[123, { pid: 123, status: 'running' }]]),
           toggleBackgroundShell: mockToggleBackgroundShell,
         };
-        mockedUseGeminiStream.mockReturnValue(geminiStreamMock);
+        mockedUseCodeflyStream.mockReturnValue(codeflyStreamMock);
 
         await setupKeypressTest();
 
         // Update the mock state when toggled to simulate real behavior
         mockToggleBackgroundShell.mockImplementation(() => {
-          geminiStreamMock.isBackgroundShellVisible = true;
+          codeflyStreamMock.isBackgroundShellVisible = true;
         });
 
         // Press Ctrl+B
@@ -2616,8 +2600,8 @@ describe('AppContainer State Management', () => {
       rerender();
       expect(capturedUIState.shortcutsHelpVisible).toBe(true);
 
-      mockedUseGeminiStream.mockReturnValue({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+      mockedUseCodeflyStream.mockReturnValue({
+        ...DEFAULT_CODEFLY_STREAM_MOCK,
         streamingState: 'responding',
       });
 
@@ -3126,8 +3110,8 @@ describe('AppContainer State Management', () => {
           throw new Error('Cannot resize a pty that has already exited');
         });
 
-      mockedUseGeminiStream.mockReturnValue({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+      mockedUseCodeflyStream.mockReturnValue({
+        ...DEFAULT_CODEFLY_STREAM_MOCK,
         activePtyId: 'some-pty-id', // Make sure activePtyId is set
       });
 
@@ -3143,10 +3127,10 @@ describe('AppContainer State Management', () => {
     });
   });
   describe('Banner Text', () => {
-    it('should render placeholder banner text for USE_GEMINI auth type', async () => {
+    it('should render placeholder banner text for USE_CODEFLY auth type', async () => {
       const config = makeFakeConfig();
       vi.spyOn(config, 'getContentGeneratorConfig').mockReturnValue({
-        authType: AuthType.USE_GEMINI,
+        authType: AuthType.USE_CODEFLY,
         apiKey: 'fake-key',
       });
       let unmount: () => void;
@@ -3164,9 +3148,9 @@ describe('AppContainer State Management', () => {
   describe('onCancelSubmit Behavior', () => {
     let mockSetText: Mock;
 
-    // Helper to extract arguments from the useGeminiStream hook call
+    // Helper to extract arguments from the useCodeflyStream hook call
     // This isolates the positional argument dependency to a single location
-    const extractUseGeminiStreamArgs = (args: unknown[]) => ({
+    const extractUseCodeflyStreamArgs = (args: unknown[]) => ({
       onCancelSubmit: args[13] as (shouldRestorePrompt?: boolean) => void,
     });
 
@@ -3186,8 +3170,8 @@ describe('AppContainer State Management', () => {
       });
       await waitFor(() => expect(capturedUIState).toBeTruthy());
 
-      const { onCancelSubmit } = extractUseGeminiStreamArgs(
-        mockedUseGeminiStream.mock.lastCall!,
+      const { onCancelSubmit } = extractUseCodeflyStreamArgs(
+        mockedUseCodeflyStream.mock.lastCall!,
       );
 
       act(() => {
@@ -3216,8 +3200,8 @@ describe('AppContainer State Management', () => {
         expect(capturedUIState.userMessages).toContain('previous message'),
       );
 
-      const { onCancelSubmit } = extractUseGeminiStreamArgs(
-        mockedUseGeminiStream.mock.lastCall!,
+      const { onCancelSubmit } = extractUseCodeflyStreamArgs(
+        mockedUseCodeflyStream.mock.lastCall!,
       );
 
       await act(async () => {
@@ -3648,7 +3632,7 @@ describe('AppContainer State Management', () => {
           mockConfig.getWorkspaceContext(),
           'addReadOnlyPath',
         );
-        const { submitQuery } = mockedUseGeminiStream();
+        const { submitQuery } = mockedUseCodeflyStream();
 
         let unmount: () => void;
         await act(async () => (unmount = renderAppContainer().unmount));
@@ -3680,8 +3664,8 @@ describe('AppContainer State Management', () => {
   describe('Plan Mode Availability', () => {
     it('should allow plan mode when enabled and idle', async () => {
       vi.spyOn(mockConfig, 'isPlanEnabled').mockReturnValue(true);
-      mockedUseGeminiStream.mockReturnValue({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+      mockedUseCodeflyStream.mockReturnValue({
+        ...DEFAULT_CODEFLY_STREAM_MOCK,
         pendingHistoryItems: [],
       });
 
@@ -3700,8 +3684,8 @@ describe('AppContainer State Management', () => {
 
     it('should NOT allow plan mode when disabled in config', async () => {
       vi.spyOn(mockConfig, 'isPlanEnabled').mockReturnValue(false);
-      mockedUseGeminiStream.mockReturnValue({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+      mockedUseCodeflyStream.mockReturnValue({
+        ...DEFAULT_CODEFLY_STREAM_MOCK,
         pendingHistoryItems: [],
       });
 
@@ -3720,8 +3704,8 @@ describe('AppContainer State Management', () => {
 
     it('should NOT allow plan mode when streaming', async () => {
       vi.spyOn(mockConfig, 'isPlanEnabled').mockReturnValue(true);
-      mockedUseGeminiStream.mockReturnValue({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+      mockedUseCodeflyStream.mockReturnValue({
+        ...DEFAULT_CODEFLY_STREAM_MOCK,
         streamingState: StreamingState.Responding,
         pendingHistoryItems: [],
       });
@@ -3741,8 +3725,8 @@ describe('AppContainer State Management', () => {
 
     it('should NOT allow plan mode when a tool is awaiting confirmation', async () => {
       vi.spyOn(mockConfig, 'isPlanEnabled').mockReturnValue(true);
-      mockedUseGeminiStream.mockReturnValue({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+      mockedUseCodeflyStream.mockReturnValue({
+        ...DEFAULT_CODEFLY_STREAM_MOCK,
         streamingState: StreamingState.Idle,
         pendingHistoryItems: [
           {

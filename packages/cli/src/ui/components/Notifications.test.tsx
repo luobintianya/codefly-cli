@@ -18,7 +18,7 @@ import { useUIState, type UIState } from '../contexts/UIStateContext.js';
 import { useIsScreenReaderEnabled } from 'ink';
 import * as fs from 'node:fs/promises';
 import { act } from 'react';
-import { WarningPriority } from '@google/gemini-cli-core';
+import { WarningPriority } from '@codeflyai/codefly-core';
 
 // Mock dependencies
 vi.mock('../contexts/AppContext.js');
@@ -74,7 +74,7 @@ vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
     Storage: {
       ...actual.Storage,
       getGlobalTempDir: () => '/mock/temp',
-      getGlobalSettingsPath: () => '/mock/home/.gemini/settings.json',
+      getGlobalSettingsPath: () => '/mock/home/.codefly/settings.json',
     },
   };
 });

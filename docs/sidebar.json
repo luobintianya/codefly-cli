@@ -15,13 +15,13 @@
           { "label": "Examples", "slug": "docs/get-started/examples" },
           { "label": "CLI cheatsheet", "slug": "docs/cli/cli-reference" },
           {
-            "label": "Gemini 3 on Gemini CLI",
-            "slug": "docs/get-started/gemini-3"
+            "label": "Codefly 3 on Codefly CLI",
+            "slug": "docs/get-started/codefly-3"
           }
         ]
       },
       {
-        "label": "Use Gemini CLI",
+        "label": "Use Codefly CLI",
         "items": [
           {
             "label": "File management",
@@ -126,16 +126,16 @@
             "slug": "docs/cli/enterprise"
           },
           {
-            "label": "Ignore files (.geminiignore)",
-            "slug": "docs/cli/gemini-ignore"
+            "label": "Ignore files (.codeflyignore)",
+            "slug": "docs/cli/codefly-ignore"
           },
           {
             "label": "Model configuration",
             "slug": "docs/cli/generation-settings"
           },
           {
-            "label": "Project context (GEMINI.md)",
-            "slug": "docs/cli/gemini-md"
+            "label": "Project context (CODEFLY.md)",
+            "slug": "docs/cli/codefly-md"
           },
           { "label": "Settings", "slug": "docs/cli/settings" },
           {

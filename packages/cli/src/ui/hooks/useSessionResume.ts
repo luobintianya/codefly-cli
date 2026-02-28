@@ -4,8 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Config, ResumedSessionData } from '@codeflyai/codefly-core';
+import { convertSessionToClientHistory } from '@codeflyai/codefly-core';
 import type { Part } from '@google/genai';
 import type { HistoryItemWithoutId } from '../types.js';
 import type { UseHistoryManagerReturn } from './useHistoryManager.js';
@@ -67,9 +68,12 @@ export function useSessionResume({
         });
         refreshStaticRef.current(); // Force Static component to re-render with the updated history.
 
-      // Give the history to the Gemini client.
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      config.getCodeflyClient()?.resumeChat(clientHistory, resumedData);
+        // Give the history to the Codefly client.
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        config.getCodeflyClient()?.resumeChat(clientHistory, resumedData);
+      } finally {
+        setIsResuming(false);
+      }
     },
     [config, isCodeflyClientInitialized, setQuittingMessages],
   );

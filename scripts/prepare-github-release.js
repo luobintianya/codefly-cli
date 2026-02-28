@@ -35,16 +35,16 @@ if (fs.existsSync(sourceBundleDir)) {
 const coreNpmrcPath = path.resolve(rootDir, 'packages/core/.npmrc');
 fs.writeFileSync(
   coreNpmrcPath,
-  '@google-gemini:registry=https://npm.pkg.github.com/',
+  '@google-codefly:registry=https://npm.pkg.github.com/',
 );
-console.log('Wrote .npmrc for @google-gemini scope to packages/core/');
+console.log('Wrote .npmrc for @google-codefly scope to packages/core/');
 
 // Update @codeflyai/codefly
 updatePackageJson('packages/cli/package.json', (pkg) => {
-  pkg.name = '@google-gemini/gemini-cli';
+  pkg.name = '@google-codefly/codefly-cli';
   pkg.files = ['bundle/'];
   pkg.bin = {
-    gemini: 'bundle/gemini.js',
+    codefly: 'bundle/codefly.js',
   };
 
   // Remove fields that are not relevant to the bundled package.
@@ -57,12 +57,12 @@ updatePackageJson('packages/cli/package.json', (pkg) => {
 
 // Update @codeflyai/codefly-a2a-server
 updatePackageJson('packages/a2a-server/package.json', (pkg) => {
-  pkg.name = '@google-gemini/gemini-cli-a2a-server';
+  pkg.name = '@google-codefly/codefly-cli-a2a-server';
 });
 
 // Update @codeflyai/codefly-core
 updatePackageJson('packages/core/package.json', (pkg) => {
-  pkg.name = '@google-gemini/gemini-cli-core';
+  pkg.name = '@google-codefly/codefly-cli-core';
 });
 
 console.log('Successfully prepared packages for GitHub release.');

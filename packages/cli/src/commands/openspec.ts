@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { runOpenspec } from '@codeflyai/codefly-core/openspec';
+import { runOpenspec } from '@codeflyai/codefly-core';
 import type { CommandModule } from 'yargs';
 
 export const openspecCommand: CommandModule = {

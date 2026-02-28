@@ -1331,7 +1331,7 @@ describe('SettingsDialog', () => {
 
       await waitFor(() => {
         expect(lastFrame()).toContain(
-          'To see changes, Gemini CLI must be restarted',
+          'To see changes, Codefly CLI must be restarted',
         );
       });
 
@@ -1378,7 +1378,7 @@ describe('SettingsDialog', () => {
 
       await waitFor(() => {
         expect(lastFrame()).toContain(
-          'To see changes, Gemini CLI must be restarted',
+          'To see changes, Codefly CLI must be restarted',
         );
       });
 

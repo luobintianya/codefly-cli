@@ -1,11 +1,11 @@
 {
-  "name": "@google/gemini-cli-core",
+  "name": "@codeflyai/codefly-core",
   "version": "0.30.0-nightly.20260210.a2174751d",
-  "description": "Gemini CLI Core",
+  "description": "Codefly CLI Core",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/google-gemini/gemini-cli.git"
+    "url": "git+https://github.com/google-codefly/codefly-cli.git"
   },
   "type": "module",
   "main": "dist/index.js",
@@ -27,6 +27,7 @@
     "@google-cloud/opentelemetry-cloud-trace-exporter": "^3.0.0",
     "@google/genai": "1.41.0",
     "@iarna/toml": "^2.2.5",
+    "@inquirer/prompts": "^8.3.0",
     "@joshua.litt/get-ripgrep": "^0.0.3",
     "@modelcontextprotocol/sdk": "^1.23.0",
     "@opentelemetry/api": "^1.9.0",
@@ -68,6 +69,7 @@
     "mime": "4.0.7",
     "mnemonist": "^0.40.3",
     "open": "^10.1.2",
+    "ora": "^9.3.0",
     "picomatch": "^4.0.1",
     "proper-lockfile": "^4.1.2",
     "read-package-up": "^11.0.0",
@@ -94,7 +96,7 @@
     "node-pty": "^1.0.0"
   },
   "devDependencies": {
-    "@google/gemini-cli-test-utils": "file:../test-utils",
+    "@codeflyai/codefly-test-utils": "file:../test-utils",
     "@types/fast-levenshtein": "^0.0.4",
     "@types/js-yaml": "^4.0.9",
     "@types/picomatch": "^4.0.1",

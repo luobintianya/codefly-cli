@@ -9,10 +9,7 @@ import { HistoryItemDisplay } from './HistoryItemDisplay.js';
 import { type HistoryItem } from '../types.js';
 import { MessageType } from '../types.js';
 import { SessionStatsProvider } from '../contexts/SessionContext.js';
-import type {
-  Config,
-  ToolExecuteConfirmationDetails,
-} from '@codeflyai/codefly-core';
+import { CoreToolCallStatus, type Config, type ToolExecuteConfirmationDetails } from '@codeflyai/codefly-core';
 import { ToolGroupMessage } from './messages/ToolGroupMessage.js';
 import { renderWithProviders } from '../../test-utils/render.js';
 import { createMockSettings } from '../../test-utils/settings.js';
@@ -150,7 +147,7 @@ describe('<HistoryItemDisplay />', () => {
       gcpProject: 'test-project',
       ideClient: 'test-ide',
     };
-    const { lastFrame, waitUntilReady, unmount } = renderWithProviders(
+    const { lastFrame } = renderWithProviders(
       <HistoryItemDisplay {...baseItem} item={item} />,
     );
     expect(lastFrame()).toContain('About Codefly');
@@ -313,7 +310,7 @@ describe('<HistoryItemDisplay />', () => {
   });
 
   describe.each([true, false])(
-    'gemini items (alternateBuffer=%s)',
+    'codefly items (alternateBuffer=%s)',
     (useAlternateBuffer) => {
       const longCode =
         '# Example code block:\n' +
@@ -321,10 +318,10 @@ describe('<HistoryItemDisplay />', () => {
         Array.from({ length: 50 }, (_, i) => `Line ${i + 1}`).join('\n') +
         '\n```';
 
-      it('should render a truncated gemini item', async () => {
+      it('should render a truncated codefly item', async () => {
         const item: HistoryItem = {
           id: 1,
-          type: 'gemini',
+          type: 'codefly',
           text: longCode,
         };
         const { lastFrame, waitUntilReady, unmount } = renderWithProviders(
@@ -342,10 +339,10 @@ describe('<HistoryItemDisplay />', () => {
         unmount();
       });
 
-      it('should render a full gemini item when using availableTerminalHeightGemini', async () => {
+      it('should render a full codefly item when using availableTerminalHeightCodefly', async () => {
         const item: HistoryItem = {
           id: 1,
-          type: 'gemini',
+          type: 'codefly',
           text: longCode,
         };
         const { lastFrame, waitUntilReady, unmount } = renderWithProviders(
@@ -354,7 +351,7 @@ describe('<HistoryItemDisplay />', () => {
             isPending={false}
             terminalWidth={80}
             availableTerminalHeight={10}
-            availableTerminalHeightGemini={Number.MAX_SAFE_INTEGER}
+            availableTerminalHeightCodefly={Number.MAX_SAFE_INTEGER}
           />,
           { useAlternateBuffer },
         );
@@ -364,10 +361,10 @@ describe('<HistoryItemDisplay />', () => {
         unmount();
       });
 
-      it('should render a truncated gemini_content item', async () => {
+      it('should render a truncated codefly_content item', async () => {
         const item: HistoryItem = {
           id: 1,
-          type: 'gemini_content',
+          type: 'codefly_content',
           text: longCode,
         };
         const { lastFrame, waitUntilReady, unmount } = renderWithProviders(
@@ -385,10 +382,10 @@ describe('<HistoryItemDisplay />', () => {
         unmount();
       });
 
-      it('should render a full gemini_content item when using availableTerminalHeightGemini', async () => {
+      it('should render a full codefly_content item when using availableTerminalHeightCodefly', async () => {
         const item: HistoryItem = {
           id: 1,
-          type: 'gemini_content',
+          type: 'codefly_content',
           text: longCode,
         };
         const { lastFrame, waitUntilReady, unmount } = renderWithProviders(
@@ -397,7 +394,7 @@ describe('<HistoryItemDisplay />', () => {
             isPending={false}
             terminalWidth={80}
             availableTerminalHeight={10}
-            availableTerminalHeightGemini={Number.MAX_SAFE_INTEGER}
+            availableTerminalHeightCodefly={Number.MAX_SAFE_INTEGER}
           />,
           { useAlternateBuffer },
         );

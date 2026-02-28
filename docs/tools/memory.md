@@ -1,12 +1,12 @@
 # Memory tool (`save_memory`)
 
-The `save_memory` tool allows the Gemini agent to persist specific facts, user
+The `save_memory` tool allows the Codefly agent to persist specific facts, user
 preferences, and project details across sessions.
 
 ## Technical reference
 
-This tool appends information to the `## Gemini Added Memories` section of your
-global `GEMINI.md` file (typically located at `~/.gemini/GEMINI.md`).
+This tool appends information to the `## Codefly Added Memories` section of your
+global `CODEFLY.md` file (typically located at `~/.codefly/CODEFLY.md`).
 
 ### Arguments
 
@@ -29,5 +29,5 @@ to have a different name.
 
 - Follow the [Memory management guide](../cli/tutorials/memory-management.md)
   for practical examples.
-- Learn how the [Project context (GEMINI.md)](../cli/gemini-md.md) system loads
+- Learn how the [Project context (CODEFLY.md)](../cli/codefly-md.md) system loads
   this information.

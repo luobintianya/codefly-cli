@@ -67,7 +67,7 @@ describe('MemoryTool', () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
-    // Reset GEMINI_MD_FILENAME to its original value after each test
+    // Reset CODEFLY_MD_FILENAME to its original value after each test
     setCodeflyMdFilename(DEFAULT_CONTEXT_FILENAME);
   });
 
@@ -436,7 +436,7 @@ describe('MemoryTool', () => {
     it('should handle existing memory file with content', async () => {
       const params = { fact: 'New fact' };
       const existingContent =
-        'Some existing content.\n\n## Gemini Added Memories\n- Old fact\n';
+        'Some existing content.\n\n## Codefly Added Memories\n- Old fact\n';
 
       vi.mocked(fs.readFile).mockResolvedValue(existingContent);
 

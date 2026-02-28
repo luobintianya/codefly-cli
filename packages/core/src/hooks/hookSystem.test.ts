@@ -66,7 +66,7 @@ describe('HookSystem Integration', () => {
 
     // Create a real config with simple command hook configurations for testing
     config = new Config({
-      model: 'gemini-1.5-flash',
+      model: 'codefly-1.5-flash',
       targetDir: testDir,
       sessionId: 'test-session',
       debugMode: false,
@@ -152,7 +152,7 @@ describe('HookSystem Integration', () => {
 
       // Create a config with invalid hooks to trigger initialization errors
       const invalidConfig = new Config({
-        model: 'gemini-1.5-flash',
+        model: 'codefly-1.5-flash',
         targetDir: invalidDir,
         sessionId: 'test-session-invalid',
         debugMode: false,
@@ -269,7 +269,7 @@ describe('HookSystem Integration', () => {
 
       // Create config with two hooks, one enabled and one disabled via settings
       const configWithDisabled = new Config({
-        model: 'gemini-1.5-flash',
+        model: 'codefly-1.5-flash',
         targetDir: disabledDir,
         sessionId: 'test-session-disabled',
         debugMode: false,
@@ -340,7 +340,7 @@ describe('HookSystem Integration', () => {
 
       // Create config with a hook
       const configForDisabling = new Config({
-        model: 'gemini-1.5-flash',
+        model: 'codefly-1.5-flash',
         targetDir: setEnabledDir,
         sessionId: 'test-session-setEnabled',
         debugMode: false,

@@ -7,8 +7,8 @@
 import { spawn } from 'node:child_process';
 import { RELAUNCH_EXIT_CODE } from './processUtils.js';
 import {
+  type AdminControlsSettings,
   writeToStderr,
-  type FetchAdminControlsResponse,
 } from '@codeflyai/codefly-core';
 
 export async function relaunchOnExitCode(runner: () => Promise<number>) {
@@ -36,7 +36,7 @@ export async function relaunchAppInChildProcess(
   additionalScriptArgs: string[],
   remoteAdminSettings?: AdminControlsSettings,
 ) {
-  if (process.env['GEMINI_CLI_NO_RELAUNCH']) {
+  if (process.env['CODEFLY_CLI_NO_RELAUNCH']) {
     return;
   }
 
@@ -55,7 +55,7 @@ export async function relaunchAppInChildProcess(
       ...additionalScriptArgs,
       ...scriptArgs,
     ];
-    const newEnv = { ...process.env, GEMINI_CLI_NO_RELAUNCH: 'true' };
+    const newEnv = { ...process.env, CODEFLY_CLI_NO_RELAUNCH: 'true' };
 
     // The parent process should not be reading from stdin while the child is running.
     process.stdin.pause();

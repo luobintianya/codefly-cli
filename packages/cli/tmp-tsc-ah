@@ -1,0 +1,100 @@
+src/ui/hooks/useGeminiStream.ts(1408,23): error TS2554: Expected 1-4 arguments, but got 5.
+src/ui/hooks/useLoadingIndicator.test.tsx(36,25): error TS2304: Cannot find name 'LoadingPhrasesMode'.
+src/ui/hooks/useLoadingIndicator.test.tsx(48,14): error TS2304: Cannot find name 'LoadingPhrasesMode'.
+src/ui/hooks/useLoadingIndicator.test.tsx(76,16): error TS2304: Cannot find name 'LoadingPhrasesMode'.
+src/ui/hooks/useLoadingIndicator.ts(20,24): error TS2304: Cannot find name 'LoadingPhrasesMode'.
+src/ui/hooks/usePromptCompletion.ts(110,9): error TS2304: Cannot find name 'LlmRole'.
+src/ui/hooks/useQuotaAndFallback.ts(91,13): error TS2304: Cannot find name 'VALID_GEMINI_MODELS'.
+src/ui/hooks/useQuotaAndFallback.ts(93,55): error TS2304: Cannot find name 'getDisplayString'.
+src/ui/hooks/useSessionBrowser.test.ts(159,12): error TS2304: Cannot find name 'convertSessionToClientHistory'.
+src/ui/hooks/useSessionBrowser.test.ts(177,27): error TS2304: Cannot find name 'convertSessionToClientHistory'.
+src/ui/hooks/useSessionBrowser.test.ts(206,27): error TS2304: Cannot find name 'convertSessionToClientHistory'.
+src/ui/hooks/useSessionBrowser.test.ts(229,12): error TS2304: Cannot find name 'convertSessionToClientHistory'.
+src/ui/hooks/useSessionBrowser.test.ts(243,21): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/useSessionBrowser.test.ts(263,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/useSessionBrowser.test.ts(268,27): error TS2304: Cannot find name 'convertSessionToClientHistory'.
+src/ui/hooks/useSessionBrowser.ts(16,15): error TS2300: Duplicate identifier 'Part'.
+src/ui/hooks/useSessionBrowser.ts(17,10): error TS6133: 'partListUnionToString' is declared but its value is never read.
+src/ui/hooks/useSessionBrowser.ts(20,15): error TS2300: Duplicate identifier 'Part'.
+src/ui/hooks/useSessionBrowser.ts(82,13): error TS2304: Cannot find name 'convertSessionToClientHistory'.
+src/ui/hooks/useSessionResume.ts(96,9): error TS2304: Cannot find name 'convertSessionToClientHistory'.
+src/ui/hooks/useShowMemoryCommand.ts(42,105): error TS2339: Property 'substring' does not exist on type 'string | HierarchicalMemory'.
+  Property 'substring' does not exist on type 'HierarchicalMemory'.
+src/ui/hooks/useShowMemoryCommand.ts(59,40): error TS2339: Property 'trim' does not exist on type 'string | HierarchicalMemory'.
+  Property 'trim' does not exist on type 'HierarchicalMemory'.
+src/ui/hooks/useToolExecutionScheduler.test.ts(275,35): error TS2352: Conversion of type '{ type: MessageBusType.TOOL_CALLS_UPDATE; toolCalls: { status: "success"; request: { callId: string; name: string; args: {}; isClientInitiated: boolean; prompt_id: string; }; tool: AnyDeclarativeTool; invocation: AnyToolInvocation; response: { ...; }; }[]; }' to type 'ToolCallsUpdateMessage' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Property 'schedulerId' is missing in type '{ type: MessageBusType.TOOL_CALLS_UPDATE; toolCalls: { status: "success"; request: { callId: string; name: string; args: {}; isClientInitiated: boolean; prompt_id: string; }; tool: AnyDeclarativeTool; invocation: AnyToolInvocation; response: { ...; }; }[]; }' but required in type 'ToolCallsUpdateMessage'.
+src/ui/hooks/useToolExecutionScheduler.test.ts(291,35): error TS2352: Conversion of type '{ type: MessageBusType.TOOL_CALLS_UPDATE; toolCalls: { status: "success"; request: { callId: string; name: string; args: {}; isClientInitiated: boolean; prompt_id: string; }; tool: AnyDeclarativeTool; invocation: AnyToolInvocation; response: { ...; }; }[]; }' to type 'ToolCallsUpdateMessage' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Property 'schedulerId' is missing in type '{ type: MessageBusType.TOOL_CALLS_UPDATE; toolCalls: { status: "success"; request: { callId: string; name: string; args: {}; isClientInitiated: boolean; prompt_id: string; }; tool: AnyDeclarativeTool; invocation: AnyToolInvocation; response: { ...; }; }[]; }' but required in type 'ToolCallsUpdateMessage'.
+src/ui/hooks/useToolExecutionScheduler.ts(75,21): error TS2345: Argument of type '{ config: Config; messageBus: MessageBus; getPreferredEditor: () => "vscode" | "vscodium" | "windsurf" | "cursor" | "zed" | "antigravity" | "vim" | "neovim" | "emacs" | "hx" | undefined; }' is not assignable to parameter of type 'SchedulerOptions'.
+  Property 'schedulerId' is missing in type '{ config: Config; messageBus: MessageBus; getPreferredEditor: () => "vscode" | "vscodium" | "windsurf" | "cursor" | "zed" | "antigravity" | "vim" | "neovim" | "emacs" | "hx" | undefined; }' but required in type 'SchedulerOptions'.
+src/ui/hooks/useTurnActivityMonitor.test.ts(96,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/useTurnActivityMonitor.test.ts(111,19): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/ui/hooks/vim.ts(384,11): error TS2304: Cannot find name 'keyMatchers'.
+src/ui/hooks/vim.ts(384,23): error TS2304: Cannot find name 'Command'.
+src/ui/hooks/vim.ts(585,11): error TS2304: Cannot find name 'keyMatchers'.
+src/ui/hooks/vim.ts(585,23): error TS2304: Cannot find name 'Command'.
+src/ui/hooks/vim.ts(596,13): error TS2304: Cannot find name 'keyMatchers'.
+src/ui/hooks/vim.ts(596,25): error TS2304: Cannot find name 'Command'.
+src/ui/types.ts(12,3): error TS6196: 'ToolCallConfirmationDetails' is declared but never used.
+src/ui/types.ts(83,14): error TS2304: Cannot find name 'checkExhaustive'.
+src/ui/types.ts(109,18): error TS2304: Cannot find name 'ApprovalMode'.
+src/ui/utils/CodeColorizer.tsx(25,1): error TS6133: 'isAlternateBufferEnabled' is declared but its value is never read.
+src/ui/utils/highlight.ts(14,1): error TS6133: 'AT_COMMAND_PATH_REGEX_SOURCE' is declared but its value is never read.
+src/ui/utils/InlineMarkdownRenderer.tsx(10,1): error TS6133: 'stringWidth' is declared but its value is never read.
+src/ui/utils/InlineMarkdownRenderer.tsx(30,16): error TS2304: Cannot find name 'stripUnsafeCharacters'.
+src/ui/utils/rewindFileOps.test.ts(71,45): error TS2339: Property 'computeAddedAndRemovedLines' does not exist on type 'typeof import("/Users/robinx/code/codefly-cli/packages/core/dist/index", { with: { "resolution-mode": "import" } })'.
+src/ui/utils/rewindFileOps.test.ts(71,45): error TS6133: 'computeAddedAndRemovedLines' is declared but its value is never read.
+src/ui/utils/rewindFileOps.test.ts(91,17): error TS2304: Cannot find name 'computeModelAddedAndRemovedLines'.
+src/ui/utils/rewindFileOps.test.ts(127,45): error TS2339: Property 'computeAddedAndRemovedLines' does not exist on type 'typeof import("/Users/robinx/code/codefly-cli/packages/core/dist/index", { with: { "resolution-mode": "import" } })'.
+src/ui/utils/rewindFileOps.test.ts(127,45): error TS6133: 'computeAddedAndRemovedLines' is declared but its value is never read.
+src/ui/utils/rewindFileOps.test.ts(167,17): error TS2304: Cannot find name 'computeModelAddedAndRemovedLines'.
+src/ui/utils/rewindFileOps.ts(17,3): error TS2724: '"@codeflyai/codefly-core"' has no exported member named 'computeAddedAndRemovedLines'. Did you mean 'computeModelAddedAndRemovedLines'?
+src/ui/utils/rewindFileOps.ts(17,3): error TS6133: 'computeAddedAndRemovedLines' is declared but its value is never read.
+src/ui/utils/rewindFileOps.ts(64,32): error TS2304: Cannot find name 'computeModelAddedAndRemovedLines'.
+src/ui/utils/rewindFileOps.ts(115,32): error TS2304: Cannot find name 'computeModelAddedAndRemovedLines'.
+src/ui/utils/TableRenderer.tsx(11,3): error TS2305: Module '"ink"' has no exported member 'toStyledCharacters'.
+src/ui/utils/TableRenderer.tsx(12,3): error TS2305: Module '"ink"' has no exported member 'styledCharsToString'.
+src/ui/utils/TableRenderer.tsx(13,3): error TS2305: Module '"ink"' has no exported member 'styledCharsWidth'.
+src/ui/utils/TableRenderer.tsx(14,3): error TS2305: Module '"ink"' has no exported member 'wordBreakStyledChars'.
+src/ui/utils/TableRenderer.tsx(15,3): error TS2724: '"ink"' has no exported member named 'wrapStyledChars'. Did you mean 'StyledChar'?
+src/ui/utils/TableRenderer.tsx(16,3): error TS2305: Module '"ink"' has no exported member 'widestLineFromStyledChars'.
+src/ui/utils/TableRenderer.tsx(183,47): error TS7006: Parameter 'line' implicitly has an 'any' type.
+src/ui/utils/terminalCapabilityManager.ts(31,3): error TS2304: Cannot find name 'disableModifyOtherKeys'.
+src/ui/utils/terminalCapabilityManager.ts(142,44): error TS2304: Cannot find name 'parseColor'.
+src/ui/utils/terminalCapabilityManager.ts(198,37): error TS2339: Property 'HIDDEN_MODE' does not exist on type 'typeof TerminalCapabilityManager'.
+src/utils/activityLogger.ts(135,32): error TS2304: Cannot find name 'ConsoleLogPayload'.
+src/utils/activityLogger.ts(164,20): error TS2304: Cannot find name 'ConsoleLogPayload'.
+src/utils/activityLogger.ts(180,20): error TS2304: Cannot find name 'ConsoleLogPayload'.
+src/utils/activityLogger.ts(654,23): error TS2304: Cannot find name 'ConsoleLogPayload'.
+src/utils/activityLogger.ts(732,10): error TS2339: Property 'on' does not exist on type 'WebSocket'.
+src/utils/activityLogger.ts(743,10): error TS2339: Property 'on' does not exist on type 'WebSocket'.
+src/utils/activityLogger.ts(765,10): error TS2339: Property 'on' does not exist on type 'WebSocket'.
+src/utils/activityLogger.ts(771,10): error TS2339: Property 'on' does not exist on type 'WebSocket'.
+src/utils/activityLogger.ts(771,23): error TS7006: Parameter 'err' implicitly has an 'any' type.
+src/utils/persistentState.test.ts(30,23): error TS2339: Property 'getGlobalCodeflyDir' does not exist on type 'typeof Storage'.
+src/utils/persistentState.ts(29,41): error TS2339: Property 'getGlobalCodeflyDir' does not exist on type 'typeof Storage'.
+src/utils/relaunch.ts(11,8): error TS6133: 'FetchAdminControlsResponse' is declared but its value is never read.
+src/utils/relaunch.ts(37,25): error TS2304: Cannot find name 'AdminControlsSettings'.
+src/utils/relaunch.ts(74,47): error TS2304: Cannot find name 'AdminControlsSettings'.
+src/utils/sessionCleanup.ts(101,33): error TS2304: Cannot find name 'sanitizeFilenamePart'.
+src/utils/sessionCleanup.ts(104,13): error TS2304: Cannot find name 'TOOL_OUTPUTS_DIR'.
+src/utils/sessionCleanup.ts(366,35): error TS2554: Expected 0 arguments, but got 1.
+src/utils/sessionCleanup.ts(367,21): error TS4111: Property 'initialize' comes from an index signature, so it must be accessed with ['initialize'].
+src/utils/sessionCleanup.ts(368,25): error TS4111: Property 'getProjectTempDir' comes from an index signature, so it must be accessed with ['getProjectTempDir'].
+src/utils/sessionCleanup.ts(370,37): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/utils/sessionCleanup.ts(370,46): error TS2304: Cannot find name 'TOOL_OUTPUTS_DIR'.
+src/utils/sessionCleanup.ts(460,29): error TS2304: Cannot find name 'sanitizeFilenamePart'.
+src/utils/sessionUtils.ts(592,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/utils/sessionUtils.ts(593,17): error TS2304: Cannot find name 'CoreToolCallStatus'.
+src/utils/userStartupWarnings.ts(20,13): error TS2304: Cannot find name 'WarningPriority'.
+src/utils/userStartupWarnings.ts(26,13): error TS2304: Cannot find name 'WarningPriority'.
+src/utils/userStartupWarnings.ts(58,13): error TS2304: Cannot find name 'WarningPriority'.
+src/utils/userStartupWarnings.ts(87,12): error TS2304: Cannot find name 'StartupWarning'.
+src/utils/userStartupWarnings.ts(101,45): error TS2304: Cannot find name 'StartupWarning'.
+src/utils/userStartupWarnings.ts(105,10): error TS2304: Cannot find name 'getCompatibilityWarnings'.
+src/validateNonInterActiveAuth.ts(20,23): error TS2304: Cannot find name 'AuthType'.
+src/validateNonInterActiveAuth.ts(26,53): error TS2304: Cannot find name 'getAuthTypeFromEnv'.
+src/validateNonInterActiveAuth.ts(41,21): error TS2304: Cannot find name 'AuthType'.
+src/zed-integration/acpResume.test.ts(209,23): error TS2339: Property 'getGeminiClient' does not exist on type 'Mocked<Config>'.

@@ -9,7 +9,7 @@ import path from 'node:path';
 import process from 'node:process';
 import type { Config } from '../config/config.js';
 import type { HierarchicalMemory } from '../config/memory.js';
-import { GEMINI_DIR } from '../utils/paths.js';
+import { homedir, CODEFLY_DIR } from '../utils/paths.js';
 import { ApprovalMode } from '../policy/types.js';
 import * as snippets from './snippets.js';
 import * as legacySnippets from './snippets.legacy.js';
@@ -30,7 +30,7 @@ import {
 } from '../tools/tool-names.js';
 import { resolveModel, supportsModernFeatures } from '../config/models.js';
 import { DiscoveredMCPTool } from '../tools/mcp-tool.js';
-import { getAllGeminiMdFilenames } from '../tools/memoryTool.js';
+import { getAllCodeflyMdFilenames } from '../tools/memoryTool.js';
 
 /**
  * Orchestrates prompt generation by gathering context and building options.
@@ -45,7 +45,7 @@ export class PromptProvider {
     interactiveOverride?: boolean,
   ): string {
     const systemMdResolution = resolvePathFromEnv(
-      process.env['GEMINI_SYSTEM_MD'],
+      process.env['CODEFLY_SYSTEM_MD'],
     );
 
     const interactiveMode = interactiveOverride ?? config.isInteractive();
@@ -59,11 +59,11 @@ export class PromptProvider {
 
     const desiredModel = resolveModel(
       config.getActiveModel(),
-      config.getGemini31LaunchedSync?.() ?? false,
+      config.getCodefly31LaunchedSync?.() ?? false,
     );
     const isModernModel = supportsModernFeatures(desiredModel);
     const activeSnippets = isModernModel ? snippets : legacySnippets;
-    const contextFilenames = getAllGeminiMdFilenames();
+    const contextFilenames = getAllCodeflyMdFilenames();
 
     // --- Context Gathering ---
     let planModeToolsList = '';
@@ -83,7 +83,7 @@ export class PromptProvider {
 
     // --- Template File Override ---
     if (systemMdResolution.value && !systemMdResolution.isDisabled) {
-      let systemMdPath = path.resolve(path.join(GEMINI_DIR, 'system.md'));
+      let systemMdPath = path.resolve(path.join(CODEFLY_DIR, 'system.md'));
       if (!systemMdResolution.isSwitch) {
         systemMdPath = systemMdResolution.value;
       }
@@ -214,11 +214,10 @@ export class PromptProvider {
     // Sanitize erratic newlines from composition
     const sanitizedPrompt = finalPrompt.replace(/\n{3,}/g, '\n\n');
 
-    // Write back to file if requested
     this.maybeWriteSystemMd(
       sanitizedPrompt,
       systemMdResolution,
-      path.resolve(path.join(GEMINI_DIR, 'system.md')),
+      path.join(homedir(), CODEFLY_DIR, 'memory.md'),
     );
 
     return sanitizedPrompt;
@@ -227,7 +226,7 @@ export class PromptProvider {
   getCompressionPrompt(config: Config): string {
     const desiredModel = resolveModel(
       config.getActiveModel(),
-      config.getGemini31LaunchedSync?.() ?? false,
+      config.getCodefly31LaunchedSync?.() ?? false,
     );
     const isModernModel = supportsModernFeatures(desiredModel);
     const activeSnippets = isModernModel ? snippets : legacySnippets;
@@ -248,7 +247,7 @@ export class PromptProvider {
     defaultPath: string,
   ): void {
     const writeSystemMdResolution = resolvePathFromEnv(
-      process.env['GEMINI_WRITE_SYSTEM_MD'],
+      process.env['CODEFLY_WRITE_SYSTEM_MD'],
     );
     if (writeSystemMdResolution.value && !writeSystemMdResolution.isDisabled) {
       const writePath = writeSystemMdResolution.isSwitch

@@ -4,26 +4,49 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export const PREVIEW_CODEFLY_MODEL = 'gemini-3-pro-preview';
-export const PREVIEW_CODEFLY_FLASH_MODEL = 'gemini-3-flash-preview';
-// Keep Gemini 2.x constants for backwards compatibility but use Gemini 3 Pro as default
+export const PREVIEW_CODEFLY_MODEL = 'codefly-3-pro-preview';
+export const PREVIEW_CODEFLY_FLASH_MODEL = 'codefly-3-flash-preview';
+export const PREVIEW_CODEFLY_3_1_MODEL = 'codefly-3.1-pro-preview';
+export const PREVIEW_CODEFLY_3_1_CUSTOM_TOOLS_MODEL =
+  'codefly-3.1-pro-preview-custom-tools';
+// Keep Codefly 2.x constants for backwards compatibility but use Codefly 3 Pro as default
 export const DEFAULT_CODEFLY_MODEL = PREVIEW_CODEFLY_MODEL; // Default to Pro
 export const DEFAULT_CODEFLY_FLASH_MODEL = PREVIEW_CODEFLY_FLASH_MODEL;
-// Gemini 2.x legacy constants (deprecated)
-export const LEGACY_GEMINI_2_5_PRO = 'gemini-2.5-pro';
-export const LEGACY_GEMINI_2_5_FLASH = 'gemini-2.5-flash';
-export const DEFAULT_GEMINI_FLASH_LITE_MODEL = 'gemini-2.5-flash-lite';
+// Codefly 2.x legacy constants (deprecated)
+export const LEGACY_CODEFLY_2_5_PRO = 'codefly-2.5-pro';
+export const LEGACY_CODEFLY_2_5_FLASH = 'codefly-2.5-flash';
+export const DEFAULT_CODEFLY_FLASH_LITE_MODEL = 'codefly-2.5-flash-lite';
+// Gemini aliases for backwards compatibility
 
 export const VALID_CODEFLY_MODELS = new Set([
   PREVIEW_CODEFLY_MODEL,
   PREVIEW_CODEFLY_FLASH_MODEL,
-  LEGACY_GEMINI_2_5_PRO,
-  LEGACY_GEMINI_2_5_FLASH,
-  DEFAULT_GEMINI_FLASH_LITE_MODEL,
+  LEGACY_CODEFLY_2_5_PRO,
+  LEGACY_CODEFLY_2_5_FLASH,
+  DEFAULT_CODEFLY_FLASH_LITE_MODEL,
 ]);
 
-export const PREVIEW_CODEFLY_MODEL_AUTO = 'auto-gemini-3';
-export const DEFAULT_CODEFLY_MODEL_AUTO = 'auto-gemini-3';
+export const PREVIEW_CODEFLY_MODEL_AUTO = 'auto-codefly-3';
+export const DEFAULT_CODEFLY_MODEL_AUTO = 'auto-codefly-3';
+// Gemini aliases for backwards compatibility
+/** @deprecated Use DEFAULT_CODEFLY_MODEL */
+export const DEFAULT_GEMINI_MODEL = DEFAULT_CODEFLY_MODEL;
+/** @deprecated Use DEFAULT_CODEFLY_FLASH_MODEL */
+export const DEFAULT_GEMINI_FLASH_MODEL = DEFAULT_CODEFLY_FLASH_MODEL;
+/** @deprecated Use DEFAULT_CODEFLY_FLASH_LITE_MODEL */
+export const DEFAULT_GEMINI_FLASH_LITE_MODEL = DEFAULT_CODEFLY_FLASH_LITE_MODEL;
+/** @deprecated Use PREVIEW_CODEFLY_MODEL */
+export const PREVIEW_GEMINI_MODEL = PREVIEW_CODEFLY_MODEL;
+/** @deprecated Use PREVIEW_CODEFLY_FLASH_MODEL */
+export const PREVIEW_GEMINI_FLASH_MODEL = PREVIEW_CODEFLY_FLASH_MODEL;
+/** @deprecated Use PREVIEW_CODEFLY_MODEL_AUTO */
+export const PREVIEW_GEMINI_MODEL_AUTO = PREVIEW_CODEFLY_MODEL_AUTO;
+/** @deprecated Use PREVIEW_CODEFLY_3_1_MODEL */
+export const PREVIEW_GEMINI_3_1_MODEL = PREVIEW_CODEFLY_3_1_MODEL;
+/** @deprecated Use LEGACY_CODEFLY_2_5_PRO */
+export const LEGACY_GEMINI_2_5_PRO = LEGACY_CODEFLY_2_5_PRO;
+/** @deprecated Use LEGACY_CODEFLY_2_5_FLASH */
+export const LEGACY_GEMINI_2_5_FLASH = LEGACY_CODEFLY_2_5_FLASH;
 
 // Model aliases for user convenience.
 export const CODEFLY_MODEL_ALIAS_AUTO = 'auto';
@@ -31,44 +54,44 @@ export const CODEFLY_MODEL_ALIAS_PRO = 'pro';
 export const CODEFLY_MODEL_ALIAS_FLASH = 'flash';
 export const CODEFLY_MODEL_ALIAS_FLASH_LITE = 'flash-lite';
 
-export const DEFAULT_CODEFLY_EMBEDDING_MODEL = 'gemini-embedding-001';
+export const DEFAULT_CODEFLY_EMBEDDING_MODEL = 'codefly-embedding-001';
+
+// Thinking mode configuration
 
 // Cap the thinking at 8192 to prevent run-away thinking loops.
 export const DEFAULT_THINKING_MODE = 8192;
 
 /**
- * Resolves the requested model alias (e.g., 'auto-gemini-3', 'pro', 'flash', 'flash-lite')
+ * Resolves the requested model alias (e.g., 'auto-codefly-3', 'pro', 'flash', 'flash-lite')
  * to a concrete model name.
  *
  * @param requestedModel The model alias or concrete model name requested by the user.
- * @param useGemini3_1 Whether to use Gemini 3.1 Pro Preview for auto/pro aliases.
+ * @param useCodefly3_1 Whether to use Codefly 3.1 Pro Preview for auto/pro aliases.
  * @returns The resolved concrete model name.
  */
 export function resolveModel(
   requestedModel: string,
-  useGemini3_1: boolean = false,
-  useCustomToolModel: boolean = false,
+  useCodefly3_1: boolean = false,
+  _useCustomToolModel: boolean = false,
 ): string {
   switch (requestedModel) {
     case PREVIEW_CODEFLY_MODEL_AUTO: {
-      return PREVIEW_CODEFLY_MODEL; // Auto uses Pro by default for Gemini 3
+      return PREVIEW_CODEFLY_MODEL; // Auto uses Pro by default for Codefly 3
     }
     case DEFAULT_CODEFLY_MODEL_AUTO: {
-      return PREVIEW_CODEFLY_MODEL; // Auto uses Pro by default for Gemini 3
+      return PREVIEW_CODEFLY_MODEL; // Auto uses Pro by default for Codefly 3
     }
     case CODEFLY_MODEL_ALIAS_AUTO:
     case CODEFLY_MODEL_ALIAS_PRO: {
-      return previewFeaturesEnabled
-        ? PREVIEW_CODEFLY_MODEL
-        : DEFAULT_CODEFLY_MODEL;
+      return useCodefly3_1 ? PREVIEW_CODEFLY_MODEL : DEFAULT_CODEFLY_MODEL;
     }
     case CODEFLY_MODEL_ALIAS_FLASH: {
-      return previewFeaturesEnabled
+      return useCodefly3_1
         ? PREVIEW_CODEFLY_FLASH_MODEL
         : DEFAULT_CODEFLY_FLASH_MODEL;
     }
     case CODEFLY_MODEL_ALIAS_FLASH_LITE: {
-      return DEFAULT_GEMINI_FLASH_LITE_MODEL;
+      return DEFAULT_CODEFLY_FLASH_LITE_MODEL;
     }
     default: {
       return requestedModel;
@@ -79,14 +102,14 @@ export function resolveModel(
 /**
  * Resolves the appropriate model based on the classifier's decision.
  *
- * @param requestedModel The current requested model (e.g. auto-gemini-2.5).
+ * @param requestedModel The current requested model (e.g. auto-codefly-2.5).
  * @param modelAlias The alias selected by the classifier ('flash' or 'pro').
  * @returns The resolved concrete model name.
  */
 export function resolveClassifierModel(
   requestedModel: string,
   modelAlias: string,
-  useGemini3_1: boolean = false,
+  useCodefly3_1: boolean = false,
   useCustomToolModel: boolean = false,
 ): string {
   if (modelAlias === CODEFLY_MODEL_ALIAS_FLASH) {
@@ -102,22 +125,23 @@ export function resolveClassifierModel(
     ) {
       return PREVIEW_CODEFLY_FLASH_MODEL;
     }
-    return resolveModel(CODEFLY_MODEL_ALIAS_FLASH, previewFeaturesEnabled);
+    return resolveModel(CODEFLY_MODEL_ALIAS_FLASH, useCodefly3_1);
   }
-  return resolveModel(requestedModel, useGemini3_1, useCustomToolModel);
+  return resolveModel(requestedModel, useCodefly3_1, useCustomToolModel);
 }
-export function getDisplayString(model: string) {
+export function getDisplayString(
+  model: string,
+  useCodefly3_1: boolean = false,
+) {
   switch (model) {
     case PREVIEW_CODEFLY_MODEL_AUTO:
-      return 'Auto (Gemini 3)';
+      return 'Auto (Codefly 3)';
     case DEFAULT_CODEFLY_MODEL_AUTO:
-      return 'Auto (Gemini 2.5)';
+      return 'Auto (Codefly 2.5)';
     case CODEFLY_MODEL_ALIAS_PRO:
-      return previewFeaturesEnabled
-        ? PREVIEW_CODEFLY_MODEL
-        : DEFAULT_CODEFLY_MODEL;
+      return useCodefly3_1 ? PREVIEW_CODEFLY_MODEL : DEFAULT_CODEFLY_MODEL;
     case CODEFLY_MODEL_ALIAS_FLASH:
-      return previewFeaturesEnabled
+      return useCodefly3_1
         ? PREVIEW_CODEFLY_FLASH_MODEL
         : DEFAULT_CODEFLY_FLASH_MODEL;
     default:
@@ -150,46 +174,48 @@ export function isProModel(model: string): boolean {
 }
 
 /**
- * Checks if the model is a Gemini 3 model.
+ * Checks if the model is a Codefly 3 model.
  *
  * @param model The model name to check.
- * @returns True if the model is a Gemini 3 model.
+ * @returns True if the model is a Codefly 3 model.
  */
-export function isGemini3Model(model: string): boolean {
+export function isCodefly3Model(model: string): boolean {
   const resolved = resolveModel(model);
-  return /^gemini-3(\.|-|$)/.test(resolved);
+  return /^codefly-3(\.|-|$)/.test(resolved);
 }
+/** @deprecated Use isCodefly3Model */
+export const isGemini3Model = isCodefly3Model;
 
 /**
- * Checks if the model is a Gemini 2.x model.
+ * Checks if the model is a Codefly 2.x model.
  *
  * @param model The model name to check.
- * @returns True if the model is a Gemini-2.x model.
+ * @returns True if the model is a Codefly-2.x model.
  */
 export function isCodefly2Model(model: string): boolean {
-  return /^gemini-2(\.|$)/.test(model);
+  return /^codefly-2(\.|$)/.test(model);
 }
 
 /**
- * Checks if the model is a "custom" model (not Gemini branded).
+ * Checks if the model is a "custom" model (not Codefly branded).
  *
  * @param model The model name to check.
- * @returns True if the model is not a Gemini branded model.
+ * @returns True if the model is not a Codefly branded model.
  */
 export function isCustomModel(model: string): boolean {
   const resolved = resolveModel(model);
-  return !resolved.startsWith('gemini-');
+  return !resolved.startsWith('codefly-');
 }
 
 /**
  * Checks if the model should be treated as a modern model.
- * This includes Gemini 3 models and any custom models.
+ * This includes Codefly 3 models and any custom models.
  *
  * @param model The model name to check.
  * @returns True if the model supports modern features like thoughts.
  */
 export function supportsModernFeatures(model: string): boolean {
-  if (isGemini3Model(model)) return true;
+  if (isCodefly3Model(model)) return true;
   return isCustomModel(model);
 }
 
@@ -209,24 +235,24 @@ export function isAutoModel(model: string): boolean {
 
 /**
  * Checks if the model supports multimodal function responses (multimodal data nested within function response).
- * This is supported in Gemini 3.
+ * This is supported in Codefly 3.
  *
  * @param model The model name to check.
  * @returns True if the model supports multimodal function responses.
  */
 export function supportsMultimodalFunctionResponse(model: string): boolean {
-  return model.startsWith('gemini-3-');
+  return model.startsWith('codefly-3-');
 }
 /**
- * Checks if the model is a Gemini model (including Vertex AI variants).
+ * Checks if the model is a Codefly model (including Vertex AI variants).
  *
  * @param model The model name to check.
- * @returns True if the model is a Gemini model.
+ * @returns True if the model is a Codefly model.
  */
-export function isGeminiModel(model: string): boolean {
+export function isCodeflyModel(model: string): boolean {
   return (
-    model.startsWith('gemini-') ||
+    model.startsWith('codefly-') ||
     model.startsWith('google/') ||
-    /^gemini-\d/.test(model)
+    /^codefly-\d/.test(model)
   );
 }

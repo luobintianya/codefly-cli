@@ -136,9 +136,9 @@ const authCommand: SlashCommand = {
         await mcpClientManager.restartServer(serverName);
       }
       // Update the client with the new tools
-      const geminiClient = config.getCodeflyClient();
-      if (geminiClient?.isInitialized()) {
-        await geminiClient.setTools();
+      const codeflyClient = config.getCodeflyClient();
+      if (codeflyClient?.isInitialized()) {
+        await codeflyClient.setTools();
       }
 
       // Reload the slash commands to reflect the changes.
@@ -346,9 +346,9 @@ const refreshCommand: SlashCommand = {
     await mcpClientManager.restart();
 
     // Update the client with the new tools
-    const geminiClient = config.getCodeflyClient();
-    if (geminiClient?.isInitialized()) {
-      await geminiClient.setTools();
+    const codeflyClient = config.getCodeflyClient();
+    if (codeflyClient?.isInitialized()) {
+      await codeflyClient.setTools();
     }
 
     // Reload the slash commands to reflect the changes.

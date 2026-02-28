@@ -14,7 +14,7 @@ import { env } from 'node:process';
 import * as acp from '@agentclientprotocol/sdk';
 
 // Skip in sandbox mode - test spawns CLI directly which behaves differently in containers
-const sandboxEnv = env['GEMINI_SANDBOX'];
+const sandboxEnv = env['CODEFLY_SANDBOX'];
 const itMaybe = sandboxEnv && sandboxEnv !== 'false' ? it.skip : it;
 
 // Reuse existing fake responses that return a simple "Hello" response
@@ -52,7 +52,7 @@ describe('ACP telemetry', () => {
     });
 
     const telemetryPath = join(rig.homeDir!, 'telemetry.log');
-    const bundlePath = join(import.meta.dirname, '..', 'bundle/gemini.js');
+    const bundlePath = join(import.meta.dirname, '..', 'bundle/codefly.js');
 
     child = spawn(
       'node',
@@ -67,12 +67,12 @@ describe('ACP telemetry', () => {
         stdio: ['pipe', 'pipe', 'inherit'],
         env: {
           ...process.env,
-          GEMINI_API_KEY: 'fake-key',
-          GEMINI_CLI_HOME: rig.homeDir!,
-          GEMINI_TELEMETRY_ENABLED: 'true',
-          GEMINI_TELEMETRY_TARGET: 'local',
-          GEMINI_TELEMETRY_OUTFILE: telemetryPath,
-          // GEMINI_DEV_TRACING not set: fake responses aren't instrumented for spans
+          CODEFLY_API_KEY: 'fake-key',
+          CODEFLY_CLI_HOME: rig.homeDir!,
+          CODEFLY_TELEMETRY_ENABLED: 'true',
+          CODEFLY_TELEMETRY_TARGET: 'local',
+          CODEFLY_TELEMETRY_OUTFILE: telemetryPath,
+          // CODEFLY_DEV_TRACING not set: fake responses aren't instrumented for spans
         },
       },
     );
