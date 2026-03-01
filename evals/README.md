@@ -147,8 +147,8 @@ tool definition has made the model's behavior less reliable.
 ## Fixing Evaluations
 
 If an evaluation is failing or has a regressed pass rate, you can use the
-`/fix-behavioral-eval` command within Codefly CLI to help investigate and fix the
-issue.
+`/fix-behavioral-eval` command within Codefly CLI to help investigate and fix
+the issue.
 
 ### `/fix-behavioral-eval`
 

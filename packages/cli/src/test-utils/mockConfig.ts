@@ -12,7 +12,9 @@ import { createTestMergedSettings } from '../config/settings.js';
 /**
  * Creates a mocked Config object with default values and allows overrides.
  */
-export const createMockConfig = (overrides: Record<string, any> = {}): Config =>
+export const createMockConfig = (
+  overrides: Record<string, unknown> = {},
+): Config =>
   // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
   ({
     getSandbox: vi.fn(() => undefined),

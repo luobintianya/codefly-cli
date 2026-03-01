@@ -8,7 +8,6 @@ import { describe, it, expect, afterEach, vi } from 'vitest';
 import { FileSearchFactory, AbortError, filter } from './fileSearch.js';
 import { createTmpDir, cleanupTmpDir } from '@codeflyai/codefly-cli-test-utils';
 import * as crawler from './crawler.js';
-import { CODEFLY_IGNORE_FILE_NAME } from '../../config/constants.js';
 import { FileDiscoveryService } from '../../services/fileDiscoveryService.js';
 
 describe('FileSearch', () => {

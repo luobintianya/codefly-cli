@@ -18,14 +18,8 @@ import { Storage } from '../config/storage.js';
 import * as path from 'node:path';
 import * as fs from 'node:fs/promises';
 import * as os from 'node:os';
-import {
-  getProjectHash,
-  CODEFLY_DIR,
-  homedir as pathsHomedir,
-} from '../utils/paths.js';
+import { CODEFLY_DIR, homedir as pathsHomedir } from '../utils/paths.js';
 import { spawnAsync } from '../utils/shell-utils.js';
-
-const PROJECT_SLUG = 'project-slug';
 
 vi.mock('../utils/shell-utils.js', () => ({
   spawnAsync: vi.fn(),

@@ -9,6 +9,7 @@ import { Validator } from '../core/validation/validator.js';
 import { isInteractive, resolveNoInteractive } from '../utils/interactive.js';
 import { getActiveChangeIds, getSpecIds } from '../utils/item-discovery.js';
 import { nearestMatches } from '../utils/match.js';
+import { getErrorMessage } from '../../utils/errors.js';
 
 type ItemType = 'change' | 'spec';
 
@@ -256,7 +257,13 @@ export class ValidateCommand {
       console.error(
         `${type === 'change' ? 'Change' : 'Specification'} '${id}' has issues`,
       );
-      for (const issue of report.issues) {
+      interface Issue {
+        level: string;
+        path: string;
+        message: string;
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+      for (const issue of report.issues as Issue[]) {
         const label = issue.level === 'ERROR' ? 'ERROR' : issue.level;
         const prefix =
           issue.level === 'ERROR'
@@ -404,7 +411,7 @@ export class ValidateCommand {
               else failed++;
             })
             .catch((error: any) => {
-              const message = error?.message || 'Unknown error';
+              const message = getErrorMessage(error);
               const res: BulkItemResult = {
                 id: getPlannedId(currentIndex, changeIds, specIds) ?? 'unknown',
                 type:

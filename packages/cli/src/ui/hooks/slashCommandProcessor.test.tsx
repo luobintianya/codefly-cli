@@ -17,7 +17,15 @@ import { MessageType } from '../types.js';
 import { BuiltinCommandLoader } from '../../services/BuiltinCommandLoader.js';
 import { FileCommandLoader } from '../../services/FileCommandLoader.js';
 import { McpPromptLoader } from '../../services/McpPromptLoader.js';
-import { CoreEvent, MCPDiscoveryState, SlashCommandStatus, coreEvents, makeFakeConfig, type CodeflyClient, type UserFeedbackPayload } from '@codeflyai/codefly-core';
+import {
+  CoreEvent,
+  MCPDiscoveryState,
+  SlashCommandStatus,
+  coreEvents,
+  makeFakeConfig,
+  type CodeflyClient,
+  type UserFeedbackPayload,
+} from '@codeflyai/codefly-core';
 
 const {
   logSlashCommand,

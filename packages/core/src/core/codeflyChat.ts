@@ -493,7 +493,8 @@ export class CodeflyChat {
     const initialActiveModel = this.config.getActiveModel();
 
     const apiCall = async () => {
-      const useCodefly3_1 = (await this.config.getCodefly31Launched?.()) ?? false;
+      const useCodefly3_1 =
+        (await this.config.getCodefly31Launched?.()) ?? false;
       // Default to the last used model (which respects arguments/availability selection)
       let modelToUse = resolveModel(lastModelToUse, useCodefly3_1);
 

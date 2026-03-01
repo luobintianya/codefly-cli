@@ -14,11 +14,11 @@ import {
 import type {
   ContentListUnion,
   GenerateContentParameters,
-
   GenerateContentResponse,
   FinishReason,
   BlockedReason,
-  type Part} from '@google/genai';
+  type Part,
+} from '@google/genai';
 
 describe('converter', () => {
   describe('toCodeAssistRequest', () => {

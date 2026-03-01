@@ -22,6 +22,7 @@ import {
   validateConfig,
   DEFAULT_CONFIG,
 } from '../core/config-schema.js';
+import { getErrorMessage } from '../../utils/errors.js';
 
 /**
  * Register the config command and all its subcommands.
@@ -73,6 +74,7 @@ export function registerConfigCommand(program: Command): void {
     .description('Get a specific value (raw, scriptable)')
     .action((key: string) => {
       const config = getGlobalConfig();
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       const value = getNestedValue(config as Record<string, unknown>, key);
 
       if (value === undefined) {
@@ -112,10 +114,12 @@ export function registerConfigCommand(program: Command): void {
           return;
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
         const config = getGlobalConfig() as Record<string, unknown>;
         const coercedValue = coerceValue(value, options.string || false);
 
         // Create a copy to validate before saving
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const newConfig = JSON.parse(JSON.stringify(config));
         setNestedValue(newConfig, key, coercedValue);
 
@@ -144,6 +148,7 @@ export function registerConfigCommand(program: Command): void {
     .command('unset <key>')
     .description('Remove a key (revert to default)')
     .action((key: string) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       const config = getGlobalConfig() as Record<string, unknown>;
       const existed = deleteNestedValue(config, key);
 
@@ -231,6 +236,7 @@ export function registerConfigCommand(program: Command): void {
 
       try {
         const rawConfig = fs.readFileSync(configPath, 'utf-8');
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const parsedConfig = JSON.parse(rawConfig);
         const validation = validateConfig(parsedConfig);
 
@@ -239,6 +245,7 @@ export function registerConfigCommand(program: Command): void {
           process.exitCode = 1;
         }
       } catch (error) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
         if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
           console.error(`Error: Config file not found at ${configPath}`);
         } else if (error instanceof SyntaxError) {
@@ -246,7 +253,7 @@ export function registerConfigCommand(program: Command): void {
           console.error(error.message);
         } else {
           console.error(
-            `Error: Unable to validate configuration - ${error instanceof Error ? error.message : String(error)}`,
+            `Error: Unable to validate configuration - ${getErrorMessage(error)}`,
           );
         }
         process.exitCode = 1;

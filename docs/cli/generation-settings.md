@@ -128,10 +128,10 @@ The configuration follows the `ModelConfigServiceConfig` interface.
 
 Defines the actual parameters for the model.
 
-| Property                | Type     | Description                                                        |
-| :---------------------- | :------- | :----------------------------------------------------------------- |
+| Property                | Type     | Description                                                         |
+| :---------------------- | :------- | :------------------------------------------------------------------ |
 | `model`                 | `string` | The identifier of the model to be called (e.g., `codefly-2.5-pro`). |
-| `generateContentConfig` | `object` | The configuration object passed to the `@google/genai` SDK.        |
+| `generateContentConfig` | `object` | The configuration object passed to the `@google/genai` SDK.         |
 
 ### `GenerateContentConfig` (Common Parameters)
 

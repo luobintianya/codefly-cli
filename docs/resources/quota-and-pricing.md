@@ -99,9 +99,9 @@ Codefly CLI by upgrading to one of the following subscriptions:
 
 ## Pay as you go
 
-If you hit your daily request limits or exhaust your Codefly Pro quota even after
-upgrading, the most flexible solution is to switch to a pay-as-you-go model,
-where you pay for the specific amount of processing you use. This is the
+If you hit your daily request limits or exhaust your Codefly Pro quota even
+after upgrading, the most flexible solution is to switch to a pay-as-you-go
+model, where you pay for the specific amount of processing you use. This is the
 recommended path for uninterrupted access.
 
 To do this, log in using a Codefly API key or Vertex AI.
@@ -159,7 +159,7 @@ costs.
 
 ## Codefly API vs. Vertex
 
-- Codefly API (codefly developer api): This is the fastest way to use the Codefly
-  models directly.
+- Codefly API (codefly developer api): This is the fastest way to use the
+  Codefly models directly.
 - Vertex AI: This is the enterprise-grade platform for building, deploying, and
   managing Codefly models with specific security and control requirements.

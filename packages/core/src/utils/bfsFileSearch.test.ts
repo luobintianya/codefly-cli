@@ -10,7 +10,6 @@ import * as path from 'node:path';
 import * as os from 'node:os';
 import { bfsFileSearch, bfsFileSearchSync } from './bfsFileSearch.js';
 import { FileDiscoveryService } from '../services/fileDiscoveryService.js';
-import { CODEFLY_IGNORE_FILE_NAME } from 'src/config/constants.js';
 
 describe('bfsFileSearch', () => {
   let testRootDir: string;

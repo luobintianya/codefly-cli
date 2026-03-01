@@ -19,7 +19,17 @@ import type {
 } from '../types.js';
 import type { CommandContext, SlashCommand } from '../commands/types.js';
 import type { TextBuffer } from '../components/shared/text-buffer.js';
-import type { AgentDefinition, ApprovalMode, FallbackIntent, FolderDiscoveryResults, IdeContext, IdeInfo, PolicyUpdateConfirmationRequest, UserTierId, ValidationIntent } from '@codeflyai/codefly-core';
+import type {
+  AgentDefinition,
+  ApprovalMode,
+  FallbackIntent,
+  FolderDiscoveryResults,
+  IdeContext,
+  IdeInfo,
+  PolicyUpdateConfirmationRequest,
+  UserTierId,
+  ValidationIntent,
+} from '@codeflyai/codefly-core';
 import type { DOMElement } from 'ink';
 import type { SessionStatsState } from '../contexts/SessionContext.js';
 import type { ExtensionUpdateState } from '../state/extensions.js';

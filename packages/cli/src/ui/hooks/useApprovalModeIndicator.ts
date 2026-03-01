@@ -5,7 +5,11 @@
  */
 
 import { useState, useEffect } from 'react';
-import { ApprovalMode, getAdminErrorMessage, type Config } from '@codeflyai/codefly-core';
+import {
+  ApprovalMode,
+  getAdminErrorMessage,
+  type Config,
+} from '@codeflyai/codefly-core';
 import { useKeypress } from './useKeypress.js';
 import { keyMatchers, Command } from '../keyMatchers.js';
 import type { HistoryItemWithoutId } from '../types.js';

@@ -12,7 +12,10 @@ import type {
   RoutingDecision,
   RoutingStrategy,
 } from '../routingStrategy.js';
-import { resolveClassifierModel, isCodefly3Model } from '../../config/models.js';
+import {
+  resolveClassifierModel,
+  isCodefly3Model,
+} from '../../config/models.js';
 import { createUserContent, Type } from '@google/genai';
 import type { Config } from '../../config/config.js';
 import { debugLogger } from '../../utils/debugLogger.js';

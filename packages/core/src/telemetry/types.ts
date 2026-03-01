@@ -2021,7 +2021,8 @@ export class AgentFinishEvent extends BaseAgentEvent {
   }
 }
 
-export const EVENT_AGENT_RECOVERY_ATTEMPT = 'codefly_cli.agent.recovery_attempt';
+export const EVENT_AGENT_RECOVERY_ATTEMPT =
+  'codefly_cli.agent.recovery_attempt';
 export class RecoveryAttemptEvent extends BaseAgentEvent {
   'event.name' = 'agent_recovery_attempt' as const;
   reason: AgentTerminateMode;

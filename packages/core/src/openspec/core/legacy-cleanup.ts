@@ -12,6 +12,7 @@ import {
   removeMarkerBlock as removeMarkerBlockUtil,
 } from '../utils/file-system.js';
 import { OPENSPEC_MARKERS } from './config.js';
+import { getErrorMessage } from '../../utils/errors.js';
 
 /**
  * Legacy config file names from the old ToolRegistry.
@@ -398,8 +399,9 @@ export async function cleanupLegacyArtifacts(
       await FileSystemUtils.writeFile(filePath, newContent);
       result.modifiedFiles.push(fileName);
     } catch (error: unknown) {
-      const err = error as { message?: string };
-      result.errors.push(`Failed to modify ${fileName}: ${err.message}`);
+      result.errors.push(
+        `Failed to modify ${fileName}: ${getErrorMessage(error)}`,
+      );
     }
   }
 
@@ -410,9 +412,8 @@ export async function cleanupLegacyArtifacts(
       await fs.rm(fullPath, { recursive: true, force: true });
       result.deletedDirs.push(dirPath);
     } catch (error: unknown) {
-      const err = error as { message?: string };
       result.errors.push(
-        `Failed to delete directory ${dirPath}: ${err.message}`,
+        `Failed to delete directory ${dirPath}: ${getErrorMessage(error)}`,
       );
     }
   }
@@ -424,8 +425,9 @@ export async function cleanupLegacyArtifacts(
       await fs.unlink(fullPath);
       result.deletedFiles.push(filePath);
     } catch (error: unknown) {
-      const err = error as { message?: string };
-      result.errors.push(`Failed to delete ${filePath}: ${err.message}`);
+      result.errors.push(
+        `Failed to delete ${filePath}: ${getErrorMessage(error)}`,
+      );
     }
   }
 
@@ -441,9 +443,8 @@ export async function cleanupLegacyArtifacts(
         await fs.unlink(agentsPath);
         result.deletedFiles.push('openspec/AGENTS.md');
       } catch (error: unknown) {
-        const err = error as { message?: string };
         result.errors.push(
-          `Failed to delete openspec/AGENTS.md: ${err.message}`,
+          `Failed to delete openspec/AGENTS.md: ${getErrorMessage(error)}`,
         );
       }
     }

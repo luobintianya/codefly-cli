@@ -545,7 +545,8 @@ export class ClearcutLogger {
         value: event.core_tools_enabled,
       },
       {
-        codefly_cli_key: EventMetadataKey.CODEFLY_CLI_START_SESSION_APPROVAL_MODE,
+        codefly_cli_key:
+          EventMetadataKey.CODEFLY_CLI_START_SESSION_APPROVAL_MODE,
         value: event.approval_mode,
       },
       {
@@ -610,7 +611,8 @@ export class ClearcutLogger {
       },
       // We deliberately do not log the names of extensions here, to be safe.
       {
-        codefly_cli_key: EventMetadataKey.CODEFLY_CLI_START_SESSION_EXTENSION_IDS,
+        codefly_cli_key:
+          EventMetadataKey.CODEFLY_CLI_START_SESSION_EXTENSION_IDS,
         value: event.extension_ids.toString(),
       },
     ];
@@ -1102,7 +1104,8 @@ export class ClearcutLogger {
 
     if (event.error_message) {
       data.push({
-        codefly_cli_key: EventMetadataKey.CODEFLY_CLI_INVALID_CHUNK_ERROR_MESSAGE,
+        codefly_cli_key:
+          EventMetadataKey.CODEFLY_CLI_INVALID_CHUNK_ERROR_MESSAGE,
         value: event.error_message,
       });
     }
@@ -1213,7 +1216,8 @@ export class ClearcutLogger {
         value: event.extension_id,
       },
       {
-        codefly_cli_key: EventMetadataKey.CODEFLY_CLI_EXTENSION_UNINSTALL_STATUS,
+        codefly_cli_key:
+          EventMetadataKey.CODEFLY_CLI_EXTENSION_UNINSTALL_STATUS,
         value: event.status,
       },
     ];
@@ -1241,7 +1245,8 @@ export class ClearcutLogger {
         value: event.extension_version,
       },
       {
-        codefly_cli_key: EventMetadataKey.CODEFLY_CLI_EXTENSION_PREVIOUS_VERSION,
+        codefly_cli_key:
+          EventMetadataKey.CODEFLY_CLI_EXTENSION_PREVIOUS_VERSION,
         value: event.extension_previous_version,
       },
       {
@@ -1523,7 +1528,8 @@ export class ClearcutLogger {
         value: event.reason,
       },
       {
-        codefly_cli_key: EventMetadataKey.CODEFLY_CLI_AGENT_RECOVERY_DURATION_MS,
+        codefly_cli_key:
+          EventMetadataKey.CODEFLY_CLI_AGENT_RECOVERY_DURATION_MS,
         value: event.duration_ms.toString(),
       },
       {

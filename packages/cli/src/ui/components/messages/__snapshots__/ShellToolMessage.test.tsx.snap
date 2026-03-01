@@ -297,7 +297,7 @@ exports[`<ShellToolMessage /> > Snapshots > renders in Alternate Buffer mode whi
 "╭──────────────────────────────────────────────────────────────────────────────╮
 │ ⊷  Shell Command A shell command                      (Shift+Tab to unfocus) │
 │                                                                              │
-│ Test result                                                                  │
+│ MockMarkdown:Test result                                                     │
 "
 `;
 
@@ -305,7 +305,7 @@ exports[`<ShellToolMessage /> > Snapshots > renders in Alternate Buffer mode whi
 "╭──────────────────────────────────────────────────────────────────────────────╮
 │ ⊷  Shell Command A shell command                                             │
 │                                                                              │
-│ Test result                                                                  │
+│ MockMarkdown:Test result                                                     │
 "
 `;
 
@@ -313,7 +313,7 @@ exports[`<ShellToolMessage /> > Snapshots > renders in Error state 1`] = `
 "╭──────────────────────────────────────────────────────────────────────────────╮
 │ x  Shell Command A shell command                                             │
 │                                                                              │
-│ Error output                                                                 │
+│ MockMarkdown:Error output                                                    │
 "
 `;
 
@@ -321,7 +321,7 @@ exports[`<ShellToolMessage /> > Snapshots > renders in Executing state 1`] = `
 "╭──────────────────────────────────────────────────────────────────────────────╮
 │ ⊷  Shell Command A shell command                                             │
 │                                                                              │
-│ Test result                                                                  │
+│ MockMarkdown:Test result                                                     │
 "
 `;
 
@@ -329,6 +329,6 @@ exports[`<ShellToolMessage /> > Snapshots > renders in Success state (history mo
 "╭──────────────────────────────────────────────────────────────────────────────╮
 │ ✓  Shell Command A shell command                                             │
 │                                                                              │
-│ Test result                                                                  │
+│ MockMarkdown:Test result                                                     │
 "
 `;

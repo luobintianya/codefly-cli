@@ -60,9 +60,9 @@ and use your extension.
 - `mcpServers`: This section defines one or more Model Context Protocol (MCP)
   servers. MCP servers are how you can add new tools for the model to use.
   - `command`, `args`, `cwd`: These fields specify how to start your server.
-    Notice the use of the `${extensionPath}` variable, which Codefly CLI replaces
-    with the absolute path to your extension's installation directory. This
-    allows your extension to work regardless of where it's installed.
+    Notice the use of the `${extensionPath}` variable, which Codefly CLI
+    replaces with the absolute path to your extension's installation directory.
+    This allows your extension to work regardless of where it's installed.
 
 ### `example.ts`
 

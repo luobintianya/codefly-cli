@@ -4,10 +4,10 @@ This document provides an overview of the Codefly Ignore (`.codeflyignore`)
 feature of the Codefly CLI.
 
 The Codefly CLI includes the ability to automatically ignore files, similar to
-`.gitignore` (used by Git) and `.aiexclude` (used by Codefly Code Assist). Adding
-paths to your `.codeflyignore` file will exclude them from tools that support
-this feature, although they will still be visible to other services (such as
-Git).
+`.gitignore` (used by Git) and `.aiexclude` (used by Codefly Code Assist).
+Adding paths to your `.codeflyignore` file will exclude them from tools that
+support this feature, although they will still be visible to other services
+(such as Git).
 
 ## How it works
 

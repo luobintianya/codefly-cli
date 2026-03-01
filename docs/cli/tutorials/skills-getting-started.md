@@ -1,8 +1,8 @@
 # Get started with Agent Skills
 
-Agent Skills extend Codefly CLI with specialized expertise. In this guide, you'll
-learn how to create your first skill, bundle custom scripts, and activate them
-during a session.
+Agent Skills extend Codefly CLI with specialized expertise. In this guide,
+you'll learn how to create your first skill, bundle custom scripts, and activate
+them during a session.
 
 ## How to create a skill
 
@@ -20,8 +20,8 @@ responding correctly.
 
 ### Create the definition
 
-1.  Create a file at `.codefly/skills/api-auditor/SKILL.md`. This tells the agent
-    _when_ to use the skill and _how_ to behave.
+1.  Create a file at `.codefly/skills/api-auditor/SKILL.md`. This tells the
+    agent _when_ to use the skill and _how_ to behave.
 
     ```markdown
     ---
@@ -68,9 +68,9 @@ Skills can bundle resources like scripts.
 
 ## How to verify discovery
 
-Codefly CLI automatically discovers skills in the `.codefly/skills` directory. You
-can also use `.agents/skills` as a more generic alternative. Check that it found
-your new skill.
+Codefly CLI automatically discovers skills in the `.codefly/skills` directory.
+You can also use `.agents/skills` as a more generic alternative. Check that it
+found your new skill.
 
 **Command:** `/skills list`
 
@@ -83,8 +83,8 @@ skill's description.
 
 **User:** "Can you audit http://codeflycli.com"
 
-Codefly recognizes the request matches the `api-auditor` description and asks for
-permission to activate it.
+Codefly recognizes the request matches the `api-auditor` description and asks
+for permission to activate it.
 
 **Model:** (After calling `activate_skill`) "I've activated the **api-auditor**
 skill. I'll run the audit script now..."

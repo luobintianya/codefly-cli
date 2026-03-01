@@ -14,6 +14,7 @@ import { AI_TOOLS, OPENSPEC_DIR_NAME } from './config.js';
 import { PALETTE } from './styles/palette.js';
 import { isInteractive } from '../utils/interactive.js';
 import { serializeConfig } from './config-prompts.js';
+import { getErrorMessage } from '../../utils/errors.js';
 import {
   generateCommands,
   CommandAdapterRegistry,
@@ -507,7 +508,11 @@ export class InitCommand {
         }
       } catch (error) {
         spinner.fail(`Failed for ${tool.name}`);
-        failedTools.push({ name: tool.name, error: error as Error });
+        failedTools.push({
+          name: tool.name,
+          error:
+            error instanceof Error ? error : new Error(getErrorMessage(error)),
+        });
       }
     }
 

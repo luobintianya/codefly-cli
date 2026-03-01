@@ -19,8 +19,8 @@ policies.
 
     Some internal utility calls (such as prompt completion and classification)
     use a silent fallback chain for `codefly-2.5-flash-lite` and will fall back
-    to `codefly-2.5-flash` and `codefly-2.5-pro` without prompting or changing the
-    configured model.
+    to `codefly-2.5-flash` and `codefly-2.5-pro` without prompting or changing
+    the configured model.
 
 3.  **Model switch:** If approved, or if the policy allows for silent fallback,
     the CLI will use an available fallback model for the current turn or the
@@ -28,7 +28,8 @@ policies.
 
 ### Model selection precedence
 
-The model used by Codefly CLI is determined by the following order of precedence:
+The model used by Codefly CLI is determined by the following order of
+precedence:
 
 1.  **`--model` command-line flag:** A model specified with the `--model` flag
     when launching the CLI will always be used.

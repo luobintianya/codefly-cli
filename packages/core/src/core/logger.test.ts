@@ -29,7 +29,6 @@ import os from 'node:os';
 import { CODEFLY_DIR } from '../utils/paths.js';
 import { debugLogger } from '../utils/debugLogger.js';
 
-const PROJECT_SLUG = 'project-slug';
 const TMP_DIR_NAME = 'tmp';
 const LOG_FILE_NAME = 'logs.json';
 const CHECKPOINT_FILE_NAME = 'checkpoint.json';

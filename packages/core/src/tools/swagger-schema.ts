@@ -122,6 +122,7 @@ class SwaggerSchemaToolInvocation extends BaseToolInvocation<
     let schema: SwaggerSchema;
 
     if (contentType.includes('application/json')) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       schema = (await response.json()) as SwaggerSchema;
     } else if (
       contentType.includes('application/x-yaml') ||
@@ -139,16 +140,19 @@ class SwaggerSchemaToolInvocation extends BaseToolInvocation<
         );
       }
       const text = await response.text();
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       schema = yaml.load(text) as SwaggerSchema;
     } else {
       // Try to parse as JSON first, then YAML
       const text = await response.text();
       try {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
         schema = JSON.parse(text) as SwaggerSchema;
       } catch {
         let yaml;
         try {
           yaml = await import('js-yaml');
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
           schema = yaml.load(text) as SwaggerSchema;
         } catch (_e) {
           throw new Error(

@@ -61,7 +61,7 @@ toolName = ["write_file", "replace"]
 decision = "allow"
 priority = 70
 modes = ["plan"]
-argsPattern = "\"file_path\":\"[^\"]+[\\\\/]+\\.gemini[\\\\/]+tmp[\\\\/]+[\\w-]+[\\\\/]+[\\w-]+[\\\\/]+plans[\\\\/]+[\\w-]+\\.md\""
+argsPattern = 'file_path":".*(\.codefly|\.gemini)[/\\]+tmp[/\\]+.*[/\\]+plans[/\\]+[^/\\"]+\.md"'
 
 # Explicitly Deny other write operations in Plan mode with a clear message.
 [[rule]]

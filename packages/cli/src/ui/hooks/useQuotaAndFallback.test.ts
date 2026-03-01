@@ -145,13 +145,17 @@ describe('useQuotaAndFallback', () => {
           1000 * 60 * 5,
         ); // 5 minutes
         act(() => {
-          promise = handler('codefly-pro', 'codefly-flash', error);
+          promise = handler(
+            DEFAULT_CODEFLY_MODEL,
+            DEFAULT_CODEFLY_FLASH_MODEL,
+            error,
+          );
         });
 
         // The hook should now have a pending request for the UI to handle
         const request = result.current.proQuotaRequest;
         expect(request).not.toBeNull();
-        expect(request?.failedModel).toBe('codefly-pro');
+        expect(request?.failedModel).toBe(DEFAULT_CODEFLY_MODEL);
         expect(request?.isTerminalQuotaError).toBe(true);
 
         const message = request!.message;
@@ -198,15 +202,21 @@ describe('useQuotaAndFallback', () => {
           1000 * 60 * 5,
         );
         act(() => {
-          promise = handler('codefly-flash', 'codefly-pro', error);
+          promise = handler(
+            DEFAULT_CODEFLY_FLASH_MODEL,
+            DEFAULT_CODEFLY_MODEL,
+            error,
+          );
         });
 
         const request = result.current.proQuotaRequest;
         expect(request).not.toBeNull();
-        expect(request?.failedModel).toBe('codefly-flash');
+        expect(request?.failedModel).toBe(DEFAULT_CODEFLY_FLASH_MODEL);
 
         const message = request!.message;
-        expect(message).toContain('Usage limit reached for codefly-flash.');
+        expect(message).toContain(
+          `Usage limit reached for ${DEFAULT_CODEFLY_FLASH_MODEL}.`,
+        );
         expect(message).not.toContain('all Pro models');
 
         act(() => {
@@ -233,7 +243,11 @@ describe('useQuotaAndFallback', () => {
         let promise: Promise<FallbackIntent | null>;
         const error = new TerminalQuotaError('no delay', mockGoogleApiError);
         act(() => {
-          promise = handler('codefly-pro', 'codefly-flash', error);
+          promise = handler(
+            DEFAULT_CODEFLY_MODEL,
+            DEFAULT_CODEFLY_FLASH_MODEL,
+            error,
+          );
         });
 
         const request = result.current.proQuotaRequest;
@@ -265,8 +279,8 @@ describe('useQuotaAndFallback', () => {
         let promise1: Promise<FallbackIntent | null>;
         act(() => {
           promise1 = handler(
-            'codefly-pro',
-            'codefly-flash',
+            DEFAULT_CODEFLY_MODEL,
+            DEFAULT_CODEFLY_FLASH_MODEL,
             new TerminalQuotaError('pro quota 1', mockGoogleApiError),
           );
         });
@@ -277,8 +291,8 @@ describe('useQuotaAndFallback', () => {
         let result2: FallbackIntent | null;
         await act(async () => {
           result2 = await handler(
-            'codefly-pro',
-            'codefly-flash',
+            DEFAULT_CODEFLY_MODEL,
+            DEFAULT_CODEFLY_FLASH_MODEL,
             new TerminalQuotaError('pro quota 2', mockGoogleApiError),
           );
         });
@@ -491,8 +505,8 @@ Your admin might have disabled the access. Contact them to enable the Preview Re
       let promise: Promise<FallbackIntent | null>;
       act(() => {
         promise = handler(
-          'codefly-pro',
-          'codefly-flash',
+          DEFAULT_CODEFLY_MODEL,
+          DEFAULT_CODEFLY_FLASH_MODEL,
           new TerminalQuotaError('pro quota', mockGoogleApiError),
         );
       });
@@ -523,8 +537,8 @@ Your admin might have disabled the access. Contact them to enable the Preview Re
       let promise: Promise<FallbackIntent | null>;
       act(() => {
         promise = handler(
-          'codefly-pro',
-          'codefly-flash',
+          DEFAULT_CODEFLY_MODEL,
+          DEFAULT_CODEFLY_FLASH_MODEL,
           new TerminalQuotaError('pro quota', mockGoogleApiError),
         );
       });
@@ -546,7 +560,7 @@ Your admin might have disabled the access. Contact them to enable the Preview Re
       const lastCall = (mockHistoryManager.addItem as Mock).mock.calls[0][0];
       expect(lastCall.type).toBe(MessageType.INFO);
       expect(lastCall.text).toContain(
-        'Switched to fallback model codefly-flash',
+        `Switched to fallback model ${DEFAULT_CODEFLY_FLASH_MODEL}`,
       );
     });
 

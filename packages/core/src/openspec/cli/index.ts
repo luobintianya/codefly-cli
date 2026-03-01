@@ -13,6 +13,7 @@ import { UpdateCommand } from '../core/update.js';
 import { ListCommand } from '../core/list.js';
 import { ArchiveCommand } from '../core/archive.js';
 import { ViewCommand } from '../core/view.js';
+import { getErrorMessage } from '../../utils/errors.js';
 
 import { registerSpecCommand } from '../commands/spec.js';
 import { ChangeCommand } from '../commands/change.js';
@@ -79,23 +80,24 @@ program
         const resolvedPath = path.resolve(targetPath);
 
         try {
-          const stats = await fs.stat(resolvedPath);
-          if (!stats.isDirectory()) {
-            throw new Error(`Path "${targetPath}" is not a directory`);
-          }
+          await fs.stat(resolvedPath);
         } catch (error: unknown) {
-          const err = error as { code?: string; message?: string };
-          if (err.code === 'ENOENT') {
+          if (
+            typeof error === 'object' &&
+            error !== null &&
+            'code' in error &&
+            error.code === 'ENOENT'
+          ) {
             // Directory doesn't exist, but we can create it
             console.log(
               `Directory "${targetPath}" doesn't exist, it will be created.`,
             );
-          } else if (err.message && err.message.includes('not a directory')) {
-            throw err;
           } else {
-            throw new Error(
-              `Cannot access path "${targetPath}": ${err.message}`,
-            );
+            const message = getErrorMessage(error);
+            if (message.includes('not a directory')) {
+              throw error;
+            }
+            throw new Error(`Cannot access path "${targetPath}": ${message}`);
           }
         }
 
@@ -107,7 +109,7 @@ program
         await initCommand.execute(targetPath);
       } catch (error) {
         console.log(); // Empty line for spacing
-        ora().fail(`Error: ${(error as Error).message}`);
+        ora().fail(`Error: ${getErrorMessage(error)}`);
         process.exit(1);
       }
     },
@@ -132,7 +134,7 @@ program
       await initCommand.execute('.');
     } catch (error) {
       console.log();
-      ora().fail(`Error: ${(error as Error).message}`);
+      ora().fail(`Error: ${getErrorMessage(error)}`);
       process.exit(1);
     }
   });
@@ -148,7 +150,7 @@ program
       await updateCommand.execute(resolvedPath);
     } catch (error) {
       console.log(); // Empty line for spacing
-      ora().fail(`Error: ${(error as Error).message}`);
+      ora().fail(`Error: ${getErrorMessage(error)}`);
       process.exit(1);
     }
   });
@@ -178,7 +180,7 @@ program
         await listCommand.execute('.', mode, { sort, json: options?.json });
       } catch (error) {
         console.log(); // Empty line for spacing
-        ora().fail(`Error: ${(error as Error).message}`);
+        ora().fail(`Error: ${getErrorMessage(error)}`);
         process.exit(1);
       }
     },
@@ -217,7 +219,7 @@ changeCmd
         const changeCommand = new ChangeCommand();
         await changeCommand.show(changeName, options);
       } catch (error) {
-        console.error(`Error: ${(error as Error).message}`);
+        console.error(`Error: ${getErrorMessage(error)}`);
         process.exitCode = 1;
       }
     },
@@ -238,7 +240,7 @@ changeCmd
       const changeCommand = new ChangeCommand();
       await changeCommand.list(options);
     } catch (error) {
-      console.error(`Error: ${(error as Error).message}`);
+      console.error(`Error: ${getErrorMessage(error)}`);
       process.exitCode = 1;
     }
   });
@@ -261,7 +263,7 @@ changeCmd
           process.exit(process.exitCode);
         }
       } catch (error) {
-        console.error(`Error: ${(error as Error).message}`);
+        console.error(`Error: ${getErrorMessage(error)}`);
         process.exitCode = 1;
       }
     },
@@ -294,7 +296,7 @@ program
         await archiveCommand.execute(changeName, options);
       } catch (error) {
         console.log(); // Empty line for spacing
-        ora().fail(`Error: ${(error as Error).message}`);
+        ora().fail(`Error: ${getErrorMessage(error)}`);
         process.exit(1);
       }
     },
@@ -338,7 +340,7 @@ program
         await validateCommand.execute(itemName, options);
       } catch (error) {
         console.log();
-        ora().fail(`Error: ${(error as Error).message}`);
+        ora().fail(`Error: ${getErrorMessage(error)}`);
         process.exit(1);
       }
     },
@@ -381,7 +383,7 @@ program
         await showCommand.execute(itemName, options ?? {});
       } catch (error) {
         console.log();
-        ora().fail(`Error: ${(error as Error).message}`);
+        ora().fail(`Error: ${getErrorMessage(error)}`);
         process.exit(1);
       }
     },
@@ -397,7 +399,7 @@ program
       await viewCommand.execute('.');
     } catch (error) {
       console.log(); // Empty line for spacing
-      ora().fail(`Error: ${(error as Error).message}`);
+      ora().fail(`Error: ${getErrorMessage(error)}`);
       process.exit(1);
     }
   });
@@ -413,7 +415,7 @@ program
       await feedbackCommand.execute(message, options);
     } catch (error) {
       console.log();
-      ora().fail(`Error: ${(error as Error).message}`);
+      ora().fail(`Error: ${getErrorMessage(error)}`);
       process.exit(1);
     }
   });
@@ -432,7 +434,7 @@ completionCmd
       await completionCommand.generate({ shell });
     } catch (error) {
       console.log();
-      ora().fail(`Error: ${(error as Error).message}`);
+      ora().fail(`Error: ${getErrorMessage(error)}`);
       process.exit(1);
     }
   });
@@ -447,7 +449,7 @@ completionCmd
       await completionCommand.install({ shell, verbose: options?.verbose });
     } catch (error) {
       console.log();
-      ora().fail(`Error: ${(error as Error).message}`);
+      ora().fail(`Error: ${getErrorMessage(error)}`);
       process.exit(1);
     }
   });
@@ -462,7 +464,7 @@ completionCmd
       await completionCommand.uninstall({ shell, yes: options?.yes });
     } catch (error) {
       console.log();
-      ora().fail(`Error: ${(error as Error).message}`);
+      ora().fail(`Error: ${getErrorMessage(error)}`);
       process.exit(1);
     }
   });
@@ -499,7 +501,7 @@ program
       await statusCommand(options);
     } catch (error) {
       console.log();
-      ora().fail(`Error: ${(error as Error).message}`);
+      ora().fail(`Error: ${getErrorMessage(error)}`);
       process.exit(1);
     }
   });
@@ -524,7 +526,7 @@ program
         }
       } catch (error) {
         console.log();
-        ora().fail(`Error: ${(error as Error).message}`);
+        ora().fail(`Error: ${getErrorMessage(error)}`);
         process.exit(1);
       }
     },
@@ -541,7 +543,7 @@ program
       await templatesCommand(options);
     } catch (error) {
       console.log();
-      ora().fail(`Error: ${(error as Error).message}`);
+      ora().fail(`Error: ${getErrorMessage(error)}`);
       process.exit(1);
     }
   });
@@ -556,7 +558,7 @@ program
       await schemasCommand(options);
     } catch (error) {
       console.log();
-      ora().fail(`Error: ${(error as Error).message}`);
+      ora().fail(`Error: ${getErrorMessage(error)}`);
       process.exit(1);
     }
   });
@@ -577,7 +579,7 @@ newCmd
       await newChangeCommand(name, options);
     } catch (error) {
       console.log();
-      ora().fail(`Error: ${(error as Error).message}`);
+      ora().fail(`Error: ${getErrorMessage(error)}`);
       process.exit(1);
     }
   });

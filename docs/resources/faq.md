@@ -39,9 +39,9 @@ If the problem persists, try deleting your `node_modules` directory and
 Cached token information is only displayed when cached tokens are being used.
 This feature is available for API key users (Codefly API key or Google Cloud
 Vertex AI) but not for OAuth users (such as Google Personal/Enterprise accounts
-like Google Gmail or Google Workspace, respectively). This is because the Codefly
-Code Assist API does not support cached content creation. You can still view
-your total token usage using the `/stats` command in Codefly CLI.
+like Google Gmail or Google Workspace, respectively). This is because the
+Codefly Code Assist API does not support cached content creation. You can still
+view your total token usage using the `/stats` command in Codefly CLI.
 
 ## Installation and updates
 
@@ -117,9 +117,9 @@ To learn more about your Google AI Pro or Google AI Ultra subscription, visit
 ### How do I know if I have higher limits for Google AI Pro or Ultra?
 
 If you're subscribed to Google AI Pro or Ultra, you automatically have higher
-limits to Codefly Code Assist and Codefly CLI. These are shared across Codefly CLI
-and agent mode in the IDE. You can confirm you have higher limits by checking if
-you are still subscribed to Google AI Pro or Ultra in your
+limits to Codefly Code Assist and Codefly CLI. These are shared across Codefly
+CLI and agent mode in the IDE. You can confirm you have higher limits by
+checking if you are still subscribed to Google AI Pro or Ultra in your
 [subscription settings](https://one.google.com).
 
 ### What is the privacy policy for using Codefly Code Assist or Codefly CLI if I've subscribed to Google AI Pro or Ultra?
@@ -130,19 +130,19 @@ subscription, visit
 
 ### I've upgraded to Google AI Pro or Ultra but it still says I am hitting quota limits. Is this a bug?
 
-The higher limits in your Google AI Pro or Ultra subscription are for Codefly 2.5
-across both Codefly 2.5 Pro and Flash. They are shared quota across Codefly CLI
-and agent mode in Codefly Code Assist IDE extensions. You can learn more about
-quota limits for Codefly CLI, Codefly Code Assist and agent mode in Codefly Code
-Assist at
+The higher limits in your Google AI Pro or Ultra subscription are for Codefly
+2.5 across both Codefly 2.5 Pro and Flash. They are shared quota across Codefly
+CLI and agent mode in Codefly Code Assist IDE extensions. You can learn more
+about quota limits for Codefly CLI, Codefly Code Assist and agent mode in
+Codefly Code Assist at
 [Quotas and limits](https://developers.google.com/codefly-code-assist/resources/quotas).
 
 ### If I upgrade to higher limits for Codefly CLI and Codefly Code Assist by purchasing a Google AI Pro or Ultra subscription, will Codefly start using my data to improve its machine learning models?
 
 Google does not use your data to improve Google's machine learning models if you
 purchase a paid plan. Note: If you decide to remain on the free version of
-Codefly Code Assist, Codefly Code Assist for individuals, you can also opt out of
-using your data to improve Google's machine learning models. See the
+Codefly Code Assist, Codefly Code Assist for individuals, you can also opt out
+of using your data to improve Google's machine learning models. See the
 [Codefly Code Assist for individuals privacy notice](https://developers.google.com/codefly-code-assist/resources/privacy-notice-codefly-code-assist-individuals)
 for more information.
 

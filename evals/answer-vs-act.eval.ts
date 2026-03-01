@@ -26,8 +26,9 @@ describe('Answer vs. ask eval', () => {
       const toolLogs = rig.readToolLogs();
 
       // Verify NO edit tools called
-      const editCalls = toolLogs.filter((log) =>
-        EDIT_TOOL_NAMES.has(log.toolRequest.name),
+      const editCalls = toolLogs.filter(
+        (log: { toolRequest: { name: string } }) =>
+          EDIT_TOOL_NAMES.has(log.toolRequest.name),
       );
       expect(editCalls.length).toBe(0);
 
@@ -50,7 +51,7 @@ describe('Answer vs. ask eval', () => {
 
       // Verify edit tools WERE called
       const editCalls = toolLogs.filter(
-        (log) =>
+        (log: { toolRequest: { name: string; success: boolean } }) =>
           EDIT_TOOL_NAMES.has(log.toolRequest.name) && log.toolRequest.success,
       );
       expect(editCalls.length).toBeGreaterThanOrEqual(1);
@@ -73,8 +74,9 @@ describe('Answer vs. ask eval', () => {
       const toolLogs = rig.readToolLogs();
 
       // Verify NO edit tools called
-      const editCalls = toolLogs.filter((log) =>
-        EDIT_TOOL_NAMES.has(log.toolRequest.name),
+      const editCalls = toolLogs.filter(
+        (log: { toolRequest: { name: string } }) =>
+          EDIT_TOOL_NAMES.has(log.toolRequest.name),
       );
       expect(editCalls.length).toBe(0);
 
@@ -96,8 +98,9 @@ describe('Answer vs. ask eval', () => {
       const toolLogs = rig.readToolLogs();
 
       // Verify NO edit tools called
-      const editCalls = toolLogs.filter((log) =>
-        EDIT_TOOL_NAMES.has(log.toolRequest.name),
+      const editCalls = toolLogs.filter(
+        (log: { toolRequest: { name: string } }) =>
+          EDIT_TOOL_NAMES.has(log.toolRequest.name),
       );
       expect(editCalls.length).toBe(0);
 
@@ -119,8 +122,9 @@ describe('Answer vs. ask eval', () => {
       const toolLogs = rig.readToolLogs();
 
       // Verify NO edit tools called
-      const editCalls = toolLogs.filter((log) =>
-        EDIT_TOOL_NAMES.has(log.toolRequest.name),
+      const editCalls = toolLogs.filter(
+        (log: { toolRequest: { name: string } }) =>
+          EDIT_TOOL_NAMES.has(log.toolRequest.name),
       );
       expect(editCalls.length).toBe(0);
 
@@ -143,8 +147,9 @@ describe('Answer vs. ask eval', () => {
       const toolLogs = rig.readToolLogs();
 
       // Verify NO edit tools called
-      const editCalls = toolLogs.filter((log) =>
-        EDIT_TOOL_NAMES.has(log.toolRequest.name),
+      const editCalls = toolLogs.filter(
+        (log: { toolRequest: { name: string } }) =>
+          EDIT_TOOL_NAMES.has(log.toolRequest.name),
       );
       expect(editCalls.length).toBe(0);
 

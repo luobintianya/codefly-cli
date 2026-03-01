@@ -87,6 +87,7 @@ export function getNestedValue(
     if (typeof current !== 'object') {
       return undefined;
     }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
     current = (current as Record<string, unknown>)[key];
   }
 
@@ -118,6 +119,7 @@ export function setNestedValue(
     ) {
       current[key] = {};
     }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
     current = current[key] as Record<string, unknown>;
   }
 
@@ -148,6 +150,7 @@ export function deleteNestedValue(
     ) {
       return false;
     }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
     current = current[key] as Record<string, unknown>;
   }
 
@@ -226,6 +229,7 @@ export function formatValueYaml(value: unknown, indent: number = 0): string {
   }
 
   if (typeof value === 'object') {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
     const entries = Object.entries(value as Record<string, unknown>);
     if (entries.length === 0) {
       return '{}';

@@ -59,7 +59,8 @@ Issues are organized to provide key information at a glance:
 - **Issue Type:** _Workstream_ => _Epics_ => _Features_ => _Tasks|Bugs_
 
 To see what we're working on, you can filter our issues by these dimensions. See
-all our items [here](https://github.com/orgs/google-codefly/projects/11/views/19)
+all our items
+[here](https://github.com/orgs/google-codefly/projects/11/views/19)
 
 ## Focus Areas
 
@@ -67,8 +68,8 @@ To better organize our efforts, we categorize our work into several key feature
 areas. These labels are used on our GitHub Issues to help you filter and find
 initiatives that interest you.
 
-- **Authentication:** Secure user access via API keys, Codefly Code Assist login,
-  etc.
+- **Authentication:** Secure user access via API keys, Codefly Code Assist
+  login, etc.
 - **Model:** Support new Codefly models, multi-modality, local execution, and
   performance tuning.
 - **User Experience:** Improve the CLI's usability, performance, interactive

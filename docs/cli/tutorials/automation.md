@@ -176,8 +176,8 @@ to create a `git commit` wrapper that writes the message for you.
     gcommit
     ```
 
-    Codefly CLI will analyze your staged changes and commit them with a generated
-    message.
+    Codefly CLI will analyze your staged changes and commit them with a
+    generated message.
 
 ## Next steps
 

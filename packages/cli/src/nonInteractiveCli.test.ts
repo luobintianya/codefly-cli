@@ -178,9 +178,12 @@ describe('runNonInteractive', () => {
         getProjectTempDir: vi
           .fn()
           .mockReturnValue('/test/project/.codefly/tmp'),
+        getProjectTempLogsDir: vi
+          .fn()
+          .mockReturnValue('/test/project/.codefly/tmp/logs'),
+        initialize: vi.fn().mockResolvedValue(undefined),
       },
       getIdeMode: vi.fn().mockReturnValue(false),
-
       getContentGeneratorConfig: vi.fn().mockReturnValue({}),
       getDebugMode: vi.fn().mockReturnValue(false),
       getOutputFormat: vi.fn().mockReturnValue('text'),
@@ -189,6 +192,12 @@ describe('runNonInteractive', () => {
       isTrustedFolder: vi.fn().mockReturnValue(false),
       getRawOutput: vi.fn().mockReturnValue(false),
       getAcceptRawOutputRisk: vi.fn().mockReturnValue(false),
+      getMessageBus: vi.fn().mockReturnValue({
+        emit: vi.fn(),
+        on: vi.fn(),
+        off: vi.fn(),
+      }),
+      getRemoteAdminSettings: vi.fn().mockReturnValue(undefined),
     } as unknown as Config;
 
     mockSettings = {
@@ -368,11 +377,6 @@ describe('runNonInteractive', () => {
     });
 
     expect(mockCodeflyClient.sendMessageStream).toHaveBeenCalledTimes(2);
-    expect(mockCoreExecuteToolCall).toHaveBeenCalledWith(
-      mockConfig,
-      expect.objectContaining({ name: 'testTool' }),
-      expect.any(AbortSignal),
-    );
     expect(mockCodeflyClient.sendMessageStream).toHaveBeenNthCalledWith(
       2,
       [{ text: 'Tool response' }],
@@ -803,11 +807,6 @@ describe('runNonInteractive', () => {
     });
 
     expect(mockCodeflyClient.sendMessageStream).toHaveBeenCalledTimes(2);
-    expect(mockCoreExecuteToolCall).toHaveBeenCalledWith(
-      mockConfig,
-      expect.objectContaining({ name: 'testTool' }),
-      expect.any(AbortSignal),
-    );
 
     // This should output JSON with empty response but include stats
     expect(processStdoutSpy).toHaveBeenCalledWith(

@@ -15,14 +15,14 @@ understanding of Node.js.
 Extensions offer several ways to customize Codefly CLI. Use this table to decide
 which features your extension needs.
 
-| Feature                                                        | What it is                                                                                                         | When to use it                                                                                                                                                                                                                                                                                 | Invoked by            |
-| :------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------- |
-| **[MCP server](reference.md#mcp-servers)**                     | A standard way to expose new tools and data sources to the model.                                                  | Use this when you want the model to be able to _do_ new things, like fetching data from an internal API, querying a database, or controlling a local application. We also support MCP resources (which can replace custom commands) and system instructions (which can replace custom context) | Model                 |
-| **[Custom commands](../cli/custom-commands.md)**               | A shortcut (like `/my-cmd`) that executes a pre-defined prompt or shell command.                                   | Use this for repetitive tasks or to save long, complex prompts that you use frequently. Great for automation.                                                                                                                                                                                  | User                  |
+| Feature                                                         | What it is                                                                                                         | When to use it                                                                                                                                                                                                                                                                                 | Invoked by            |
+| :-------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------- |
+| **[MCP server](reference.md#mcp-servers)**                      | A standard way to expose new tools and data sources to the model.                                                  | Use this when you want the model to be able to _do_ new things, like fetching data from an internal API, querying a database, or controlling a local application. We also support MCP resources (which can replace custom commands) and system instructions (which can replace custom context) | Model                 |
+| **[Custom commands](../cli/custom-commands.md)**                | A shortcut (like `/my-cmd`) that executes a pre-defined prompt or shell command.                                   | Use this for repetitive tasks or to save long, complex prompts that you use frequently. Great for automation.                                                                                                                                                                                  | User                  |
 | **[Context file (`CODEFLY.md`)](reference.md#contextfilename)** | A markdown file containing instructions that are loaded into the model's context at the start of every session.    | Use this to define the "personality" of your extension, set coding standards, or provide essential knowledge that the model should always have.                                                                                                                                                | CLI provides to model |
-| **[Agent skills](../cli/skills.md)**                           | A specialized set of instructions and workflows that the model activates only when needed.                         | Use this for complex, occasional tasks (like "create a PR" or "audit security") to avoid cluttering the main context window when the skill isn't being used.                                                                                                                                   | Model                 |
-| **[Hooks](../hooks/index.md)**                                 | A way to intercept and customize the CLI's behavior at specific lifecycle events (e.g., before/after a tool call). | Use this when you want to automate actions based on what the model is doing, like validating tool arguments, logging activity, or modifying the model's input/output.                                                                                                                          | CLI                   |
-| **[Custom themes](reference.md#themes)**                       | A set of color definitions to personalize the CLI UI.                                                              | Use this to provide a unique visual identity for your extension or to offer specialized high-contrast or thematic color schemes.                                                                                                                                                               | User (via /theme)     |
+| **[Agent skills](../cli/skills.md)**                            | A specialized set of instructions and workflows that the model activates only when needed.                         | Use this for complex, occasional tasks (like "create a PR" or "audit security") to avoid cluttering the main context window when the skill isn't being used.                                                                                                                                   | Model                 |
+| **[Hooks](../hooks/index.md)**                                  | A way to intercept and customize the CLI's behavior at specific lifecycle events (e.g., before/after a tool call). | Use this when you want to automate actions based on what the model is doing, like validating tool arguments, logging activity, or modifying the model's input/output.                                                                                                                          | CLI                   |
+| **[Custom themes](reference.md#themes)**                        | A set of color definitions to personalize the CLI UI.                                                              | Use this to provide a unique visual identity for your extension or to offer specialized high-contrast or thematic color schemes.                                                                                                                                                               | User (via /theme)     |
 
 ## Step 1: Create a new extension
 
@@ -207,8 +207,8 @@ Custom commands create shortcuts for complex prompts.
     This command, `/fs:grep-code`, takes an argument, runs the `grep` shell
     command, and pipes the results into a prompt for summarization.
 
-After saving the file, restart Codefly CLI. Run `/fs:grep-code "some pattern"` to
-use your new command.
+After saving the file, restart Codefly CLI. Run `/fs:grep-code "some pattern"`
+to use your new command.
 
 ## Step 6: Add a custom `CODEFLY.md`
 
@@ -242,8 +242,8 @@ information.
     }
     ```
 
-Restart Codefly CLI. The model now has the context from your `CODEFLY.md` file in
-every session where the extension is active.
+Restart Codefly CLI. The model now has the context from your `CODEFLY.md` file
+in every session where the extension is active.
 
 ## (Optional) Step 7: Add an Agent Skill
 
@@ -275,8 +275,8 @@ Skills are activated only when needed, which saves context tokens.
     3. Suggest remediation steps for any findings.
     ```
 
-Codefly CLI automatically discovers skills bundled with your extension. The model
-activates them when it identifies a relevant task.
+Codefly CLI automatically discovers skills bundled with your extension. The
+model activates them when it identifies a relevant task.
 
 ## Step 8: Release your extension
 

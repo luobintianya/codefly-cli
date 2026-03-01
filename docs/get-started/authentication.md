@@ -1,8 +1,8 @@
 # Codefly CLI authentication setup
 
-To use Codefly CLI, you'll need to authenticate with Google. This guide helps you
-quickly find the best way to sign in based on your account type and how you're
-using the CLI.
+To use Codefly CLI, you'll need to authenticate with Google. This guide helps
+you quickly find the best way to sign in based on your account type and how
+you're using the CLI.
 
 For most users, we recommend starting Codefly CLI and logging in with your
 personal Google account.
@@ -11,12 +11,12 @@ personal Google account.
 
 Select the authentication method that matches your situation in the table below:
 
-| User Type / Scenario                                                   | Recommended Authentication Method                                | Google Cloud Project Required                               |
-| :--------------------------------------------------------------------- | :--------------------------------------------------------------- | :---------------------------------------------------------- |
-| Individual Google accounts                                             | [Login with Google](#login-google)                               | No, with exceptions                                         |
-| Organization users with a company, school, or Google Workspace account | [Login with Google](#login-google)                               | [Yes](#set-gcp)                                             |
-| AI Studio user with a Codefly API key                                   | [Use Codefly API Key](#codefly-api)                                | No                                                          |
-| Google Cloud Vertex AI user                                            | [Vertex AI](#vertex-ai)                                          | [Yes](#set-gcp)                                             |
+| User Type / Scenario                                                   | Recommended Authentication Method                                  | Google Cloud Project Required                                |
+| :--------------------------------------------------------------------- | :----------------------------------------------------------------- | :----------------------------------------------------------- |
+| Individual Google accounts                                             | [Login with Google](#login-google)                                 | No, with exceptions                                          |
+| Organization users with a company, school, or Google Workspace account | [Login with Google](#login-google)                                 | [Yes](#set-gcp)                                              |
+| AI Studio user with a Codefly API key                                  | [Use Codefly API Key](#codefly-api)                                | No                                                           |
+| Google Cloud Vertex AI user                                            | [Vertex AI](#vertex-ai)                                            | [Yes](#set-gcp)                                              |
 | [Headless mode](#headless)                                             | [Use Codefly API Key](#codefly-api) or<br> [Vertex AI](#vertex-ai) | No (for Codefly API Key)<br> [Yes](#set-gcp) (for Vertex AI) |
 
 ### What is my Google account type?
@@ -94,9 +94,9 @@ To authenticate and use Codefly CLI with a Codefly API key:
 
 4. Select **Use Codefly API key**.
 
-> **Warning:** Treat API keys, especially for services like Codefly, as sensitive
-> credentials. Protect them to prevent unauthorized access and potential misuse
-> of the service under your account.
+> **Warning:** Treat API keys, especially for services like Codefly, as
+> sensitive credentials. Protect them to prevent unauthorized access and
+> potential misuse of the service under your account.
 
 ## Use Vertex AI <a id="vertex-ai"></a>
 
@@ -127,8 +127,8 @@ To make any Vertex AI environment variable settings persistent, see
 
 Consider this authentication method if you have Google Cloud CLI installed.
 
-> **Note:** If you have previously set `GOOGLE_API_KEY` or `CODEFLY_API_KEY`, you
-> must unset them to use ADC:
+> **Note:** If you have previously set `GOOGLE_API_KEY` or `CODEFLY_API_KEY`,
+> you must unset them to use ADC:
 >
 > ```bash
 > unset GOOGLE_API_KEY CODEFLY_API_KEY
@@ -157,8 +157,8 @@ Consider this authentication method if you have Google Cloud CLI installed.
 Consider this method of authentication in non-interactive environments, CI/CD
 pipelines, or if your organization restricts user-based ADC or API key creation.
 
-> **Note:** If you have previously set `GOOGLE_API_KEY` or `CODEFLY_API_KEY`, you
-> must unset them:
+> **Note:** If you have previously set `GOOGLE_API_KEY` or `CODEFLY_API_KEY`,
+> you must unset them:
 >
 > ```bash
 > unset GOOGLE_API_KEY CODEFLY_API_KEY
@@ -290,8 +290,8 @@ Variables are loaded from the first file found, not merged.
 
 ## Running in Google Cloud environments <a id="cloud-env"></a>
 
-When running Codefly CLI within certain Google Cloud environments, authentication
-is automatic.
+When running Codefly CLI within certain Google Cloud environments,
+authentication is automatic.
 
 In a Google Cloud Shell environment, Codefly CLI typically authenticates
 automatically using your Cloud Shell credentials. In Compute Engine

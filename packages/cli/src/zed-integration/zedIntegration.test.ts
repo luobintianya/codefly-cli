@@ -141,6 +141,11 @@ describe('CodeflyAgent', () => {
       }),
       getApprovalMode: vi.fn().mockReturnValue('default'),
       isPlanEnabled: vi.fn().mockReturnValue(false),
+      getContentGeneratorConfig: vi.fn().mockReturnValue({
+        apiKey: 'test-key',
+      }),
+      getActiveModel: vi.fn().mockReturnValue('codefly-pro'),
+      getModel: vi.fn().mockReturnValue('codefly-pro'),
     } as unknown as Mocked<Awaited<ReturnType<typeof loadCliConfig>>>;
     mockSettings = {
       merged: {
@@ -432,6 +437,7 @@ describe('Session', () => {
     mockChat = {
       sendMessageStream: vi.fn(),
       addHistory: vi.fn(),
+      recordCompletedToolCalls: vi.fn(),
     } as unknown as Mocked<CodeflyChat>;
     mockTool = {
       kind: 'read',

@@ -4,8 +4,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type { Config , AuthType} from '@codeflyai/codefly-core';
-import { ExitCodes, OutputFormat, debugLogger, getAuthTypeFromEnv } from '@codeflyai/codefly-core';
+import type { Config, AuthType } from '@codeflyai/codefly-core';
+import {
+  ExitCodes,
+  OutputFormat,
+  debugLogger,
+  getAuthTypeFromEnv,
+} from '@codeflyai/codefly-core';
 import { USER_SETTINGS_PATH } from './config/settings.js';
 import { validateAuthMethod } from './config/auth.js';
 import { type LoadedSettings } from './config/settings.js';

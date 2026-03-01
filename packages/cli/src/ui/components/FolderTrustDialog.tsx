@@ -18,7 +18,10 @@ import * as process from 'node:process';
 import * as path from 'node:path';
 import { relaunchApp } from '../../utils/processUtils.js';
 import { runExitCleanup } from '../../utils/cleanup.js';
-import { ExitCodes, type FolderDiscoveryResults } from '@codeflyai/codefly-core';
+import {
+  ExitCodes,
+  type FolderDiscoveryResults,
+} from '@codeflyai/codefly-core';
 import { useUIState } from '../contexts/UIStateContext.js';
 import { useAlternateBuffer } from '../hooks/useAlternateBuffer.js';
 import { StickyHeader } from './StickyHeader.js';

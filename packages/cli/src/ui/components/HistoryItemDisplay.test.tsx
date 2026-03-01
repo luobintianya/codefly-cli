@@ -9,7 +9,11 @@ import { HistoryItemDisplay } from './HistoryItemDisplay.js';
 import { type HistoryItem } from '../types.js';
 import { MessageType } from '../types.js';
 import { SessionStatsProvider } from '../contexts/SessionContext.js';
-import { CoreToolCallStatus, type Config, type ToolExecuteConfirmationDetails } from '@codeflyai/codefly-core';
+import {
+  CoreToolCallStatus,
+  type Config,
+  type ToolExecuteConfirmationDetails,
+} from '@codeflyai/codefly-core';
 import { ToolGroupMessage } from './messages/ToolGroupMessage.js';
 import { renderWithProviders } from '../../test-utils/render.js';
 import { createMockSettings } from '../../test-utils/settings.js';
@@ -147,10 +151,12 @@ describe('<HistoryItemDisplay />', () => {
       gcpProject: 'test-project',
       ideClient: 'test-ide',
     };
-    const { lastFrame } = renderWithProviders(
+    const { lastFrame, waitUntilReady, unmount } = renderWithProviders(
       <HistoryItemDisplay {...baseItem} item={item} />,
     );
+    await waitUntilReady();
     expect(lastFrame()).toContain('About Codefly');
+    unmount();
   });
 
   it('renders ModelStatsDisplay for "model_stats" type', async () => {

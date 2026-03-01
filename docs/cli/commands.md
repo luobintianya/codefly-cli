@@ -363,8 +363,8 @@ Codefly CLI.
       - While in shell mode, text you type is interpreted directly as a shell
         command.
     - **Exiting shell mode:**
-      - When exited, the UI reverts to its standard appearance and normal Codefly
-        CLI behavior resumes.
+      - When exited, the UI reverts to its standard appearance and normal
+        Codefly CLI behavior resumes.
 
 - **Caution for all `!` usage:** Commands you execute in shell mode have the
   same permissions and impact as if you ran them directly in your terminal.

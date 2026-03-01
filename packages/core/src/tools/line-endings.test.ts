@@ -114,7 +114,9 @@ describe('Line Ending Preservation', () => {
     mockCodeflyClientInstance = new (vi.mocked(CodeflyClient))(
       mockConfig,
     ) as Mocked<CodeflyClient>;
-    vi.mocked(CodeflyClient).mockImplementation(() => mockCodeflyClientInstance);
+    vi.mocked(CodeflyClient).mockImplementation(
+      () => mockCodeflyClientInstance,
+    );
 
     mockBaseLlmClientInstance = {
       generateJson: vi.fn(),

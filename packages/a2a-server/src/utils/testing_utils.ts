@@ -17,7 +17,8 @@ import {
   CodeflyClient,
   HookSystem,
   PolicyDecision,
- tmpdir } from '@codeflyai/codefly-core';
+  tmpdir,
+} from '@codeflyai/codefly-core';
 import type { Config, Storage } from '@codeflyai/codefly-core';
 import { createMockMessageBus } from '@codeflyai/codefly-core/src/test-utils/mock-message-bus.js';
 import { expect, vi } from 'vitest';
@@ -52,7 +53,9 @@ export function createMockConfig(
       DEFAULT_TRUNCATE_TOOL_OUTPUT_THRESHOLD,
     getActiveModel: vi.fn().mockReturnValue(DEFAULT_CODEFLY_MODEL),
     getDebugMode: vi.fn().mockReturnValue(false),
-    getContentGeneratorConfig: vi.fn().mockReturnValue({ model: 'codefly-pro' }),
+    getContentGeneratorConfig: vi
+      .fn()
+      .mockReturnValue({ model: 'codefly-pro' }),
     getModel: vi.fn().mockReturnValue('codefly-pro'),
     getUsageStatisticsEnabled: vi.fn().mockReturnValue(false),
     setFallbackModelHandler: vi.fn(),

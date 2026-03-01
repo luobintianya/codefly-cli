@@ -9,8 +9,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { execSync } from 'node:child_process';
+// @ts-expect-error - TestRig is exported but linter/tsc sometimes misses it in monorepo
 import { TestRig } from '@codeflyai/codefly-cli-test-utils';
-import { createUnauthorizedToolError } from '@codeflyai/codefly-core';
+import {
+  createUnauthorizedToolError,
+  parseAgentMarkdown,
+} from '@codeflyai/codefly-core';
 
 export * from '@codeflyai/codefly-cli-test-utils';
 

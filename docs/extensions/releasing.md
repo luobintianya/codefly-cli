@@ -22,8 +22,8 @@ To have your extension automatically discovered and listed:
 2.  **Add the GitHub topic:** Add the `codefly-cli-extension` topic to your
     repository's **About** section. Our crawler uses this topic to find new
     extensions.
-3.  **Place the manifest at the root:** Ensure your `codefly-extension.json` file
-    is in the absolute root of the repository or the release archive.
+3.  **Place the manifest at the root:** Ensure your `codefly-extension.json`
+    file is in the absolute root of the repository or the release archive.
 
 Our system crawls tagged repositories daily. Once you tag your repository, your
 extension will appear in the gallery if it passes validation.

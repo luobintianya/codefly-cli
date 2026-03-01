@@ -465,62 +465,6 @@ export class ReadManyFilesTool extends BaseDeclarativeTool<
     private config: Config,
     messageBus: MessageBus,
   ) {
-    const parameterSchema = {
-      type: 'object',
-      properties: {
-        include: {
-          type: 'array',
-          items: {
-            type: 'string',
-            minLength: 1,
-          },
-          minItems: 1,
-          description:
-            'An array of glob patterns or paths. Examples: ["src/**/*.ts"], ["README.md", "docs/"]',
-        },
-        exclude: {
-          type: 'array',
-          items: {
-            type: 'string',
-            minLength: 1,
-          },
-          description:
-            'Optional. Glob patterns for files/directories to exclude. Added to default excludes if useDefaultExcludes is true. Example: "**/*.log", "temp/"',
-          default: [],
-        },
-        recursive: {
-          type: 'boolean',
-          description:
-            'Optional. Whether to search recursively (primarily controlled by `**` in glob patterns). Defaults to true.',
-          default: true,
-        },
-        useDefaultExcludes: {
-          type: 'boolean',
-          description:
-            'Optional. Whether to apply a list of default exclusion patterns (e.g., node_modules, .git, binary files). Defaults to true.',
-          default: true,
-        },
-        file_filtering_options: {
-          description:
-            'Whether to respect ignore patterns from .gitignore or .codeflyignore',
-          type: 'object',
-          properties: {
-            respect_git_ignore: {
-              description:
-                'Optional: Whether to respect .gitignore patterns when listing files. Only available in git repositories. Defaults to true.',
-              type: 'boolean',
-            },
-            respect_codefly_ignore: {
-              description:
-                'Optional: Whether to respect .codeflyignore patterns when listing files. Defaults to true.',
-              type: 'boolean',
-            },
-          },
-        },
-      },
-      required: ['include'],
-    };
-
     super(
       ReadManyFilesTool.Name,
       'ReadManyFiles',

@@ -108,7 +108,12 @@ describe('CodeflyAgent Session Resume', () => {
 
     (loadCliConfig as Mock).mockResolvedValue(mockConfig);
 
-    agent = new CodeflyAgent(mockConfig, mockSettings, mockArgv, mockConnection);
+    agent = new CodeflyAgent(
+      mockConfig,
+      mockSettings,
+      mockArgv,
+      mockConnection,
+    );
   });
 
   it('should advertise loadSession capability', async () => {

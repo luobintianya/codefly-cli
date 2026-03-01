@@ -36,7 +36,8 @@ npm install -g @codeflyai/codefly@preview
 - feat(ux): added text wrapping capabilities to markdown tables by @devr0306 in
   [#18240](https://github.com/google-codefly/codefly-cli/pull/18240)
 - Revert "fix(mcp): ensure MCP transport is closed to prevent memory leaks" by
-  @skeshive in [#18771](https://github.com/google-codefly/codefly-cli/pull/18771)
+  @skeshive in
+  [#18771](https://github.com/google-codefly/codefly-cli/pull/18771)
 - chore(release): bump version to 0.30.0-nightly.20260210.a2174751d by
   @codefly-cli-robot in
   [#18772](https://github.com/google-codefly/codefly-cli/pull/18772)
@@ -77,7 +78,8 @@ npm install -g @codeflyai/codefly@preview
   @LyalinDotCom in
   [#18586](https://github.com/google-codefly/codefly-cli/pull/18586)
 - fix(core): cache CLI version to ensure consistency during sessions by
-  @sehoon38 in [#18793](https://github.com/google-codefly/codefly-cli/pull/18793)
+  @sehoon38 in
+  [#18793](https://github.com/google-codefly/codefly-cli/pull/18793)
 - fix(cli): resolve double rendering in shpool and address vscode lint warnings
   by @braddux in
   [#18704](https://github.com/google-codefly/codefly-cli/pull/18704)
@@ -122,7 +124,8 @@ npm install -g @codeflyai/codefly@preview
   engine by @Abhijit-2592 in
   [#18508](https://github.com/google-codefly/codefly-cli/pull/18508)
 - fix(workflows): improve maintainer detection for automated PR actions by
-  @bdmorgan in [#18869](https://github.com/google-codefly/codefly-cli/pull/18869)
+  @bdmorgan in
+  [#18869](https://github.com/google-codefly/codefly-cli/pull/18869)
 - refactor(cli): consolidate useToolScheduler and delete legacy implementation
   by @abhipatel12 in
   [#18567](https://github.com/google-codefly/codefly-cli/pull/18567)
@@ -171,11 +174,13 @@ npm install -g @codeflyai/codefly@preview
 - Hide AskUser tool validation errors from UI (agent self-corrects) by @jerop in
   [#18954](https://github.com/google-codefly/codefly-cli/pull/18954)
 - bug(cli) fix flicker due to AppContainer continuous initialization by
-  @jacob314 in [#18958](https://github.com/google-codefly/codefly-cli/pull/18958)
+  @jacob314 in
+  [#18958](https://github.com/google-codefly/codefly-cli/pull/18958)
 - feat(admin): Add admin controls documentation by @skeshive in
   [#18644](https://github.com/google-codefly/codefly-cli/pull/18644)
 - feat(cli): disable ctrl-s shortcut outside of alternate buffer mode by
-  @jacob314 in [#18887](https://github.com/google-codefly/codefly-cli/pull/18887)
+  @jacob314 in
+  [#18887](https://github.com/google-codefly/codefly-cli/pull/18887)
 - fix(vim): vim support that feels (more) complete by @ppgranger in
   [#18755](https://github.com/google-codefly/codefly-cli/pull/18755)
 - feat(policy): add --policy flag for user defined policies by @allenhutchison
@@ -221,7 +226,8 @@ npm install -g @codeflyai/codefly@preview
 - feat(sdk): Implement dynamic system instructions by @mbleigh in
   [#18863](https://github.com/google-codefly/codefly-cli/pull/18863)
 - Docs: Refresh docs to organize and standardize reference materials. by
-  @jkcinouye in [#18403](https://github.com/google-codefly/codefly-cli/pull/18403)
+  @jkcinouye in
+  [#18403](https://github.com/google-codefly/codefly-cli/pull/18403)
 - fix windows escaping (and broken tests) by @scidomino in
   [#19011](https://github.com/google-codefly/codefly-cli/pull/19011)
 - refactor: use `CoreToolCallStatus` in the the history data model by @jerop in
@@ -246,7 +252,8 @@ npm install -g @codeflyai/codefly@preview
 - fix(cli): wrap terminal capability queries in hidden sequence by @srithreepo
   in [#19080](https://github.com/google-codefly/codefly-cli/pull/19080)
 - fix(workflows): fix GitHub App token permissions for maintainer detection by
-  @bdmorgan in [#19139](https://github.com/google-codefly/codefly-cli/pull/19139)
+  @bdmorgan in
+  [#19139](https://github.com/google-codefly/codefly-cli/pull/19139)
 - test: fix hook integration test flakiness on Windows CI by @NTaylorMullen in
   [#18665](https://github.com/google-codefly/codefly-cli/pull/18665)
 - fix(core): Encourage non-interactive flags for scaffolding commands by
@@ -269,7 +276,8 @@ npm install -g @codeflyai/codefly@preview
   @kevinjwang1 in
   [#19034](https://github.com/google-codefly/codefly-cli/pull/19034)
 - feat(cli): refactor model command to support set and manage subcommands by
-  @sehoon38 in [#19221](https://github.com/google-codefly/codefly-cli/pull/19221)
+  @sehoon38 in
+  [#19221](https://github.com/google-codefly/codefly-cli/pull/19221)
 - Add refresh/reload aliases to slash command subcommands by @korade-krushna in
   [#19218](https://github.com/google-codefly/codefly-cli/pull/19218)
 - refactor: consolidate development rules and add cli guidelines by @jacob314 in
@@ -293,7 +301,8 @@ npm install -g @codeflyai/codefly@preview
 - feat(plan): support project exploration without planning when in plan mode by
   @Adib234 in [#18992](https://github.com/google-codefly/codefly-cli/pull/18992)
 - feat: add role-specific statistics to telemetry and UI (cont. #15234) by
-  @yunaseoul in [#18824](https://github.com/google-codefly/codefly-cli/pull/18824)
+  @yunaseoul in
+  [#18824](https://github.com/google-codefly/codefly-cli/pull/18824)
 - feat(cli): remove Plan Mode from rotation when actively working by @jerop in
   [#19262](https://github.com/google-codefly/codefly-cli/pull/19262)
 - Fix side breakage where anchors don't work in slugs. by @g-samroberts in

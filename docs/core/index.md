@@ -2,8 +2,8 @@
 
 Codefly CLI's core package (`packages/core`) is the backend portion of Codefly
 CLI, handling communication with the Codefly API, managing tools, and processing
-requests sent from `packages/cli`. For a general overview of Codefly CLI, see the
-[main documentation page](../index.md).
+requests sent from `packages/cli`. For a general overview of Codefly CLI, see
+the [main documentation page](../index.md).
 
 ## Navigating this section
 
@@ -19,8 +19,8 @@ requests sent from `packages/cli`. For a general overview of Codefly CLI, see th
 While the `packages/cli` portion of Codefly CLI provides the user interface,
 `packages/core` is responsible for:
 
-- **Codefly API interaction:** Securely communicating with the Google Codefly API,
-  sending user prompts, and receiving model responses.
+- **Codefly API interaction:** Securely communicating with the Google Codefly
+  API, sending user prompts, and receiving model responses.
 - **Prompt engineering:** Constructing effective prompts for the Codefly model,
   potentially incorporating conversation history, tool definitions, and
   instructional context from `CODEFLY.md` files.
@@ -29,7 +29,8 @@ While the `packages/cli` portion of Codefly CLI provides the user interface,
     execution).
   - Interpreting tool use requests from the Codefly model.
   - Executing the requested tools with the provided arguments.
-  - Returning tool execution results to the Codefly model for further processing.
+  - Returning tool execution results to the Codefly model for further
+    processing.
 - **Session and state management:** Keeping track of the conversation state,
   including history and any relevant context required for coherent interactions.
 - **Configuration:** Managing core-specific configurations, such as API key
@@ -70,7 +71,8 @@ session. This allows you to continue working without interruption.
 
 Internal utility calls that use `codefly-2.5-flash-lite` (for example, prompt
 completion and classification) silently fall back to `codefly-2.5-flash` and
-`codefly-2.5-pro` when quota is exhausted, without changing the configured model.
+`codefly-2.5-pro` when quota is exhausted, without changing the configured
+model.
 
 ## File discovery service
 

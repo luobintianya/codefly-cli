@@ -1,9 +1,9 @@
 # Codefly CLI for the enterprise
 
 This document outlines configuration patterns and best practices for deploying
-and managing Codefly CLI in an enterprise environment. By leveraging system-level
-settings, administrators can enforce security policies, manage tool access, and
-ensure a consistent experience for all users.
+and managing Codefly CLI in an enterprise environment. By leveraging
+system-level settings, administrators can enforce security policies, manage tool
+access, and ensure a consistent experience for all users.
 
 > **A note on security:** The patterns described in this document are intended
 > to help administrators create a more controlled and secure environment for
@@ -209,10 +209,10 @@ In shared compute environments (like ML experiment runners or shared build
 servers), you can isolate Codefly CLI state by overriding the user's home
 directory.
 
-By default, Codefly CLI stores configuration and history in `~/.codefly`. You can
-use the `CODEFLY_CLI_HOME` environment variable to point to a unique directory
-for a specific user or job. The CLI will create a `.codefly` folder inside the
-specified path.
+By default, Codefly CLI stores configuration and history in `~/.codefly`. You
+can use the `CODEFLY_CLI_HOME` environment variable to point to a unique
+directory for a specific user or job. The CLI will create a `.codefly` folder
+inside the specified path.
 
 ```bash
 # Isolate state for a specific job
@@ -295,8 +295,8 @@ effectively.
 
 ### How MCP server configurations are merged
 
-Codefly CLI loads `settings.json` files from three levels: System, Workspace, and
-User. When it comes to the `mcpServers` object, these configurations are
+Codefly CLI loads `settings.json` files from three levels: System, Workspace,
+and User. When it comes to the `mcpServers` object, these configurations are
 **merged**:
 
 1.  **Merging:** The lists of servers from all three levels are combined into a
@@ -433,10 +433,10 @@ a custom `sandbox.Dockerfile` as described in the
 
 ## Controlling network access via proxy
 
-In corporate environments with strict network policies, you can configure Codefly
-CLI to route all outbound traffic through a corporate proxy. This can be set via
-an environment variable, but it can also be enforced for custom tools via the
-`mcpServers` configuration.
+In corporate environments with strict network policies, you can configure
+Codefly CLI to route all outbound traffic through a corporate proxy. This can be
+set via an environment variable, but it can also be enforced for custom tools
+via the `mcpServers` configuration.
 
 **Example (for an MCP server):**
 

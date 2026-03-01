@@ -141,7 +141,7 @@ The available modes are:
 
 | Mode         | Description                                                                                                                                                                                 |
 | :----------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `persistent` | **(Default)** Launches Chrome with a persistent profile stored at `~/.codefly/cli-browser-profile/`. Cookies, history, and settings are preserved between sessions.                          |
+| `persistent` | **(Default)** Launches Chrome with a persistent profile stored at `~/.codefly/cli-browser-profile/`. Cookies, history, and settings are preserved between sessions.                         |
 | `isolated`   | Launches Chrome with a temporary profile that is deleted after each session. Use this for clean-state automation.                                                                           |
 | `existing`   | Attaches to an already-running Chrome instance. You must enable remote debugging first by navigating to `chrome://inspect/#remote-debugging` in Chrome. No new browser process is launched. |
 
@@ -149,11 +149,11 @@ The available modes are:
 
 All browser-specific settings go under `agents.browser` in your `settings.json`.
 
-| Setting       | Type      | Default        | Description                                                                                     |
-| :------------ | :-------- | :------------- | :---------------------------------------------------------------------------------------------- |
-| `sessionMode` | `string`  | `"persistent"` | How Chrome is managed: `"persistent"`, `"isolated"`, or `"existing"`.                           |
-| `headless`    | `boolean` | `false`        | Run Chrome in headless mode (no visible window).                                                |
-| `profilePath` | `string`  | —              | Custom path to a browser profile directory.                                                     |
+| Setting       | Type      | Default        | Description                                                                                      |
+| :------------ | :-------- | :------------- | :----------------------------------------------------------------------------------------------- |
+| `sessionMode` | `string`  | `"persistent"` | How Chrome is managed: `"persistent"`, `"isolated"`, or `"existing"`.                            |
+| `headless`    | `boolean` | `false`        | Run Chrome in headless mode (no visible window).                                                 |
+| `profilePath` | `string`  | —              | Custom path to a browser profile directory.                                                      |
 | `visualModel` | `string`  | —              | Model override for the visual agent (for example, `"codefly-2.5-computer-use-preview-10-2025"`). |
 
 #### Security
@@ -260,7 +260,7 @@ it yourself; just report it.
 | `description`  | string | Yes      | Short description of what the agent does. This is visible to the main agent to help it decide when to call this subagent. |
 | `kind`         | string | No       | `local` (default) or `remote`.                                                                                            |
 | `tools`        | array  | No       | List of tool names this agent can use. If omitted, it may have access to a default set.                                   |
-| `model`        | string | No       | Specific model to use (e.g., `codefly-2.5-pro`). Defaults to `inherit` (uses the main session model).                      |
+| `model`        | string | No       | Specific model to use (e.g., `codefly-2.5-pro`). Defaults to `inherit` (uses the main session model).                     |
 | `temperature`  | number | No       | Model temperature (0.0 - 2.0).                                                                                            |
 | `max_turns`    | number | No       | Maximum number of conversation turns allowed for this agent before it must return. Defaults to `15`.                      |
 | `timeout_mins` | number | No       | Maximum execution time in minutes. Defaults to `5`.                                                                       |

@@ -233,6 +233,17 @@ export async function createPolicyEngineConfig(
   const rules: PolicyRule[] = [...tomlRules];
   const checkers = [...tomlCheckers];
 
+  debugLogger.debug(
+    `[PolicyEngine] Loaded ${rules.length} rules and ${checkers.length} checkers from TOML.`,
+  );
+  for (const rule of rules) {
+    if (rule.modes?.includes(approvalMode)) {
+      debugLogger.debug(
+        `[PolicyEngine] Active rule in mode ${approvalMode}: toolName=${rule.toolName}, decision=${rule.decision}, priority=${rule.priority}, hasArgsPattern=${!!rule.argsPattern}`,
+      );
+    }
+  }
+
   // Priority system for policy rules:
   // - Higher priority numbers win over lower priority numbers
   // - When multiple rules match, the highest priority rule is applied

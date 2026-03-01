@@ -127,7 +127,10 @@ describe('ContextManager', () => {
         '/home/user/.codefly/CODEFLY.md',
       ]);
       vi.mocked(memoryDiscovery.readCodeflyMdFiles).mockResolvedValue([
-        { filePath: '/home/user/.codefly/CODEFLY.md', content: 'Global Content' },
+        {
+          filePath: '/home/user/.codefly/CODEFLY.md',
+          content: 'Global Content',
+        },
       ]);
 
       await contextManager.refresh();

@@ -49,7 +49,7 @@ describe('Flash Model Fallback Configuration', () => {
   describe('getModel', () => {
     it('should return contentGeneratorConfig model if available', async () => {
       // Simulate initialized content generator config
-      await config.setModel(DEFAULT_CODEFLY_FLASH_MODEL);
+      config.setModel(DEFAULT_CODEFLY_FLASH_MODEL);
       expect(config.getModel()).toBe(DEFAULT_CODEFLY_FLASH_MODEL);
     });
 

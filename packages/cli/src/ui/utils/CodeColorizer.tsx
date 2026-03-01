@@ -23,7 +23,6 @@ import {
 import type { LoadedSettings } from '../../config/settings.js';
 import { debugLogger } from '@codeflyai/codefly-core';
 
-
 // Configure theming and parsing utilities.
 const lowlight = createLowlight(common);
 

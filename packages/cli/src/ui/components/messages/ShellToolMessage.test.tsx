@@ -10,7 +10,7 @@ import {
   type ShellToolMessageProps,
 } from './ShellToolMessage.js';
 import { StreamingState } from '../../types.js';
-import { ACTIVE_SHELL_MAX_LINES , SHELL_COMMAND_NAME } from '../../constants.js';
+import { ACTIVE_SHELL_MAX_LINES, SHELL_COMMAND_NAME } from '../../constants.js';
 import { Text } from 'ink';
 import type { Config } from '@codeflyai/codefly-core';
 import { renderWithProviders } from '../../../test-utils/render.js';

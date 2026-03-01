@@ -505,7 +505,7 @@ export async function loadEnvironmentMemory(
       .filter((item) => item.content !== null)
       .map((item) => ({
         path: item.filePath,
-        content: item.content as string,
+        content: item.content!,
       })),
   };
 }

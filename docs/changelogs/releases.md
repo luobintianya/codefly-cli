@@ -22,9 +22,9 @@ on GitHub.
 
 ### Highlights
 
-- **⚡️⚡️⚡️ Codefly 3 Flash + Codefly CLI:** If you are a paid user, you can now
-  enable Codefly 3 Pro and Codefly 3 Flash. Go to `/settings` and set **Preview
-  Features** to `true` to enable Codefly 3. For more information:
+- **⚡️⚡️⚡️ Codefly 3 Flash + Codefly CLI:** If you are a paid user, you can
+  now enable Codefly 3 Pro and Codefly 3 Flash. Go to `/settings` and set
+  **Preview Features** to `true` to enable Codefly 3. For more information:
   [Codefly 3 Flash is now available in Codefly CLI](https://developers.googleblog.com/codefly-3-flash-is-now-available-in-codefly-cli/).
 
 ### What's Changed
@@ -163,8 +163,9 @@ on GitHub.
   https://github.com/google-codefly/codefly-cli/pull/14470
 - Add prompt_id propagation in a2a-server task by @koxkox111 in
   https://github.com/google-codefly/codefly-cli/pull/14581
-- Fix: Prevent freezing in non-interactive Codefly CLI when debug mode is enabled
-  by @parthasaradhie in https://github.com/google-codefly/codefly-cli/pull/14580
+- Fix: Prevent freezing in non-interactive Codefly CLI when debug mode is
+  enabled by @parthasaradhie in
+  https://github.com/google-codefly/codefly-cli/pull/14580
 - fix(audio): improve reading of audio files by @jackwotherspoon in
   https://github.com/google-codefly/codefly-cli/pull/14658
 - Update automated triage workflow to stop assigning priority labels by
@@ -773,8 +774,8 @@ https://github.com/google-codefly/codefly-cli/compare/v0.18.0-preview.4...v0.19.
   to use this feature.
 - **Codefly 3 support rolled out for some users**: Some users can now enable
   Codefly 3 by using the `/settings` flag and toggling **Preview Features**. See
-  our [Codefly 3 on Codefly CLI documentation](../get-started/codefly-3.md) to find
-  out more about using Codefly 3.
+  our [Codefly 3 on Codefly CLI documentation](../get-started/codefly-3.md) to
+  find out more about using Codefly 3.
 - **Updated UI rollback:** We've temporarily rolled back a previous UI update,
   which enabled embedded scrolling and mouse support. This can be re-enabled by
   using the `/settings` command and setting **Use Alternate Screen Buffer** to
@@ -819,7 +820,8 @@ https://github.com/google-codefly/codefly-cli/compare/v0.18.0-preview.4...v0.19.
 - Capturing github action workflow name if present and send it to clearcut by
   @MJjainam in https://github.com/google-codefly/codefly-cli/pull/13132
 - feat(sessions): record interactive-only errors and warnings to chat recording
-  JSON files by @bl-ue in https://github.com/google-codefly/codefly-cli/pull/13300
+  JSON files by @bl-ue in
+  https://github.com/google-codefly/codefly-cli/pull/13300
 - fix(zed-integration): Correctly handle cancellation errors by @benbrandt in
   https://github.com/google-codefly/codefly-cli/pull/13399
 - docs: Add Code Wiki link to README by @holtskinner in

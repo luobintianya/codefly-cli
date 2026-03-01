@@ -1,8 +1,8 @@
 # Codefly CLI hooks
 
-Hooks are scripts or programs that Codefly CLI executes at specific points in the
-agentic loop, allowing you to intercept and customize behavior without modifying
-the CLI's source code.
+Hooks are scripts or programs that Codefly CLI executes at specific points in
+the agentic loop, allowing you to intercept and customize behavior without
+modifying the CLI's source code.
 
 See [writing hooks guide](writing-hooks.md) for a tutorial on creating your
 first hook and a comprehensive example.
@@ -577,7 +577,7 @@ This command:
 
 ### Event name mapping
 
-| Claude Code        | Codefly CLI     |
+| Claude Code        | Codefly CLI    |
 | ------------------ | -------------- |
 | `PreToolUse`       | `BeforeTool`   |
 | `PostToolUse`      | `AfterTool`    |
@@ -590,7 +590,7 @@ This command:
 
 ### Tool name mapping
 
-| Claude Code | Codefly CLI            |
+| Claude Code | Codefly CLI           |
 | ----------- | --------------------- |
 | `Bash`      | `run_shell_command`   |
 | `Edit`      | `replace`             |

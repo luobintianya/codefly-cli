@@ -29,7 +29,8 @@ describe('validateAuthMethod', () => {
 
   it.each([
     {
-      description: 'should return null for USE_CODEFLY if CODEFLY_API_KEY is set',
+      description:
+        'should return null for USE_CODEFLY if CODEFLY_API_KEY is set',
       authType: AuthType.USE_CODEFLY,
       envs: { CODEFLY_API_KEY: 'test-key' },
       expected: null,

@@ -77,8 +77,8 @@ observability framework — Codefly CLI's observability system provides:
 All telemetry behavior is controlled through your `.codefly/settings.json` file.
 Environment variables can be used to override the settings in the file.
 
-| Setting        | Environment Variable             | Description                                         | Values            | Default                 |
-| -------------- | -------------------------------- | --------------------------------------------------- | ----------------- | ----------------------- |
+| Setting        | Environment Variable              | Description                                         | Values            | Default                 |
+| -------------- | --------------------------------- | --------------------------------------------------- | ----------------- | ----------------------- |
 | `enabled`      | `CODEFLY_TELEMETRY_ENABLED`       | Enable or disable telemetry                         | `true`/`false`    | `false`                 |
 | `target`       | `CODEFLY_TELEMETRY_TARGET`        | Where to send telemetry data                        | `"gcp"`/`"local"` | `"local"`               |
 | `otlpEndpoint` | `CODEFLY_TELEMETRY_OTLP_ENDPOINT` | OTLP collector endpoint                             | URL string        | `http://localhost:4317` |
@@ -783,7 +783,8 @@ Optional performance monitoring for startup, CPU/memory, and phase timing.
     - `function_name` (string)
     - `phase` ("validation", "preparation", "execution", "result_processing")
 
-- `codefly_cli.api.request.breakdown` (Histogram, ms): API request time by phase.
+- `codefly_cli.api.request.breakdown` (Histogram, ms): API request time by
+  phase.
   - **Attributes**:
     - `model` (string)
     - `phase` ("request_preparation", "network_latency", "response_processing",

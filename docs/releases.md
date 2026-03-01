@@ -16,8 +16,8 @@ More information can be found about these systems in the
 
 ### Package scopes
 
-| Package    | `prod` (Wombat Dressing Room) | `dev` (Github Private NPM Repo)           |
-| ---------- | ----------------------------- | ----------------------------------------- |
+| Package    | `prod` (Wombat Dressing Room) | `dev` (Github Private NPM Repo)             |
+| ---------- | ----------------------------- | ------------------------------------------- |
 | CLI        | @codeflyai/codefly            | @google-codefly/codefly-cli                 |
 | Core       | @codeflyai/codefly-core       | @google-codefly/codefly-cli-core A2A Server |
 | A2A Server | @codeflyai/codefly-a2a-server | @google-codefly/codefly-cli-a2a-server      |
@@ -496,16 +496,16 @@ executable that enables `npx` usage directly from the GitHub repository.
       `codefly.js` executable, are attached as assets to a new GitHub Release.
     - **Why:** This makes the single-file version of the CLI available for
       direct download and enables the
-      `npx https://github.com/google-codefly/codefly-cli` command, which downloads
-      and runs this specific bundled asset.
+      `npx https://github.com/google-codefly/codefly-cli` command, which
+      downloads and runs this specific bundled asset.
 
 **Summary of artifacts**
 
 - **NPM:** Publishes standard, un-bundled Node.js packages. The primary artifact
   is the code in `packages/cli/dist`, which depends on
   `@codeflyai/codefly-core`.
-- **GitHub release:** Publishes a single, bundled `codefly.js` file that contains
-  all dependencies, for easy execution via `npx`.
+- **GitHub release:** Publishes a single, bundled `codefly.js` file that
+  contains all dependencies, for easy execution via `npx`.
 
 This dual-artifact process ensures that both traditional `npm` users and those
 who prefer the convenience of `npx` have an optimized experience.

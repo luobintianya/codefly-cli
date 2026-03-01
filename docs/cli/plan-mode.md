@@ -74,8 +74,8 @@ manually during a session.
 
 - **Command:** Type `/plan` in the input box.
 
-- **Natural Language:** Ask Codefly CLI to "start a plan for...". Codefly CLI then
-  calls the [`enter_plan_mode`] tool to switch modes.
+- **Natural Language:** Ask Codefly CLI to "start a plan for...". Codefly CLI
+  then calls the [`enter_plan_mode`] tool to switch modes.
   > **Note:** This tool is not available when Codefly CLI is in [YOLO mode].
 
 ### Planning Workflow

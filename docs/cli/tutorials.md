@@ -73,8 +73,8 @@ Use an environment variable to store your GitHub PAT:
 GITHUB_PERSONAL_ACCESS_TOKEN="pat_YourActualGitHubTokenHere"
 ```
 
-Codefly CLI uses this value in the `mcpServers` configuration that you defined in
-the `settings.json` file.
+Codefly CLI uses this value in the `mcpServers` configuration that you defined
+in the `settings.json` file.
 
 #### Launch Codefly CLI and verify the connection
 

@@ -188,8 +188,15 @@ export class ViewCommand {
   }
 
   private displaySummary(
-    changesData: { draft: any[]; active: any[]; completed: any[] },
-    specsData: any[],
+    changesData: {
+      draft: Array<{ name: string }>;
+      active: Array<{
+        name: string;
+        progress: { total: number; completed: number };
+      }>;
+      completed: Array<{ name: string }>;
+    },
+    specsData: Array<{ name: string; requirementCount: number }>,
   ): void {
     const totalSpecs = specsData.length;
     const totalRequirements = specsData.reduce(

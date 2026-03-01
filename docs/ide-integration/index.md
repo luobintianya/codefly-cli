@@ -29,8 +29,8 @@ support VS Code extensions. To build support for other editors, see the
   - `Codefly CLI: Accept Diff`: Accepts the changes in the active diff editor.
   - `Codefly CLI: Close Diff Editor`: Rejects the changes and closes the active
     diff editor.
-  - `Codefly CLI: View Third-Party Notices`: Displays the third-party notices for
-    the extension.
+  - `Codefly CLI: View Third-Party Notices`: Displays the third-party notices
+    for the extension.
 
 ## Installation and setup
 
@@ -155,9 +155,9 @@ messages and how to resolve them.
 - **Message:**
   `🔴 Disconnected: Failed to connect to IDE companion extension in [IDE Name]. Please ensure the extension is running. To install the extension, run /ide install.`
   - **Cause:** Codefly CLI could not find the necessary environment variables
-    (`CODEFLY_CLI_IDE_WORKSPACE_PATH` or `CODEFLY_CLI_IDE_SERVER_PORT`) to connect
-    to the IDE. This usually means the IDE companion extension is not running or
-    did not initialize correctly.
+    (`CODEFLY_CLI_IDE_WORKSPACE_PATH` or `CODEFLY_CLI_IDE_SERVER_PORT`) to
+    connect to the IDE. This usually means the IDE companion extension is not
+    running or did not initialize correctly.
   - **Solution:**
     1.  Make sure you have installed the **Codefly CLI Companion** extension in
         your IDE and that it is enabled.

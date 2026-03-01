@@ -1,8 +1,8 @@
 # Codefly CLI documentation
 
-Codefly CLI brings the power of Codefly models directly into your terminal. Use it
-to understand code, automate tasks, and build workflows with your local project
-context.
+Codefly CLI brings the power of Codefly models directly into your terminal. Use
+it to understand code, automate tasks, and build workflows with your local
+project context.
 
 ## Install
 
@@ -19,12 +19,12 @@ Jump in to Codefly CLI.
   on your system.
 - **[Authentication](./get-started/authentication.md):** Setup instructions for
   personal and enterprise accounts.
-- **[Examples](./get-started/examples.md):** Practical examples of Codefly CLI in
-  action.
+- **[Examples](./get-started/examples.md):** Practical examples of Codefly CLI
+  in action.
 - **[CLI cheatsheet](./cli/cli-reference.md):** A quick reference for common
   commands and options.
-- **[Codefly 3 on Codefly CLI](./get-started/codefly-3.md):** Learn about Codefly 3
-  support in Codefly CLI.
+- **[Codefly 3 on Codefly CLI](./get-started/codefly-3.md):** Learn about
+  Codefly 3 support in Codefly CLI.
 
 ## Use Codefly CLI
 
@@ -83,12 +83,12 @@ Settings and customization options for Codefly CLI.
 - **[Custom commands](./cli/custom-commands.md):** Personalized shortcuts.
 - **[Enterprise configuration](./cli/enterprise.md):** Professional environment
   controls.
-- **[Ignore files (.codeflyignore)](./cli/codefly-ignore.md):** Exclusion pattern
-  reference.
+- **[Ignore files (.codeflyignore)](./cli/codefly-ignore.md):** Exclusion
+  pattern reference.
 - **[Model configuration](./cli/generation-settings.md):** Fine-tune generation
   parameters like temperature and thinking budget.
-- **[Project context (CODEFLY.md)](./cli/codefly-md.md):** Technical hierarchy of
-  context files.
+- **[Project context (CODEFLY.md)](./cli/codefly-md.md):** Technical hierarchy
+  of context files.
 - **[System prompt override](./cli/system-prompt.md):** Instruction replacement
   logic.
 - **[Themes](./cli/themes.md):** UI personalization technical guide.
@@ -126,7 +126,8 @@ Support, release history, and legal information.
 
 ## Development
 
-- **[Contribution guide](/docs/contributing):** How to contribute to Codefly CLI.
+- **[Contribution guide](/docs/contributing):** How to contribute to Codefly
+  CLI.
 - **[Integration testing](./integration-tests.md):** Running integration tests.
 - **[Issue and PR automation](./issue-and-pr-automation.md):** Automation for
   issues and pull requests.

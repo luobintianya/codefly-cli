@@ -11,7 +11,8 @@ to other editors like JetBrains IDEs, Sublime Text, etc.
 
 ## I. The communication interface
 
-Codefly CLI and the IDE plugin communicate through a local communication channel.
+Codefly CLI and the IDE plugin communicate through a local communication
+channel.
 
 ### 1. Transport layer: MCP over HTTP
 

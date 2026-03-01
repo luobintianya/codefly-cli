@@ -359,7 +359,8 @@ export class TestRig {
     this.testName = testName;
     const sanitizedName = sanitizeTestName(testName);
     const testFileDir =
-      env['INTEGRATION_TEST_FILE_DIR'] || join(os.tmpdir(), 'codefly-cli-tests');
+      env['INTEGRATION_TEST_FILE_DIR'] ||
+      join(os.tmpdir(), 'codefly-cli-tests');
     this.testDir = join(testFileDir, sanitizedName);
     this.homeDir = join(testFileDir, sanitizedName + '-home');
 
@@ -504,7 +505,8 @@ export class TestRig {
   } {
     const isNpmReleaseTest =
       env['INTEGRATION_TEST_USE_INSTALLED_CODEFLY'] === 'true';
-    const codeflyCommand = os.platform() === 'win32' ? 'codefly.cmd' : 'codefly';
+    const codeflyCommand =
+      os.platform() === 'win32' ? 'codefly.cmd' : 'codefly';
     const command = isNpmReleaseTest ? codeflyCommand : 'node';
     const initialArgs = isNpmReleaseTest
       ? extraInitialArgs

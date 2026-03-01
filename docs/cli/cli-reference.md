@@ -5,16 +5,16 @@ and parameters.
 
 ## CLI commands
 
-| Command                            | Description                        | Example                                             |
-| ---------------------------------- | ---------------------------------- | --------------------------------------------------- |
-| `codefly`                           | Start interactive REPL             | `codefly`                                            |
-| `codefly "query"`                   | Query non-interactively, then exit | `codefly "explain this project"`                     |
-| `cat file \| codefly`               | Process piped content              | `cat logs.txt \| codefly`                            |
-| `codefly -i "query"`                | Execute and continue interactively | `codefly -i "What is the purpose of this project?"`  |
-| `codefly -r "latest"`               | Continue most recent session       | `codefly -r "latest"`                                |
-| `codefly -r "latest" "query"`       | Continue session with a new prompt | `codefly -r "latest" "Check for type errors"`        |
-| `codefly -r "<session-id>" "query"` | Resume session by ID               | `codefly -r "abc123" "Finish this PR"`               |
-| `codefly update`                    | Update to latest version           | `codefly update`                                     |
+| Command                             | Description                        | Example                                             |
+| ----------------------------------- | ---------------------------------- | --------------------------------------------------- |
+| `codefly`                           | Start interactive REPL             | `codefly`                                           |
+| `codefly "query"`                   | Query non-interactively, then exit | `codefly "explain this project"`                    |
+| `cat file \| codefly`               | Process piped content              | `cat logs.txt \| codefly`                           |
+| `codefly -i "query"`                | Execute and continue interactively | `codefly -i "What is the purpose of this project?"` |
+| `codefly -r "latest"`               | Continue most recent session       | `codefly -r "latest"`                               |
+| `codefly -r "latest" "query"`       | Continue session with a new prompt | `codefly -r "latest" "Check for type errors"`       |
+| `codefly -r "<session-id>" "query"` | Resume session by ID               | `codefly -r "abc123" "Finish this PR"`              |
+| `codefly update`                    | Update to latest version           | `codefly update`                                    |
 | `codefly extensions`                | Manage extensions                  | See [Extensions Management](#extensions-management) |
 | `codefly mcp`                       | Configure MCP servers              | See [MCP Server Management](#mcp-server-management) |
 
@@ -52,24 +52,24 @@ and parameters.
 
 ## Model selection
 
-The `--model` (or `-m`) flag lets you specify which Codefly model to use. You can
-use either model aliases (user-friendly names) or concrete model names.
+The `--model` (or `-m`) flag lets you specify which Codefly model to use. You
+can use either model aliases (user-friendly names) or concrete model names.
 
 ### Model aliases
 
 These are convenient shortcuts that map to specific models:
 
-| Alias        | Resolves To                                | Description                                                                                                               |
-| ------------ | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
+| Alias        | Resolves To                                  | Description                                                                                                               |
+| ------------ | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
 | `auto`       | `codefly-2.5-pro` or `codefly-3-pro-preview` | **Default.** Resolves to the preview model if preview features are enabled, otherwise resolves to the standard pro model. |
 | `pro`        | `codefly-2.5-pro` or `codefly-3-pro-preview` | For complex reasoning tasks. Uses preview model if enabled.                                                               |
-| `flash`      | `codefly-2.5-flash`                         | Fast, balanced model for most tasks.                                                                                      |
-| `flash-lite` | `codefly-2.5-flash-lite`                    | Fastest model for simple tasks.                                                                                           |
+| `flash`      | `codefly-2.5-flash`                          | Fast, balanced model for most tasks.                                                                                      |
+| `flash-lite` | `codefly-2.5-flash-lite`                     | Fastest model for simple tasks.                                                                                           |
 
 ## Extensions management
 
-| Command                                            | Description                                  | Example                                                                        |
-| -------------------------------------------------- | -------------------------------------------- | ------------------------------------------------------------------------------ |
+| Command                                             | Description                                  | Example                                                                         |
+| --------------------------------------------------- | -------------------------------------------- | ------------------------------------------------------------------------------- |
 | `codefly extensions install <source>`               | Install extension from Git URL or local path | `codefly extensions install https://github.com/user/my-extension`               |
 | `codefly extensions install <source> --ref <ref>`   | Install from specific branch/tag/commit      | `codefly extensions install https://github.com/user/my-extension --ref develop` |
 | `codefly extensions install <source> --auto-update` | Install with auto-update enabled             | `codefly extensions install https://github.com/user/my-extension --auto-update` |
@@ -87,8 +87,8 @@ See [Extensions Documentation](../extensions/index.md) for more details.
 
 ## MCP server management
 
-| Command                                                       | Description                     | Example                                                                                              |
-| ------------------------------------------------------------- | ------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Command                                                        | Description                     | Example                                                                                               |
+| -------------------------------------------------------------- | ------------------------------- | ----------------------------------------------------------------------------------------------------- |
 | `codefly mcp add <name> <command>`                             | Add stdio-based MCP server      | `codefly mcp add github npx -y @modelcontextprotocol/server-github`                                   |
 | `codefly mcp add <name> <url> --transport http`                | Add HTTP-based MCP server       | `codefly mcp add api-server http://localhost:3000 --transport http`                                   |
 | `codefly mcp add <name> <command> --env KEY=value`             | Add with environment variables  | `codefly mcp add slack node server.js --env SLACK_TOKEN=xoxb-xxx`                                     |
@@ -101,8 +101,8 @@ See [MCP Server Integration](../tools/mcp-server.md) for more details.
 
 ## Skills management
 
-| Command                          | Description                           | Example                                           |
-| -------------------------------- | ------------------------------------- | ------------------------------------------------- |
+| Command                           | Description                           | Example                                            |
+| --------------------------------- | ------------------------------------- | -------------------------------------------------- |
 | `codefly skills list`             | List all discovered agent skills      | `codefly skills list`                              |
 | `codefly skills install <source>` | Install skill from Git, path, or file | `codefly skills install https://github.com/u/repo` |
 | `codefly skills link <path>`      | Link local agent skills via symlink   | `codefly skills link /path/to/my-skills`           |

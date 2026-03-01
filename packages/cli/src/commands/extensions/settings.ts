@@ -64,7 +64,9 @@ const setCommand: CommandModule<object, SetArgs> = {
       extension.id,
       setting,
       promptForSetting,
-      scope as ExtensionSettingScope,
+      scope === 'workspace'
+        ? ExtensionSettingScope.WORKSPACE
+        : ExtensionSettingScope.USER,
       process.cwd(),
     );
     await exitCli();

@@ -68,7 +68,8 @@ npm install -g @codeflyai/codefly
 - chore: correct docs as skills and hooks are stable by @jackwotherspoon in
   [#18358](https://github.com/google-codefly/codefly-cli/pull/18358)
 - feat(admin): Implement admin allowlist for MCP server configurations by
-  @skeshive in [#18311](https://github.com/google-codefly/codefly-cli/pull/18311)
+  @skeshive in
+  [#18311](https://github.com/google-codefly/codefly-cli/pull/18311)
 - fix(core): add retry logic for transient SSL/TLS errors (#17318) by @ppgranger
   in [#18310](https://github.com/google-codefly/codefly-cli/pull/18310)
 - Add support for /extensions config command by @chrstnb in
@@ -89,7 +90,8 @@ npm install -g @codeflyai/codefly
 - undo by @jacob314 in
   [#18147](https://github.com/google-codefly/codefly-cli/pull/18147)
 - feat(plan): add guidance on iterating on approved plans vs creating new plans
-  by @jerop in [#18346](https://github.com/google-codefly/codefly-cli/pull/18346)
+  by @jerop in
+  [#18346](https://github.com/google-codefly/codefly-cli/pull/18346)
 - feat(plan): fix invalid tool calls in plan mode by @Adib234 in
   [#18352](https://github.com/google-codefly/codefly-cli/pull/18352)
 - feat(plan): integrate planning artifacts and tools into primary workflows by
@@ -99,7 +101,8 @@ npm install -g @codeflyai/codefly
 - ux(polish) autocomplete in the input prompt by @jacob314 in
   [#18181](https://github.com/google-codefly/codefly-cli/pull/18181)
 - fix: resolve infinite loop when using 'Modify with external editor' by
-  @ppgranger in [#17453](https://github.com/google-codefly/codefly-cli/pull/17453)
+  @ppgranger in
+  [#17453](https://github.com/google-codefly/codefly-cli/pull/17453)
 - feat: expand verify-release to macOS and Windows by @yunaseoul in
   [#18145](https://github.com/google-codefly/codefly-cli/pull/18145)
 - feat(plan): implement support for MCP servers in Plan mode by @Adib234 in
@@ -128,7 +131,8 @@ npm install -g @codeflyai/codefly
 - Remove previewFeatures and default to Codefly 3 by @sehoon38 in
   [#18414](https://github.com/google-codefly/codefly-cli/pull/18414)
 - feat(admin): apply MCP allowlist to extensions & codefly mcp list command by
-  @skeshive in [#18442](https://github.com/google-codefly/codefly-cli/pull/18442)
+  @skeshive in
+  [#18442](https://github.com/google-codefly/codefly-cli/pull/18442)
 - fix(cli): improve focus navigation for interactive and background shells by
   @galz10 in [#18343](https://github.com/google-codefly/codefly-cli/pull/18343)
 - Add shortcuts hint and panel for discoverability by @LyalinDotCom in
@@ -315,8 +319,8 @@ npm install -g @codeflyai/codefly
   [#18638](https://github.com/google-codefly/codefly-cli/pull/18638)
 - fix: move toasts location to left side by @jackwotherspoon in
   [#18705](https://github.com/google-codefly/codefly-cli/pull/18705)
-- feat(routing): restrict numerical routing to Codefly 3 family by @mattKorwel in
-  [#18478](https://github.com/google-codefly/codefly-cli/pull/18478)
+- feat(routing): restrict numerical routing to Codefly 3 family by @mattKorwel
+  in [#18478](https://github.com/google-codefly/codefly-cli/pull/18478)
 - fix(ide): fix ide nudge setting by @skeshive in
   [#18733](https://github.com/google-codefly/codefly-cli/pull/18733)
 - fix(core): standardize tool formatting in system prompts by @NTaylorMullen in
@@ -347,7 +351,8 @@ npm install -g @codeflyai/codefly
 - Fix issues with rip grep by @gundermanc in
   [#18756](https://github.com/google-codefly/codefly-cli/pull/18756)
 - fix(cli): fix history navigation regression after prompt autocomplete by
-  @sehoon38 in [#18752](https://github.com/google-codefly/codefly-cli/pull/18752)
+  @sehoon38 in
+  [#18752](https://github.com/google-codefly/codefly-cli/pull/18752)
 - chore: cleanup unused and add unlisted dependencies in packages/cli by
   @adamfweidman in
   [#18749](https://github.com/google-codefly/codefly-cli/pull/18749)

@@ -101,7 +101,12 @@ describe('ide-connection-utils', () => {
 
       expect(result).toEqual(config);
       expect(fs.promises.readFile).toHaveBeenCalledWith(
-        path.join('/tmp', 'codefly', 'ide', 'codefly-ide-server-12345-123.json'),
+        path.join(
+          '/tmp',
+          'codefly',
+          'ide',
+          'codefly-ide-server-12345-123.json',
+        ),
         'utf8',
       );
     });
@@ -392,7 +397,12 @@ describe('ide-connection-utils', () => {
 
       expect(result).toEqual(validConfig);
       expect(fs.promises.readFile).toHaveBeenCalledWith(
-        path.join('/tmp', 'codefly', 'ide', 'codefly-ide-server-12345-111.json'),
+        path.join(
+          '/tmp',
+          'codefly',
+          'ide',
+          'codefly-ide-server-12345-111.json',
+        ),
         'utf8',
       );
       expect(fs.promises.readFile).not.toHaveBeenCalledWith(

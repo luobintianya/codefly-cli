@@ -2,9 +2,9 @@
 
 Codefly 3 Pro and Codefly 3 Flash are available on Codefly CLI for all users!
 
-> **Note:** Codefly 3.1 Pro Preview is rolling out. To determine whether you have
-> access to Codefly 3.1, use the `/model` command and select **Manual**. If you
-> have access, you will see `codefly-3.1-pro-preview`.
+> **Note:** Codefly 3.1 Pro Preview is rolling out. To determine whether you
+> have access to Codefly 3.1, use the `/model` command and select **Manual**. If
+> you have access, you will see `codefly-3.1-pro-preview`.
 >
 > If you have access to Codefly 3.1, it will be included in model routing when
 > you select **Auto (Codefly 3)**. You can also launch the Codefly 3.1 model
@@ -44,13 +44,13 @@ a message prompting fallback to Codefly 2.5 Flash.
 
 ### Capacity errors
 
-There may be times when the Codefly 3 Pro model is overloaded. When that happens,
-Codefly CLI will ask you to decide whether you want to keep trying Codefly 3 Pro
-or fallback to Codefly 2.5 Pro.
+There may be times when the Codefly 3 Pro model is overloaded. When that
+happens, Codefly CLI will ask you to decide whether you want to keep trying
+Codefly 3 Pro or fallback to Codefly 2.5 Pro.
 
-> **Note:** The **Keep trying** option uses exponential backoff, in which Codefly
-> CLI waits longer between each retry, when the system is busy. If the retry
-> doesn't happen immediately, please wait a few minutes for the request to
+> **Note:** The **Keep trying** option uses exponential backoff, in which
+> Codefly CLI waits longer between each retry, when the system is busy. If the
+> retry doesn't happen immediately, please wait a few minutes for the request to
 > process.
 
 ### Model selection and routing types
@@ -63,11 +63,12 @@ manage your usage limits:
 
 - **Auto routing:** Auto routing first determines whether a prompt involves a
   complex or simple operation. For simple prompts, it will automatically use
-  Codefly 2.5 Flash. For complex prompts, if Codefly 3 Pro is enabled, it will use
-  Codefly 3 Pro; otherwise, it will use Codefly 2.5 Pro.
+  Codefly 2.5 Flash. For complex prompts, if Codefly 3 Pro is enabled, it will
+  use Codefly 3 Pro; otherwise, it will use Codefly 2.5 Pro.
 - **Pro routing:** If you want to ensure your task is processed by the most
-  capable model, use `/model` and select **Pro**. Codefly CLI will prioritize the
-  most capable model available, including Codefly 3 Pro if it has been enabled.
+  capable model, use `/model` and select **Pro**. Codefly CLI will prioritize
+  the most capable model available, including Codefly 3 Pro if it has been
+  enabled.
 
 To learn more about selecting a model and routing, refer to
 [Codefly CLI Model Selection](../cli/model.md).
@@ -75,9 +76,9 @@ To learn more about selecting a model and routing, refer to
 ## How to enable Codefly 3 with Codefly CLI on Codefly Code Assist
 
 If you're using Codefly Code Assist Standard or Codefly Code Assist Enterprise,
-enabling Codefly 3 Pro on Codefly CLI requires configuring your release channels.
-Using Codefly 3 Pro will require two steps: administrative enablement and user
-enablement.
+enabling Codefly 3 Pro on Codefly CLI requires configuring your release
+channels. Using Codefly 3 Pro will require two steps: administrative enablement
+and user enablement.
 
 To learn more about these settings, refer to
 [Configure Codefly Code Assist release channels](https://developers.google.com/codefly-code-assist/docs/configure-release-channels).

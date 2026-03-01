@@ -20,7 +20,22 @@ import { act, useContext, type ReactElement } from 'react';
 import { AppContainer } from './AppContainer.js';
 import { SettingsContext } from './contexts/SettingsContext.js';
 import { type TrackedToolCall } from './hooks/useToolScheduler.js';
-import { AuthType, CoreEvent, CoreToolCallStatus, ShellExecutionService, WarningPriority, disableMouseEvents, enableMouseEvents, makeFakeConfig, writeToStdout, type AgentDefinition, type Config, type ResumedSessionData, type StartupWarning, type UserFeedbackPayload } from '@codeflyai/codefly-core';
+import {
+  AuthType,
+  CoreEvent,
+  CoreToolCallStatus,
+  ShellExecutionService,
+  WarningPriority,
+  disableMouseEvents,
+  enableMouseEvents,
+  makeFakeConfig,
+  writeToStdout,
+  type AgentDefinition,
+  type Config,
+  type ResumedSessionData,
+  type StartupWarning,
+  type UserFeedbackPayload,
+} from '@codeflyai/codefly-core';
 
 // Mock coreEvents
 const mockCoreEvents = vi.hoisted(() => ({
@@ -165,6 +180,19 @@ vi.mock('./hooks/useBanner.js', () => ({
     ).replace(/\\n/g, '\n'),
   })),
 }));
+vi.mock('./hooks/useExtensionUpdates.js', () => ({
+  useExtensionUpdates: vi.fn(() => ({
+    extensionsUpdateState: new Map(),
+    extensionsUpdateStateInternal: new Map(),
+    dispatchExtensionStateUpdate: vi.fn(),
+  })),
+  useConfirmUpdateRequests: vi.fn(() => ({
+    addConfirmUpdateExtensionRequest: vi.fn(),
+    confirmUpdateExtensionRequests: [],
+    dispatchConfirmUpdateExtensionRequests: vi.fn(),
+  })),
+}));
+
 vi.mock('./hooks/useShellInactivityStatus.js', () => ({
   useShellInactivityStatus: vi.fn(() => ({
     shouldShowFocusHint: false,

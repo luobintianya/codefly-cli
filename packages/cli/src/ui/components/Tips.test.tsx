@@ -13,10 +13,12 @@ describe('Tips', () => {
   it.each([
     [0, '3. Create CODEFLY.md files'],
     [5, '3. /help for more information'],
-  ])('renders correct tips when file count is %i', async (count, expectedText) => {
-    const config = {
-      getCodeflyMdFileCount: vi.fn().mockReturnValue(count),
-    } as unknown as Config;
+  ])(
+    'renders correct tips when file count is %i',
+    async (count, expectedText) => {
+      const config = {
+        getCodeflyMdFileCount: vi.fn().mockReturnValue(count),
+      } as unknown as Config;
 
       const { lastFrame, waitUntilReady, unmount } = render(
         <Tips config={config} />,

@@ -65,7 +65,10 @@ interface SaveMemoryParams {
 }
 
 export function getGlobalMemoryFilePath(): string {
-  return path.join(Storage.getGlobalCodeflyDir(), getCurrentCodeflyMdFilename());
+  return path.join(
+    Storage.getGlobalCodeflyDir(),
+    getCurrentCodeflyMdFilename(),
+  );
 }
 
 /**

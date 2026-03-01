@@ -25,8 +25,8 @@ custom scripts, or specialized workflows.
 
 ## Core integration architecture
 
-The Codefly CLI integrates with MCP servers through a sophisticated discovery and
-execution system built into the core package (`packages/core/src/tools/`):
+The Codefly CLI integrates with MCP servers through a sophisticated discovery
+and execution system built into the core package (`packages/core/src/tools/`):
 
 ### Discovery Layer (`mcp-client.ts`)
 

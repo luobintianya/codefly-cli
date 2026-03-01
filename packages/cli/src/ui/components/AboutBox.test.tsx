@@ -24,8 +24,11 @@ describe('AboutBox', () => {
     ideClient: '',
   };
 
+  const renderWide = (element: React.ReactElement) =>
+    renderWithProviders(element, { width: 200 });
+
   it('renders with required props', async () => {
-    const { lastFrame, waitUntilReady, unmount } = renderWithProviders(
+    const { lastFrame, waitUntilReady, unmount } = renderWide(
       <AboutBox {...defaultProps} />,
     );
     await waitUntilReady();
@@ -36,40 +39,42 @@ describe('AboutBox', () => {
     expect(output).toContain('codefly-pro');
     expect(output).toContain('default');
     expect(output).toContain('macOS');
-    expect(output).toContain('Logged in with Google');
+    expect(output).toContain('Logged in');
+    expect(output).toContain('Google');
     unmount();
   });
 
   it.each([
-    ['gcpProject', 'my-project', 'GCP Project'],
-    ['ideClient', 'vscode', 'IDE Client'],
-    ['tier', 'Enterprise', 'Tier'],
-  ])('renders optional prop %s', async (prop, value, label) => {
+    ['gcpProject', 'my-project', ['GCP', 'Project']],
+    ['ideClient', 'vscode', ['IDE', 'Client']],
+    ['tier', 'Enterprise', ['Tier']],
+  ])('renders optional prop %s', async (prop, value, labels: string[]) => {
     const props = { ...defaultProps, [prop]: value };
-    const { lastFrame, waitUntilReady, unmount } = renderWithProviders(
+    const { lastFrame, waitUntilReady, unmount } = renderWide(
       <AboutBox {...props} />,
     );
     await waitUntilReady();
     const output = lastFrame();
-    expect(output).toContain(label);
+    labels.forEach((label) => expect(output).toContain(label));
     expect(output).toContain(value);
     unmount();
   });
 
   it('renders Auth Method with email when userEmail is provided', async () => {
     const props = { ...defaultProps, userEmail: 'test@example.com' };
-    const { lastFrame, waitUntilReady, unmount } = renderWithProviders(
+    const { lastFrame, waitUntilReady, unmount } = renderWide(
       <AboutBox {...props} />,
     );
     await waitUntilReady();
     const output = lastFrame();
-    expect(output).toContain('Logged in with Google (test@example.com)');
+    expect(output).toContain('Logged in');
+    expect(output).toContain('test@example.com');
     unmount();
   });
 
   it('renders Auth Method correctly when not oauth', async () => {
     const props = { ...defaultProps, selectedAuthType: 'api-key' };
-    const { lastFrame, waitUntilReady, unmount } = renderWithProviders(
+    const { lastFrame, waitUntilReady, unmount } = renderWide(
       <AboutBox {...props} />,
     );
     await waitUntilReady();

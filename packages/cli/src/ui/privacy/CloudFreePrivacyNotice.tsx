@@ -82,14 +82,14 @@ export const CloudFreePrivacyNotice = ({
       <Newline />
       <Text color={theme.text.primary}>
         This notice and our Privacy Policy
-        <Text color={theme.text.link}>[1]</Text> describe how Codefly Code Assist
-        handles your data. Please read them carefully.
+        <Text color={theme.text.link}>[1]</Text> describe how Codefly Code
+        Assist handles your data. Please read them carefully.
       </Text>
       <Newline />
       <Text color={theme.text.primary}>
-        When you use Codefly Code Assist for individuals with Codefly CLI, Google
-        collects your prompts, related code, generated output, code edits,
-        related feature usage information, and your feedback to provide,
+        When you use Codefly Code Assist for individuals with Codefly CLI,
+        Google collects your prompts, related code, generated output, code
+        edits, related feature usage information, and your feedback to provide,
         improve, and develop Google products and services and machine learning
         technologies.
       </Text>

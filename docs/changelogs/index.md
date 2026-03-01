@@ -22,8 +22,9 @@ on GitHub.
 
 - **Plan Mode:** A new comprehensive planning capability with `/plan`,
   `enter_plan_mode` tool, and dedicated documentation
-  ([#17698](https://github.com/google-codefly/codefly-cli/pull/17698) by @Adib234,
-  [#18324](https://github.com/google-codefly/codefly-cli/pull/18324) by @jerop).
+  ([#17698](https://github.com/google-codefly/codefly-cli/pull/17698) by
+  @Adib234, [#18324](https://github.com/google-codefly/codefly-cli/pull/18324)
+  by @jerop).
 - **Codefly 3 Default:** We've removed the preview flag and enabled Codefly 3 by
   default for all users
   ([#18414](https://github.com/google-codefly/codefly-cli/pull/18414) by
@@ -49,13 +50,14 @@ on GitHub.
 - **Customization:** You can now use custom themes in extensions, and we've
   implemented automatic theme switching based on your terminal's background
   ([#17327](https://github.com/google-codefly/codefly-cli/pull/17327) by
-  @spencer426, [#17976](https://github.com/google-codefly/codefly-cli/pull/17976)
-  by @Abhijit-2592).
+  @spencer426,
+  [#17976](https://github.com/google-codefly/codefly-cli/pull/17976) by
+  @Abhijit-2592).
 - **Authentication:** We've added interactive and non-interactive consent for
   OAuth, and you can now include your auth method in bug reports
   ([#17699](https://github.com/google-codefly/codefly-cli/pull/17699) by
-  @ehedlund, [#17569](https://github.com/google-codefly/codefly-cli/pull/17569) by
-  @erikus).
+  @ehedlund, [#17569](https://github.com/google-codefly/codefly-cli/pull/17569)
+  by @erikus).
 
 ## Announcements: v0.27.0 - 2026-02-03
 
@@ -82,8 +84,8 @@ on GitHub.
   ([#16638](https://github.com/google-codefly/codefly-cli/pull/16638) by
   @joshualitt).
 - **UI/UX Improvements:** You can now "Rewind" through your conversation history
-  ([#15717](https://github.com/google-codefly/codefly-cli/pull/15717) by @Adib234)
-  and use a new `/introspect` command for debugging.
+  ([#15717](https://github.com/google-codefly/codefly-cli/pull/15717) by
+  @Adib234) and use a new `/introspect` command for debugging.
 - **Core and Scheduler Refactoring:** The core scheduler has been significantly
   refactored to improve performance and reliability
   ([#16895](https://github.com/google-codefly/codefly-cli/pull/16895) by
@@ -113,8 +115,9 @@ on GitHub.
   built-in agent skills
   ([#16045](https://github.com/google-codefly/codefly-cli/pull/16045) by
   [@NTaylorMullen](https://github.com/NTaylorMullen)), refined Codefly 3 system
-  instructions ([#16139](https://github.com/google-codefly/codefly-cli/pull/16139)
-  by [@NTaylorMullen](https://github.com/NTaylorMullen)), caching for ignore
+  instructions
+  ([#16139](https://github.com/google-codefly/codefly-cli/pull/16139) by
+  [@NTaylorMullen](https://github.com/NTaylorMullen)), caching for ignore
   instances to improve performance
   ([#16185](https://github.com/google-codefly/codefly-cli/pull/16185) by
   [@EricRahm](https://github.com/EricRahm)), and enhanced retry mechanisms
@@ -226,8 +229,8 @@ on GitHub.
 
 ## Announcements: v0.21.0 - 2025-12-15
 
-- **⚡️⚡️⚡️ Codefly 3 Flash + Codefly CLI:** Better, faster and cheaper than 2.5
-  Pro - and in some scenarios better than 3 Pro! For paid tiers + free tier
+- **⚡️⚡️⚡️ Codefly 3 Flash + Codefly CLI:** Better, faster and cheaper than
+  2.5 Pro - and in some scenarios better than 3 Pro! For paid tiers + free tier
   users who were on the wait list enable **Preview Features** in `/settings.`
 - For more information:
   [Codefly 3 Flash is now available in Codefly CLI](https://developers.googleblog.com/codefly-3-flash-is-now-available-in-codefly-cli/).
@@ -299,10 +302,10 @@ on GitHub.
   information.
   - Blog:
     [https://allen.hutchison.org/2025/11/26/the-guardrails-of-autonomy/](https://allen.hutchison.org/2025/11/26/the-guardrails-of-autonomy/)
-- **Codefly 3 support for paid:** Codefly 3 support has been rolled out to all API
-  key, Google AI Pro or Google AI Ultra (for individuals, not businesses) and
-  Codefly Code Assist Enterprise users. Enable it via `/settings` and toggling on
-  **Preview Features**.
+- **Codefly 3 support for paid:** Codefly 3 support has been rolled out to all
+  API key, Google AI Pro or Google AI Ultra (for individuals, not businesses)
+  and Codefly Code Assist Enterprise users. Enable it via `/settings` and
+  toggling on **Preview Features**.
 - **Updated UI rollback:** We’ve temporarily rolled back our updated UI to give
   it more time to bake. This means for a time you won’t have embedded scrolling
   or mouse support. You can re-enable with `/settings` -> **Use Alternate Screen
@@ -419,8 +422,9 @@ on GitHub.
     [@silviojr](https://github.com/silviojr)).
 - **Explore extensions with `/extension`:** Users can now open the extensions
   page in their default browser directly from the CLI using the `/extension`
-  explore command. ([pr](https://github.com/google-codefly/codefly-cli/pull/11846)
-  by [@JayadityaGit](https://github.com/JayadityaGit)).
+  explore command.
+  ([pr](https://github.com/google-codefly/codefly-cli/pull/11846) by
+  [@JayadityaGit](https://github.com/JayadityaGit)).
 - **Configurable compression:** Users can modify the compression threshold in
   `/settings`. The default has been made more proactive
   ([pr](https://github.com/google-codefly/codefly-cli/pull/12317) by
@@ -439,8 +443,8 @@ on GitHub.
 
 ![Codefly CLI and Jules](https://storage.googleapis.com/gweb-developer-goog-blog-assets/images/Jules_Extension_-_Blog_Header_O346JNt.original.png)
 
-- 🎉 **Codefly CLI Jules Extension:** Use Codefly CLI to orchestrate Jules. Spawn
-  remote workers, delegate tedious tasks, or check in on running jobs!
+- 🎉 **Codefly CLI Jules Extension:** Use Codefly CLI to orchestrate Jules.
+  Spawn remote workers, delegate tedious tasks, or check in on running jobs!
   - Install:
     `codefly extensions install https://github.com/codefly-cli-extensions/jules`
   - Announcement:
@@ -604,8 +608,8 @@ on GitHub.
   significantly higher 2.5 quota limits for Codefly CLI!
   - **Announcement:**
     [https://blog.google/technology/developers/codefly-cli-code-assist-higher-limits/](https://blog.google/technology/developers/codefly-cli-code-assist-higher-limits/)
-- 🎉**Codefly CLI Databases and BigQuery Extensions:** Connect Codefly CLI to all
-  of your cloud data with Codefly CLI.
+- 🎉**Codefly CLI Databases and BigQuery Extensions:** Connect Codefly CLI to
+  all of your cloud data with Codefly CLI.
   - Announcement and how to get started with each of the below extensions:
     [https://cloud.google.com/blog/products/databases/codefly-cli-extensions-for-google-data-cloud?e=48754805](https://cloud.google.com/blog/products/databases/codefly-cli-extensions-for-google-data-cloud?e=48754805)
   - **AlloyDB:** Interact, manage and observe AlloyDB for PostgreSQL databases
@@ -646,8 +650,9 @@ on GitHub.
   [@jerop](https://github.com/jerop))
 - **Keybinding triggered approvals:** When you use shortcuts (`shift+y` or
   `shift+tab`) to activate YOLO/auto-edit modes any pending confirmation dialogs
-  will now approve. ([pr](https://github.com/google-codefly/codefly-cli/pull/6665)
-  by [@bulkypanda](https://github.com/bulkypanda))
+  will now approve.
+  ([pr](https://github.com/google-codefly/codefly-cli/pull/6665) by
+  [@bulkypanda](https://github.com/bulkypanda))
 - **Chat sharing:** Convert the current conversation to a Markdown or JSON file
   with _/chat share &lt;file.md|file.json>_
   ([pr](https://github.com/google-codefly/codefly-cli/pull/8139) by
@@ -696,8 +701,9 @@ on GitHub.
   `"enableToolOutputTruncation": true `([pr](https://github.com/google-codefly/codefly-cli/pull/8039)
   by [@SandyTao520](https://github.com/SandyTao520))
 - **Edit Tool improvements:** Codefly CLI’s ability to edit files should now be
-  far more capable. ([pr](https://github.com/google-codefly/codefly-cli/pull/7679)
-  by [@silviojr](https://github.com/silviojr))
+  far more capable.
+  ([pr](https://github.com/google-codefly/codefly-cli/pull/7679) by
+  [@silviojr](https://github.com/silviojr))
 - **Custom witty messages:** The feature you’ve all been waiting for…
   Personalized witty loading messages via
   `"ui": { "customWittyPhrases": ["YOLO"]}` in `settings.json`.
@@ -725,10 +731,10 @@ on GitHub.
 
 ## Announcements: v0.4.0 - 2025-09-01
 
-- 🎉**Codefly CLI CloudRun and Security Integrations**🎉: Automate app deployment
-  and security analysis with CloudRun and Security extension integrations. Once
-  installed deploy your app to the cloud with `/deploy` and find and fix
-  security vulnerabilities with `/security:analyze`.
+- 🎉**Codefly CLI CloudRun and Security Integrations**🎉: Automate app
+  deployment and security analysis with CloudRun and Security extension
+  integrations. Once installed deploy your app to the cloud with `/deploy` and
+  find and fix security vulnerabilities with `/security:analyze`.
   - Announcement and how to get started:
     [https://cloud.google.com/blog/products/ai-machine-learning/automate-app-deployment-and-security-analysis-with-new-codefly-cli-extensions](https://cloud.google.com/blog/products/ai-machine-learning/automate-app-deployment-and-security-analysis-with-new-codefly-cli-extensions)
 - **Experimental**

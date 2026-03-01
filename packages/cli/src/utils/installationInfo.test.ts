@@ -141,7 +141,10 @@ describe('getInstallationInfo', () => {
     process.argv[1] = cliPath;
 
     mockedExecSync.mockImplementation((cmd) => {
-      if (typeof cmd === 'string' && cmd.includes('brew --prefix codefly-cli')) {
+      if (
+        typeof cmd === 'string' &&
+        cmd.includes('brew --prefix codefly-cli')
+      ) {
         return '/opt/homebrew/opt/codefly-cli';
       }
       throw new Error(`Command failed: ${cmd}`);
@@ -354,7 +357,10 @@ describe('getInstallationInfo', () => {
         return Buffer.from('codefly-cli\n');
       }
       // Future proofing for the fix:
-      if (typeof cmd === 'string' && cmd.includes('brew --prefix codefly-cli')) {
+      if (
+        typeof cmd === 'string' &&
+        cmd.includes('brew --prefix codefly-cli')
+      ) {
         return '/opt/homebrew/opt/codefly-cli';
       }
       throw new Error(`Command failed: ${cmd}`);

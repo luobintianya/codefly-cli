@@ -106,8 +106,8 @@ npm install -g @codeflyai/codefly@nightly
 ### Advanced Capabilities
 
 - Ground your queries with built-in
-  [Google Search](https://ai.google.dev/codefly-api/docs/grounding) for real-time
-  information
+  [Google Search](https://ai.google.dev/codefly-api/docs/grounding) for
+  real-time information
 - Conversation checkpointing to save and resume complex sessions
 - Custom context files (CODEFLY.md) to tailor behavior for your projects
 

@@ -117,12 +117,13 @@ export class ProjectRegistry {
     }
 
     // Use proper-lockfile to prevent racy updates
-    const release = await lock(this.registryPath, {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+    const release = (await lock(this.registryPath, {
       retries: {
         retries: Math.floor(LOCK_TIMEOUT_MS / LOCK_RETRY_DELAY_MS),
         minTimeout: LOCK_RETRY_DELAY_MS,
       },
-    });
+    })) as () => Promise<void>;
 
     try {
       // Re-load data under lock to get the latest state

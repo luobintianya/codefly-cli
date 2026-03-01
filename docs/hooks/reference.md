@@ -300,7 +300,8 @@ state saving.
 
 ## Stable Model API
 
-Codefly CLI uses these structures to ensure hooks don't break across SDK updates.
+Codefly CLI uses these structures to ensure hooks don't break across SDK
+updates.
 
 **LLMRequest**:
 

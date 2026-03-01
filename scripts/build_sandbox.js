@@ -92,7 +92,9 @@ if (!argv.s) {
 
 console.log('packing @codeflyai/codefly ...');
 const cliPackageDir = join('packages', 'cli');
-rmSync(join(cliPackageDir, 'dist', 'google-codefly-cli-*.tgz'), { force: true });
+rmSync(join(cliPackageDir, 'dist', 'google-codefly-cli-*.tgz'), {
+  force: true,
+});
 execSync(
   `npm pack -w @codeflyai/codefly --pack-destination ./packages/cli/dist`,
   {

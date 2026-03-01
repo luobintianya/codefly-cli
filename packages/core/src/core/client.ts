@@ -17,7 +17,7 @@ import {
   getInitialChatHistory,
 } from '../utils/environmentContext.js';
 import type { ServerCodeflyStreamEvent, ChatCompressionInfo } from './turn.js';
-import { CompressionStatus , Turn, CodeflyEventType } from './turn.js';
+import { CompressionStatus, Turn, CodeflyEventType } from './turn.js';
 import type { Config } from '../config/config.js';
 import { getCoreSystemPrompt } from './prompts.js';
 import { checkNextSpeaker } from '../utils/nextSpeakerChecker.js';

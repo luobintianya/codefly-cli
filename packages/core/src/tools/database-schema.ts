@@ -90,7 +90,8 @@ class DatabaseSchemaToolInvocation extends BaseToolInvocation<
     try {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-       
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       mysql = await import('mysql2/promise');
     } catch (_e) {
       throw new Error(
@@ -98,6 +99,7 @@ class DatabaseSchemaToolInvocation extends BaseToolInvocation<
       );
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const connection = await mysql.createConnection({
       host,
       port,
@@ -107,6 +109,7 @@ class DatabaseSchemaToolInvocation extends BaseToolInvocation<
     });
 
     try {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const [rows] = await connection.execute(
         `SELECT table_name, column_name, data_type, is_nullable, column_key 
          FROM information_schema.columns 
@@ -115,6 +118,7 @@ class DatabaseSchemaToolInvocation extends BaseToolInvocation<
         [database],
       );
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       return this.formatSchema(rows as Array<Record<string, string>>);
     } finally {
       await connection.end();
@@ -132,6 +136,7 @@ class DatabaseSchemaToolInvocation extends BaseToolInvocation<
     try {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       pg = await import('pg');
     } catch (_e) {
       throw new Error(
@@ -139,7 +144,9 @@ class DatabaseSchemaToolInvocation extends BaseToolInvocation<
       );
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const { Client } = pg.default || pg;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const client = new Client({
       host,
       port,
@@ -151,6 +158,7 @@ class DatabaseSchemaToolInvocation extends BaseToolInvocation<
     await client.connect();
 
     try {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const res = await client.query(
         `SELECT table_name, column_name, data_type, is_nullable 
          FROM information_schema.columns 
@@ -159,6 +167,7 @@ class DatabaseSchemaToolInvocation extends BaseToolInvocation<
         [database],
       );
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       return this.formatSchema(res.rows as Array<Record<string, string>>);
     } finally {
       await client.end();

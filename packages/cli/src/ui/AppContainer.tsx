@@ -40,7 +40,48 @@ import {
 import { checkPermissions } from './hooks/atCommandProcessor.js';
 import { MessageType, StreamingState } from './types.js';
 import { ToolActionsProvider } from './contexts/ToolActionsContext.js';
-import { AuthType, ChangeAuthRequestedError, CoreEvent, CoreToolCallStatus, IdeClient, SessionEndReason, SessionStartSource, ShellExecutionService, buildUserSteeringHintPrompt, clearCachedCredentialFile, coreEvents, debugLogger, disableLineWrapping, disableMouseEvents, enableMouseEvents, enterAlternateScreen, flattenMemory, generateSteeringAckMessage, generateSummary, getAllCodeflyMdFilenames, getErrorMessage, ideContextStore, recordExitFail, refreshServerHierarchicalMemory, saveApiKey, shouldEnterAlternateScreen, startupProfiler, type AgentsDiscoveredPayload, type ConsentRequestPayload, type AgentDefinition, type ApprovalMode, type Config, type EditorType, type IdeContext, type IdeInfo, type MemoryChangedPayload, type ResumedSessionData, type StartupWarning, type UserFeedbackPayload, type UserTierId } from '@codeflyai/codefly-core';
+import {
+  AuthType,
+  ChangeAuthRequestedError,
+  CoreEvent,
+  CoreToolCallStatus,
+  IdeClient,
+  SessionEndReason,
+  SessionStartSource,
+  ShellExecutionService,
+  buildUserSteeringHintPrompt,
+  clearCachedCredentialFile,
+  coreEvents,
+  debugLogger,
+  disableLineWrapping,
+  disableMouseEvents,
+  enableMouseEvents,
+  enterAlternateScreen,
+  flattenMemory,
+  generateSteeringAckMessage,
+  generateSummary,
+  getAllCodeflyMdFilenames,
+  getErrorMessage,
+  ideContextStore,
+  recordExitFail,
+  refreshServerHierarchicalMemory,
+  saveApiKey,
+  shouldEnterAlternateScreen,
+  startupProfiler,
+  type AgentsDiscoveredPayload,
+  type ConsentRequestPayload,
+  type AgentDefinition,
+  type ApprovalMode,
+  type Config,
+  type EditorType,
+  type IdeContext,
+  type IdeInfo,
+  type MemoryChangedPayload,
+  type ResumedSessionData,
+  type StartupWarning,
+  type UserFeedbackPayload,
+  type UserTierId,
+} from '@codeflyai/codefly-core';
 import { validateAuthMethod } from '../config/auth.js';
 import process from 'node:process';
 import { useHistory } from './hooks/useHistoryManager.js';
@@ -803,7 +844,7 @@ export const AppContainer = (props: AppContainerProps) => {
           };
 
           if (updatedModel) {
-            await config.setModel(updatedModel);
+            config.setModel(updatedModel);
           }
         }
 
@@ -2457,18 +2498,6 @@ export const AppContainer = (props: AppContainerProps) => {
       customDialog,
       apiKeyDefaultValue,
       baseUrlDefaultValue,
-      modelsDefaultValue,
-      authState,
-      copyModeEnabled,
-      transientMessage,
-      bannerData,
-      bannerVisible,
-      config,
-      settingsNonce,
-      backgroundShellHeight,
-      isBackgroundShellListOpen,
-      activeBackgroundShellPid,
-      backgroundShells,
       modelsDefaultValue,
       authState,
       copyModeEnabled,

@@ -1889,9 +1889,8 @@ describe('useCodeflyStream', () => {
         expect(mockParseAndFormatApiError).toHaveBeenCalledWith(
           'Rate limit exceeded',
           mockAuthType,
-          undefined,
           'codefly-2.5-pro',
-          'codefly-2.5-flash',
+          'codefly-3-flash-preview',
         );
       });
     });
@@ -2985,9 +2984,8 @@ describe('useCodeflyStream', () => {
       expect(mockParseAndFormatApiError).toHaveBeenCalledWith(
         { message: 'Test error' },
         expect.any(String),
-        undefined,
         'codefly-2.5-pro',
-        'codefly-2.5-flash',
+        'codefly-3-flash-preview',
       );
     });
 

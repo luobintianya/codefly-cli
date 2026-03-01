@@ -7,15 +7,16 @@ exports[`AuthDialog > Snapshots > renders correctly with auth error 1`] = `
 │                                                                                                  │
 │   How would you like to authenticate for this project?                                           │
 │                                                                                                  │
-│   (selected) Login with Google(not selected) Use Codefly API Key(not selected) Vertex AI          │
+│   (selected) OpenAI     (not selected) Use Codefly (not selected) Login with (not selected)      │
+│   Compatible            API Key                    Google                    Vertex AI           │
 │                                                                                                  │
 │   Something went wrong                                                                           │
 │                                                                                                  │
 │   (Use Enter to select)                                                                          │
 │                                                                                                  │
-│   Terms of Services and Privacy Notice for Codefly CLI                                            │
+│   Terms of Services and Privacy Notice for Codefly cli                                           │
 │                                                                                                  │
-│   https://codeflycli.com/docs/resources/tos-privacy/                                              │
+│   https://codeflycli.com/docs/resources/tos-privacy/                                             │
 │                                                                                                  │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
 "
@@ -28,13 +29,14 @@ exports[`AuthDialog > Snapshots > renders correctly with default props 1`] = `
 │                                                                                                  │
 │   How would you like to authenticate for this project?                                           │
 │                                                                                                  │
-│   (selected) Login with Google(not selected) Use Codefly API Key(not selected) Vertex AI          │
+│   (selected) OpenAI     (not selected) Use Codefly (not selected) Login with (not selected)      │
+│   Compatible            API Key                    Google                    Vertex AI           │
 │                                                                                                  │
 │   (Use Enter to select)                                                                          │
 │                                                                                                  │
-│   Terms of Services and Privacy Notice for Codefly CLI                                            │
+│   Terms of Services and Privacy Notice for Codefly cli                                           │
 │                                                                                                  │
-│   https://codeflycli.com/docs/resources/tos-privacy/                                              │
+│   https://codeflycli.com/docs/resources/tos-privacy/                                             │
 │                                                                                                  │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
 "
@@ -47,13 +49,13 @@ exports[`AuthDialog > Snapshots > renders correctly with enforced auth type 1`] 
 │                                                                                                  │
 │   How would you like to authenticate for this project?                                           │
 │                                                                                                  │
-│   (selected) Use Codefly API Key                                                                  │
+│   (selected) Use Codefly API Key                                                                 │
 │                                                                                                  │
 │   (Use Enter to select)                                                                          │
 │                                                                                                  │
-│   Terms of Services and Privacy Notice for Codefly CLI                                            │
+│   Terms of Services and Privacy Notice for Codefly cli                                           │
 │                                                                                                  │
-│   https://codeflycli.com/docs/resources/tos-privacy/                                              │
+│   https://codeflycli.com/docs/resources/tos-privacy/                                             │
 │                                                                                                  │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
 "

@@ -19,7 +19,14 @@ import type {
   ChatRecordingService,
   CodeflyClient,
 } from '@codeflyai/codefly-core';
-import { checkExhaustive, convertSessionToClientHistory, coreEvents, debugLogger, logRewind, RewindEvent } from '@codeflyai/codefly-core';
+import {
+  checkExhaustive,
+  convertSessionToClientHistory,
+  coreEvents,
+  debugLogger,
+  logRewind,
+  RewindEvent,
+} from '@codeflyai/codefly-core';
 
 /**
  * Helper function to handle the core logic of rewinding a conversation.

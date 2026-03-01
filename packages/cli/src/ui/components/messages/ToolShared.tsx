@@ -15,7 +15,13 @@ import {
   SHELL_FOCUS_HINT_DELAY_MS,
 } from '../../constants.js';
 import { theme } from '../../semantic-colors.js';
-import { CoreToolCallStatus, SHELL_TOOL_NAME, isCompletedAskUserTool, type Config, type ToolResultDisplay } from '@codeflyai/codefly-core';
+import {
+  CoreToolCallStatus,
+  SHELL_TOOL_NAME,
+  isCompletedAskUserTool,
+  type Config,
+  type ToolResultDisplay,
+} from '@codeflyai/codefly-core';
 import { useInactivityTimer } from '../../hooks/useInactivityTimer.js';
 import { formatCommand } from '../../utils/keybindingUtils.js';
 import { Command } from '../../../config/keyBindings.js';

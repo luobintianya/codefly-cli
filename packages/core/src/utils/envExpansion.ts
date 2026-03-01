@@ -45,10 +45,12 @@ export function expandEnvVars(
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const result = expand({
     parsed: { [dummyKey]: processedStr },
     processEnv,
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return result.parsed?.[dummyKey] ?? '';
 }

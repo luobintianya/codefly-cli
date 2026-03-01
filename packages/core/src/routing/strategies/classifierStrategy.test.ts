@@ -348,7 +348,9 @@ describe('ClassifierStrategy', () => {
   describe('Codefly 3.1 and Custom Tools Routing', () => {
     it('should route to PREVIEW_CODEFLY_3_1_MODEL when Codefly 3.1 is launched', async () => {
       vi.mocked(mockConfig.getCodefly31Launched).mockResolvedValue(true);
-      vi.mocked(mockConfig.getModel).mockReturnValue(PREVIEW_CODEFLY_MODEL_AUTO);
+      vi.mocked(mockConfig.getModel).mockReturnValue(
+        PREVIEW_CODEFLY_MODEL_AUTO,
+      );
       const mockApiResponse = {
         reasoning: 'Complex task',
         model_choice: 'pro',
@@ -368,7 +370,9 @@ describe('ClassifierStrategy', () => {
 
     it('should route to PREVIEW_CODEFLY_3_1_CUSTOM_TOOLS_MODEL when Codefly 3.1 is launched and auth is USE_CODEFLY', async () => {
       vi.mocked(mockConfig.getCodefly31Launched).mockResolvedValue(true);
-      vi.mocked(mockConfig.getModel).mockReturnValue(PREVIEW_CODEFLY_MODEL_AUTO);
+      vi.mocked(mockConfig.getModel).mockReturnValue(
+        PREVIEW_CODEFLY_MODEL_AUTO,
+      );
       vi.mocked(mockConfig.getContentGeneratorConfig).mockReturnValue({
         authType: AuthType.USE_CODEFLY,
       });

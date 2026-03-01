@@ -99,7 +99,8 @@ export async function runNonInteractive({
       config,
       messageBus: config.getMessageBus(),
       getPreferredEditor: () =>
-        settings.merged.general?.preferredEditor as EditorType | undefined,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+        settings.merged.general?.preferredEditor as EditorType,
       schedulerId: 'non-interactive-cli',
     });
 

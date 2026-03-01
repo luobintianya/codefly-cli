@@ -15,7 +15,6 @@ import { FileDiscoveryService } from '../services/fileDiscoveryService.js';
 import { ToolErrorType } from './tool-error.js';
 import { WorkspaceContext } from '../utils/workspaceContext.js';
 import { createMockMessageBus } from '../test-utils/mock-message-bus.js';
-import { CODEFLY_IGNORE_FILE_NAME } from '../config/constants.js';
 
 describe('LSTool', () => {
   let lsTool: LSTool;

@@ -16,8 +16,8 @@ or specific online documentation not available in its internal training data.
 
 - **Grounding:** Returns a generated summary based on search results.
 - **Citations:** Includes source URIs and titles for factual grounding.
-- **Processing:** The Codefly API processes the search results before returning a
-  synthesized response to the agent.
+- **Processing:** The Codefly API processes the search results before returning
+  a synthesized response to the agent.
 
 ## Use cases
 

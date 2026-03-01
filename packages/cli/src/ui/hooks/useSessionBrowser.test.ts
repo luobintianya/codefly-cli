@@ -19,7 +19,11 @@ import type {
   ConversationRecord,
   MessageRecord,
 } from '@codeflyai/codefly-core';
-import { CoreToolCallStatus, convertSessionToClientHistory, coreEvents } from '@codeflyai/codefly-core';
+import {
+  CoreToolCallStatus,
+  convertSessionToClientHistory,
+  coreEvents,
+} from '@codeflyai/codefly-core';
 
 // Mock modules
 vi.mock('fs/promises');

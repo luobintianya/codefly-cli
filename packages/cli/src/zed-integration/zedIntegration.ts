@@ -204,6 +204,8 @@ export class CodeflyAgent {
       );
     }
 
+    await config.initialize();
+
     if (this.clientCapabilities?.fs) {
       const acpFileSystemService = new AcpFileSystemService(
         this.connection,

@@ -35,8 +35,8 @@ overridden by higher numbers):
 
 ## Settings files
 
-Codefly CLI uses JSON settings files for persistent configuration. There are four
-locations for these files:
+Codefly CLI uses JSON settings files for persistent configuration. There are
+four locations for these files:
 
 - **System defaults file:**
   - **Location:** `/etc/codefly-cli/system-defaults.json` (Linux),
@@ -58,8 +58,8 @@ locations for these files:
 - **System settings file:**
   - **Location:** `/etc/codefly-cli/settings.json` (Linux),
     `C:\ProgramData\codefly-cli\settings.json` (Windows) or
-    `/Library/Application Support/CodeflyCli/settings.json` (macOS). The path can
-    be overridden using the `CODEFLY_CLI_SYSTEM_SETTINGS_PATH` environment
+    `/Library/Application Support/CodeflyCli/settings.json` (macOS). The path
+    can be overridden using the `CODEFLY_CLI_SYSTEM_SETTINGS_PATH` environment
     variable.
   - **Scope:** Applies to all Codefly CLI sessions on the system, for all users.
     System settings act as overrides, taking precedence over all other settings
@@ -80,7 +80,8 @@ variable `MY_API_TOKEN`, you could use it in `settings.json` like this:
 ### The `.codefly` directory in your project
 
 In addition to a project settings file, a project's `.codefly` directory can
-contain other project-specific files related to Codefly CLI's operation, such as:
+contain other project-specific files related to Codefly CLI's operation, such
+as:
 
 - [Custom sandbox profiles](#sandboxing) (e.g.,
   `.codefly/sandbox-macos-custom.sb`, `.codefly/sandbox.Dockerfile`).
@@ -719,12 +720,12 @@ for that specific session.
 While not strictly configuration for the CLI's _behavior_, context files
 (defaulting to `CODEFLY.md` but configurable via the `contextFileName` setting)
 are crucial for configuring the _instructional context_ (also referred to as
-"memory") provided to the Codefly model. This powerful feature allows you to give
-project-specific instructions, coding style guides, or any relevant background
-information to the AI, making its responses more tailored and accurate to your
-needs. The CLI includes UI elements, such as an indicator in the footer showing
-the number of loaded context files, to keep you informed about the active
-context.
+"memory") provided to the Codefly model. This powerful feature allows you to
+give project-specific instructions, coding style guides, or any relevant
+background information to the AI, making its responses more tailored and
+accurate to your needs. The CLI includes UI elements, such as an indicator in
+the footer showing the number of loaded context files, to keep you informed
+about the active context.
 
 - **Purpose:** These Markdown files contain instructions, guidelines, or context
   that you want the Codefly model to be aware of during your interactions. The

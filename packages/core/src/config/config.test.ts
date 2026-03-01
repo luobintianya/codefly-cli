@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import type { Mock } from 'vitest';
 import type { ConfigParameters, SandboxConfig } from './config.js';
 import { Config, DEFAULT_FILE_FILTERING_OPTIONS } from './config.js';
@@ -52,6 +52,7 @@ import {
   DEFAULT_CODEFLY_MODEL_AUTO,
   PREVIEW_CODEFLY_MODEL,
   PREVIEW_CODEFLY_MODEL_AUTO,
+  PREVIEW_CODEFLY_3_1_MODEL,
 } from './models.js';
 import { Storage } from './storage.js';
 
@@ -214,11 +215,10 @@ vi.mock('../services/contextManager.js', () => ({
 
 import { BaseLlmClient } from '../core/baseLlmClient.js';
 import { tokenLimit } from '../core/tokenLimits.js';
-import { getCodeAssistServer } from '../code_assist/codeAssist.js';
 import { getExperiments } from '../code_assist/experiments/experiments.js';
 import type { CodeAssistServer } from '../code_assist/server.js';
 import { ContextManager } from '../services/contextManager.js';
-import { UserTierId } from '../code_assist/types.js';
+import { getCodeAssistServer } from '../code_assist/codeAssist.js';
 import type {
   ModelConfigService,
   ModelConfigServiceConfig,
@@ -1994,7 +1994,7 @@ describe('Config getHooks', () => {
       const spy = vi.spyOn(service, 'reset');
 
       const proModel = 'codefly-2.5-pro';
-      await config.setModel(proModel);
+      config.setModel(proModel);
 
       expect(config.getModel()).toBe(proModel);
       expect(mockCoreEvents.emitModelChanged).toHaveBeenCalledWith(proModel);
@@ -2006,7 +2006,7 @@ describe('Config getHooks', () => {
       const service = config.getModelAvailabilityService();
       const spy = vi.spyOn(service, 'reset');
 
-      await config.setModel('auto');
+      config.setModel('auto');
 
       expect(config.getModel()).toBe('auto');
       expect(mockCoreEvents.emitModelChanged).toHaveBeenCalledWith('auto');
@@ -2025,7 +2025,7 @@ describe('Config getHooks', () => {
       const service = config.getModelAvailabilityService();
       const spy = vi.spyOn(service, 'reset');
 
-      await config.setModel('auto');
+      config.setModel('auto');
 
       expect(config.getModel()).toBe('auto');
       expect(spy).toHaveBeenCalled();
@@ -2039,7 +2039,7 @@ describe('Config getHooks', () => {
       config.setActiveModel(fallbackModel);
       expect(config.getActiveModel()).toBe(fallbackModel);
 
-      await config.setModel(originalModel);
+      config.setModel(originalModel);
 
       expect(config.getModel()).toBe(originalModel);
       expect(config.getActiveModel()).toBe(originalModel);
@@ -2052,7 +2052,7 @@ describe('Config getHooks', () => {
         onModelChange,
       });
 
-      await config.setModel(DEFAULT_CODEFLY_MODEL, false);
+      config.setModel(DEFAULT_CODEFLY_MODEL, false);
 
       expect(onModelChange).toHaveBeenCalledWith(DEFAULT_CODEFLY_MODEL);
     });
@@ -2064,7 +2064,7 @@ describe('Config getHooks', () => {
         onModelChange,
       });
 
-      await config.setModel(DEFAULT_CODEFLY_MODEL, true);
+      config.setModel(DEFAULT_CODEFLY_MODEL, true);
 
       expect(onModelChange).not.toHaveBeenCalled();
     });
@@ -2400,27 +2400,27 @@ describe('Config Quota & Preview Model Access', () => {
 
   describe('setPreviewFeatures', () => {
     it('should reset model to default auto if disabling preview features while using a preview model', async () => {
-      config.setPreviewFeatures(true);
-      await config.setModel(PREVIEW_CODEFLY_MODEL);
+      config.setHasAccessToPreviewModel(true);
+      config.setModel(PREVIEW_CODEFLY_MODEL);
 
-      config.setPreviewFeatures(false);
+      config.setHasAccessToPreviewModel(false);
 
       expect(config.getModel()).toBe(DEFAULT_CODEFLY_MODEL_AUTO);
     });
 
     it('should NOT reset model if disabling preview features while NOT using a preview model', async () => {
-      config.setPreviewFeatures(true);
+      config.setHasAccessToPreviewModel(true);
       const nonPreviewModel = 'codefly-1.5-pro';
-      await config.setModel(nonPreviewModel);
+      config.setModel(nonPreviewModel);
 
-      config.setPreviewFeatures(false);
+      config.setHasAccessToPreviewModel(false);
 
       expect(config.getModel()).toBe(nonPreviewModel);
     });
 
     it('should switch to preview auto model if enabling preview features while using default auto model', async () => {
-      config.setPreviewFeatures(false);
-      await config.setModel(DEFAULT_CODEFLY_MODEL_AUTO);
+      config.setHasAccessToPreviewModel(false);
+      config.setModel(DEFAULT_CODEFLY_MODEL_AUTO);
 
       // First call to initialize lastQuotaFetchTime
       await config.refreshUserQuota();
@@ -2431,7 +2431,7 @@ describe('Config Quota & Preview Model Access', () => {
 
     it('should NOT reset model if enabling preview features', async () => {
       config.setPreviewFeatures(false);
-      await config.setModel(PREVIEW_CODEFLY_MODEL); // Just pretending it was set somehow
+      config.setModel(PREVIEW_CODEFLY_MODEL); // Just pretending it was set somehow
 
       // First call
       await config.refreshUserQuota();

@@ -23,7 +23,11 @@ import {
 } from '../index.js';
 import { OutputFormat } from '../output/types.js';
 import { logs } from '@opentelemetry/api-logs';
-import type { Config, CodeflyCLIExtension , type CodeflyCLIExtension } from '../config/config.js';
+import type {
+  Config,
+  CodeflyCLIExtension,
+  type CodeflyCLIExtension,
+} from '../config/config.js';
 import { ApprovalMode } from '../policy/types.js';
 import {
   logApiError,

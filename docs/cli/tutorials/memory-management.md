@@ -1,7 +1,7 @@
 # Manage context and memory
 
-Control what Codefly CLI knows about you and your projects. In this guide, you'll
-learn how to define project-wide rules with `CODEFLY.md`, teach the agent
+Control what Codefly CLI knows about you and your projects. In this guide,
+you'll learn how to define project-wide rules with `CODEFLY.md`, teach the agent
 persistent facts, and inspect the active context.
 
 ## Prerequisites
@@ -114,8 +114,8 @@ immediately. Force a reload with:
 - **Use negative constraints:** Explicitly telling the agent what _not_ to do
   (e.g., "Do not use class components") is often more effective than vague
   positive instructions.
-- **Review often:** Periodically check your `CODEFLY.md` files to remove outdated
-  rules.
+- **Review often:** Periodically check your `CODEFLY.md` files to remove
+  outdated rules.
 
 ## Next steps
 

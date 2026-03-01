@@ -1,8 +1,8 @@
 # Plan tasks with todos
 
-Keep complex jobs on the rails with Codefly CLI's built-in task planning. In this
-guide, you'll learn how to ask for a plan, execute it step-by-step, and monitor
-progress with the todo list.
+Keep complex jobs on the rails with Codefly CLI's built-in task planning. In
+this guide, you'll learn how to ask for a plan, execute it step-by-step, and
+monitor progress with the todo list.
 
 ## Prerequisites
 

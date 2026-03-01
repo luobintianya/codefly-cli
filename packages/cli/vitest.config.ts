@@ -54,7 +54,7 @@ export default defineConfig({
     },
     server: {
       deps: {
-        inline: [/@google\/codefly-cli-core/],
+        inline: [/@codeflyai\/codefly-core/],
       },
     },
   },

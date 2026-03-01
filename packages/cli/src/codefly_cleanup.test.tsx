@@ -9,7 +9,6 @@ import { main } from './codefly.js';
 import { debugLogger } from '@codeflyai/codefly-core';
 import { type Config } from '@codeflyai/codefly-core';
 
-
 vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
   const actual =
     await importOriginal<typeof import('@codeflyai/codefly-core')>();

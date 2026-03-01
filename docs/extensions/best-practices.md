@@ -33,8 +33,8 @@ my-extension/
 
 ### Iterate with `link`
 
-Use the `codefly extensions link` command to develop locally without reinstalling
-your extension after every change.
+Use the `codefly extensions link` command to develop locally without
+reinstalling your extension after every change.
 
 ```bash
 cd my-extension

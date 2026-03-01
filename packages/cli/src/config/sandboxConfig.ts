@@ -102,7 +102,8 @@ export async function loadSandboxConfig(
 
   const packageJson = await getPackageJson(__dirname);
   const image =
-    process.env['CODEFLY_SANDBOX_IMAGE'] ?? packageJson?.config?.sandboxImageUri;
+    process.env['CODEFLY_SANDBOX_IMAGE'] ??
+    packageJson?.config?.sandboxImageUri;
 
   return command && image ? { command, image } : undefined;
 }

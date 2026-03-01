@@ -262,7 +262,9 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
       </Box>
       <Box marginTop={1} flexDirection="column">
         <Text color={theme.text.secondary}>
-          {'> To use a specific Codefly model on startup, use the --model flag.'}
+          {
+            '> To use a specific Codefly model on startup, use the --model flag.'
+          }
         </Text>
       </Box>
       <Box marginTop={1} flexDirection="column">

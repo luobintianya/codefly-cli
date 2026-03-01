@@ -208,14 +208,13 @@ export async function resolveEditorAsync(
 
   coreEvents.emit(CoreEvent.RequestEditorSelection);
 
-  return (
-    once(coreEvents, CoreEvent.EditorSelected, { signal })
-       
-      .then(
-        ([payload]) => (payload as EditorSelectedPayload).editor ?? undefined,
-      )
-      .catch(() => undefined)
-  );
+  return once(coreEvents, CoreEvent.EditorSelected, { signal })
+    .then(
+      ([payload]) =>
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+        (payload as EditorSelectedPayload).editor ?? undefined,
+    )
+    .catch(() => undefined);
 }
 
 /**

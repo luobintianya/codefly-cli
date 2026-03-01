@@ -56,12 +56,9 @@ export function TerminalProvider({ children }: { children: React.ReactNode }) {
     [subscribers],
   );
 
-  const queryTerminalBackground = useCallback(
-    async () => {
-      // terminal background is detected at startup
-    },
-    [],
-  );
+  const queryTerminalBackground = useCallback(async () => {
+    // terminal background is detected at startup
+  }, []);
 
   useEffect(() => {
     const handleData = (data: Buffer | string) => {

@@ -128,6 +128,7 @@ export function useReactToolScheduler(
             existingTrackedCall?.responseSubmittedToCodefly ?? false;
 
           if (coreTc.status === 'executing') {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
             const liveOutput = (existingTrackedCall as TrackedExecutingToolCall)
               ?.liveOutput;
             return {

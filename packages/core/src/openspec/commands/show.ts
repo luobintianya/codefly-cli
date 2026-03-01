@@ -72,6 +72,7 @@ export class ShowCommand {
         choices: changes.map((id) => ({ name: id, value: id })),
       });
       const cmd = new ChangeCommand();
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       await cmd.show(picked, options as any);
       return;
     }
@@ -87,6 +88,7 @@ export class ShowCommand {
       choices: specs.map((id) => ({ name: id, value: id })),
     });
     const cmd = new SpecCommand();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
     await cmd.show(picked, options as any);
   }
 
@@ -144,10 +146,12 @@ export class ShowCommand {
     this.warnIrrelevantFlags(resolvedType, params.options);
     if (resolvedType === 'change') {
       const cmd = new ChangeCommand();
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       await cmd.show(itemName, params.options as any);
       return;
     }
     const cmd = new SpecCommand();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
     await cmd.show(itemName, params.options as any);
   }
 

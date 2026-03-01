@@ -24,8 +24,12 @@ vi.mock('../contexts/VimModeContext.js', () => ({
     vimMode: 'INSERT',
   })),
 }));
-import type { Config} from '@codeflyai/codefly-core';
-import { ApprovalMode, CoreToolCallStatus, tokenLimit } from '@codeflyai/codefly-core';
+import type { Config } from '@codeflyai/codefly-core';
+import {
+  ApprovalMode,
+  CoreToolCallStatus,
+  tokenLimit,
+} from '@codeflyai/codefly-core';
 import { StreamingState } from '../types.js';
 import { TransientMessageType } from '../../utils/events.js';
 import type { LoadedSettings } from '../../config/settings.js';

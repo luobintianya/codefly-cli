@@ -23,7 +23,6 @@ import {
 } from '../utils/ignorePatterns.js';
 import * as glob from 'glob';
 import { createMockMessageBus } from '../test-utils/mock-message-bus.js';
-import { CODEFLY_IGNORE_FILE_NAME } from '../config/constants.js';
 
 vi.mock('glob', { spy: true });
 

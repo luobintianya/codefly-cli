@@ -15,7 +15,8 @@ import { LlmRole, ToolCallDecision } from '@codeflyai/codefly-core';
 
 // Mock the context to provide controlled data for testing
 vi.mock('../contexts/SessionContext.js', async (importOriginal) => {
-  const actual = await importOriginal<typeof SessionContext>();
+  const actual =
+    await importOriginal<typeof import('../contexts/SessionContext.js')>();
   return {
     ...actual,
     useSessionStats: vi.fn(),
@@ -23,7 +24,8 @@ vi.mock('../contexts/SessionContext.js', async (importOriginal) => {
 });
 
 vi.mock('../contexts/SettingsContext.js', async (importOriginal) => {
-  const actual = await importOriginal<typeof SettingsContext>();
+  const actual =
+    await importOriginal<typeof import('../contexts/SettingsContext.js')>();
   return {
     ...actual,
     useSettings: vi.fn(),

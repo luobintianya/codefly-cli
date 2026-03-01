@@ -96,7 +96,7 @@ has a designated number that forms the base of the final priority calculation.
 
 | Tier      | Base | Description                                                                |
 | :-------- | :--- | :------------------------------------------------------------------------- |
-| Default   | 1    | Built-in policies that ship with the Codefly CLI.                           |
+| Default   | 1    | Built-in policies that ship with the Codefly CLI.                          |
 | Workspace | 2    | Policies defined in the current workspace's configuration directory.       |
 | User      | 3    | Custom policies defined by the user.                                       |
 | Admin     | 4    | Policies managed by an administrator (e.g., in an enterprise environment). |
@@ -161,11 +161,11 @@ User, and (if configured) Admin directories.
 
 ### Policy locations
 
-| Tier          | Type   | Location                                  |
-| :------------ | :----- | :---------------------------------------- |
+| Tier          | Type   | Location                                   |
+| :------------ | :----- | :----------------------------------------- |
 | **User**      | Custom | `~/.codefly/policies/*.toml`               |
 | **Workspace** | Custom | `$WORKSPACE_ROOT/.codefly/policies/*.toml` |
-| **Admin**     | System | _See below (OS specific)_                 |
+| **Admin**     | System | _See below (OS specific)_                  |
 
 #### System-wide policies (Admin)
 
@@ -173,8 +173,8 @@ Administrators can enforce system-wide policies (Tier 3) that override all user
 and default settings. These policies must be placed in specific, secure
 directories:
 
-| OS          | Policy Directory Path                             |
-| :---------- | :------------------------------------------------ |
+| OS          | Policy Directory Path                              |
+| :---------- | :------------------------------------------------- |
 | **Linux**   | `/etc/codefly-cli/policies`                        |
 | **macOS**   | `/Library/Application Support/CodeflyCli/policies` |
 | **Windows** | `C:\ProgramData\codefly-cli\policies`              |

@@ -145,8 +145,8 @@ DEBUG=1 codefly -s -p "debug command"
 ```
 
 **Note:** If you have `DEBUG=true` in a project's `.env` file, it won't affect
-codefly-cli due to automatic exclusion. Use `.codefly/.env` files for codefly-cli
-specific debug settings.
+codefly-cli due to automatic exclusion. Use `.codefly/.env` files for
+codefly-cli specific debug settings.
 
 ### Inspect sandbox
 

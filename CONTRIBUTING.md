@@ -224,8 +224,8 @@ To skip building the sandbox container, you can use `npm run build` instead.
 
 ### Running the CLI
 
-To start the Codefly CLI from the source code (after building), run the following
-command from the root directory:
+To start the Codefly CLI from the source code (after building), run the
+following command from the root directory:
 
 ```bash
 npm start
@@ -367,8 +367,8 @@ DEBUG=1 codefly
 ```
 
 **Note:** If you have `DEBUG=true` in a project's `.env` file, it won't affect
-codefly-cli due to automatic exclusion. Use `.codefly/.env` files for codefly-cli
-specific debug settings.
+codefly-cli due to automatic exclusion. Use `.codefly/.env` files for
+codefly-cli specific debug settings.
 
 ### React DevTools
 
@@ -547,8 +547,8 @@ If you have questions about contributing documentation:
 
 - Check our [FAQ](/docs/resources/faq.md).
 - Review existing documentation for examples.
-- Open [an issue](https://github.com/google-codefly/codefly-cli/issues) to discuss
-  your proposed changes.
+- Open [an issue](https://github.com/google-codefly/codefly-cli/issues) to
+  discuss your proposed changes.
 - Reach out to the maintainers.
 
 We appreciate your contributions to making Codefly CLI documentation better!

@@ -29,5 +29,5 @@ to have a different name.
 
 - Follow the [Memory management guide](../cli/tutorials/memory-management.md)
   for practical examples.
-- Learn how the [Project context (CODEFLY.md)](../cli/codefly-md.md) system loads
-  this information.
+- Learn how the [Project context (CODEFLY.md)](../cli/codefly-md.md) system
+  loads this information.

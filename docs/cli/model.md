@@ -19,11 +19,11 @@ Use the following command in Codefly CLI:
 
 Running this command will open a dialog with your options:
 
-| Option            | Description                                                    | Models                                                                 |
-| ----------------- | -------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| Option             | Description                                                     | Models                                                                   |
+| ------------------ | --------------------------------------------------------------- | ------------------------------------------------------------------------ |
 | Auto (Codefly 3)   | Let the system choose the best Codefly 3 model for your task.   | codefly-3-pro-preview (if enabled), codefly-3-flash-preview (if enabled) |
 | Auto (Codefly 2.5) | Let the system choose the best Codefly 2.5 model for your task. | codefly-2.5-pro, codefly-2.5-flash                                       |
-| Manual            | Select a specific model.                                       | Any available model.                                                   |
+| Manual             | Select a specific model.                                        | Any available model.                                                     |
 
 We recommend selecting one of the above **Auto** options. However, you can
 select **Manual** to select a specific model from those available.

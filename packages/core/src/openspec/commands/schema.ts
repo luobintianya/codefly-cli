@@ -20,6 +20,7 @@ import {
   SchemaValidationError,
 } from '../core/artifact-graph/schema.js';
 import type { SchemaYaml, Artifact } from '../core/artifact-graph/types.js';
+import { getErrorMessage } from '../../utils/errors.js';
 
 /**
  * Schema source location type
@@ -172,7 +173,7 @@ function validateSchema(
     issues.push({
       level: 'error',
       path: 'schema.yaml',
-      message: `Failed to read file: ${(err as Error).message}`,
+      message: `Failed to read file: ${getErrorMessage(err)}`,
     });
     return { valid: false, issues };
   }
@@ -195,7 +196,7 @@ function validateSchema(
       issues.push({
         level: 'error',
         path: 'schema.yaml',
-        message: `Parse error: ${(err as Error).message}`,
+        message: `Parse error: ${getErrorMessage(err)}`,
       });
     }
     return { valid: false, issues };
@@ -419,7 +420,7 @@ export function registerSchemaCommand(program: Command): void {
             }
           }
         } catch (error) {
-          console.error(`Error: ${(error as Error).message}`);
+          console.error(`Error: ${getErrorMessage(error)}`);
           process.exitCode = 1;
         }
       },
@@ -599,14 +600,14 @@ export function registerSchemaCommand(program: Command): void {
               JSON.stringify(
                 {
                   valid: false,
-                  error: (error as Error).message,
+                  error: getErrorMessage(error),
                 },
                 null,
                 2,
               ),
             );
           } else {
-            console.error(`Error: ${(error as Error).message}`);
+            console.error(`Error: ${getErrorMessage(error)}`);
           }
           process.exitCode = 1;
         }
@@ -762,14 +763,14 @@ export function registerSchemaCommand(program: Command): void {
               JSON.stringify(
                 {
                   forked: false,
-                  error: (error as Error).message,
+                  error: getErrorMessage(error),
                 },
                 null,
                 2,
               ),
             );
           } else {
-            console.error(`Error: ${(error as Error).message}`);
+            console.error(`Error: ${getErrorMessage(error)}`);
           }
           process.exitCode = 1;
         }
@@ -1035,8 +1036,12 @@ export function registerSchemaCommand(program: Command): void {
               const { parse: parseYaml, stringify: stringifyYaml2 } =
                 await import('yaml');
               const configContent = fs.readFileSync(configPath, 'utf-8');
-              const config = parseYaml(configContent) || {};
-              config.defaultSchema = name;
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+              const config = (parseYaml(configContent) || {}) as Record<
+                string,
+                unknown
+              >;
+              config['defaultSchema'] = name;
               fs.writeFileSync(configPath, stringifyYaml2(config));
             } else {
               // Create config file
@@ -1087,14 +1092,14 @@ export function registerSchemaCommand(program: Command): void {
               JSON.stringify(
                 {
                   created: false,
-                  error: (error as Error).message,
+                  error: getErrorMessage(error),
                 },
                 null,
                 2,
               ),
             );
           } else {
-            console.error(`Error: ${(error as Error).message}`);
+            console.error(`Error: ${getErrorMessage(error)}`);
           }
           process.exitCode = 1;
         }

@@ -1,0 +1,65 @@
+
+> @codeflyai/codefly@0.30.0-nightly.20260210.a2174751d build
+> node scripts/build.js
+
+
+> @codeflyai/codefly@0.30.0-nightly.20260210.a2174751d generate
+> node scripts/generate-git-commit-info.js
+
+
+> @codeflyai/codefly-a2a-server@0.24.0-nightly.20251227.37be16243 build
+> node ../../scripts/build_package.js
+
+Successfully copied files.
+
+> @codeflyai/codefly@0.27.0-nightly.20260124.37be16243 build
+> node ../../scripts/build_package.js
+
+Successfully copied files.
+
+> @codeflyai/codefly-core@0.30.0-nightly.20260210.a2174751d build
+> node ../../scripts/build_package.js
+
+Successfully copied files.
+Copied documentation to dist/docs
+
+> @codeflyai/codefly-devtools@0.30.0-nightly.20260210.a2174751d build
+> npm run build:client && tsc -p tsconfig.build.json
+
+
+> @codeflyai/codefly-devtools@0.30.0-nightly.20260210.a2174751d build:client
+> node esbuild.client.js
+
+
+> @codeflyai/codefly-sdk@0.29.0-nightly.20260203.71f46f116 build
+> node ../../scripts/build_package.js
+
+Successfully copied files.
+
+> @codeflyai/codefly-cli-test-utils@0.24.0-nightly.20251227.37be16243 build
+> node ../../scripts/build_package.js
+
+Successfully copied files.
+
+> codefly-vscode-ide-companion@0.24.0-nightly.20251227.37be16243 build
+> npm run build:dev
+
+
+> codefly-vscode-ide-companion@0.24.0-nightly.20251227.37be16243 build:dev
+> npm run check-types && npm run lint && node esbuild.js
+
+
+> codefly-vscode-ide-companion@0.24.0-nightly.20251227.37be16243 check-types
+> tsc --noEmit
+
+
+> codefly-vscode-ide-companion@0.24.0-nightly.20251227.37be16243 lint
+> eslint src
+
+[watch] build started
+[watch] build finished
+Copied 6 policy files to bundle/policies/
+Copied docs to bundle/docs/
+Copied built-in skills to bundle/builtin/
+Copied devtools package to bundle/node_modules/
+Assets copied to bundle/

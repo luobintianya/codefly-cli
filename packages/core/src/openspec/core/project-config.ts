@@ -80,7 +80,8 @@ export function readProjectConfig(projectRoot: string): ProjectConfig | null {
 
   try {
     const content = readFileSync(configPath, 'utf-8');
-    const raw = parseYaml(content);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const raw: any = parseYaml(content);
 
     if (!raw || typeof raw !== 'object') {
       console.warn(`openspec/config.yaml is not a valid YAML object`);
@@ -166,6 +167,7 @@ export function readProjectConfig(projectRoot: string): ProjectConfig | null {
     }
 
     // Return partial config even if some fields failed
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
     return Object.keys(config).length > 0 ? (config as ProjectConfig) : null;
   } catch (error) {
     console.warn(`Failed to parse openspec/config.yaml:`, error);

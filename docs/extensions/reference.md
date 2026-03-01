@@ -8,10 +8,10 @@ This guide covers the `codefly extensions` commands and the structure of the
 Use the `codefly extensions` command group to manage your extensions from the
 terminal.
 
-Note that commands like `codefly extensions install` are not supported within the
-CLI's interactive mode. However, you can use the `/extensions list` command to
-view installed extensions. All management operations, including updates to slash
-commands, take effect only after you restart the CLI session.
+Note that commands like `codefly extensions install` are not supported within
+the CLI's interactive mode. However, you can use the `/extensions list` command
+to view installed extensions. All management operations, including updates to
+slash commands, take effect only after you restart the CLI session.
 
 ### Install an extension
 

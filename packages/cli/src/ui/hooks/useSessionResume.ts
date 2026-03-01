@@ -71,6 +71,12 @@ export function useSessionResume({
         // Give the history to the Codefly client.
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
         config.getCodeflyClient()?.resumeChat(clientHistory, resumedData);
+
+        if (resumedData.conversation.directories?.length) {
+          config
+            .getWorkspaceContext()
+            ?.addDirectories(resumedData.conversation.directories);
+        }
       } finally {
         setIsResuming(false);
       }

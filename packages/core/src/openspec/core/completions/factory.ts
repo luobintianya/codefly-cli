@@ -102,6 +102,7 @@ export class CompletionFactory {
    * @returns true if the shell is supported
    */
   static isSupported(shell: string): shell is SupportedShell {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
     return this.SUPPORTED_SHELLS.includes(shell as SupportedShell);
   }
 

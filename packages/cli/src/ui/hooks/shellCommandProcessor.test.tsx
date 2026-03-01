@@ -58,7 +58,13 @@ import {
   useShellCommandProcessor,
   OUTPUT_UPDATE_INTERVAL_MS,
 } from './shellCommandProcessor.js';
-import { CoreToolCallStatus, type CodeflyClient, type Config, type ShellExecutionResult, type ShellOutputEvent } from '@codeflyai/codefly-core';
+import {
+  CoreToolCallStatus,
+  type CodeflyClient,
+  type Config,
+  type ShellExecutionResult,
+  type ShellOutputEvent,
+} from '@codeflyai/codefly-core';
 import * as fs from 'node:fs';
 import * as os from 'node:os';
 import * as path from 'node:path';

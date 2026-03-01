@@ -93,7 +93,10 @@ describe('policyHelpers', () => {
       const config = createMockConfig({
         getModel: () => DEFAULT_CODEFLY_MODEL_AUTO,
       });
-      const chain = resolvePolicyChain(config, DEFAULT_CODEFLY_FLASH_LITE_MODEL);
+      const chain = resolvePolicyChain(
+        config,
+        DEFAULT_CODEFLY_FLASH_LITE_MODEL,
+      );
       expect(chain).toHaveLength(3);
       expect(chain[0]?.model).toBe('codefly-2.5-flash-lite');
       expect(chain[1]?.model).toBe('codefly-2.5-flash');

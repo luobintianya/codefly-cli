@@ -12,7 +12,6 @@ import { crawl } from './crawler.js';
 import { createTmpDir, cleanupTmpDir } from '@codeflyai/codefly-cli-test-utils';
 import type { Ignore } from './ignore.js';
 import { loadIgnoreRules } from './ignore.js';
-import { CODEFLY_IGNORE_FILE_NAME } from '../../config/constants.js';
 import { FileDiscoveryService } from '../../services/fileDiscoveryService.js';
 
 describe('crawler', () => {

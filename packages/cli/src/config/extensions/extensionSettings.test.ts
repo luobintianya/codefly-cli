@@ -78,7 +78,8 @@ describe('extensionSettings', () => {
         } as unknown as KeychainTokenStorage;
       },
     );
-    tempHomeDir = os.tmpdir() + path.sep + `codefly-cli-test-home-${Date.now()}`;
+    tempHomeDir =
+      os.tmpdir() + path.sep + `codefly-cli-test-home-${Date.now()}`;
     tempWorkspaceDir = path.join(
       os.tmpdir(),
       `codefly-cli-test-workspace-${Date.now()}`,

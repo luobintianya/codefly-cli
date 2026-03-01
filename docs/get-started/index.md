@@ -5,9 +5,9 @@ using the Codefly CLI to enhance your workflow right from your terminal.
 
 ## Quickstart: Install, authenticate, configure, and use Codefly CLI
 
-Codefly CLI brings the power of advanced language models directly to your command
-line interface. As an AI-powered assistant, Codefly CLI can help you with a
-variety of tasks, from understanding and generating code to reviewing and
+Codefly CLI brings the power of advanced language models directly to your
+command line interface. As an AI-powered assistant, Codefly CLI can help you
+with a variety of tasks, from understanding and generating code to reviewing and
 editing documents.
 
 ## Install
@@ -24,7 +24,8 @@ Once Codefly CLI is installed, run Codefly CLI from your command line:
 codefly
 ```
 
-For more installation options, see [Codefly CLI Installation](./installation.md).
+For more installation options, see
+[Codefly CLI Installation](./installation.md).
 
 ## Authenticate
 

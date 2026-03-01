@@ -1,0 +1,63 @@
+
+> @codeflyai/codefly@0.30.0-nightly.20260210.a2174751d lint
+> eslint . --cache
+
+
+/Users/robinx/code/codefly-cli/packages/cli/src/commands/extensions/utils.ts
+  50:10  error  Unsafe assertion from `any` detected: consider using type guards or a safer assertion  @typescript-eslint/no-unsafe-type-assertion
+
+/Users/robinx/code/codefly-cli/packages/cli/src/config/extensions/extensionSettings.ts
+  168:3   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unsafe-return')
+  169:10  error    Unsafe assertion from `any` detected: consider using type guards or a safer assertion                   @typescript-eslint/no-unsafe-type-assertion
+
+/Users/robinx/code/codefly-cli/packages/cli/src/ui/AppContainer.tsx
+  2394:5  warning  React Hook useMemo has duplicate dependencies: 'activeBackgroundShellPid', 'authState', 'backgroundShellHeight', 'backgroundShells', 'bannerData', 'bannerVisible', 'config', 'copyModeEnabled', 'isBackgroundShellListOpen', 'modelsDefaultValue', 'settingsNonce', and 'transientMessage'. Either omit them or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/robinx/code/codefly-cli/packages/cli/src/ui/hooks/useReactToolScheduler.ts
+  131:33  error  Unsafe type assertion: type 'TrackedExecutingToolCall' is more narrow than the original type  @typescript-eslint/no-unsafe-type-assertion
+
+/Users/robinx/code/codefly-cli/packages/cli/src/ui/utils/pendingAttentionNotification.ts
+  39:3  error  Unexpected console statement  no-console
+
+/Users/robinx/code/codefly-cli/packages/core/src/core/converter.ts
+  207:20  error  Unsafe type assertion: type 'Part' is more narrow than the original type  @typescript-eslint/no-unsafe-type-assertion
+
+/Users/robinx/code/codefly-cli/packages/core/src/core/openaiCompatibleContentGenerator.ts
+  271:9   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unsafe-type-assertion')
+  318:12  error    Unsafe assertion from `any` detected: consider using type guards or a safer assertion                           @typescript-eslint/no-unsafe-type-assertion
+  321:7   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unsafe-type-assertion')
+  429:23  error    Unsafe assertion from `any` detected: consider using type guards or a safer assertion                           @typescript-eslint/no-unsafe-type-assertion
+  449:28  error    Unsafe type assertion: type 'Part' is more narrow than the original type                                        @typescript-eslint/no-unsafe-type-assertion
+  452:19  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unsafe-type-assertion')
+  470:23  error    Unsafe assertion from `any` detected: consider using type guards or a safer assertion                           @typescript-eslint/no-unsafe-type-assertion
+  548:23  error    Unsafe assertion from `any` detected: consider using type guards or a safer assertion                           @typescript-eslint/no-unsafe-type-assertion
+  616:27  error    Unsafe assertion from `any` detected: consider using type guards or a safer assertion                           @typescript-eslint/no-unsafe-type-assertion
+  619:23  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unsafe-type-assertion')
+
+/Users/robinx/code/codefly-cli/packages/core/src/openspec/core/list.ts
+   6:32  warning  'node:fs' imported multiple times  import/no-duplicates
+  12:30  warning  'node:fs' imported multiple times  import/no-duplicates
+
+/Users/robinx/code/codefly-cli/packages/core/src/openspec/prompts/searchable-multi-select.ts
+  226:8  warning  Prefer named exports  import/no-default-export
+
+/Users/robinx/code/codefly-cli/packages/core/src/tools/database-schema.ts
+  102:5  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unsafe-member-access')
+  102:5  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unsafe-call')
+  112:7  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unsafe-member-access')
+  112:7  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unsafe-call')
+  147:5  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unsafe-member-access')
+  149:5  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unsafe-call')
+  161:7  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unsafe-member-access')
+  161:7  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unsafe-call')
+  170:7  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unsafe-member-access')
+
+/Users/robinx/code/codefly-cli/packages/core/src/tools/swagger-schema.ts
+  143:7   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unsafe-member-access')
+  143:7   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unsafe-call')
+  155:11  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unsafe-member-access')
+  155:11  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unsafe-call')
+
+✖ 33 problems (11 errors, 22 warnings)
+  0 errors and 18 warnings potentially fixable with the `--fix` option.
+

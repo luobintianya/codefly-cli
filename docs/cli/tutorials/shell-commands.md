@@ -52,8 +52,8 @@ This loop turns Codefly into an autonomous engineer.
 
 ## How to manage background processes
 
-You can ask Codefly to start long-running tasks, like development servers or file
-watchers.
+You can ask Codefly to start long-running tasks, like development servers or
+file watchers.
 
 **Prompt:** `Start the React dev server in the background.`
 

@@ -11,6 +11,7 @@ import { Validator } from '../core/validation/validator.js';
 import type { Spec } from '../core/schemas/index.js';
 import { isInteractive } from '../utils/interactive.js';
 import { getSpecIds } from '../utils/item-discovery.js';
+import { getErrorMessage } from '../../utils/errors.js';
 
 const SPECS_DIR = 'openspec/specs';
 
@@ -164,11 +165,10 @@ export function registerSpecCommand(rootProgram: typeof program) {
       ) => {
         try {
           const cmd = new SpecCommand();
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
           await cmd.show(specId, options as any);
         } catch (error) {
-          console.error(
-            `Error: ${error instanceof Error ? error.message : 'Unknown error'}`,
-          );
+          console.error(`Error: ${getErrorMessage(error)}`);
           process.exitCode = 1;
         }
       },
@@ -238,9 +238,7 @@ export function registerSpecCommand(rootProgram: typeof program) {
           });
         }
       } catch (error) {
-        console.error(
-          `Error: ${error instanceof Error ? error.message : 'Unknown error'}`,
-        );
+        console.error(`Error: ${getErrorMessage(error)}`);
         process.exitCode = 1;
       }
     });
@@ -305,9 +303,7 @@ export function registerSpecCommand(rootProgram: typeof program) {
           }
           process.exitCode = report.valid ? 0 : 1;
         } catch (error) {
-          console.error(
-            `Error: ${error instanceof Error ? error.message : 'Unknown error'}`,
-          );
+          console.error(`Error: ${getErrorMessage(error)}`);
           process.exitCode = 1;
         }
       },

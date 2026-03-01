@@ -5,8 +5,8 @@ documentation to provide more accurate answers about its capabilities and usage.
 
 ## Description
 
-This tool is used when Codefly CLI needs to verify specific details about Codefly
-CLI's internal features, built-in commands, or configuration options. It
+This tool is used when Codefly CLI needs to verify specific details about
+Codefly CLI's internal features, built-in commands, or configuration options. It
 provides direct access to the Markdown files in the `docs/` directory.
 
 ### Arguments

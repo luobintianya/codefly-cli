@@ -74,7 +74,7 @@ This skill guides the agent in conducting thorough code reviews.
 
 - **`name`**: A unique identifier for the skill. This should match the directory
   name.
-- **`description`**: A description of what the skill does and when Codefly should
-  use it.
+- **`description`**: A description of what the skill does and when Codefly
+  should use it.
 - **Body**: The Markdown body of the file contains the instructions that guide
   the agent's behavior when the skill is active.

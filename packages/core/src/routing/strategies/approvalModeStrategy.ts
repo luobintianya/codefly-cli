@@ -54,7 +54,9 @@ export class ApprovalModeStrategy implements RoutingStrategy {
 
     // 1. Planning Phase: If ApprovalMode === PLAN, explicitly route to the Pro model.
     if (approvalMode === ApprovalMode.PLAN) {
-      const proModel = isPreview ? PREVIEW_CODEFLY_MODEL : DEFAULT_CODEFLY_MODEL;
+      const proModel = isPreview
+        ? PREVIEW_CODEFLY_MODEL
+        : DEFAULT_CODEFLY_MODEL;
       return {
         model: proModel,
         metadata: {

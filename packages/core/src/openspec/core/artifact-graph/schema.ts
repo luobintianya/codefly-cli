@@ -26,6 +26,7 @@ export function loadSchema(filePath: string): SchemaYaml {
  * Parses and validates an artifact schema from YAML content.
  */
 export function parseSchema(yamlContent: string): SchemaYaml {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const parsed = parseYaml(yamlContent);
 
   // Validate with Zod

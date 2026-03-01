@@ -1,0 +1,189 @@
+
+> @codeflyai/codefly@0.30.0-nightly.20260210.a2174751d lint
+> eslint . --cache
+
+
+/Users/robinx/code/codefly-cli/packages/cli/src/commands/extensions/utils.ts
+  50:10  error  Unsafe assertion from `any` detected: consider using type guards or a safer assertion  @typescript-eslint/no-unsafe-type-assertion
+
+/Users/robinx/code/codefly-cli/packages/cli/src/config/extensions/extensionSettings.ts
+  168:3   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unsafe-return')
+  169:10  error    Unsafe assertion from `any` detected: consider using type guards or a safer assertion                   @typescript-eslint/no-unsafe-type-assertion
+
+/Users/robinx/code/codefly-cli/packages/cli/src/nonInteractiveCli.ts
+  102:9  error  Unsafe type assertion: type '"vscode" | "vscodium" | "windsurf" | "cursor" | "zed" | "antigravity" | "vim" | "neovim" | "emacs" | "hx"' is more narrow than the original type  @typescript-eslint/no-unsafe-type-assertion
+
+/Users/robinx/code/codefly-cli/packages/cli/src/test-utils/mockConfig.ts
+  15:60  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/robinx/code/codefly-cli/packages/cli/src/test_import.ts
+  7:1  error  Unexpected console statement  no-console
+
+/Users/robinx/code/codefly-cli/packages/cli/src/ui/AppContainer.tsx
+  2394:5  warning  React Hook useMemo has duplicate dependencies: 'activeBackgroundShellPid', 'authState', 'backgroundShellHeight', 'backgroundShells', 'bannerData', 'bannerVisible', 'config', 'copyModeEnabled', 'isBackgroundShellListOpen', 'modelsDefaultValue', 'settingsNonce', and 'transientMessage'. Either omit them or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/robinx/code/codefly-cli/packages/cli/src/ui/hooks/useReactToolScheduler.ts
+  131:33  error  Unsafe type assertion: type 'TrackedExecutingToolCall' is more narrow than the original type  @typescript-eslint/no-unsafe-type-assertion
+
+/Users/robinx/code/codefly-cli/packages/cli/src/ui/utils/pendingAttentionNotification.ts
+  39:3  error  Unexpected console statement  no-console
+
+/Users/robinx/code/codefly-cli/packages/core/src/config/projectRegistry.ts
+  120:11  error  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+
+/Users/robinx/code/codefly-cli/packages/core/src/core/converter.ts
+  207:20  error  Unsafe type assertion: type 'Part' is more narrow than the original type  @typescript-eslint/no-unsafe-type-assertion
+
+/Users/robinx/code/codefly-cli/packages/core/src/core/openaiCompatibleContentGenerator.ts
+  160:23  error  Unsafe type assertion: type '{ functionDeclarations?: { name: string; description?: string | undefined; parameters?: Record<string, unknown> | undefined; parametersJsonSchema?: Record<string, unknown> | undefined; }[] | undefined; }' is more narrow than the original type  @typescript-eslint/no-unsafe-type-assertion
+  261:18  error  Unsafe type assertion: type 'OpenAIResponse' is more narrow than the original type                                                                                                                                                                                               @typescript-eslint/no-unsafe-type-assertion
+  266:18  error  Unsafe type assertion: type 'Part' is more narrow than the original type                                                                                                                                                                                                         @typescript-eslint/no-unsafe-type-assertion
+  283:21  error  Unsafe assertion from `any` detected: consider using type guards or a safer assertion                                                                                                                                                                                            @typescript-eslint/no-unsafe-type-assertion
+  301:25  error  Unsafe type assertion: type 'FinishReason' is more narrow than the original type                                                                                                                                                                                                 @typescript-eslint/no-unsafe-type-assertion
+  313:12  error  Unsafe assertion from `any` detected: consider using type guards or a safer assertion                                                                                                                                                                                            @typescript-eslint/no-unsafe-type-assertion
+  410:28  error  Unsafe type assertion: type 'OpenAIStreamResponse' is more narrow than the original type                                                                                                                                                                                         @typescript-eslint/no-unsafe-type-assertion
+  424:23  error  Unsafe assertion from `any` detected: consider using type guards or a safer assertion                                                                                                                                                                                            @typescript-eslint/no-unsafe-type-assertion
+  444:28  error  Unsafe type assertion: type 'Part' is more narrow than the original type                                                                                                                                                                                                         @typescript-eslint/no-unsafe-type-assertion
+  457:28  error  Unsafe type assertion: type 'FinishReason' is more narrow than the original type                                                                                                                                                                                                 @typescript-eslint/no-unsafe-type-assertion
+  463:23  error  Unsafe assertion from `any` detected: consider using type guards or a safer assertion                                                                                                                                                                                            @typescript-eslint/no-unsafe-type-assertion
+  534:28  error  Unsafe type assertion: type 'FinishReason' is more narrow than the original type                                                                                                                                                                                                 @typescript-eslint/no-unsafe-type-assertion
+  540:23  error  Unsafe assertion from `any` detected: consider using type guards or a safer assertion                                                                                                                                                                                            @typescript-eslint/no-unsafe-type-assertion
+  569:38  error  Unsafe assertion from `any` detected: consider using type guards or a safer assertion                                                                                                                                                                                            @typescript-eslint/no-unsafe-type-assertion
+  601:41  error  Unsafe type assertion: type 'FinishReason' is more narrow than the original type                                                                                                                                                                                                 @typescript-eslint/no-unsafe-type-assertion
+  606:27  error  Unsafe assertion from `any` detected: consider using type guards or a safer assertion                                                                                                                                                                                            @typescript-eslint/no-unsafe-type-assertion
+
+/Users/robinx/code/codefly-cli/packages/core/src/openspec/cli/index.ts
+   87:23  error  Unsafe type assertion: type '{ code?: string | undefined; message?: string | undefined; }' is more narrow than the original type  @typescript-eslint/no-unsafe-type-assertion
+  110:31  error  Unsafe type assertion: type 'Error' is more narrow than the original type                                                         @typescript-eslint/no-unsafe-type-assertion
+  135:29  error  Unsafe type assertion: type 'Error' is more narrow than the original type                                                         @typescript-eslint/no-unsafe-type-assertion
+  151:29  error  Unsafe type assertion: type 'Error' is more narrow than the original type                                                         @typescript-eslint/no-unsafe-type-assertion
+  181:31  error  Unsafe type assertion: type 'Error' is more narrow than the original type                                                         @typescript-eslint/no-unsafe-type-assertion
+  220:34  error  Unsafe type assertion: type 'Error' is more narrow than the original type                                                         @typescript-eslint/no-unsafe-type-assertion
+  241:32  error  Unsafe type assertion: type 'Error' is more narrow than the original type                                                         @typescript-eslint/no-unsafe-type-assertion
+  264:34  error  Unsafe type assertion: type 'Error' is more narrow than the original type                                                         @typescript-eslint/no-unsafe-type-assertion
+  297:31  error  Unsafe type assertion: type 'Error' is more narrow than the original type                                                         @typescript-eslint/no-unsafe-type-assertion
+  341:31  error  Unsafe type assertion: type 'Error' is more narrow than the original type                                                         @typescript-eslint/no-unsafe-type-assertion
+  384:31  error  Unsafe type assertion: type 'Error' is more narrow than the original type                                                         @typescript-eslint/no-unsafe-type-assertion
+  400:29  error  Unsafe type assertion: type 'Error' is more narrow than the original type                                                         @typescript-eslint/no-unsafe-type-assertion
+  416:29  error  Unsafe type assertion: type 'Error' is more narrow than the original type                                                         @typescript-eslint/no-unsafe-type-assertion
+  435:29  error  Unsafe type assertion: type 'Error' is more narrow than the original type                                                         @typescript-eslint/no-unsafe-type-assertion
+  450:29  error  Unsafe type assertion: type 'Error' is more narrow than the original type                                                         @typescript-eslint/no-unsafe-type-assertion
+  465:29  error  Unsafe type assertion: type 'Error' is more narrow than the original type                                                         @typescript-eslint/no-unsafe-type-assertion
+  502:29  error  Unsafe type assertion: type 'Error' is more narrow than the original type                                                         @typescript-eslint/no-unsafe-type-assertion
+  527:31  error  Unsafe type assertion: type 'Error' is more narrow than the original type                                                         @typescript-eslint/no-unsafe-type-assertion
+  544:29  error  Unsafe type assertion: type 'Error' is more narrow than the original type                                                         @typescript-eslint/no-unsafe-type-assertion
+  559:29  error  Unsafe type assertion: type 'Error' is more narrow than the original type                                                         @typescript-eslint/no-unsafe-type-assertion
+  580:29  error  Unsafe type assertion: type 'Error' is more narrow than the original type                                                         @typescript-eslint/no-unsafe-type-assertion
+
+/Users/robinx/code/codefly-cli/packages/core/src/openspec/commands/change.ts
+  87:13  error  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+
+/Users/robinx/code/codefly-cli/packages/core/src/openspec/commands/config.ts
+   76:36  error  Unsafe type assertion: type 'Record<string, unknown>' is more narrow than the original type  @typescript-eslint/no-unsafe-type-assertion
+  115:24  error  Unsafe type assertion: type 'Record<string, unknown>' is more narrow than the original type  @typescript-eslint/no-unsafe-type-assertion
+  119:15  error  Unsafe assignment of an `any` value                                                          @typescript-eslint/no-unsafe-assignment
+  147:22  error  Unsafe type assertion: type 'Record<string, unknown>' is more narrow than the original type  @typescript-eslint/no-unsafe-type-assertion
+  234:15  error  Unsafe assignment of an `any` value                                                          @typescript-eslint/no-unsafe-assignment
+  242:14  error  Unsafe type assertion: type 'ErrnoException' is more narrow than the original type           @typescript-eslint/no-unsafe-type-assertion
+
+/Users/robinx/code/codefly-cli/packages/core/src/openspec/commands/schema.ts
+   175:41  error  Unsafe type assertion: type 'Error' is more narrow than the original type  @typescript-eslint/no-unsafe-type-assertion
+   198:35  error  Unsafe type assertion: type 'Error' is more narrow than the original type  @typescript-eslint/no-unsafe-type-assertion
+   422:36  error  Unsafe type assertion: type 'Error' is more narrow than the original type  @typescript-eslint/no-unsafe-type-assertion
+   602:27  error  Unsafe type assertion: type 'Error' is more narrow than the original type  @typescript-eslint/no-unsafe-type-assertion
+   609:38  error  Unsafe type assertion: type 'Error' is more narrow than the original type  @typescript-eslint/no-unsafe-type-assertion
+   765:27  error  Unsafe type assertion: type 'Error' is more narrow than the original type  @typescript-eslint/no-unsafe-type-assertion
+   772:38  error  Unsafe type assertion: type 'Error' is more narrow than the original type  @typescript-eslint/no-unsafe-type-assertion
+  1038:21  error  Unsafe assignment of an `any` value                                        @typescript-eslint/no-unsafe-assignment
+  1090:27  error  Unsafe type assertion: type 'Error' is more narrow than the original type  @typescript-eslint/no-unsafe-type-assertion
+  1097:38  error  Unsafe type assertion: type 'Error' is more narrow than the original type  @typescript-eslint/no-unsafe-type-assertion
+
+/Users/robinx/code/codefly-cli/packages/core/src/openspec/commands/show.ts
+   75:30  error  Unsafe assertion to `any` detected: consider using a more specific type to ensure safety  @typescript-eslint/no-unsafe-type-assertion
+   90:28  error  Unsafe assertion to `any` detected: consider using a more specific type to ensure safety  @typescript-eslint/no-unsafe-type-assertion
+  147:32  error  Unsafe assertion to `any` detected: consider using a more specific type to ensure safety  @typescript-eslint/no-unsafe-type-assertion
+  151:30  error  Unsafe assertion to `any` detected: consider using a more specific type to ensure safety  @typescript-eslint/no-unsafe-type-assertion
+
+/Users/robinx/code/codefly-cli/packages/core/src/openspec/commands/spec.ts
+  167:34  error  Unsafe assertion to `any` detected: consider using a more specific type to ensure safety  @typescript-eslint/no-unsafe-type-assertion
+
+/Users/robinx/code/codefly-cli/packages/core/src/openspec/commands/validate.ts
+  260:15  error  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+  407:21  error  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+  413:58  error  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+
+/Users/robinx/code/codefly-cli/packages/core/src/openspec/core/artifact-graph/schema.ts
+  29:9  error  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+
+/Users/robinx/code/codefly-cli/packages/core/src/openspec/core/completions/factory.ts
+  105:43  error  Unsafe type assertion: type 'SupportedShell' is more narrow than the original type  @typescript-eslint/no-unsafe-type-assertion
+
+/Users/robinx/code/codefly-cli/packages/core/src/openspec/core/config-schema.ts
+   90:16  error  Unsafe type assertion: type 'Record<string, unknown>' is more narrow than the original type  @typescript-eslint/no-unsafe-type-assertion
+  121:15  error  Unsafe type assertion: type 'Record<string, unknown>' is more narrow than the original type  @typescript-eslint/no-unsafe-type-assertion
+  151:15  error  Unsafe type assertion: type 'Record<string, unknown>' is more narrow than the original type  @typescript-eslint/no-unsafe-type-assertion
+  229:36  error  Unsafe type assertion: type 'Record<string, unknown>' is more narrow than the original type  @typescript-eslint/no-unsafe-type-assertion
+
+/Users/robinx/code/codefly-cli/packages/core/src/openspec/core/global-config.ts
+  111:11  error  Unsafe assignment of an `any` value     @typescript-eslint/no-unsafe-assignment
+  114:5   error  Unsafe return of a value of type `any`  @typescript-eslint/no-unsafe-return
+  118:7   error  Unsafe assignment of an `any` value     @typescript-eslint/no-unsafe-assignment
+
+/Users/robinx/code/codefly-cli/packages/core/src/openspec/core/init.ts
+  510:52  error  Unsafe type assertion: type 'Error' is more narrow than the original type  @typescript-eslint/no-unsafe-type-assertion
+
+/Users/robinx/code/codefly-cli/packages/core/src/openspec/core/legacy-cleanup.ts
+  401:19  error  Unsafe type assertion: type '{ message?: string | undefined; }' is more narrow than the original type  @typescript-eslint/no-unsafe-type-assertion
+  413:19  error  Unsafe type assertion: type '{ message?: string | undefined; }' is more narrow than the original type  @typescript-eslint/no-unsafe-type-assertion
+  427:19  error  Unsafe type assertion: type '{ message?: string | undefined; }' is more narrow than the original type  @typescript-eslint/no-unsafe-type-assertion
+  444:21  error  Unsafe type assertion: type '{ message?: string | undefined; }' is more narrow than the original type  @typescript-eslint/no-unsafe-type-assertion
+
+/Users/robinx/code/codefly-cli/packages/core/src/openspec/core/list.ts
+   6:32  warning  'node:fs' imported multiple times  import/no-duplicates
+  12:30  warning  'node:fs' imported multiple times  import/no-duplicates
+
+/Users/robinx/code/codefly-cli/packages/core/src/openspec/core/project-config.ts
+   83:11  error  Unsafe assignment of an `any` value                                                                                                                                  @typescript-eslint/no-unsafe-assignment
+  169:46  error  Unsafe type assertion: type '{ schema: string; context?: string | undefined; rules?: Record<string, string[]> | undefined; }' is more narrow than the original type  @typescript-eslint/no-unsafe-type-assertion
+
+/Users/robinx/code/codefly-cli/packages/core/src/openspec/core/view.ts
+  195:11  error  Unsafe assignment of an `any` value     @typescript-eslint/no-unsafe-assignment
+  196:22  error  Unsafe return of a value of type `any`  @typescript-eslint/no-unsafe-return
+
+/Users/robinx/code/codefly-cli/packages/core/src/openspec/prompts/searchable-multi-select.ts
+  226:8  warning  Prefer named exports  import/no-default-export
+
+/Users/robinx/code/codefly-cli/packages/core/src/openspec/utils/match.ts
+  22:9  error  Unsafe assignment of type `any[][]` to a variable of type `number[][]`  @typescript-eslint/no-unsafe-assignment
+  23:5  error  Unsafe return of a value of type `any[]`                                @typescript-eslint/no-unsafe-return
+
+/Users/robinx/code/codefly-cli/packages/core/src/tools/database-schema.ts
+   94:7   error  Unsafe assignment of an `any` value                                                    @typescript-eslint/no-unsafe-assignment
+  101:11  error  Unsafe assignment of an `any` value                                                    @typescript-eslint/no-unsafe-assignment
+  110:13  error  Unsafe assignment of an `any` value                                                    @typescript-eslint/no-unsafe-assignment
+  118:32  error  Unsafe assertion from `any` detected: consider using type guards or a safer assertion  @typescript-eslint/no-unsafe-type-assertion
+  135:7   error  Unsafe assignment of an `any` value                                                    @typescript-eslint/no-unsafe-assignment
+  142:11  error  Unsafe assignment of an `any` value                                                    @typescript-eslint/no-unsafe-assignment
+  143:11  error  Unsafe assignment of an `any` value                                                    @typescript-eslint/no-unsafe-assignment
+  154:13  error  Unsafe assignment of an `any` value                                                    @typescript-eslint/no-unsafe-assignment
+  162:32  error  Unsafe assertion from `any` detected: consider using type guards or a safer assertion  @typescript-eslint/no-unsafe-type-assertion
+
+/Users/robinx/code/codefly-cli/packages/core/src/tools/read-many-files.ts
+  468:11  error  'parameterSchema' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/Users/robinx/code/codefly-cli/packages/core/src/tools/swagger-schema.ts
+  125:16  error  Unsafe type assertion: type 'SwaggerSchema' is more narrow than the original type      @typescript-eslint/no-unsafe-type-assertion
+  142:16  error  Unsafe type assertion: type 'SwaggerSchema' is more narrow than the original type      @typescript-eslint/no-unsafe-type-assertion
+  147:18  error  Unsafe assertion from `any` detected: consider using type guards or a safer assertion  @typescript-eslint/no-unsafe-type-assertion
+  152:20  error  Unsafe type assertion: type 'SwaggerSchema' is more narrow than the original type      @typescript-eslint/no-unsafe-type-assertion
+
+/Users/robinx/code/codefly-cli/packages/core/src/utils/editor.ts
+  212:27  error  Unsafe assertion from `any` detected: consider using type guards or a safer assertion  @typescript-eslint/no-unsafe-type-assertion
+
+/Users/robinx/code/codefly-cli/packages/core/src/utils/envExpansion.ts
+  48:9  error  Unsafe assignment of an `any` value     @typescript-eslint/no-unsafe-assignment
+  53:3  error  Unsafe return of a value of type `any`  @typescript-eslint/no-unsafe-return
+
+✖ 113 problems (108 errors, 5 warnings)
+  0 errors and 1 warning potentially fixable with the `--fix` option.
+

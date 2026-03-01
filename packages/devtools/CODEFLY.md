@@ -45,8 +45,8 @@ codefly.tsx / nonInteractiveCli.ts
 
 ## Environment Variables
 
-| Variable                         | Description                                   |
-| -------------------------------- | --------------------------------------------- |
+| Variable                          | Description                                   |
+| --------------------------------- | --------------------------------------------- |
 | `CODEFLY_CLI_ACTIVITY_LOG_TARGET` | File path for JSONL mode (optional, fallback) |
 
 ## API Endpoints

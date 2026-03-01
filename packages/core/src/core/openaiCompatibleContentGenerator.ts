@@ -157,6 +157,7 @@ export class OpenAICompatibleContentGenerator implements ContentGenerator {
 
     const openAITools: Array<Record<string, unknown>> = [];
     for (const tool of tools) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       const toolObj = tool as {
         functionDeclarations?: Array<{
           name: string;
@@ -258,15 +259,17 @@ export class OpenAICompatibleContentGenerator implements ContentGenerator {
       );
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
     const data = (await response.json()) as OpenAIResponse;
     const choice = data.choices[0];
 
     const parts: Content['parts'] = [];
     if (this.config.enableThink && choice.message.reasoning_content) {
+       
       parts.push({
         text: choice.message.reasoning_content,
         thought: true,
-      } as unknown as Part);
+      } as Part);
       parts.push({
         text: `<think>\n${choice.message.reasoning_content}\n</think>\n\n`,
       });
@@ -280,6 +283,7 @@ export class OpenAICompatibleContentGenerator implements ContentGenerator {
           parts.push({
             functionCall: {
               name: tc.function.name,
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
               args: JSON.parse(tc.function.arguments) as Record<
                 string,
                 unknown
@@ -298,7 +302,8 @@ export class OpenAICompatibleContentGenerator implements ContentGenerator {
             role: 'model',
             parts,
           },
-          finishReason: choice.finish_reason as FinishReason,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+          finishReason: choice.finish_reason as unknown as FinishReason,
           index: choice.index,
         },
       ],
@@ -310,10 +315,11 @@ export class OpenAICompatibleContentGenerator implements ContentGenerator {
           }
         : undefined,
     };
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
     return Object.setPrototypeOf(
       genResponse,
       GenerateContentResponse.prototype,
-    );
+    ) as GenerateContentResponse;
   }
 
   async generateContentStream(
@@ -407,6 +413,7 @@ export class OpenAICompatibleContentGenerator implements ContentGenerator {
             coreEvents.emitConsoleLog('debug', `[OpenAI Stream] ${jsonStr}`);
 
             try {
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
               const data = JSON.parse(jsonStr) as OpenAIStreamResponse;
 
               // Handle usage metadata in stream
@@ -419,10 +426,11 @@ export class OpenAICompatibleContentGenerator implements ContentGenerator {
                     totalTokenCount: data.usage.total_tokens,
                   },
                 };
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
                 yield Object.setPrototypeOf(
                   genResponse,
                   GenerateContentResponse.prototype,
-                );
+                ) as GenerateContentResponse;
               }
 
               const choice = data.choices[0];
@@ -438,7 +446,7 @@ export class OpenAICompatibleContentGenerator implements ContentGenerator {
                   isThinking = true;
                   parts.push({ text: '<think>\n' });
                 }
-                parts.push({ text: delta.reasoning_content });
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
                 parts.push({
                   text: delta.reasoning_content,
                   thought: true,
@@ -452,16 +460,18 @@ export class OpenAICompatibleContentGenerator implements ContentGenerator {
                         parts,
                       },
                       finish_reason: finishReason
-                        ? (finishReason as FinishReason)
+                        ? // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+                          (finishReason as unknown as FinishReason)
                         : undefined,
                       index: choice.index,
                     },
                   ],
                 };
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
                 yield Object.setPrototypeOf(
                   genResponse,
                   GenerateContentResponse.prototype,
-                );
+                ) as GenerateContentResponse;
               }
 
               // Handle content deltas
@@ -529,16 +539,18 @@ export class OpenAICompatibleContentGenerator implements ContentGenerator {
                         parts,
                       },
                       finishReason: finishReason
-                        ? (finishReason as FinishReason)
+                        ? // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+                          (finishReason as unknown as FinishReason)
                         : undefined,
                       index: choice.index,
                     },
                   ],
                 };
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
                 yield Object.setPrototypeOf(
                   genResponse,
                   GenerateContentResponse.prototype,
-                );
+                ) as GenerateContentResponse;
               }
 
               // Handle tool call deltas (Standard OpenAI tool_calls)
@@ -564,11 +576,15 @@ export class OpenAICompatibleContentGenerator implements ContentGenerator {
                   for (const acc of toolCallsAccumulator.values()) {
                     if (acc.name && acc.arguments) {
                       try {
-                        const args = JSON.parse(acc.arguments);
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+                        const args = JSON.parse(acc.arguments) as Record<
+                          string,
+                          unknown
+                        >;
                         parts.push({
                           functionCall: {
                             name: acc.name,
-                            args: args as Record<string, unknown>,
+                            args,
                             id: acc.id,
                           },
                         });
@@ -593,15 +609,17 @@ export class OpenAICompatibleContentGenerator implements ContentGenerator {
                             role: 'model',
                             parts,
                           },
-                          finishReason: finishReason as FinishReason,
+                          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+                          finishReason: finishReason as unknown as FinishReason,
                           index: choice.index,
                         },
                       ],
                     };
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
                     yield Object.setPrototypeOf(
                       genResponse,
                       GenerateContentResponse.prototype,
-                    );
+                    ) as GenerateContentResponse;
                   }
                   toolCallsAccumulator.clear();
                 }

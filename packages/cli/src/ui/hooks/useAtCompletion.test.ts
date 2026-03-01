@@ -11,7 +11,11 @@ import { renderHook } from '../../test-utils/render.js';
 import { waitFor } from '../../test-utils/async.js';
 import { useAtCompletion } from './useAtCompletion.js';
 import type { Config, FileSearch } from '@codeflyai/codefly-core';
-import { FileDiscoveryService, FileSearchFactory, escapePath } from '@codeflyai/codefly-core';
+import {
+  FileDiscoveryService,
+  FileSearchFactory,
+  escapePath,
+} from '@codeflyai/codefly-core';
 import type { FileSystemStructure } from '@codeflyai/codefly-cli-test-utils';
 import { createTmpDir, cleanupTmpDir } from '@codeflyai/codefly-cli-test-utils';
 import type { Suggestion } from '../components/SuggestionsDisplay.js';

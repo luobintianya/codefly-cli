@@ -22,8 +22,8 @@ overridden by higher numbers):
 
 ## Settings files
 
-Codefly CLI uses JSON settings files for persistent configuration. There are four
-locations for these files:
+Codefly CLI uses JSON settings files for persistent configuration. There are
+four locations for these files:
 
 > **Tip:** JSON-aware editors can use autocomplete and validation by pointing to
 > the generated schema at `schemas/settings.schema.json` in this repository.
@@ -50,8 +50,8 @@ locations for these files:
 - **System settings file:**
   - **Location:** `/etc/codefly-cli/settings.json` (Linux),
     `C:\ProgramData\codefly-cli\settings.json` (Windows) or
-    `/Library/Application Support/CodeflyCli/settings.json` (macOS). The path can
-    be overridden using the `CODEFLY_CLI_SYSTEM_SETTINGS_PATH` environment
+    `/Library/Application Support/CodeflyCli/settings.json` (macOS). The path
+    can be overridden using the `CODEFLY_CLI_SYSTEM_SETTINGS_PATH` environment
     variable.
   - **Scope:** Applies to all Codefly CLI sessions on the system, for all users.
     System settings act as overrides, taking precedence over all other settings
@@ -73,7 +73,8 @@ this: `"apiKey": "$MY_API_TOKEN"`. Additionally, each extension can have its own
 ### The `.codefly` directory in your project
 
 In addition to a project settings file, a project's `.codefly` directory can
-contain other project-specific files related to Codefly CLI's operation, such as:
+contain other project-specific files related to Codefly CLI's operation, such
+as:
 
 - [Custom sandbox profiles](#sandboxing) (e.g.,
   `.codefly/sandbox-macos-custom.sb`, `.codefly/sandbox.Dockerfile`).
@@ -218,8 +219,8 @@ their corresponding top-level category object in your `settings.json` file.
   - **Values:** `"off"`, `"full"`
 
 - **`ui.showStatusInTitle`** (boolean):
-  - **Description:** Show Codefly CLI model thoughts in the terminal window title
-    during the working phase
+  - **Description:** Show Codefly CLI model thoughts in the terminal window
+    title during the working phase
   - **Default:** `false`
 
 - **`ui.dynamicWindowTitle`** (boolean):
@@ -251,8 +252,8 @@ their corresponding top-level category object in your `settings.json` file.
   - **Default:** `false`
 
 - **`ui.hideContextSummary`** (boolean):
-  - **Description:** Hide the context summary (CODEFLY.md, MCP servers) above the
-    input.
+  - **Description:** Hide the context summary (CODEFLY.md, MCP servers) above
+    the input.
   - **Default:** `false`
 
 - **`ui.footer.hideCWD`** (boolean):
@@ -1413,10 +1414,10 @@ the `advanced.excludedEnvVars` setting in your `settings.json` file.
 
 ### Environment variable redaction
 
-To prevent accidental leakage of sensitive information, Codefly CLI automatically
-redacts potential secrets from environment variables when executing tools (such
-as shell commands). This "best effort" redaction applies to variables inherited
-from the system or loaded from `.env` files.
+To prevent accidental leakage of sensitive information, Codefly CLI
+automatically redacts potential secrets from environment variables when
+executing tools (such as shell commands). This "best effort" redaction applies
+to variables inherited from the system or loaded from `.env` files.
 
 **Default Redaction Rules:**
 
@@ -1522,7 +1523,8 @@ for that specific session.
     provide a session index number, or provide a full session UUID.
   - If no session_id is provided, defaults to "latest".
   - Example: `codefly --resume 5` or `codefly --resume latest` or
-    `codefly --resume a1b2c3d4-e5f6-7890-abcd-ef1234567890` or `codefly --resume`
+    `codefly --resume a1b2c3d4-e5f6-7890-abcd-ef1234567890` or
+    `codefly --resume`
   - See [Session Management](../cli/session-management.md) for more details.
 - **`--list-sessions`**:
   - List all available chat sessions for the current project and exit.
@@ -1561,12 +1563,12 @@ for that specific session.
 While not strictly configuration for the CLI's _behavior_, context files
 (defaulting to `CODEFLY.md` but configurable via the `context.fileName` setting)
 are crucial for configuring the _instructional context_ (also referred to as
-"memory") provided to the Codefly model. This powerful feature allows you to give
-project-specific instructions, coding style guides, or any relevant background
-information to the AI, making its responses more tailored and accurate to your
-needs. The CLI includes UI elements, such as an indicator in the footer showing
-the number of loaded context files, to keep you informed about the active
-context.
+"memory") provided to the Codefly model. This powerful feature allows you to
+give project-specific instructions, coding style guides, or any relevant
+background information to the AI, making its responses more tailored and
+accurate to your needs. The CLI includes UI elements, such as an indicator in
+the footer showing the number of loaded context files, to keep you informed
+about the active context.
 
 - **Purpose:** These Markdown files contain instructions, guidelines, or context
   that you want the Codefly model to be aware of during your interactions. The

@@ -17,8 +17,8 @@ Choose the guide that best fits your needs.
 
 ### I want to use extensions
 
-Learn how to discover, install, and manage extensions to enhance your Codefly CLI
-experience.
+Learn how to discover, install, and manage extensions to enhance your Codefly
+CLI experience.
 
 - **[Manage extensions](#manage-extensions):** List and verify your installed
   extensions.
@@ -85,7 +85,8 @@ codefly extensions enable <name> [--scope <scope>]
 
 For extensions installed from a local path or a git repository, you can
 explicitly update to the latest version (as reflected in the
-`codefly-extension.json` `version` field) with `codefly extensions update <name>`.
+`codefly-extension.json` `version` field) with
+`codefly extensions update <name>`.
 
 You can update all extensions with:
 
@@ -190,8 +191,8 @@ Extensions can define settings that the user will be prompted to provide upon
 installation. This is useful for things like API keys, URLs, or other
 configuration that the extension needs to function.
 
-To define settings, add a `settings` array to your `codefly-extension.json` file.
-Each object in the array should have the following properties:
+To define settings, add a `settings` array to your `codefly-extension.json`
+file. Each object in the array should have the following properties:
 
 - `name`: A user-friendly name for the setting.
 - `description`: A description of the setting and what it's used for.

@@ -286,7 +286,8 @@ export class TestRig {
     this.testName = testName;
     const sanitizedName = sanitizeTestName(testName);
     const testFileDir =
-      env['INTEGRATION_TEST_FILE_DIR'] || join(os.tmpdir(), 'codefly-cli-tests');
+      env['INTEGRATION_TEST_FILE_DIR'] ||
+      join(os.tmpdir(), 'codefly-cli-tests');
     this.testDir = join(testFileDir, sanitizedName);
     mkdirSync(this.testDir, { recursive: true });
     if (options.fakeResponsesPath) {

@@ -4,8 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-
-
 import { renderWithProviders } from '../../test-utils/render.js';
 import {
   describe,
@@ -221,9 +219,7 @@ describe('AuthDialog', () => {
   describe('handleAuthSelect', () => {
     it('calls onAuthError if validation fails', async () => {
       mockedValidateAuthMethod.mockReturnValue('Invalid method');
-      const { waitUntilReady } = renderWithProviders(
-        <AuthDialog {...props} />,
-      );
+      const { waitUntilReady } = renderWithProviders(<AuthDialog {...props} />);
       await waitUntilReady();
       const { onSelect: handleAuthSelect } =
         mockedRadioButtonSelect.mock.calls[0][0];
@@ -239,9 +235,7 @@ describe('AuthDialog', () => {
 
     it('calls onSelect with correct type', async () => {
       mockedValidateAuthMethod.mockReturnValue(null);
-      const { waitUntilReady } = renderWithProviders(
-        <AuthDialog {...props} />,
-      );
+      const { waitUntilReady } = renderWithProviders(<AuthDialog {...props} />);
       await waitUntilReady();
       const { onSelect: handleAuthSelect } =
         mockedRadioButtonSelect.mock.calls[0][0];
@@ -254,9 +248,7 @@ describe('AuthDialog', () => {
       mockedValidateAuthMethod.mockReturnValue(null);
       vi.stubEnv('CODEFLY_API_KEY', 'test-key-from-env');
 
-      const { waitUntilReady } = renderWithProviders(
-        <AuthDialog {...props} />,
-      );
+      const { waitUntilReady } = renderWithProviders(<AuthDialog {...props} />);
       await waitUntilReady();
       const { onSelect: handleAuthSelect } =
         mockedRadioButtonSelect.mock.calls[0][0];

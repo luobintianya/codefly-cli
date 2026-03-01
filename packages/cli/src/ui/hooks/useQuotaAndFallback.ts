@@ -4,7 +4,21 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AuthType, DEFAULT_CODEFLY_MODEL, ModelNotFoundError, PREVIEW_CODEFLY_MODEL, TerminalQuotaError, VALID_CODEFLY_MODELS, getDisplayString, type Config, type FallbackIntent, type FallbackModelHandler, type UserTierId, type ValidationHandler, type ValidationIntent } from '@codeflyai/codefly-core';
+import {
+  AuthType,
+  DEFAULT_CODEFLY_MODEL,
+  ModelNotFoundError,
+  PREVIEW_CODEFLY_MODEL,
+  TerminalQuotaError,
+  VALID_CODEFLY_MODELS,
+  getDisplayString,
+  type Config,
+  type FallbackIntent,
+  type FallbackModelHandler,
+  type UserTierId,
+  type ValidationHandler,
+  type ValidationIntent,
+} from '@codeflyai/codefly-core';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { type UseHistoryManagerReturn } from './useHistoryManager.js';
 import { MessageType } from '../types.js';
@@ -70,10 +84,7 @@ export function useQuotaAndFallback({
           `/auth to switch to API key.`,
         ].filter(Boolean);
         message = messageLines.join('\n');
-      } else if (
-        error instanceof ModelNotFoundError &&
-        VALID_CODEFLY_MODELS.has(failedModel)
-      ) {
+      } else if (error instanceof ModelNotFoundError) {
         isModelNotFoundError = true;
         if (VALID_CODEFLY_MODELS.has(failedModel)) {
           const messageLines = [

@@ -387,7 +387,8 @@ describe('ClearcutLogger', () => {
       const event = logger?.createLogEvent(EventNames.API_ERROR, []);
 
       const gpuInfoEntry = event?.event_metadata[0].find(
-        (item) => item.codefly_cli_key === EventMetadataKey.CODEFLY_CLI_GPU_INFO,
+        (item) =>
+          item.codefly_cli_key === EventMetadataKey.CODEFLY_CLI_GPU_INFO,
       );
       expect(gpuInfoEntry).toBeDefined();
       expect(gpuInfoEntry?.value).toBe('Single GPU');
@@ -586,7 +587,8 @@ describe('ClearcutLogger', () => {
       const event = logger?.createLogEvent(EventNames.API_ERROR, []);
       const hasWorkflowName = event?.event_metadata[0].some(
         (item) =>
-          item.codefly_cli_key === EventMetadataKey.CODEFLY_CLI_GH_WORKFLOW_NAME,
+          item.codefly_cli_key ===
+          EventMetadataKey.CODEFLY_CLI_GH_WORKFLOW_NAME,
       );
       expect(hasWorkflowName).toBe(false);
     });

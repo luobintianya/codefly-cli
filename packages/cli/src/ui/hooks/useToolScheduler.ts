@@ -246,7 +246,8 @@ function adaptToolCalls(
 
   return coreCalls.map((coreCall): TrackedToolCall => {
     const prev = prevMap.get(coreCall.request.callId);
-    const responseSubmittedToCodefly = prev?.responseSubmittedToCodefly ?? false;
+    const responseSubmittedToCodefly =
+      prev?.responseSubmittedToCodefly ?? false;
 
     let status = coreCall.status;
     // If a tool call has completed but scheduled a tail call, it is in a transitional

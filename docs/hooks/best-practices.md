@@ -602,12 +602,12 @@ fi
 Understanding where hooks come from and what they can do is critical for secure
 usage.
 
-| Hook Source                    | Description                                                                                                                |
-| :----------------------------- | :------------------------------------------------------------------------------------------------------------------------- |
+| Hook Source                    | Description                                                                                                                 |
+| :----------------------------- | :-------------------------------------------------------------------------------------------------------------------------- |
 | **System**                     | Configured by system administrators (e.g., `/etc/codefly-cli/settings.json`, `/Library/...`). Assumed to be the **safest**. |
-| **User** (`~/.codefly/...`)    | Configured by you. You are responsible for ensuring they are safe.                                                         |
-| **Extensions**                 | You explicitly approve and install these. Security depends on the extension source (integrity).                            |
-| **Project** (`./.codefly/...`) | **Untrusted by default.** Safest in trusted internal repos; higher risk in third-party/public repos.                       |
+| **User** (`~/.codefly/...`)    | Configured by you. You are responsible for ensuring they are safe.                                                          |
+| **Extensions**                 | You explicitly approve and install these. Security depends on the extension source (integrity).                             |
+| **Project** (`./.codefly/...`) | **Untrusted by default.** Safest in trusted internal repos; higher risk in third-party/public repos.                        |
 
 #### Project Hook Security
 
@@ -623,18 +623,18 @@ When you open a project with hooks defined in `.codefly/settings.json`:
 5. **Trust**: The hook is marked as "trusted" for this project.
 
 > [!IMPORTANT] **Modification Detection**: If the `command` string of a project
-> hook is changed (e.g., by a `git pull`), its identity changes. Codefly CLI will
-> treat it as a **new, untrusted hook** and warn you again. This prevents
+> hook is changed (e.g., by a `git pull`), its identity changes. Codefly CLI
+> will treat it as a **new, untrusted hook** and warn you again. This prevents
 > malicious actors from silently swapping a verified command for a malicious
 > one.
 
 ### Risks
 
-| Risk                         | Description                                                                                                                          |
-| :--------------------------- | :----------------------------------------------------------------------------------------------------------------------------------- |
-| **Arbitrary Code Execution** | Hooks run as your user. They can do anything you can do (delete files, install software).                                            |
+| Risk                         | Description                                                                                                                           |
+| :--------------------------- | :------------------------------------------------------------------------------------------------------------------------------------ |
+| **Arbitrary Code Execution** | Hooks run as your user. They can do anything you can do (delete files, install software).                                             |
 | **Data Exfiltration**        | A hook could read your input (prompts), output (code), or environment variables (`CODEFLY_API_KEY`) and send them to a remote server. |
-| **Prompt Injection**         | Malicious content in a file or web page could trick an LLM into running a tool that triggers a hook in an unexpected way.            |
+| **Prompt Injection**         | Malicious content in a file or web page could trick an LLM into running a tool that triggers a hook in an unexpected way.             |
 
 ### Mitigation Strategies
 
@@ -650,8 +650,8 @@ When you open a project with hooks defined in `.codefly/settings.json`:
 #### Sanitize Environment
 
 Hooks inherit the environment of the Codefly CLI process, which may include
-sensitive API keys. Codefly CLI attempts to sanitize sensitive variables, but you
-should be cautious.
+sensitive API keys. Codefly CLI attempts to sanitize sensitive variables, but
+you should be cautious.
 
 - **Avoid printing environment variables** to stdout/stderr unless necessary.
 - **Use `.env` files** to securely manage sensitive variables, ensuring they are

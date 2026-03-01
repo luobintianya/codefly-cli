@@ -84,6 +84,7 @@ export class ChangeCommand {
         );
       }
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const parsed: Change = JSON.parse(jsonOutput);
       const contentForTitle = await fs.readFile(proposalPath, 'utf-8');
       const title = this.extractTitle(contentForTitle, changeName);
