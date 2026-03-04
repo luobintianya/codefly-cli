@@ -19,6 +19,12 @@ vi.mock('../hooks/useKeypress.js', () => ({
     mockUseKeypress(handler, options),
 }));
 
+// Mock useUIActions
+const mockUseUIActions = vi.hoisted(() => vi.fn());
+vi.mock('../contexts/UIActionsContext.js', () => ({
+  useUIActions: mockUseUIActions,
+}));
+
 // Mock ShellExecutionService
 vi.mock('@codeflyai/codefly-core', async () => {
   const actual = await vi.importActual('@codeflyai/codefly-core');

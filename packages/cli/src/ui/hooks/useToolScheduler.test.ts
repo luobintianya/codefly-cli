@@ -4,464 +4,67 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { act } from 'react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook } from '../../test-utils/render.js';
 import { useToolScheduler } from './useToolScheduler.js';
-import {
-  MessageBusType,
-  Scheduler,
-  type Config,
-  type MessageBus,
-  type ExecutingToolCall,
-  type CompletedToolCall,
-  type ToolCallsUpdateMessage,
-  type AnyDeclarativeTool,
-  type AnyToolInvocation,
-  ROOT_SCHEDULER_ID,
-  CoreToolCallStatus,
-} from '@codeflyai/codefly-core';
-import { createMockMessageBus } from '@codeflyai/codefly-core/src/test-utils/mock-message-bus.js';
+import { useReactToolScheduler } from './useReactToolScheduler.js';
+import { useToolExecutionScheduler } from './useToolExecutionScheduler.js';
+import type { Config } from '@codeflyai/codefly-core';
 
-// Mock Core Scheduler
-vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import('@codeflyai/codefly-core')>();
-  return {
-    ...actual,
-    Scheduler: vi.fn().mockImplementation(() => ({
-      schedule: vi.fn().mockResolvedValue([]),
-      cancelAll: vi.fn(),
-    })),
-  };
-});
+vi.mock('./useReactToolScheduler.js', () => ({
+  useReactToolScheduler: vi.fn().mockReturnValue(['legacy']),
+}));
 
-const createMockTool = (
-  overrides: Partial<AnyDeclarativeTool> = {},
-): AnyDeclarativeTool =>
-  ({
-    name: 'test_tool',
-    displayName: 'Test Tool',
-    description: 'A test tool',
-    kind: 'function',
-    parameterSchema: {},
-    isOutputMarkdown: false,
-    build: vi.fn(),
-    ...overrides,
-  }) as AnyDeclarativeTool;
+vi.mock('./useToolExecutionScheduler.js', () => ({
+  useToolExecutionScheduler: vi.fn().mockReturnValue(['modern']),
+}));
 
-const createMockInvocation = (
-  overrides: Partial<AnyToolInvocation> = {},
-): AnyToolInvocation =>
-  ({
-    getDescription: () => 'Executing test tool',
-    shouldConfirmExecute: vi.fn(),
-    execute: vi.fn(),
-    params: {},
-    toolLocations: [],
-    ...overrides,
-  }) as AnyToolInvocation;
-
-describe('useToolScheduler', () => {
+describe('useToolScheduler (Facade)', () => {
   let mockConfig: Config;
-  let mockMessageBus: MessageBus;
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockMessageBus = createMockMessageBus() as unknown as MessageBus;
+  });
+
+  it('delegates to useReactToolScheduler when event-driven scheduler is disabled', () => {
     mockConfig = {
-      getMessageBus: () => mockMessageBus,
+      isEventDrivenSchedulerEnabled: () => false,
     } as unknown as Config;
-  });
 
-  afterEach(() => {
-    vi.clearAllMocks();
-  });
-
-  it('initializes with empty tool calls', () => {
-    const { result } = renderHook(() =>
-      useToolScheduler(
-        vi.fn().mockResolvedValue(undefined),
-        mockConfig,
-        () => undefined,
-      ),
-    );
-    const [toolCalls] = result.current;
-    expect(toolCalls).toEqual([]);
-  });
-
-  it('updates tool calls when MessageBus emits TOOL_CALLS_UPDATE', () => {
-    const { result } = renderHook(() =>
-      useToolScheduler(
-        vi.fn().mockResolvedValue(undefined),
-        mockConfig,
-        () => undefined,
-      ),
-    );
-
-    const mockToolCall = {
-      status: CoreToolCallStatus.Executing as const,
-      request: {
-        callId: 'call-1',
-        name: 'test_tool',
-        args: {},
-        isClientInitiated: false,
-        prompt_id: 'p1',
-      },
-      tool: createMockTool(),
-      invocation: createMockInvocation(),
-      liveOutput: 'Loading...',
-    } as ExecutingToolCall;
-
-    act(() => {
-      void mockMessageBus.publish({
-        type: MessageBusType.TOOL_CALLS_UPDATE,
-        toolCalls: [mockToolCall],
-        schedulerId: ROOT_SCHEDULER_ID,
-      } as ToolCallsUpdateMessage);
-    });
-
-    const [toolCalls] = result.current;
-    expect(toolCalls).toHaveLength(1);
-    // Expect Core Object structure, not Display Object
-    expect(toolCalls[0]).toMatchObject({
-      request: { callId: 'call-1', name: 'test_tool' },
-      status: CoreToolCallStatus.Executing,
-      liveOutput: 'Loading...',
-      responseSubmittedToCodefly: false,
-    });
-  });
-
-  it('preserves responseSubmittedToCodefly flag across updates', () => {
-    const { result } = renderHook(() =>
-      useToolScheduler(
-        vi.fn().mockResolvedValue(undefined),
-        mockConfig,
-        () => undefined,
-      ),
-    );
-
-    const mockToolCall = {
-      status: CoreToolCallStatus.Success as const,
-      request: {
-        callId: 'call-1',
-        name: 'test',
-        args: {},
-        isClientInitiated: false,
-        prompt_id: 'p1',
-      },
-      tool: createMockTool(),
-      invocation: createMockInvocation(),
-      response: {
-        callId: 'call-1',
-        resultDisplay: 'OK',
-        responseParts: [],
-        error: undefined,
-        errorType: undefined,
-      },
-    };
-
-    // 1. Initial success
-    act(() => {
-      void mockMessageBus.publish({
-        type: MessageBusType.TOOL_CALLS_UPDATE,
-        toolCalls: [mockToolCall],
-        schedulerId: ROOT_SCHEDULER_ID,
-      } as ToolCallsUpdateMessage);
-    });
-
-    // 2. Mark as submitted
-    act(() => {
-      const [, , markAsSubmitted] = result.current;
-      markAsSubmitted(['call-1']);
-    });
-
-    expect(result.current[0][0].responseSubmittedToCodefly).toBe(true);
-
-    // 3. Receive another update (should preserve the true flag)
-    act(() => {
-      void mockMessageBus.publish({
-        type: MessageBusType.TOOL_CALLS_UPDATE,
-        toolCalls: [mockToolCall],
-        schedulerId: ROOT_SCHEDULER_ID,
-      } as ToolCallsUpdateMessage);
-    });
-
-    expect(result.current[0][0].responseSubmittedToCodefly).toBe(true);
-  });
-
-  it('updates lastToolOutputTime when tools are executing', () => {
-    vi.useFakeTimers();
-    const { result } = renderHook(() =>
-      useToolScheduler(
-        vi.fn().mockResolvedValue(undefined),
-        mockConfig,
-        () => undefined,
-      ),
-    );
-
-    const startTime = Date.now();
-    vi.advanceTimersByTime(1000);
-
-    act(() => {
-      void mockMessageBus.publish({
-        type: MessageBusType.TOOL_CALLS_UPDATE,
-        toolCalls: [
-          {
-            status: CoreToolCallStatus.Executing as const,
-            request: {
-              callId: 'call-1',
-              name: 'test',
-              args: {},
-              isClientInitiated: false,
-              prompt_id: 'p1',
-            },
-            tool: createMockTool(),
-            invocation: createMockInvocation(),
-          },
-        ],
-        schedulerId: ROOT_SCHEDULER_ID,
-      } as ToolCallsUpdateMessage);
-    });
-
-    const [, , , , , lastOutputTime] = result.current;
-    expect(lastOutputTime).toBeGreaterThan(startTime);
-    vi.useRealTimers();
-  });
-
-  it('delegates cancelAll to the Core Scheduler', () => {
-    const { result } = renderHook(() =>
-      useToolScheduler(
-        vi.fn().mockResolvedValue(undefined),
-        mockConfig,
-        () => undefined,
-      ),
-    );
-
-    const [, , , , cancelAll] = result.current;
-    const signal = new AbortController().signal;
-
-    // We need to find the mock instance of Scheduler
-    // Since we used vi.mock at top level, we can get it from vi.mocked(Scheduler)
-    const schedulerInstance = vi.mocked(Scheduler).mock.results[0].value;
-
-    cancelAll(signal);
-
-    expect(schedulerInstance.cancelAll).toHaveBeenCalled();
-  });
-
-  it('resolves the schedule promise when scheduler resolves', async () => {
-    const onComplete = vi.fn().mockResolvedValue(undefined);
-
-    const completedToolCall = {
-      status: CoreToolCallStatus.Success as const,
-      request: {
-        callId: 'call-1',
-        name: 'test',
-        args: {},
-        isClientInitiated: false,
-        prompt_id: 'p1',
-      },
-      tool: createMockTool(),
-      invocation: createMockInvocation(),
-      response: {
-        callId: 'call-1',
-        responseParts: [],
-        resultDisplay: 'Success',
-        error: undefined,
-        errorType: undefined,
-      },
-    };
-
-    // Mock the specific return value for this test
-    const { Scheduler } = await import('@codeflyai/codefly-core');
-    vi.mocked(Scheduler).mockImplementation(
-      () =>
-        ({
-          schedule: vi.fn().mockResolvedValue([completedToolCall]),
-          cancelAll: vi.fn(),
-        }) as unknown as Scheduler,
-    );
+    const onComplete = vi.fn();
+    const getPreferredEditor = vi.fn();
 
     const { result } = renderHook(() =>
-      useToolScheduler(onComplete, mockConfig, () => undefined),
+      useToolScheduler(onComplete, mockConfig, getPreferredEditor),
     );
 
-    const [, schedule] = result.current;
-    const signal = new AbortController().signal;
-
-    let completedResult: CompletedToolCall[] = [];
-    await act(async () => {
-      completedResult = await schedule(
-        {
-          callId: 'call-1',
-          name: 'test',
-          args: {},
-          isClientInitiated: false,
-          prompt_id: 'p1',
-        },
-        signal,
-      );
-    });
-
-    expect(completedResult).toEqual([completedToolCall]);
-    expect(onComplete).toHaveBeenCalledWith([completedToolCall]);
+    expect(result.current).toEqual(['legacy']);
+    expect(useReactToolScheduler).toHaveBeenCalledWith(
+      onComplete,
+      mockConfig,
+      getPreferredEditor,
+    );
+    expect(useToolExecutionScheduler).not.toHaveBeenCalled();
   });
 
-  it('setToolCallsForDisplay re-groups tools by schedulerId (Multi-Scheduler support)', () => {
+  it('delegates to useToolExecutionScheduler when event-driven scheduler is enabled', () => {
+    mockConfig = {
+      isEventDrivenSchedulerEnabled: () => true,
+    } as unknown as Config;
+
+    const onComplete = vi.fn();
+    const getPreferredEditor = vi.fn();
+
     const { result } = renderHook(() =>
-      useToolScheduler(
-        vi.fn().mockResolvedValue(undefined),
-        mockConfig,
-        () => undefined,
-      ),
+      useToolScheduler(onComplete, mockConfig, getPreferredEditor),
     );
 
-    const callRoot = {
-      status: CoreToolCallStatus.Success as const,
-      request: {
-        callId: 'call-root',
-        name: 'test',
-        args: {},
-        isClientInitiated: false,
-        prompt_id: 'p1',
-      },
-      tool: createMockTool(),
-      invocation: createMockInvocation(),
-      response: {
-        callId: 'call-root',
-        responseParts: [],
-        resultDisplay: 'OK',
-        error: undefined,
-        errorType: undefined,
-      },
-      schedulerId: ROOT_SCHEDULER_ID,
-    };
-
-    const callSub = {
-      ...callRoot,
-      request: { ...callRoot.request, callId: 'call-sub' },
-      schedulerId: 'subagent-1',
-    };
-
-    // 1. Populate state with multiple schedulers
-    act(() => {
-      void mockMessageBus.publish({
-        type: MessageBusType.TOOL_CALLS_UPDATE,
-        toolCalls: [callRoot],
-        schedulerId: ROOT_SCHEDULER_ID,
-      } as ToolCallsUpdateMessage);
-
-      void mockMessageBus.publish({
-        type: MessageBusType.TOOL_CALLS_UPDATE,
-        toolCalls: [callSub],
-        schedulerId: 'subagent-1',
-      } as ToolCallsUpdateMessage);
-    });
-
-    let [toolCalls] = result.current;
-    expect(toolCalls).toHaveLength(2);
-    expect(
-      toolCalls.find((t) => t.request.callId === 'call-root')?.schedulerId,
-    ).toBe(ROOT_SCHEDULER_ID);
-    expect(
-      toolCalls.find((t) => t.request.callId === 'call-sub')?.schedulerId,
-    ).toBe('subagent-1');
-
-    // 2. Call setToolCallsForDisplay (e.g., simulate a manual update or clear)
-    act(() => {
-      const [, , , setToolCalls] = result.current;
-      setToolCalls((prev) =>
-        prev.map((t) => ({ ...t, responseSubmittedToCodefly: true })),
-      );
-    });
-
-    // 3. Verify that tools are still present and maintain their scheduler IDs
-    // The internal map should have been re-grouped.
-    [toolCalls] = result.current;
-    expect(toolCalls).toHaveLength(2);
-    expect(toolCalls.every((t) => t.responseSubmittedToCodefly)).toBe(true);
-
-    const updatedRoot = toolCalls.find((t) => t.request.callId === 'call-root');
-    const updatedSub = toolCalls.find((t) => t.request.callId === 'call-sub');
-
-    expect(updatedRoot?.schedulerId).toBe(ROOT_SCHEDULER_ID);
-    expect(updatedSub?.schedulerId).toBe('subagent-1');
-
-    // 4. Verify that a subsequent update to ONE scheduler doesn't wipe the other
-    act(() => {
-      void mockMessageBus.publish({
-        type: MessageBusType.TOOL_CALLS_UPDATE,
-        toolCalls: [{ ...callRoot, status: CoreToolCallStatus.Executing }],
-        schedulerId: ROOT_SCHEDULER_ID,
-      } as ToolCallsUpdateMessage);
-    });
-
-    [toolCalls] = result.current;
-    expect(toolCalls).toHaveLength(2);
-    expect(
-      toolCalls.find((t) => t.request.callId === 'call-root')?.status,
-    ).toBe(CoreToolCallStatus.Executing);
-    expect(
-      toolCalls.find((t) => t.request.callId === 'call-sub')?.schedulerId,
-    ).toBe('subagent-1');
-  });
-
-  it('adapts success/error status to executing when a tail call is present', () => {
-    vi.useFakeTimers();
-    const { result } = renderHook(() =>
-      useToolScheduler(
-        vi.fn().mockResolvedValue(undefined),
-        mockConfig,
-        () => undefined,
-      ),
+    expect(result.current).toEqual(['modern']);
+    expect(useToolExecutionScheduler).toHaveBeenCalledWith(
+      onComplete,
+      mockConfig,
+      getPreferredEditor,
     );
-
-    const startTime = Date.now();
-    vi.advanceTimersByTime(1000);
-
-    const mockToolCall = {
-      status: CoreToolCallStatus.Success as const,
-      request: {
-        callId: 'call-1',
-        name: 'test_tool',
-        args: {},
-        isClientInitiated: false,
-        prompt_id: 'p1',
-      },
-      tool: createMockTool(),
-      invocation: createMockInvocation(),
-      response: {
-        callId: 'call-1',
-        resultDisplay: 'OK',
-        responseParts: [],
-        error: undefined,
-        errorType: undefined,
-      },
-      tailToolCallRequest: {
-        name: 'tail_tool',
-        args: {},
-        isClientInitiated: false,
-        prompt_id: '123',
-      },
-    };
-
-    act(() => {
-      void mockMessageBus.publish({
-        type: MessageBusType.TOOL_CALLS_UPDATE,
-        toolCalls: [mockToolCall],
-        schedulerId: ROOT_SCHEDULER_ID,
-      } as ToolCallsUpdateMessage);
-    });
-
-    const [toolCalls, , , , , lastOutputTime] = result.current;
-
-    // Check if status has been adapted to 'executing'
-    expect(toolCalls[0].status).toBe(CoreToolCallStatus.Executing);
-
-    // Check if lastOutputTime was updated due to the transitional state
-    expect(lastOutputTime).toBeGreaterThan(startTime);
-
-    vi.useRealTimers();
+    expect(useReactToolScheduler).not.toHaveBeenCalled();
   });
 });

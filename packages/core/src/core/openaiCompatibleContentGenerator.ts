@@ -265,7 +265,6 @@ export class OpenAICompatibleContentGenerator implements ContentGenerator {
 
     const parts: Content['parts'] = [];
     if (this.config.enableThink && choice.message.reasoning_content) {
-       
       parts.push({
         text: choice.message.reasoning_content,
         thought: true,

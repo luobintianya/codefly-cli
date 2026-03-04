@@ -72,12 +72,13 @@ describe('getUserStartupWarnings', () => {
     it('should return a warning when running in home directory', async () => {
       const warnings = await getUserStartupWarnings({}, homeDir);
       expect(warnings).toContainEqual(
-        expect.stringContaining(
-          'Warning you are running Codefly CLI in your home directory',
-        ),
-      );
-      expect(warnings).toContainEqual(
-        expect.stringContaining('warning can be disabled in /settings'),
+        expect.objectContaining({
+          id: 'home-directory',
+          message: expect.stringContaining(
+            'Warning you are running Codefly CLI in your home directory',
+          ),
+          priority: WarningPriority.Low,
+        }),
       );
     });
 

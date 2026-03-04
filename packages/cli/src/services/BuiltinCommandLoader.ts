@@ -40,6 +40,7 @@ import { memoryCommand } from '../ui/commands/memoryCommand.js';
 import { modelCommand } from '../ui/commands/modelCommand.js';
 import { permissionsCommand } from '../ui/commands/permissionsCommand.js';
 import { openspecCommand } from '../ui/commands/openspecCommand.js';
+import { planCommand } from '../ui/commands/planCommand.js';
 import { privacyCommand } from '../ui/commands/privacyCommand.js';
 import { policiesCommand } from '../ui/commands/policiesCommand.js';
 import { profileCommand } from '../ui/commands/profileCommand.js';
@@ -155,6 +156,7 @@ export class BuiltinCommandLoader implements ICommandLoader {
         modelCommand,
         openspecCommand,
         ...(this.config?.getFolderTrust() ? [permissionsCommand] : []),
+        ...(this.config?.isPlanEnabled() ? [planCommand] : []),
         privacyCommand,
         policiesCommand,
         ...(isDevelopment ? [profileCommand] : []),

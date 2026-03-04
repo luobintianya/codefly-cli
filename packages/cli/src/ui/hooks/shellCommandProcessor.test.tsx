@@ -21,8 +21,8 @@ const mockIsBinary = vi.hoisted(() => vi.fn());
 const mockShellExecutionService = vi.hoisted(() => vi.fn());
 const mockShellKill = vi.hoisted(() => vi.fn());
 const mockShellBackground = vi.hoisted(() => vi.fn());
-const mockShellSubscribe = vi.hoisted(() => vi.fn());
-const mockShellOnExit = vi.hoisted(() => vi.fn());
+const mockShellSubscribe = vi.hoisted(() => vi.fn(() => vi.fn()));
+const mockShellOnExit = vi.hoisted(() => vi.fn(() => vi.fn()));
 vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
   const actual =
     await importOriginal<typeof import('@codeflyai/codefly-core')>();

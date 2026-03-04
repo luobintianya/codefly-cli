@@ -829,7 +829,12 @@ export async function loadCliConfig(
     directWebFetch: settings.experimental?.directWebFetch,
     planSettings: settings.general?.plan,
     enableEventDrivenScheduler: true,
-    skillsSupport: settings.skills?.enabled ?? true,
+    skillsSupport:
+       
+      (settings.experimental as Record<string, unknown> | undefined)?.[
+        'skills'
+      ] === true ||
+      (settings.skills?.enabled ?? true),
     disabledSkills: settings.skills?.disabled,
     experimentalJitContext: settings.experimental?.jitContext,
     modelSteering: settings.experimental?.modelSteering,

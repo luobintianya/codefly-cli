@@ -37,6 +37,7 @@ import {
 import { createMockSettings } from './settings.js';
 import { type LoadedSettings } from '../config/settings.js';
 import { AuthState } from '../ui/types.js';
+import { persistentState } from '../utils/persistentState.js';
 
 // Mock core functions globally for tests using AppRig.
 vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
@@ -85,6 +86,15 @@ vi.mock('../ui/components/CodeflyRespondingSpinner.js', async () => {
     }: {
       nonRespondingDisplay: string;
     }) => React.createElement(Text, null, nonRespondingDisplay || '...'),
+  };
+});
+
+vi.mock('../ui/utils/terminalSetup.js', async (importOriginal) => {
+  const original =
+    await importOriginal<typeof import('../ui/utils/terminalSetup.js')>();
+  return {
+    ...original,
+    useTerminalSetupPrompt: () => {},
   };
 });
 
@@ -138,11 +148,12 @@ export class AppRig {
       interactive: true,
       approvalMode,
       policyEngineConfig,
-      enableEventDrivenScheduler: true,
+      enableEventDrivenScheduler: false,
       extensionLoader: new MockExtensionManager(),
       excludeTools: this.options.configOverrides?.excludeTools,
       ...this.options.configOverrides,
     };
+    persistentState.set('terminalSetupPromptShown', true);
     this.config = makeFakeConfig(configParams);
 
     if (this.options.fakeResponsesPath) {
@@ -162,6 +173,7 @@ export class AppRig {
   private setupEnvironment() {
     // Stub environment variables to avoid interference from developer's machine
     vi.stubEnv('CODEFLY_CLI_HOME', this.testDir);
+    vi.stubEnv('TERM_PROGRAM', 'unknown');
     if (this.options.fakeResponsesPath) {
       vi.stubEnv('CODEFLY_API_KEY', 'test-api-key');
       MockShellExecutionService.setPassthrough(false);

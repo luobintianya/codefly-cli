@@ -31,7 +31,10 @@ describe('AppRig', () => {
       configOverrides: { modelSteering: true },
     });
     await rig.initialize();
-    rig.render();
+    await act(async () => {
+      rig!.render();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
     await rig.waitForIdle();
 
     // Set breakpoints on the canonical tool names

@@ -769,7 +769,7 @@ describe('loadCliConfig', () => {
       DEFAULT_FILE_FILTERING_OPTIONS.respectCodeflyIgnore,
     );
     expect(config.getCustomIgnoreFilePaths()).toEqual(
-      DEFAULT_FILE_FILTERING_OPTIONS.customIgnoreFilePaths,
+      DEFAULT_FILE_FILTERING_OPTIONS.customIgnoreFilePaths ?? [],
     );
     expect(config.getApprovalMode()).toBe(ApprovalMode.DEFAULT);
   });

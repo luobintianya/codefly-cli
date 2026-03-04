@@ -141,6 +141,7 @@ describe('useAuth', () => {
       }) as LoadedSettings;
 
     it('should initialize with Unauthenticated state', async () => {
+      mockLoadApiKey.mockResolvedValue('fake-key');
       const { result } = renderHook(() =>
         useAuthCommand(createSettings(AuthType.USE_CODEFLY), mockConfig),
       );

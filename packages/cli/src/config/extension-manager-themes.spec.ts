@@ -85,6 +85,7 @@ describe('ExtensionManager theme loading', () => {
     });
 
     await extensionManager.loadExtensions();
+    extensionManager.getExtensions()[0].isActive = true;
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
     const mockConfig = {
@@ -171,6 +172,7 @@ describe('ExtensionManager theme loading', () => {
     });
 
     await extensionManager.loadExtensions();
+    extensionManager.getExtensions()[0].isActive = true;
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
     const mockConfig = {

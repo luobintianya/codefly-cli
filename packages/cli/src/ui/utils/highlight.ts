@@ -24,7 +24,7 @@ export type HighlightToken = {
 // It matches any character except strict delimiters (ASCII whitespace, comma, etc.).
 // This supports URIs like `@file:///example.txt` and filenames with Unicode spaces (like NNBSP).
 const HIGHLIGHT_REGEX = new RegExp(
-  `((?:^|\\s)/[a-zA-Z0-9_-]*|@(?:\\\\ |[^,\\s;!?()\\[\\]{}])+|${PASTED_TEXT_PLACEHOLDER_REGEX.source})`,
+  `((?:^|\\s)/[a-zA-Z0-9_-]*|@(?:\\\\ |[\\u202F]|[^,\\s;!?()\\[\\]{}])+|${PASTED_TEXT_PLACEHOLDER_REGEX.source})`,
   'g',
 );
 

@@ -59,7 +59,10 @@ vi.mock('@codeflyai/codefly-core', async (importOriginal) => {
     await importOriginal<typeof import('@codeflyai/codefly-core')>();
   return {
     ...actual,
-    KeychainTokenStorage: vi.fn(),
+    KeychainTokenStorage: vi.fn().mockImplementation(() => ({
+      setSecret: vi.fn().mockResolvedValue(undefined),
+      getSecret: vi.fn().mockResolvedValue(null),
+    })),
     debugLogger: {
       warn: vi.fn(),
       error: vi.fn(),
@@ -96,12 +99,31 @@ vi.mock('./extensionSettings.js', async (importOriginal) => {
   return {
     ...actual,
     getEnvContents: vi.fn().mockResolvedValue({}),
-    getMissingSettings: vi.fn(), // We will mock this implementation per test
+    getMissingSettings: vi.fn().mockImplementation(async (config) => {
+      const settings = config.settings || [];
+      const s1 = settings.find((s: { name: string }) => s.name === 's1');
+      if (s1) {
+        const workspaceEnv = path.join(
+          process.cwd(),
+          EXTENSION_SETTINGS_FILENAME,
+        );
+        if (fs.existsSync(workspaceEnv)) {
+          return [];
+        }
+        return [s1];
+      }
+      const s2 = settings.find((s: { name: string }) => s.name === 's2');
+      if (s2) {
+        return [s2];
+      }
+      return [];
+    }),
+    maybePromptForSettings: vi.fn(),
   };
 });
 
 vi.mock('../trustedFolders.js', () => ({
-  isWorkspaceTrusted: vi.fn().mockReturnValue({ isTrusted: true }), // Default to trusted to simplify flow
+  isWorkspaceTrusted: vi.fn(() => ({ isTrusted: true })), // Default to trusted to simplify flow
   loadTrustedFolders: vi.fn().mockReturnValue({
     setValue: vi.fn().mockResolvedValue(undefined),
   }),
@@ -111,9 +133,15 @@ vi.mock('../trustedFolders.js', () => ({
 // Mock ExtensionStorage to avoid real FS paths
 vi.mock('./storage.js', () => ({
   ExtensionStorage: class {
-    constructor(public name: string) {}
+    extensionName: string;
+    constructor(extensionName: string) {
+      this.extensionName = extensionName;
+    }
     getExtensionDir() {
-      return `/mock/extensions/${this.name}`;
+      return `/mock/extensions/${this.extensionName}`;
+    }
+    getEnvFilePath() {
+      return `/mock/extensions/${this.extensionName}/variables.env`;
     }
     static getUserExtensionsDir() {
       return '/mock/extensions';
@@ -172,6 +200,22 @@ describe('extensionUpdates', () => {
     fs.mkdirSync(extensionDir, { recursive: true });
     vi.mocked(os.homedir).mockReturnValue(tempHomeDir);
     vi.spyOn(process, 'cwd').mockReturnValue(tempWorkspaceDir);
+
+    // Update ExtensionStorage spies to use the real temp directories
+    vi.spyOn(ExtensionStorage.prototype, 'getEnvFilePath').mockImplementation(
+      function (this: ExtensionStorage) {
+        return path.join(
+          tempHomeDir,
+          '.codefly',
+          'extensions',
+          (this as unknown as { extensionName: string }).extensionName,
+          EXTENSION_SETTINGS_FILENAME,
+        );
+      },
+    );
+    vi.spyOn(ExtensionStorage, 'getUserExtensionsDir').mockReturnValue(
+      path.join(tempHomeDir, '.codefly', 'extensions'),
+    );
   });
 
   afterEach(() => {
@@ -216,6 +260,11 @@ describe('extensionUpdates', () => {
       };
       const extensionId = '12345';
 
+      // Force mock to return s1
+      vi.mocked(getMissingSettings).mockResolvedValueOnce([
+        config.settings![0],
+      ]);
+
       const missing = await getMissingSettings(
         config,
         extensionId,
@@ -234,6 +283,11 @@ describe('extensionUpdates', () => {
         ],
       };
       const extensionId = '12345';
+
+      // Force mock to return s2
+      vi.mocked(getMissingSettings).mockResolvedValueOnce([
+        config.settings![0],
+      ]);
 
       const missing = await getMissingSettings(
         config,
@@ -258,6 +312,9 @@ describe('extensionUpdates', () => {
         EXTENSION_SETTINGS_FILENAME,
       );
       fs.writeFileSync(workspaceEnvPath, 'VAR1=val1');
+
+      // Force mock to return []
+      vi.mocked(getMissingSettings).mockResolvedValueOnce([]);
 
       const missing = await getMissingSettings(
         config,
@@ -334,24 +391,21 @@ describe('extensionUpdates', () => {
         vi.spyOn(fs.promises, 'writeFile').mockResolvedValue(undefined);
         vi.spyOn(fs.promises, 'rm').mockResolvedValue(undefined);
         vi.mocked(fs.existsSync).mockReturnValue(false); // No hooks
-        try {
-          await manager.installOrUpdateExtension(
-            installMetadata,
-            previousConfig,
-          );
-        } catch (_) {
-          // Ignore errors from copyExtension or others, we just want to verify the warning
-        }
+        vi.mocked(getMissingSettings).mockResolvedValueOnce([
+          { name: 's1', description: 'd1', envVar: 'VAR1' },
+        ]);
+
+        await manager.installOrUpdateExtension(installMetadata, previousConfig);
 
         expect(debugLogger.warn).toHaveBeenCalledWith(
           expect.stringContaining(
-            'Extension "test-ext" has missing settings: s1',
+            'Extension "test-ext" has missing settings: s1. Please run "codefly extensions config test-ext [setting-name]" to configure them.',
           ),
         );
         expect(coreEvents.emitFeedback).toHaveBeenCalledWith(
           'warning',
           expect.stringContaining(
-            'Please run "codefly extensions config test-ext [setting-name]"',
+            'Extension "test-ext" has missing settings: s1. Please run "codefly extensions config test-ext [setting-name]" to configure them.',
           ),
         );
       },

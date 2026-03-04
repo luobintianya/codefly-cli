@@ -196,8 +196,8 @@ describe('AuthDialog', () => {
         setup: () => {
           vi.stubEnv('CODEFLY_API_KEY', 'test-key');
         },
-        expected: AuthType.USE_CODEFLY,
-        desc: 'from CODEFLY_API_KEY env var',
+        expected: AuthType.OPENAI,
+        desc: 'does not select USE_CODEFLY simply because CODEFLY_API_KEY is set',
       },
       {
         setup: () => {},

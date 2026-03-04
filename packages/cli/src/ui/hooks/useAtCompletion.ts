@@ -274,27 +274,35 @@ export function useAtCompletion(props: UseAtCompletionProps): void {
     const initialize = async () => {
       const currentEpoch = initEpoch.current;
       try {
-        const fileDiscoveryService = new FileDiscoveryService(cwd, {
-          respectGitIgnore:
-            config?.getFileFilteringOptions()?.respectGitIgnore ?? true,
-          respectCodeflyIgnore:
-            config?.getFileFilteringOptions()?.respectCodeflyIgnore ?? true,
-        });
+        const directories = config
+          ?.getWorkspaceContext?.()
+          ?.getDirectories() ?? [cwd];
 
-        const searcher = FileSearchFactory.create({
-          projectRoot: cwd,
-          ignoreDirs: [],
-          fileDiscoveryService,
-          cache: true,
-          cacheTtl: 30, // 30 seconds
-          enableRecursiveFileSearch:
-            config?.getEnableRecursiveFileSearch() ?? true,
-          enableFuzzySearch:
-            config?.getFileFilteringEnableFuzzySearch() ?? true,
-          maxFiles: config?.getFileFilteringOptions()?.maxFileCount,
-        });
-        await searcher.initialize();
-        fileSearchMap.current.set(cwd, searcher);
+        await Promise.all(
+          directories.map(async (dir) => {
+            const fileDiscoveryService = new FileDiscoveryService(dir, {
+              respectGitIgnore:
+                config?.getFileFilteringOptions()?.respectGitIgnore ?? true,
+              respectCodeflyIgnore:
+                config?.getFileFilteringOptions()?.respectCodeflyIgnore ?? true,
+            });
+
+            const searcher = FileSearchFactory.create({
+              projectRoot: dir,
+              ignoreDirs: [],
+              fileDiscoveryService,
+              cache: true,
+              cacheTtl: 30, // 30 seconds
+              enableRecursiveFileSearch:
+                config?.getEnableRecursiveFileSearch() ?? true,
+              enableFuzzySearch:
+                config?.getFileFilteringEnableFuzzySearch() ?? true,
+              maxFiles: config?.getFileFilteringOptions()?.maxFileCount,
+            });
+            await searcher.initialize();
+            fileSearchMap.current.set(dir, searcher);
+          }),
+        );
         dispatch({ type: 'INITIALIZE_SUCCESS' });
         if (state.pattern !== null) {
           dispatch({ type: 'SEARCH', payload: state.pattern });

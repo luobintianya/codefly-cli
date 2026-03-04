@@ -139,7 +139,10 @@ export function getInstallationInfo(
         updateMessage: 'Running via bunx, update not applicable.',
       };
     }
-    if (realPath.includes('/.bun/bin')) {
+    if (
+      realPath.includes('/.bun/bin') ||
+      realPath.includes('/.bun/install/global')
+    ) {
       const updateCommand = 'bun add -g @codeflyai/codefly@latest';
       return {
         packageManager: PackageManager.BUN,
