@@ -830,7 +830,6 @@ export async function loadCliConfig(
     planSettings: settings.general?.plan,
     enableEventDrivenScheduler: true,
     skillsSupport:
-       
       (settings.experimental as Record<string, unknown> | undefined)?.[
         'skills'
       ] === true ||
