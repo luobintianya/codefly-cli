@@ -95,7 +95,7 @@ describe('FileDiscoveryService', () => {
 
       expect(defaults.respectGitIgnore).toBe(true);
       expect(defaults.respectCodeflyIgnore).toBe(true);
-      expect(defaults.customIgnoreFilePaths).toStrictEqual([]);
+      expect(defaults.customIgnoreFilePaths).toBeUndefined();
     });
 
     it('should partially override defaults', () => {

@@ -36,19 +36,22 @@ describe('ChatRecordingService', () => {
   let chatRecordingService: ChatRecordingService;
   let mockConfig: Config;
   let testTempDir: string;
+  let mkdirSyncSpy: import('vitest').MockInstance;
+  let writeFileSyncSpy: import('vitest').MockInstance;
 
   beforeEach(async () => {
     testTempDir = await fs.promises.mkdtemp(
       path.join(os.tmpdir(), 'chat-recording-test-'),
     );
+    const projectRoot = path.join(testTempDir, 'project');
+    const projectTempDir = path.join(projectRoot, '.codefly', 'tmp');
+    await fs.promises.mkdir(projectTempDir, { recursive: true });
 
     mockConfig = {
       getSessionId: vi.fn().mockReturnValue('test-session-id'),
-      getProjectRoot: vi.fn().mockReturnValue('/test/project/root'),
+      getProjectRoot: vi.fn().mockReturnValue(projectRoot),
       storage: {
-        getProjectTempDir: vi
-          .fn()
-          .mockReturnValue('/test/project/root/.codefly/tmp'),
+        getProjectTempDir: vi.fn().mockReturnValue(projectTempDir),
       },
       getModel: vi.fn().mockReturnValue('codefly-pro'),
       getDebugMode: vi.fn().mockReturnValue(false),
@@ -62,6 +65,9 @@ describe('ChatRecordingService', () => {
     } as unknown as Config;
 
     vi.mocked(getProjectHash).mockReturnValue('test-project-hash');
+    mkdirSyncSpy = vi.spyOn(fs, 'mkdirSync');
+    writeFileSyncSpy = vi.spyOn(fs, 'writeFileSync');
+    vi.spyOn(fs, 'unlinkSync');
     chatRecordingService = new ChatRecordingService(mockConfig);
   });
 
@@ -75,14 +81,9 @@ describe('ChatRecordingService', () => {
   describe('initialize', () => {
     it('should create a new session if none is provided', () => {
       chatRecordingService.initialize();
-      chatRecordingService.recordMessage({
-        type: 'user',
-        content: 'ping',
-        model: 'm',
-      });
 
       expect(mkdirSyncSpy).toHaveBeenCalledWith(
-        '/test/project/root/.codefly/tmp/chats',
+        expect.stringContaining('.codefly/tmp/chats'),
         { recursive: true },
       );
       expect(writeFileSyncSpy).not.toHaveBeenCalled();
@@ -100,7 +101,7 @@ describe('ChatRecordingService', () => {
       fs.writeFileSync(sessionFile, JSON.stringify(initialData));
 
       chatRecordingService.initialize({
-        filePath: '/test/project/root/.codefly/tmp/chats/session.json',
+        filePath: sessionFile,
         conversation: {
           sessionId: 'old-session-id',
         } as ConversationRecord,
@@ -296,17 +297,25 @@ describe('ChatRecordingService', () => {
   });
 
   describe('deleteSession', () => {
-    it('should delete the session file', () => {
-      const unlinkSyncSpy = vi
-        .spyOn(fs, 'unlinkSync')
-        .mockImplementation(() => undefined);
-      chatRecordingService.deleteSession('test-session-id');
-      expect(unlinkSyncSpy).toHaveBeenCalledWith(
-        '/test/project/root/.codefly/tmp/chats/test-session-id.json',
+    it('should delete the session file and tool output directory', () => {
+      const sessionId = 'test-session-id';
+      const tempDir = mockConfig.storage.getProjectTempDir();
+      const chatsDir = path.join(tempDir, 'chats');
+      const sessionFile = path.join(chatsDir, `${sessionId}.json`);
+      const toolOutputDir = path.join(
+        tempDir,
+        'tool-outputs',
+        `session-${sessionId}`,
       );
+
+      fs.mkdirSync(chatsDir, { recursive: true });
+      fs.writeFileSync(sessionFile, 'test');
       fs.mkdirSync(toolOutputDir, { recursive: true });
 
-      chatRecordingService.deleteSession('test-session-id');
+      expect(fs.existsSync(sessionFile)).toBe(true);
+      expect(fs.existsSync(toolOutputDir)).toBe(true);
+
+      chatRecordingService.deleteSession(sessionId);
 
       expect(fs.existsSync(sessionFile)).toBe(false);
       expect(fs.existsSync(toolOutputDir)).toBe(false);

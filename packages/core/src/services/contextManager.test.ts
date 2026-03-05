@@ -21,6 +21,7 @@ vi.mock('../utils/memoryDiscovery.js', async (importOriginal) => {
     getEnvironmentMemoryPaths: vi.fn(),
     readCodeflyMdFiles: vi.fn(),
     loadJitSubdirectoryMemory: vi.fn(),
+    categorizeAndConcatenate: vi.fn(),
     concatenateInstructions: vi
       .fn()
       .mockImplementation(actual.concatenateInstructions),
@@ -56,36 +57,40 @@ describe('ContextManager', () => {
 
   describe('refresh', () => {
     it('should load and format global and environment memory', async () => {
-      const mockGlobalResult: memoryDiscovery.MemoryLoadResult = {
-        files: [
-          { path: '/home/user/.codefly/CODEFLY.md', content: 'Global Content' },
-        ],
-      };
-      vi.mocked(memoryDiscovery.loadGlobalMemory).mockResolvedValue(
-        mockGlobalResult,
-      );
-
-      const mockEnvResult: memoryDiscovery.MemoryLoadResult = {
-        files: [{ path: '/app/CODEFLY.md', content: 'Env Content' }],
-      };
-      vi.mocked(memoryDiscovery.loadEnvironmentMemory).mockResolvedValue(
-        mockEnvResult,
-      );
+      vi.mocked(memoryDiscovery.getGlobalMemoryPaths).mockResolvedValue([
+        '/home/user/.codefly/CODEFLY.md',
+      ]);
+      vi.mocked(memoryDiscovery.getEnvironmentMemoryPaths).mockResolvedValue([
+        '/app/CODEFLY.md',
+      ]);
+      vi.mocked(memoryDiscovery.readCodeflyMdFiles).mockResolvedValue([
+        {
+          filePath: '/home/user/.codefly/CODEFLY.md',
+          content: 'Global Content',
+        },
+        { filePath: '/app/CODEFLY.md', content: 'Env Content' },
+      ]);
+      vi.mocked(memoryDiscovery.categorizeAndConcatenate).mockReturnValue({
+        global:
+          '--- Context from: /home/user/.codefly/CODEFLY.md ---\nGlobal Content',
+        extension: '',
+        project: '--- Context from: /app/CODEFLY.md ---\nEnv Content',
+      });
 
       await contextManager.refresh();
 
-      expect(memoryDiscovery.loadGlobalMemory).toHaveBeenCalledWith(false);
-      expect(contextManager.getGlobalMemory()).toMatch(
-        /--- Context from: .*CODEFLY.md ---/,
+      expect(memoryDiscovery.getGlobalMemoryPaths).toHaveBeenCalledWith(false);
+      expect(contextManager.getGlobalMemory()).toContain(
+        '--- Context from: /home/user/.codefly/CODEFLY.md ---',
       );
       expect(contextManager.getGlobalMemory()).toContain('Global Content');
 
-      expect(memoryDiscovery.loadEnvironmentMemory).toHaveBeenCalledWith(
+      expect(memoryDiscovery.getEnvironmentMemoryPaths).toHaveBeenCalledWith(
         ['/app'],
         false,
       );
       expect(contextManager.getEnvironmentMemory()).toContain(
-        '--- Context from: CODEFLY.md ---',
+        '--- Context from: /app/CODEFLY.md ---',
       );
 
       expect(contextManager.getGlobalMemory()).toContain('Global Content');
@@ -101,18 +106,24 @@ describe('ContextManager', () => {
     });
 
     it('should emit MemoryChanged event when memory is refreshed', async () => {
-      const mockGlobalResult = {
-        files: [{ path: '/app/CODEFLY.md', content: 'content' }],
-      };
-      const mockEnvResult = {
-        files: [{ path: '/app/src/CODEFLY.md', content: 'env content' }],
-      };
-      vi.mocked(memoryDiscovery.loadGlobalMemory).mockResolvedValue(
-        mockGlobalResult,
-      );
-      vi.mocked(memoryDiscovery.loadEnvironmentMemory).mockResolvedValue(
-        mockEnvResult,
-      );
+      vi.mocked(memoryDiscovery.getGlobalMemoryPaths).mockResolvedValue([
+        '/home/user/.codefly/CODEFLY.md',
+      ]);
+      vi.mocked(memoryDiscovery.getEnvironmentMemoryPaths).mockResolvedValue([
+        '/app/CODEFLY.md',
+      ]);
+      vi.mocked(memoryDiscovery.readCodeflyMdFiles).mockResolvedValue([
+        {
+          filePath: '/home/user/.codefly/CODEFLY.md',
+          content: 'Global Content',
+        },
+        { filePath: '/app/CODEFLY.md', content: 'Env Content' },
+      ]);
+      vi.mocked(memoryDiscovery.categorizeAndConcatenate).mockReturnValue({
+        global: '',
+        extension: '',
+        project: '',
+      });
 
       await contextManager.refresh();
 
@@ -132,6 +143,12 @@ describe('ContextManager', () => {
           content: 'Global Content',
         },
       ]);
+      vi.mocked(memoryDiscovery.categorizeAndConcatenate).mockReturnValue({
+        global:
+          '--- Context from: /home/user/.codefly/CODEFLY.md ---\nGlobal Content',
+        extension: '',
+        project: '',
+      });
 
       await contextManager.refresh();
 
@@ -149,6 +166,9 @@ describe('ContextManager', () => {
       vi.mocked(memoryDiscovery.loadJitSubdirectoryMemory).mockResolvedValue(
         mockResult,
       );
+      vi.mocked(memoryDiscovery.concatenateInstructions).mockReturnValue(
+        '--- Context from: /app/src/CODEFLY.md ---\nSrc Content',
+      );
 
       const result = await contextManager.discoverContext('/app/src/file.ts', [
         '/app',
@@ -160,13 +180,15 @@ describe('ContextManager', () => {
         expect.any(Set),
         false,
       );
-      expect(result).toMatch(/--- Context from: src[\\/]CODEFLY\.md ---/);
+      expect(result).toContain('--- Context from: /app/src/CODEFLY.md ---');
       expect(result).toContain('Src Content');
       expect(contextManager.getLoadedPaths()).toContain('/app/src/CODEFLY.md');
     });
 
     it('should return empty string if no new files found', async () => {
-      const mockResult: memoryDiscovery.MemoryLoadResult = { files: [] };
+      const mockResult: memoryDiscovery.MemoryLoadResult = {
+        files: [],
+      };
       vi.mocked(memoryDiscovery.loadJitSubdirectoryMemory).mockResolvedValue(
         mockResult,
       );

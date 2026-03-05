@@ -14,6 +14,7 @@ import type { GenerateContentResponse, Part, Content } from '@google/genai';
 import { reportError } from '../utils/errorReporting.js';
 import type { CodeflyChat } from './codeflyChat.js';
 import { InvalidStreamError, StreamEventType } from './codeflyChat.js';
+import { LlmRole } from '../telemetry/llmRole.js';
 
 const mockSendMessageStream = vi.fn();
 const mockGetHistory = vi.fn();

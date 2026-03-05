@@ -15,7 +15,7 @@ import {
   DEFAULT_CODEFLY_FLASH_MODEL,
   DEFAULT_CODEFLY_MODEL,
   PREVIEW_CODEFLY_FLASH_MODEL,
-  PREVIEW_CODEFLY_MODEL,
+  PREVIEW_CODEFLY_MODEL_AUTO,
   resolveModel,
 } from '../config/models.js';
 import type { UserTierId } from '../code_assist/types.js';
@@ -83,7 +83,7 @@ export function getModelPolicyChain(
 ): ModelPolicyChain {
   if (options.previewEnabled) {
     const previewModel = resolveModel(
-      PREVIEW_CODEFLY_MODEL,
+      PREVIEW_CODEFLY_MODEL_AUTO,
       options.useCodefly31,
       options.useCustomToolModel,
     );

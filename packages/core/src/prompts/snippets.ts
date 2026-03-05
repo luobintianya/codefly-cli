@@ -35,6 +35,7 @@ export interface SystemPromptOptions {
   sandbox?: SandboxMode;
   interactiveYoloMode?: boolean;
   gitRepo?: GitRepoOptions;
+  language?: string;
 }
 
 export interface PreambleOptions {
@@ -117,6 +118,7 @@ ${renderInteractiveYoloMode(options.interactiveYoloMode)}
 ${renderSandbox(options.sandbox)}
 
 ${renderGitRepo(options.gitRepo)}
+${renderLanguage(options.language)}
 `.trim();
 }
 
@@ -391,6 +393,19 @@ export function renderGitRepo(options?: GitRepoOptions): string {
 - After each commit, confirm that it was successful by running \`git status\`.
 - If a commit fails, never attempt to work around the issues without being asked to do so.
 - Never push changes to a remote repository without being asked explicitly by the user.`.trim();
+}
+
+/**
+ * Renders the language instructions if specified.
+ */
+export function renderLanguage(language?: string): string {
+  if (!language || language === 'auto' || language === 'en') return '';
+  return `
+# Language
+
+- You must respond in ${language}.
+- CRITICAL: You MUST explicitly adhere to the users language preference.
+`;
 }
 
 export function renderUserMemory(

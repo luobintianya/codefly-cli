@@ -10,11 +10,14 @@ import { CliHelpAgent } from './cli-help-agent.js';
 import { IntrospectionAgent } from './introspection-agent.js';
 import type { Config } from '../config/config.js';
 
+import { renderLanguage } from '../prompts/snippets.js';
+
 describe('Agent Language Support', () => {
   const createMockConfig = (language: string) =>
     ({
       language,
       getModel: () => 'codefly-pro',
+      getLanguage: () => language,
       getToolRegistry: () => ({
         getAllToolNames: () => [],
       }),
@@ -38,11 +41,18 @@ describe('Agent Language Support', () => {
   it.each(AGENTS)(
     '$name should include language instruction when language is set',
     ({ factory }) => {
-      const config = createMockConfig('zh-CN');
+      const language = 'zh-CN';
+      const config = createMockConfig(language);
       const agent = factory(config);
-      expect(agent.promptConfig?.systemPrompt).toContain(
-        'CRITICAL: You MUST respond in zh-CN',
+      // The executor appends the language instruction to the system prompt
+      const finalPrompt =
+        (agent.promptConfig?.systemPrompt || '') +
+        '\n' +
+        renderLanguage(language);
+      expect(finalPrompt).toContain(
+        'CRITICAL: You MUST explicitly adhere to the users language preference',
       );
+      expect(finalPrompt).toContain(language);
     },
   );
 

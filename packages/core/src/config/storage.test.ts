@@ -14,6 +14,14 @@ import * as os from 'node:os';
 import * as path from 'node:path';
 import * as fs from 'node:fs';
 
+vi.mock('../utils/paths.js', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../utils/paths.js')>();
+  return {
+    ...actual,
+    homedir: vi.fn(actual.homedir),
+  };
+});
+
 vi.mock('fs', async (importOriginal) => {
   const actual = await importOriginal<typeof import('fs')>();
   return {
@@ -27,7 +35,7 @@ import { Storage } from './storage.js';
 import { CODEFLY_DIR, homedir } from '../utils/paths.js';
 import { ProjectRegistry } from './projectRegistry.js';
 
-const PROJECT_SLUG = 'test-slug';
+const PROJECT_SLUG = 'project';
 
 describe('Storage – getGlobalSettingsPath', () => {
   it('returns path to ~/.codefly/settings.json', () => {

@@ -74,7 +74,7 @@ export function getGlobalMemoryFilePath(): string {
 /**
  * Ensures proper newline separation before appending content.
  */
-function ensureNewlineSeparation(currentContent: string): string {
+export function ensureNewlineSeparation(currentContent: string): string {
   if (currentContent.length === 0) return '';
   if (currentContent.endsWith('\n\n') || currentContent.endsWith('\r\n\r\n'))
     return '';
@@ -100,7 +100,10 @@ async function readMemoryFileContent(): Promise<string> {
 /**
  * Computes the new content that would result from adding a memory entry
  */
-function computeNewContent(currentContent: string, fact: string): string {
+export function computeNewContent(
+  currentContent: string,
+  fact: string,
+): string {
   // Sanitize to prevent markdown injection by collapsing to a single line.
   let processedText = fact.replace(/[\r\n]/g, ' ').trim();
   processedText = processedText.replace(/^(-+\s*)+/, '').trim();

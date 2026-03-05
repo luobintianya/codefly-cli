@@ -843,6 +843,12 @@ describe('RipGrepTool', () => {
           createMockWorkspaceContext(tempRootDir, [secondDir]),
         getDebugMode: () => false,
         getFileFilteringRespectCodeflyIgnore: () => true,
+        getFileFilteringRespectGitIgnore: () => true,
+        getFileFilteringOptions: () => ({
+          respectGitIgnore: true,
+          respectCodeflyIgnore: true,
+        }),
+        validatePathAccess: vi.fn().mockReturnValue(null),
       } as unknown as Config;
 
       // Setup specific mock for this test - multi-directory search for 'world'
@@ -930,6 +936,12 @@ describe('RipGrepTool', () => {
           createMockWorkspaceContext(tempRootDir, [secondDir]),
         getDebugMode: () => false,
         getFileFilteringRespectCodeflyIgnore: () => true,
+        getFileFilteringRespectGitIgnore: () => true,
+        getFileFilteringOptions: () => ({
+          respectGitIgnore: true,
+          respectCodeflyIgnore: true,
+        }),
+        validatePathAccess: vi.fn().mockReturnValue(null),
       } as unknown as Config;
 
       // Setup specific mock for this test - searching in 'sub' should only return matches from that directory
@@ -1445,7 +1457,13 @@ describe('RipGrepTool', () => {
         getTargetDir: () => tempRootDir,
         getWorkspaceContext: () => createMockWorkspaceContext(tempRootDir),
         getDebugMode: () => false,
+        getFileFilteringRespectGitIgnore: () => true,
         getFileFilteringRespectCodeflyIgnore: () => true,
+        getFileFilteringOptions: () => ({
+          respectGitIgnore: true,
+          respectCodeflyIgnore: true,
+        }),
+        validatePathAccess: vi.fn().mockReturnValue(null),
       } as unknown as Config;
       const codeflyIgnoreTool = new RipGrepTool(
         configWithCodeflyIgnore,
@@ -1485,7 +1503,13 @@ describe('RipGrepTool', () => {
         getTargetDir: () => tempRootDir,
         getWorkspaceContext: () => createMockWorkspaceContext(tempRootDir),
         getDebugMode: () => false,
+        getFileFilteringRespectGitIgnore: () => true,
         getFileFilteringRespectCodeflyIgnore: () => false,
+        getFileFilteringOptions: () => ({
+          respectGitIgnore: true,
+          respectCodeflyIgnore: false,
+        }),
+        validatePathAccess: vi.fn().mockReturnValue(null),
       } as unknown as Config;
       const codeflyIgnoreTool = new RipGrepTool(
         configWithoutCodeflyIgnore,

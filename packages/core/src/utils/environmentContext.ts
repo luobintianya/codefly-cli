@@ -60,6 +60,7 @@ export async function getEnvironmentContext(config: Config): Promise<Part[]> {
   const environmentMemory = config.getEnvironmentMemory();
 
   const context = `
+<session_context>
 This is the Codefly CLI. We are setting up the context for our chat.
 Today's date is ${today} (formatted according to the user's locale).
 My operating system is: ${platform}

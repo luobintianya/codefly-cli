@@ -28,8 +28,10 @@ describe('FileSearch', () => {
 
     const fileSearch = FileSearchFactory.create({
       projectRoot: tmpDir,
-      useGitignore: false,
-      useCodeflyignore: true,
+      fileDiscoveryService: new FileDiscoveryService(tmpDir, {
+        respectGitIgnore: false,
+        respectCodeflyIgnore: true,
+      }),
       ignoreDirs: [],
       cache: false,
       cacheTtl: 0,
@@ -45,6 +47,7 @@ describe('FileSearch', () => {
 
   it('should combine .gitignore and .codeflyignore rules', async () => {
     tmpDir = await createTmpDir({
+      '.git': {},
       '.gitignore': 'dist/',
       '.codeflyignore': 'build/',
       dist: ['ignored-by-git.js'],
@@ -54,8 +57,10 @@ describe('FileSearch', () => {
 
     const fileSearch = FileSearchFactory.create({
       projectRoot: tmpDir,
-      useGitignore: true,
-      useCodeflyignore: true,
+      fileDiscoveryService: new FileDiscoveryService(tmpDir, {
+        respectGitIgnore: true,
+        respectCodeflyIgnore: true,
+      }),
       ignoreDirs: [],
       cache: false,
       cacheTtl: 0,
@@ -437,12 +442,12 @@ describe('FileSearch', () => {
 
   it('should throw AbortError when filter is aborted', async () => {
     const controller = new AbortController();
-    const dummyPaths = Array.from({ length: 5000 }, (_, i) => `file${i}.js`); // Large array to ensure yielding
+    const dummyPaths = Array.from({ length: 2000 }, (_, i) => `file${i}.js`);
 
     const filterPromise = filter(dummyPaths, '*.js', controller.signal);
 
-    // Abort after a short delay to ensure filter has started
-    setTimeout(() => controller.abort(), 1);
+    // Abort synchronously after the async function yields on the first item
+    controller.abort();
 
     await expect(filterPromise).rejects.toThrow(AbortError);
   });

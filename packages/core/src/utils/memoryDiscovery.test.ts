@@ -15,6 +15,7 @@ import {
   getEnvironmentMemoryPaths,
   loadJitSubdirectoryMemory,
   refreshServerHierarchicalMemory,
+  type LoadServerHierarchicalMemoryResponse,
 } from './memoryDiscovery.js';
 import {
   setCodeflyMdFilename,
@@ -22,12 +23,21 @@ import {
 } from '../tools/memoryTool.js';
 import { flattenMemory } from '../config/memory.js';
 import { FileDiscoveryService } from '../services/fileDiscoveryService.js';
-import { CODEFLY_DIR } from './paths.js';
+import {
+  CODEFLY_DIR,
+  normalizePath,
+  homedir as pathsHomedir,
+} from './paths.js';
 import { Config, type CodeflyCLIExtension } from '../config/config.js';
 import { Storage } from '../config/storage.js';
 import { SimpleExtensionLoader } from './extensionLoader.js';
 import { CoreEvent, coreEvents } from './events.js';
 import { debugLogger } from './debugLogger.js';
+
+const flattenResult = (result: LoadServerHierarchicalMemoryResponse) => ({
+  ...result,
+  memoryContent: flattenMemory(result.memoryContent),
+});
 
 vi.mock('os', async (importOriginal) => {
   const actualOs = await importOriginal<typeof os>();
@@ -147,7 +157,7 @@ describe('memoryDiscovery', () => {
         DEFAULT_CONTEXT_FILENAME,
       );
       await createTestFile(filepath, 'default context content'); // In user home dir (outside untrusted space).
-      const { fileCount, memoryContent, filePaths } =
+      const { fileCount, memoryContent, filePaths } = flattenResult(
         await loadServerHierarchicalMemory(
           cwd,
           [],
@@ -155,7 +165,8 @@ describe('memoryDiscovery', () => {
           new FileDiscoveryService(projectRoot),
           new SimpleExtensionLoader([]),
           false, // untrusted
-        );
+        ),
+      );
 
       expect(fileCount).toEqual(1);
       expect(memoryContent).toContain(path.relative(cwd, filepath).toString());
@@ -478,11 +489,12 @@ Subdir memory
       {
         respectGitIgnore: true,
         respectCodeflyIgnore: true,
+        customIgnoreFilePaths: [],
       },
       200, // maxDirs parameter
     );
 
-    expect(result).toEqual({
+    expect(flattenResult(result)).toEqual({
       memoryContent: `--- Project ---
 --- Context from: ${normMarker(path.relative(cwd, regularSubDirCodeflyFile))} ---
 My code memory
@@ -515,6 +527,7 @@ My code memory
       {
         respectGitIgnore: true,
         respectCodeflyIgnore: true,
+        customIgnoreFilePaths: [],
       },
       1, // maxDirs
     );
@@ -564,7 +577,7 @@ My code memory
       DEFAULT_FOLDER_TRUST,
     );
 
-    expect(result).toEqual({
+    expect(flattenResult(result)).toEqual({
       memoryContent: `--- Extension ---
 --- Context from: ${normMarker(path.relative(cwd, extensionFilePath))} ---
 Extension memory content
@@ -988,10 +1001,10 @@ included directory memory
     const refreshResult = await refreshServerHierarchicalMemory(config);
     expect(refreshResult.fileCount).equals(1);
     expect(config.getCodeflyMdFileCount()).equals(refreshResult.fileCount);
-    expect(refreshResult.memoryContent).toContain(
+    expect(refreshResult.memoryContent.extension).toContain(
       'Really cool custom context!',
     );
-    expect(config.getUserMemory()).equals(refreshResult.memoryContent);
+    expect(config.getUserMemory()).toEqual(refreshResult.memoryContent);
     expect(refreshResult.filePaths[0]).toContain(
       normMarker(path.join(extensionPath, 'CustomContext.md')),
     );

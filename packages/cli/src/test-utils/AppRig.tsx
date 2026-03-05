@@ -148,7 +148,7 @@ export class AppRig {
       interactive: true,
       approvalMode,
       policyEngineConfig,
-      enableEventDrivenScheduler: false,
+      enableEventDrivenScheduler: true,
       extensionLoader: new MockExtensionManager(),
       excludeTools: this.options.configOverrides?.excludeTools,
       ...this.options.configOverrides,

@@ -114,6 +114,7 @@ export class PromptProvider {
           !!userMemory.project?.trim());
 
       const options: snippets.SystemPromptOptions = {
+        language: config.getLanguage?.() || 'en',
         preamble: this.withSection('preamble', () => ({
           interactive: interactiveMode,
         })),
@@ -217,7 +218,7 @@ export class PromptProvider {
     this.maybeWriteSystemMd(
       sanitizedPrompt,
       systemMdResolution,
-      path.join(homedir(), CODEFLY_DIR, 'memory.md'),
+      path.join(homedir(), CODEFLY_DIR, 'system.md'),
     );
 
     return sanitizedPrompt;

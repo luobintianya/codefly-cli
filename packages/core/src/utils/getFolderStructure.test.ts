@@ -250,7 +250,7 @@ ${testRootDir}${path.sep}
 
     it('should ignore files and folders specified in .gitignore', async () => {
       await fsPromises.writeFile(
-        nodePath.join(testRootDir, '.gitignore'),
+        path.join(testRootDir, '.gitignore'),
         `ignored.txt\nnode_modules/\n${CODEFLY_DIR}/*\n!/${CODEFLY_DIR}/config.yaml`,
       );
       await createTestFile('file1.txt');
@@ -297,7 +297,7 @@ ${testRootDir}${path.sep}
   describe('with codeflyignore', () => {
     it('should ignore codeflyignore files by default', async () => {
       await fsPromises.writeFile(
-        nodePath.join(testRootDir, '.codeflyignore'),
+        path.join(testRootDir, '.codeflyignore'),
         `ignored.txt\nnode_modules/\n${CODEFLY_DIR}/\n!/${CODEFLY_DIR}/config.yaml`,
       );
       await createTestFile('file1.txt');
@@ -317,7 +317,7 @@ ${testRootDir}${path.sep}
 
     it('should not ignore files if respectCodeflyIgnore is false', async () => {
       await fsPromises.writeFile(
-        nodePath.join(testRootDir, '.codeflyignore'),
+        path.join(testRootDir, '.codeflyignore'),
         `ignored.txt\nnode_modules/\n${CODEFLY_DIR}/\n!/${CODEFLY_DIR}/config.yaml`,
       );
       await createTestFile('file1.txt');

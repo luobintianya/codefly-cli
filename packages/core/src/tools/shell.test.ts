@@ -107,6 +107,9 @@ describe('ShellTool', () => {
       getCodeflyClient: vi.fn(),
       getEnableInteractiveShell: vi.fn().mockReturnValue(false),
       getEnableShellOutputEfficiency: vi.fn().mockReturnValue(true),
+      getShellToolInactivityTimeout: vi.fn().mockReturnValue(0),
+      validatePathAccess: vi.fn().mockReturnValue(null),
+      getContentGeneratorConfig: vi.fn().mockReturnValue({}),
       sanitizationConfig: {},
     } as unknown as Config;
 
@@ -200,6 +203,9 @@ describe('ShellTool', () => {
 
     it('should throw an error for a directory outside the workspace', () => {
       const outsidePath = path.resolve(tempRootDir, '../outside');
+      vi.mocked(mockConfig.validatePathAccess).mockReturnValue(
+        'Path not in workspace',
+      );
       expect(() =>
         shellTool.build({ command: 'ls', dir_path: outsidePath }),
       ).toThrow(/Path not in workspace/);

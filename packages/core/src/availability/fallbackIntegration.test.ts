@@ -75,6 +75,6 @@ describe('Fallback Integration', () => {
     const result = applyModelSelection(config, { model: requestedModel });
 
     // 5. Expect it to stay on Pro (because single model chain)
-    expect(result.model).toBe(PREVIEW_CODEFLY_MODEL);
+    expect(result.model).toBe(PREVIEW_CODEFLY_FLASH_MODEL);
   });
 });

@@ -14,8 +14,8 @@
     "build": "node ../../scripts/build_package.js",
     "lint": "eslint . --ext .ts,.tsx",
     "format": "prettier --write .",
-    "test": "vitest run",
-    "test:ci": "vitest run",
+    "test": "npx vitest run",
+    "test:ci": "npx vitest run",
     "typecheck": "tsc --noEmit"
   },
   "files": [
@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "typescript": "^5.3.3",
-    "vitest": "^3.1.1"
+    "vitest": "^3.2.4"
   },
   "engines": {
     "node": ">=20"

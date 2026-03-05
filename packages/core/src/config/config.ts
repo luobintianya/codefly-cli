@@ -435,6 +435,7 @@ export interface ConfigParameters {
   targetDir: string;
   debugMode: boolean;
   question?: string;
+  language?: string;
 
   coreTools?: string[];
   /** @deprecated Use Policy Engine instead */
@@ -584,6 +585,7 @@ export class Config {
   private workspaceContext: WorkspaceContext;
   private readonly debugMode: boolean;
   private readonly question: string | undefined;
+  private readonly language: string;
   readonly enableConseca: boolean;
   openaiConfig?: {
     apiKey?: string;
@@ -775,6 +777,7 @@ export class Config {
     this.pendingIncludeDirectories = params.includeDirectories ?? [];
     this.debugMode = params.debugMode;
     this.question = params.question;
+    this.language = params.language ?? 'en';
 
     this.coreTools = params.coreTools;
     this.allowedTools = params.allowedTools;
@@ -1417,10 +1420,15 @@ export class Config {
     const isPreview =
       model === PREVIEW_CODEFLY_MODEL_AUTO ||
       isPreviewModel(this.getActiveModel());
-    const proModel = isPreview ? PREVIEW_CODEFLY_MODEL : DEFAULT_CODEFLY_MODEL;
-    const flashModel = isPreview
+    let proModel = isPreview ? PREVIEW_CODEFLY_MODEL : DEFAULT_CODEFLY_MODEL;
+    let flashModel = isPreview
       ? PREVIEW_CODEFLY_FLASH_MODEL
       : DEFAULT_CODEFLY_FLASH_MODEL;
+
+    if (model === 'auto-codefly-2.5') {
+      proModel = 'codefly-2.5-pro';
+      flashModel = 'codefly-2.5-flash';
+    }
 
     const proQuota = this.modelQuotas.get(proModel);
     const flashQuota = this.modelQuotas.get(flashModel);
@@ -1549,12 +1557,22 @@ export class Config {
     return this.question;
   }
 
+  getLanguage(): string {
+    return this.language;
+  }
+
   getHasAccessToPreviewModel(): boolean {
     return this.hasAccessToPreviewModel !== false;
   }
 
   setHasAccessToPreviewModel(hasAccess: boolean | null): void {
+    const previousAccess = this.hasAccessToPreviewModel !== false;
     this.hasAccessToPreviewModel = hasAccess;
+    const currentAccess = hasAccess !== false;
+
+    if (previousAccess && !currentAccess && isPreviewModel(this.model)) {
+      this.setModel(DEFAULT_CODEFLY_MODEL_AUTO);
+    }
   }
 
   async refreshUserQuota(): Promise<RetrieveUserQuotaResponse | undefined> {

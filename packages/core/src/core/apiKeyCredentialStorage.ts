@@ -11,14 +11,22 @@ import { debugLogger } from '../utils/debugLogger.js';
 const KEYCHAIN_SERVICE_NAME = 'codefly-cli-api-key';
 const DEFAULT_API_KEY_ENTRY = 'default-api-key';
 
-const storage = new HybridTokenStorage(KEYCHAIN_SERVICE_NAME);
+let _storage: HybridTokenStorage | null = null;
+function getStorage(): HybridTokenStorage {
+  if (!_storage) {
+    _storage = new HybridTokenStorage(KEYCHAIN_SERVICE_NAME);
+  }
+  return _storage;
+}
 
 /**
  * Load cached API key
  */
 export async function loadApiKey(): Promise<string | null> {
   try {
-    const credentials = await storage.getCredentials(DEFAULT_API_KEY_ENTRY);
+    const credentials = await getStorage().getCredentials(
+      DEFAULT_API_KEY_ENTRY,
+    );
 
     if (credentials?.token?.accessToken) {
       return credentials.token.accessToken;
@@ -40,7 +48,7 @@ export async function saveApiKey(
 ): Promise<void> {
   if (!apiKey || apiKey.trim() === '') {
     try {
-      await storage.deleteCredentials(DEFAULT_API_KEY_ENTRY);
+      await getStorage().deleteCredentials(DEFAULT_API_KEY_ENTRY);
     } catch (error: unknown) {
       // Ignore errors when deleting, as it might not exist
       debugLogger.warn('Failed to delete API key from storage:', error);
@@ -58,7 +66,7 @@ export async function saveApiKey(
     updatedAt: Date.now(),
   };
 
-  await storage.setCredentials(credentials);
+  await getStorage().setCredentials(credentials);
 }
 
 /**
@@ -66,7 +74,7 @@ export async function saveApiKey(
  */
 export async function clearApiKey(): Promise<void> {
   try {
-    await storage.deleteCredentials(DEFAULT_API_KEY_ENTRY);
+    await getStorage().deleteCredentials(DEFAULT_API_KEY_ENTRY);
   } catch (error: unknown) {
     debugLogger.error('Failed to clear API key from storage:', error);
   }

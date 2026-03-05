@@ -62,6 +62,7 @@ import { getToolCallContext } from '../utils/toolCallContext.js';
 import { scheduleAgentTools } from './agent-scheduler.js';
 import { DeadlineTimer } from '../utils/deadlineTimer.js';
 import { formatUserHintsForModel } from '../utils/fastAckHelper.js';
+import { renderLanguage } from '../prompts/snippets.js';
 
 /** A callback function to report on agent activity. */
 export type ActivityCallback = (activity: SubagentActivityEvent) => void;
@@ -1214,6 +1215,8 @@ Important Rules:
 * Do not call any other tools in the same turn as \`${TASK_COMPLETE_TOOL_NAME}\`.
 * This is the ONLY way to complete your mission. If you stop calling tools without calling this, you have failed.`;
     }
+    const language = this.runtimeContext.getLanguage();
+    finalPrompt += '\n' + renderLanguage(language);
 
     return finalPrompt;
   }

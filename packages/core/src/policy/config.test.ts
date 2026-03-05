@@ -96,8 +96,8 @@ describe('createPolicyEngineConfig', () => {
         if (
           typeof path === 'string' &&
           nodePath
-            .normalize(path)
-            .includes(nodePath.normalize('.codefly/policies'))
+            .normalize(path.toString())
+            .includes(nodePath.normalize('/tmp/mock/default/policies'))
         ) {
           // Return empty array for user policies
           return [] as unknown as Awaited<ReturnType<typeof actualFs.readdir>>;
@@ -643,7 +643,7 @@ describe('createPolicyEngineConfig', () => {
         if (
           typeof path === 'string' &&
           nodePath
-            .normalize(path)
+            .normalize(path.toString())
             .includes(nodePath.normalize('/tmp/mock/default/policies'))
         ) {
           return [
@@ -666,14 +666,7 @@ describe('createPolicyEngineConfig', () => {
         path: Parameters<typeof actualFs.readFile>[0],
         options: Parameters<typeof actualFs.readFile>[1],
       ) => {
-        if (
-          typeof path === 'string' &&
-          nodePath
-            .normalize(path)
-            .includes(
-              nodePath.normalize('/tmp/mock/default/policies/write.toml'),
-            )
-        ) {
+        if (typeof path === 'string' && path.includes('write.toml')) {
           return `
 [[rule]]
 toolName = "run_shell_command"
@@ -694,8 +687,8 @@ priority = 150
         if (
           typeof path === 'string' &&
           nodePath
-            .normalize(path)
-            .includes(nodePath.normalize('.codefly/policies'))
+            .normalize(path.toString())
+            .includes(nodePath.normalize('/tmp/mock/default/policies'))
         ) {
           return {
             isDirectory: () => true,
@@ -761,7 +754,7 @@ priority = 150
         if (
           typeof path === 'string' &&
           nodePath
-            .normalize(path)
+            .normalize(path.toString())
             .includes(nodePath.normalize('/tmp/mock/default/policies'))
         ) {
           return [
@@ -784,14 +777,7 @@ priority = 150
         path: Parameters<typeof actualFs.readFile>[0],
         options: Parameters<typeof actualFs.readFile>[1],
       ) => {
-        if (
-          typeof path === 'string' &&
-          nodePath
-            .normalize(path)
-            .includes(
-              nodePath.normalize('/tmp/mock/default/policies/safety.toml'),
-            )
-        ) {
+        if (typeof path === 'string' && path.includes('safety.toml')) {
           return `
 [[rule]]
 toolName = "write_file"
@@ -825,8 +811,8 @@ required_context = ["environment"]
         if (
           typeof path === 'string' &&
           nodePath
-            .normalize(path)
-            .includes(nodePath.normalize('.codefly/policies'))
+            .normalize(path.toString())
+            .includes(nodePath.normalize('/tmp/mock/default/policies'))
         ) {
           return {
             isDirectory: () => true,
@@ -890,8 +876,8 @@ required_context = ["environment"]
         if (
           typeof path === 'string' &&
           nodePath
-            .normalize(path)
-            .includes(nodePath.normalize('.codefly/policies'))
+            .normalize(path.toString())
+            .includes(nodePath.normalize('/tmp/mock/default/policies'))
         ) {
           return [
             {
@@ -916,7 +902,7 @@ required_context = ["environment"]
         if (
           typeof path === 'string' &&
           nodePath
-            .normalize(path)
+            .normalize(path.toString())
             .includes(
               nodePath.normalize('.codefly/policies/invalid_safety.toml'),
             )
@@ -947,8 +933,8 @@ name = "invalid-name"
         if (
           typeof path === 'string' &&
           nodePath
-            .normalize(path)
-            .includes(nodePath.normalize('.codefly/policies'))
+            .normalize(path.toString())
+            .includes(nodePath.normalize('/tmp/mock/default/policies'))
         ) {
           return {
             isDirectory: () => true,

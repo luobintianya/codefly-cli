@@ -17,6 +17,10 @@ import {
   DEFAULT_CODEFLY_FLASH_MODEL,
   DEFAULT_CODEFLY_MODEL,
   DEFAULT_CODEFLY_MODEL_AUTO,
+  PREVIEW_CODEFLY_MODEL_AUTO,
+  PREVIEW_CODEFLY_3_1_MODEL,
+  PREVIEW_CODEFLY_3_1_CUSTOM_TOOLS_MODEL,
+  LEGACY_CODEFLY_2_5_PRO,
 } from '../../config/models.js';
 import { promptIdContext } from '../../utils/promptIdContext.js';
 import type { Content } from '@google/genai';
@@ -51,7 +55,7 @@ describe('ClassifierStrategy', () => {
       modelConfigService: {
         getResolvedConfig: vi.fn().mockReturnValue(mockResolvedConfig),
       },
-      getModel: () => DEFAULT_CODEFLY_MODEL_AUTO,
+      getModel: vi.fn().mockReturnValue(DEFAULT_CODEFLY_MODEL_AUTO),
       getPreviewFeatures: () => false,
       getNumericalRoutingEnabled: vi.fn().mockResolvedValue(false),
       getCodefly31Launched: vi.fn().mockResolvedValue(false),
@@ -82,7 +86,7 @@ describe('ClassifierStrategy', () => {
 
   it('should NOT return null if numerical routing is enabled but model is NOT Codefly 3', async () => {
     vi.mocked(mockConfig.getNumericalRoutingEnabled).mockResolvedValue(true);
-    vi.mocked(mockConfig.getModel).mockReturnValue(DEFAULT_CODEFLY_MODEL_AUTO);
+    vi.mocked(mockConfig.getModel).mockReturnValue(LEGACY_CODEFLY_2_5_PRO);
     vi.mocked(mockBaseLlmClient.generateJson).mockResolvedValue({
       reasoning: 'test',
       model_choice: 'flash',

@@ -55,6 +55,9 @@ const RETRYABLE_NETWORK_CODES = [
   'EAI_AGAIN',
   'ECONNREFUSED',
   'ERR_STREAM_PREMATURE_CLOSE',
+  'EPROTO',
+  'ERR_SSL_SSLV3_ALERT_BAD_RECORD_MAC',
+  'ERR_SSL_BAD_RECORD_MAC',
 ];
 
 function getNetworkErrorCode(error: unknown): string | undefined {
@@ -65,6 +68,13 @@ function getNetworkErrorCode(error: unknown): string | undefined {
     if ('code' in obj && typeof (obj as { code: unknown }).code === 'string') {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       return (obj as { code: string }).code;
+    }
+    if (
+      'errno' in obj &&
+      typeof (obj as { errno: unknown }).errno === 'string'
+    ) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+      return (obj as { errno: string }).errno;
     }
     return undefined;
   };

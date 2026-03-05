@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi, beforeEach } from 'vitest';
 import type { Mock } from 'vitest';
 import type { ConfigParameters, SandboxConfig } from './config.js';
 import { Config, DEFAULT_FILE_FILTERING_OPTIONS } from './config.js';
@@ -15,6 +15,7 @@ import { ApprovalMode } from '../policy/types.js';
 import type { HookDefinition } from '../hooks/types.js';
 import { HookType, HookEventName } from '../hooks/types.js';
 import { FileDiscoveryService } from '../services/fileDiscoveryService.js';
+import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { setCodeflyMdFilename as mockSetCodeflyMdFilename } from '../tools/memoryTool.js';
 import {
@@ -2398,7 +2399,7 @@ describe('Config Quota & Preview Model Access', () => {
     });
   });
 
-  describe('setPreviewFeatures', () => {
+  describe('setHasAccessToPreviewModel model reset', () => {
     it('should reset model to default auto if disabling preview features while using a preview model', async () => {
       config.setHasAccessToPreviewModel(true);
       config.setModel(PREVIEW_CODEFLY_MODEL);
@@ -2418,9 +2419,13 @@ describe('Config Quota & Preview Model Access', () => {
       expect(config.getModel()).toBe(nonPreviewModel);
     });
 
-    it('should switch to preview auto model if enabling preview features while using default auto model', async () => {
+    it('should swap to preview model after quota refresh if currently using default auto model', async () => {
       config.setHasAccessToPreviewModel(false);
       config.setModel(DEFAULT_CODEFLY_MODEL_AUTO);
+
+      mockCodeAssistServer.retrieveUserQuota.mockResolvedValue({
+        buckets: [{ modelId: PREVIEW_CODEFLY_MODEL }],
+      });
 
       // First call to initialize lastQuotaFetchTime
       await config.refreshUserQuota();
@@ -2429,9 +2434,13 @@ describe('Config Quota & Preview Model Access', () => {
       expect(config.getModel()).toBe(PREVIEW_CODEFLY_MODEL_AUTO);
     });
 
-    it('should NOT reset model if enabling preview features', async () => {
-      config.setPreviewFeatures(false);
+    it('should NOT reset model if already has preview features', async () => {
+      config.setHasAccessToPreviewModel(false);
       config.setModel(PREVIEW_CODEFLY_MODEL); // Just pretending it was set somehow
+
+      mockCodeAssistServer.retrieveUserQuota.mockResolvedValue({
+        buckets: [{ modelId: PREVIEW_CODEFLY_MODEL }],
+      });
 
       // First call
       await config.refreshUserQuota();

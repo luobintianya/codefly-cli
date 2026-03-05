@@ -18,6 +18,7 @@ import { loadApiKey } from './apiKeyCredentialStorage.js';
 import { FakeContentGenerator } from './fakeContentGenerator.js';
 import { RecordingContentGenerator } from './recordingContentGenerator.js';
 import { OpenAICompatibleContentGenerator } from './openaiCompatibleContentGenerator.js';
+import { resetVersionCache } from '../utils/version.js';
 vi.mock('@google/genai');
 vi.mock('./apiKeyCredentialStorage.js', () => ({
   loadApiKey: vi.fn(),

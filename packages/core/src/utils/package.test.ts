@@ -32,7 +32,6 @@ describe('getPackageJson', () => {
     expect(result).toEqual(expectedPackageJsonResult);
     expect(readPackageUp).toHaveBeenCalledWith({
       cwd: '/some/path',
-      normalize: false,
     });
   });
 

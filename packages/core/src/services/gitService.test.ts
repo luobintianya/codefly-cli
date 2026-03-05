@@ -82,6 +82,7 @@ describe('GitService', () => {
   let projectRoot: string;
   let homedir: string;
   let storage: Storage;
+  const hash = 'project-slug';
 
   beforeEach(async () => {
     testRootDir = await fs.mkdtemp(path.join(os.tmpdir(), 'git-service-test-'));

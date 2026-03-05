@@ -448,6 +448,10 @@ export class OpenAICompatibleContentGenerator implements ContentGenerator {
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
                 parts.push({
                   text: delta.reasoning_content,
+                } as unknown as Part);
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+                parts.push({
+                  text: delta.reasoning_content,
                   thought: true,
                 } as unknown as Part);
 

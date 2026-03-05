@@ -100,6 +100,7 @@ import {
   EVENT_HOOK_CALL,
   LlmRole,
 } from './types.js';
+import { ClearcutLogger } from './clearcut-logger/clearcut-logger.js';
 import { HookType } from '../hooks/types.js';
 import * as metrics from './metrics.js';
 import { FileOperation } from './metrics.js';
@@ -228,6 +229,8 @@ describe('loggers', () => {
         }),
         isInteractive: () => false,
         getUsageStatisticsEnabled: () => true,
+        getExperiments: () => undefined,
+        getExperimentsAsync: async () => undefined,
       } as unknown as Config;
 
       const startSessionEvent = new StartSessionEvent(mockConfig);
@@ -274,6 +277,7 @@ describe('loggers', () => {
       getTelemetryLogPromptsEnabled: () => true,
       isInteractive: () => false,
       getUsageStatisticsEnabled: () => true,
+      getExperiments: () => undefined,
     } as unknown as Config;
 
     it('should log a user prompt', () => {
@@ -311,6 +315,7 @@ describe('loggers', () => {
         getTargetDir: () => 'target-dir',
         isInteractive: () => false,
         getUsageStatisticsEnabled: () => true,
+        getExperiments: () => undefined,
       } as unknown as Config;
       const event = new UserPromptEvent(
         11,
@@ -346,6 +351,7 @@ describe('loggers', () => {
       getTelemetryLogPromptsEnabled: () => true,
       isInteractive: () => false,
       getUsageStatisticsEnabled: () => true,
+      getExperiments: () => undefined,
     } as Config;
 
     const mockMetrics = {
@@ -546,6 +552,7 @@ describe('loggers', () => {
       getTelemetryLogPromptsEnabled: () => true,
       isInteractive: () => false,
       getUsageStatisticsEnabled: () => true,
+      getExperiments: () => undefined,
     } as Config;
 
     const mockMetrics = {
@@ -702,9 +709,11 @@ describe('loggers', () => {
       getTelemetryLogPromptsEnabled: () => true,
       isInteractive: () => false,
       getUsageStatisticsEnabled: () => true,
+      getExperiments: () => undefined,
       getContentGeneratorConfig: () => ({
         authType: AuthType.USE_CODEFLY,
       }),
+      getExperiments: () => undefined,
     } as Config;
 
     it('should log an API request with request_text', () => {
@@ -778,6 +787,7 @@ describe('loggers', () => {
         getTelemetryLogPromptsEnabled: () => true, // Enabled
         isInteractive: () => false,
         getUsageStatisticsEnabled: () => true,
+        getExperiments: () => undefined,
         getContentGeneratorConfig: () => ({
           authType: AuthType.USE_CODEFLY,
         }),
@@ -865,6 +875,7 @@ describe('loggers', () => {
         getTelemetryLogPromptsEnabled: () => false, // Disabled
         isInteractive: () => false,
         getUsageStatisticsEnabled: () => true,
+        getExperiments: () => undefined,
         getContentGeneratorConfig: () => ({
           authType: AuthType.USE_VERTEX_AI,
         }),
@@ -921,6 +932,7 @@ describe('loggers', () => {
         getExperiments: () => undefined,
         getExperimentsAsync: async () => undefined,
         getUsageStatisticsEnabled: () => true,
+        getExperiments: () => undefined,
         getContentGeneratorConfig: () => ({
           authType: AuthType.USE_CODEFLY,
         }),
@@ -976,6 +988,7 @@ describe('loggers', () => {
       getSessionId: () => 'test-session-id',
       isInteractive: () => false,
       getUsageStatisticsEnabled: () => true,
+      getExperiments: () => undefined,
     } as unknown as Config;
 
     it('should log flash fallback event', () => {
@@ -1003,6 +1016,7 @@ describe('loggers', () => {
       getSessionId: () => 'test-session-id',
       isInteractive: () => false,
       getUsageStatisticsEnabled: () => true,
+      getExperiments: () => undefined,
     } as unknown as Config;
 
     beforeEach(() => {});
@@ -1087,6 +1101,7 @@ describe('loggers', () => {
       getTelemetryLogPromptsEnabled: () => true,
       isInteractive: () => false,
       getUsageStatisticsEnabled: () => true,
+      getExperiments: () => undefined,
     } as Config;
 
     const mockMetrics = {
@@ -1699,6 +1714,7 @@ describe('loggers', () => {
       getTelemetryLogPromptsEnabled: () => true,
       isInteractive: () => false,
       getUsageStatisticsEnabled: () => true,
+      getExperiments: () => undefined,
     } as Config;
 
     const mockMetrics = {
@@ -1759,6 +1775,7 @@ describe('loggers', () => {
       getSessionId: () => 'test-session-id',
       isInteractive: () => false,
       getUsageStatisticsEnabled: () => true,
+      getExperiments: () => undefined,
     } as unknown as Config;
 
     it('should log a tool output truncated event', () => {
@@ -1796,6 +1813,7 @@ describe('loggers', () => {
       getSessionId: () => 'test-session-id',
       isInteractive: () => false,
       getUsageStatisticsEnabled: () => true,
+      getExperiments: () => undefined,
     } as unknown as Config;
 
     beforeEach(() => {
@@ -1834,6 +1852,9 @@ describe('loggers', () => {
     });
 
     it('should log the event with numerical routing fields', () => {
+      const spy = vi
+        .spyOn(ClearcutLogger.prototype, 'logModelRoutingEvent')
+        .mockImplementation(() => {});
       const event = new ModelRoutingEvent(
         'codefly-pro',
         'NumericalClassifier (Strict)',
@@ -1848,9 +1869,7 @@ describe('loggers', () => {
 
       logModelRouting(mockConfig, event);
 
-      expect(
-        ClearcutLogger.prototype.logModelRoutingEvent,
-      ).toHaveBeenCalledWith(event);
+      expect(spy).toHaveBeenCalledWith(event);
 
       expect(mockLogger.emit).toHaveBeenCalledWith({
         body: 'Model routing decision. Model: codefly-pro, Source: NumericalClassifier (Strict)',
@@ -1891,6 +1910,7 @@ describe('loggers', () => {
       getContentGeneratorConfig: () => null,
       isInteractive: () => false,
       getUsageStatisticsEnabled: () => true,
+      getExperiments: () => undefined,
     } as unknown as Config;
 
     beforeEach(() => {});
@@ -1935,6 +1955,7 @@ describe('loggers', () => {
       getContentGeneratorConfig: () => null,
       isInteractive: () => false,
       getUsageStatisticsEnabled: () => true,
+      getExperiments: () => undefined,
     } as unknown as Config;
 
     beforeEach(() => {});
@@ -1981,6 +2002,7 @@ describe('loggers', () => {
       getContentGeneratorConfig: () => null,
       isInteractive: () => false,
       getUsageStatisticsEnabled: () => true,
+      getExperiments: () => undefined,
     } as unknown as Config;
 
     beforeEach(() => {});
@@ -2019,6 +2041,7 @@ describe('loggers', () => {
       getSessionId: () => 'test-session-id',
       isInteractive: () => false,
       getUsageStatisticsEnabled: () => true,
+      getExperiments: () => undefined,
     } as unknown as Config;
 
     beforeEach(() => {});
@@ -2058,6 +2081,7 @@ describe('loggers', () => {
       getSessionId: () => 'test-session-id',
       isInteractive: () => false,
       getUsageStatisticsEnabled: () => true,
+      getExperiments: () => undefined,
     } as unknown as Config;
 
     beforeEach(() => {});
@@ -2097,6 +2121,7 @@ describe('loggers', () => {
       getSessionId: () => 'test-session-id',
       isInteractive: () => false,
       getUsageStatisticsEnabled: () => true,
+      getExperiments: () => undefined,
     } as unknown as Config;
 
     beforeEach(() => {});
@@ -2127,6 +2152,7 @@ describe('loggers', () => {
       getSessionId: () => 'test-session-id',
       isInteractive: () => false,
       getUsageStatisticsEnabled: () => true,
+      getExperiments: () => undefined,
     } as unknown as Config;
 
     beforeEach(() => {
@@ -2173,6 +2199,8 @@ describe('loggers', () => {
       getSessionId: () => 'test-session-id',
       isInteractive: () => false,
       getUsageStatisticsEnabled: () => true,
+      getExperiments: () => undefined,
+      getContentGeneratorConfig: () => ({ authType: undefined }),
     } as unknown as Config;
 
     beforeEach(() => {});
@@ -2205,6 +2233,7 @@ describe('loggers', () => {
       getExperimentsAsync: async () => undefined,
       getTelemetryLogPromptsEnabled: () => false,
       getUsageStatisticsEnabled: () => true,
+      getExperiments: () => undefined,
     } as unknown as Config;
 
     beforeEach(() => {

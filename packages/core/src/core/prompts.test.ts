@@ -21,6 +21,7 @@ import {
   PREVIEW_CODEFLY_FLASH_MODEL,
   DEFAULT_CODEFLY_MODEL_AUTO,
   DEFAULT_CODEFLY_MODEL,
+  DEFAULT_CODEFLY_FLASH_LITE_MODEL,
 } from '../config/models.js';
 import { ApprovalMode } from '../policy/types.js';
 import { DiscoveredMCPTool } from '../tools/mcp-tool.js';
@@ -111,6 +112,9 @@ describe('Core System Prompt (prompts.ts)', () => {
       }),
       getApprovalMode: vi.fn().mockReturnValue(ApprovalMode.DEFAULT),
       getApprovedPlanPath: vi.fn().mockReturnValue(undefined),
+      getLanguage: vi.fn().mockReturnValue('en'),
+      isModelCompatibleWithCodeflyX: vi.fn().mockReturnValue(false),
+      supportsLanguageInstructions: vi.fn().mockReturnValue(true),
     } as unknown as Config;
   });
 
@@ -132,7 +136,7 @@ describe('Core System Prompt (prompts.ts)', () => {
 
     expect(prompt).toContain('# Available Agent Skills');
     expect(prompt).toContain(
-      "To activate a skill and receive its detailed instructions, you can call the `activate_skill` tool with the skill's name.",
+      "To activate a skill and receive its detailed instructions, call the `activate_skill` tool with the skill's name.",
     );
     expect(prompt).toContain('Skill Guidance');
     expect(prompt).toContain('<available_skills>');
@@ -260,7 +264,7 @@ describe('Core System Prompt (prompts.ts)', () => {
     vi.mocked(mockConfig.getActiveModel).mockReturnValue(PREVIEW_CODEFLY_MODEL);
     const prompt = getCoreSystemPrompt(mockConfig, userMemory);
     expect(prompt).not.toContain('---\n\n'); // Separator should not be present
-    expect(prompt).toContain('You are an interactive CLI agent'); // Check for core content
+    expect(prompt).toContain('You are Codefly CLI, an interactive CLI agent'); // Check for core content
     expect(prompt).toMatchSnapshot(); // Use snapshot for base prompt structure
   });
 
@@ -656,7 +660,7 @@ describe('Core System Prompt (prompts.ts)', () => {
 
   describe('Language in System Prompt', () => {
     it('should include language instruction when language is set to a specific value', () => {
-      (mockConfig as { language: string }).language = 'Chinese';
+      vi.mocked(mockConfig.getLanguage).mockReturnValue('Chinese');
       const prompt = getCoreSystemPrompt(mockConfig);
       expect(prompt).toContain('You must respond in Chinese.');
       expect(prompt).toContain(
@@ -665,15 +669,15 @@ describe('Core System Prompt (prompts.ts)', () => {
     });
 
     it('should NOT include language instruction when language is set to "auto"', () => {
-      (mockConfig as { language: string }).language = 'auto';
+      vi.mocked(mockConfig.getLanguage).mockReturnValue('auto');
       const prompt = getCoreSystemPrompt(mockConfig);
       expect(prompt).not.toContain('You must respond in');
     });
 
     it('should include language instruction when language is set to "en"', () => {
-      (mockConfig as { language: string }).language = 'en';
+      vi.mocked(mockConfig.getLanguage).mockReturnValue('en');
       const prompt = getCoreSystemPrompt(mockConfig);
-      expect(prompt).toContain('You must respond in en.');
+      expect(prompt).not.toContain('You must respond in');
     });
   });
 
@@ -753,7 +757,11 @@ describe('Core System Prompt (prompts.ts)', () => {
     it.each(['true', '1'])(
       'should write to default path when CODEFLY_WRITE_SYSTEM_MD is "%s"',
       (value) => {
-        const defaultPath = path.resolve(path.join(CODEFLY_DIR, 'system.md'));
+        const homeDir = '/Users/test';
+        vi.spyOn(os, 'homedir').mockReturnValue(homeDir);
+        const defaultPath = path.resolve(
+          path.join(homeDir, CODEFLY_DIR, 'system.md'),
+        );
         vi.stubEnv('CODEFLY_WRITE_SYSTEM_MD', value);
         getCoreSystemPrompt(mockConfig);
         expect(fs.writeFileSync).toHaveBeenCalledWith(

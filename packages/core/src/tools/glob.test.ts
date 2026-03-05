@@ -31,19 +31,7 @@ describe('GlobTool', () => {
   const abortSignal = new AbortController().signal;
 
   // Mock config for testing
-  const mockConfig = {
-    getFileService: () => new FileDiscoveryService(tempRootDir),
-    getFileFilteringRespectGitIgnore: () => true,
-    getFileFilteringOptions: () => ({
-      respectGitIgnore: true,
-      respectCodeflyIgnore: true,
-    }),
-    getTargetDir: () => tempRootDir,
-    getWorkspaceContext: () => createMockWorkspaceContext(tempRootDir),
-    getFileExclusions: () => ({
-      getGlobExcludes: () => [],
-    }),
-  } as unknown as Config;
+  let mockConfig: Config;
 
   beforeEach(async () => {
     // Create a unique root directory for each test run

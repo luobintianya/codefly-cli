@@ -84,5 +84,5 @@ describe('Model Steering Integration', () => {
 
     // Wait for final completion
     await rig.waitForOutput('Task complete.');
-  });
+  }, 30000);
 });

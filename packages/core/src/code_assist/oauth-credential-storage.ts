@@ -17,9 +17,13 @@ const KEYCHAIN_SERVICE_NAME = 'codefly-cli-oauth';
 const MAIN_ACCOUNT_KEY = 'main-account';
 
 export class OAuthCredentialStorage {
-  private static storage: HybridTokenStorage = new HybridTokenStorage(
-    KEYCHAIN_SERVICE_NAME,
-  );
+  private static _storage: HybridTokenStorage | null = null;
+  private static get storage(): HybridTokenStorage {
+    if (!this._storage) {
+      this._storage = new HybridTokenStorage(KEYCHAIN_SERVICE_NAME);
+    }
+    return this._storage;
+  }
 
   /**
    * Load cached OAuth credentials

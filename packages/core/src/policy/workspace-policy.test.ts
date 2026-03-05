@@ -56,7 +56,7 @@ describe('Workspace-Level Policies', () => {
 
     // Mock readdir to return a policy file for each tier
     const mockReaddir = vi.fn(async (path: string) => {
-      const normalizedPath = nodePath.normalize(path);
+      const normalizedPath = nodePath.normalize(path.toString());
       if (normalizedPath.endsWith('default/policies'))
         return [
           {
@@ -179,7 +179,7 @@ priority = 10
     });
 
     const mockReaddir = vi.fn(async (path: string) => {
-      const normalizedPath = nodePath.normalize(path);
+      const normalizedPath = nodePath.normalize(path.toString());
       if (normalizedPath.endsWith('default/policies'))
         return [
           {
@@ -244,7 +244,7 @@ priority=10`,
     });
 
     const mockReaddir = vi.fn(async (path: string) => {
-      const normalizedPath = nodePath.normalize(path);
+      const normalizedPath = nodePath.normalize(path.toString());
       if (normalizedPath.endsWith('workspace/policies'))
         return [
           {

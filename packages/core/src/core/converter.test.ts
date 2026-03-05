@@ -11,12 +11,14 @@ import {
   fromGenerateContentResponse,
   toContents,
 } from './converter.js';
-import type {
-  ContentListUnion,
-  GenerateContentParameters,
+import {
   GenerateContentResponse,
   FinishReason,
   BlockedReason,
+} from '@google/genai';
+import type {
+  ContentListUnion,
+  GenerateContentParameters,
   type Part,
 } from '@google/genai';
 

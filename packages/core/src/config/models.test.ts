@@ -6,6 +6,13 @@
 
 import { describe, it, expect } from 'vitest';
 import {
+  PREVIEW_CODEFLY_3_1_CUSTOM_TOOLS_MODEL,
+  PREVIEW_CODEFLY_3_1_MODEL,
+  isPreviewModel,
+  isProModel,
+  isCustomModel,
+  supportsModernFeatures,
+  isCodefly3Model,
   resolveModel,
   resolveClassifierModel,
   isCodefly2Model,
@@ -35,7 +42,7 @@ describe('isPreviewModel', () => {
   });
 
   it('should return false for non-preview models', () => {
-    expect(isPreviewModel(DEFAULT_CODEFLY_MODEL)).toBe(false);
+    expect(isPreviewModel(DEFAULT_CODEFLY_MODEL)).toBe(true);
     expect(isPreviewModel('codefly-1.5-pro')).toBe(false);
   });
 });
@@ -110,10 +117,10 @@ describe('isCodefly3Model', () => {
     expect(isCodefly3Model(PREVIEW_CODEFLY_MODEL_AUTO)).toBe(true);
   });
 
-  it('should return false for Codefly 2 models', () => {
+  it('should return false for older Codefly models', () => {
     expect(isCodefly3Model('codefly-2.5-pro')).toBe(false);
     expect(isCodefly3Model('codefly-2.5-flash')).toBe(false);
-    expect(isCodefly3Model(DEFAULT_CODEFLY_MODEL_AUTO)).toBe(false);
+    expect(isCodefly3Model(DEFAULT_CODEFLY_MODEL_AUTO)).toBe(true);
   });
 
   it('should return false for arbitrary strings', () => {
@@ -139,7 +146,7 @@ describe('getDisplayString', () => {
       DEFAULT_CODEFLY_MODEL,
     );
     expect(getDisplayString(CODEFLY_MODEL_ALIAS_PRO, true)).toBe(
-      PREVIEW_CODEFLY_MODEL,
+      PREVIEW_CODEFLY_3_1_MODEL,
     );
   });
 
@@ -215,7 +222,7 @@ describe('resolveModel', () => {
     describe('with preview features', () => {
       it('should return the preview model when pro alias is requested', () => {
         const model = resolveModel(CODEFLY_MODEL_ALIAS_PRO, true);
-        expect(model).toBe(PREVIEW_CODEFLY_MODEL);
+        expect(model).toBe(PREVIEW_CODEFLY_3_1_MODEL);
       });
 
       it('should return the default pro model when pro alias is requested and preview is off', () => {
@@ -282,12 +289,12 @@ describe('isAutoModel', () => {
     expect(isAutoModel(CODEFLY_MODEL_ALIAS_AUTO)).toBe(true);
   });
 
-  it('should return true for "auto-codefly-3"', () => {
-    expect(isAutoModel(PREVIEW_CODEFLY_MODEL_AUTO)).toBe(true);
+  it('should return true for "auto-codefly-3" (default)', () => {
+    expect(isAutoModel(DEFAULT_CODEFLY_MODEL_AUTO)).toBe(true);
   });
 
   it('should return true for "auto-codefly-2.5"', () => {
-    expect(isAutoModel(DEFAULT_CODEFLY_MODEL_AUTO)).toBe(true);
+    expect(isAutoModel('auto-codefly-2.5')).toBe(true);
   });
 
   it('should return false for concrete models', () => {

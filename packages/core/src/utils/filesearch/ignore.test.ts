@@ -7,6 +7,7 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { Ignore, loadIgnoreRules } from './ignore.js';
 import { createTmpDir, cleanupTmpDir } from '@codeflyai/codefly-cli-test-utils';
+import { FileDiscoveryService } from '../../services/fileDiscoveryService.js';
 
 describe('Ignore', () => {
   describe('getDirectoryFilter', () => {

@@ -138,10 +138,10 @@ export class ClassifierStrategy implements RoutingStrategy {
   ): Promise<RoutingDecision | null> {
     const startTime = Date.now();
     try {
-      const model = context.requestedModel ?? config.getModel();
+      const requestedModel = context.requestedModel ?? config.getModel();
       if (
         (await config.getNumericalRoutingEnabled()) &&
-        isCodefly3Model(model)
+        isCodefly3Model(requestedModel)
       ) {
         return null;
       }
@@ -174,11 +174,12 @@ export class ClassifierStrategy implements RoutingStrategy {
       const reasoning = routerResponse.reasoning;
       const latencyMs = Date.now() - startTime;
       const useCodefly3_1 = (await config.getCodefly31Launched?.()) ?? false;
+      const authType = config.getContentGeneratorConfig().authType;
       const useCustomToolModel =
-        useCodefly3_1 &&
-        config.getContentGeneratorConfig().authType === AuthType.USE_CODEFLY;
+        useCodefly3_1 && authType === AuthType.USE_CODEFLY;
+
       const selectedModel = resolveClassifierModel(
-        model,
+        requestedModel,
         routerResponse.model_choice,
         useCodefly3_1,
         useCustomToolModel,

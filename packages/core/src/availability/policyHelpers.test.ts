@@ -56,8 +56,8 @@ describe('policyHelpers', () => {
 
       // Expect default chain [Pro, Flash]
       expect(chain).toHaveLength(2);
-      expect(chain[0]?.model).toBe('codefly-2.5-pro');
-      expect(chain[1]?.model).toBe('codefly-2.5-flash');
+      expect(chain[0]?.model).toBe('codefly-3-pro-preview');
+      expect(chain[1]?.model).toBe('codefly-3-flash-preview');
     });
 
     it('uses auto chain when preferred model is auto', () => {
@@ -66,27 +66,27 @@ describe('policyHelpers', () => {
       });
       const chain = resolvePolicyChain(config, DEFAULT_CODEFLY_MODEL_AUTO);
       expect(chain).toHaveLength(2);
-      expect(chain[0]?.model).toBe('codefly-2.5-pro');
-      expect(chain[1]?.model).toBe('codefly-2.5-flash');
+      expect(chain[0]?.model).toBe('codefly-3-pro-preview');
+      expect(chain[1]?.model).toBe('codefly-3-flash-preview');
     });
 
     it('uses auto chain when configured model is auto even if preferred is concrete', () => {
       const config = createMockConfig({
         getModel: () => DEFAULT_CODEFLY_MODEL_AUTO,
       });
-      const chain = resolvePolicyChain(config, 'codefly-2.5-pro');
+      const chain = resolvePolicyChain(config, 'codefly-3-pro-preview');
       expect(chain).toHaveLength(2);
-      expect(chain[0]?.model).toBe('codefly-2.5-pro');
-      expect(chain[1]?.model).toBe('codefly-2.5-flash');
+      expect(chain[0]?.model).toBe('codefly-3-pro-preview');
+      expect(chain[1]?.model).toBe('codefly-3-flash-preview');
     });
 
     it('starts chain from preferredModel when model is "auto"', () => {
       const config = createMockConfig({
         getModel: () => DEFAULT_CODEFLY_MODEL_AUTO,
       });
-      const chain = resolvePolicyChain(config, 'codefly-2.5-flash');
+      const chain = resolvePolicyChain(config, 'codefly-3-flash-preview');
       expect(chain).toHaveLength(1);
-      expect(chain[0]?.model).toBe('codefly-2.5-flash');
+      expect(chain[0]?.model).toBe('codefly-3-flash-preview');
     });
 
     it('returns flash-lite chain when preferred model is flash-lite', () => {
@@ -99,8 +99,8 @@ describe('policyHelpers', () => {
       );
       expect(chain).toHaveLength(3);
       expect(chain[0]?.model).toBe('codefly-2.5-flash-lite');
-      expect(chain[1]?.model).toBe('codefly-2.5-flash');
-      expect(chain[2]?.model).toBe('codefly-2.5-pro');
+      expect(chain[1]?.model).toBe('codefly-3-flash-preview');
+      expect(chain[2]?.model).toBe('codefly-3-pro-preview');
     });
 
     it('returns flash-lite chain when configured model is flash-lite', () => {
@@ -110,31 +110,31 @@ describe('policyHelpers', () => {
       const chain = resolvePolicyChain(config);
       expect(chain).toHaveLength(3);
       expect(chain[0]?.model).toBe('codefly-2.5-flash-lite');
-      expect(chain[1]?.model).toBe('codefly-2.5-flash');
-      expect(chain[2]?.model).toBe('codefly-2.5-pro');
+      expect(chain[1]?.model).toBe('codefly-3-flash-preview');
+      expect(chain[2]?.model).toBe('codefly-3-pro-preview');
     });
 
     it('wraps around the chain when wrapsAround is true', () => {
       const config = createMockConfig({
         getModel: () => DEFAULT_CODEFLY_MODEL_AUTO,
       });
-      const chain = resolvePolicyChain(config, 'codefly-2.5-flash', true);
+      const chain = resolvePolicyChain(config, 'codefly-3-flash-preview', true);
       expect(chain).toHaveLength(2);
-      expect(chain[0]?.model).toBe('codefly-2.5-flash');
-      expect(chain[1]?.model).toBe('codefly-2.5-pro');
+      expect(chain[0]?.model).toBe('codefly-3-flash-preview');
+      expect(chain[1]?.model).toBe('codefly-3-pro-preview');
     });
 
-    it('proactively returns Codefly 2.5 chain if Codefly 3 requested but user lacks access', () => {
+    it('proactively returns default chain if Codefly 3 requested but user lacks access', () => {
       const config = createMockConfig({
         getModel: () => 'auto-codefly-3',
         getHasAccessToPreviewModel: () => false,
       });
       const chain = resolvePolicyChain(config);
 
-      // Should downgrade to [Pro 2.5, Flash 2.5]
+      // Should return default chain (which is currently Codefly 3)
       expect(chain).toHaveLength(2);
-      expect(chain[0]?.model).toBe('codefly-2.5-pro');
-      expect(chain[1]?.model).toBe('codefly-2.5-flash');
+      expect(chain[0]?.model).toBe('codefly-3-pro-preview');
+      expect(chain[1]?.model).toBe('codefly-3-flash-preview');
     });
 
     it('returns Codefly 3.1 Pro chain when launched and auto-codefly-3 requested', () => {

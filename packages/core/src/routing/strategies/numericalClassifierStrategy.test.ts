@@ -13,6 +13,8 @@ import {
   DEFAULT_CODEFLY_FLASH_MODEL,
   DEFAULT_CODEFLY_MODEL,
   DEFAULT_CODEFLY_MODEL_AUTO,
+  PREVIEW_CODEFLY_3_1_MODEL,
+  PREVIEW_CODEFLY_3_1_CUSTOM_TOOLS_MODEL,
 } from '../../config/models.js';
 import { promptIdContext } from '../../utils/promptIdContext.js';
 import type { Content } from '@google/genai';
@@ -47,8 +49,8 @@ describe('NumericalClassifierStrategy', () => {
       modelConfigService: {
         getResolvedConfig: vi.fn().mockReturnValue(mockResolvedConfig),
       },
-      getModel: () => DEFAULT_CODEFLY_MODEL_AUTO,
-      getPreviewFeatures: () => false,
+      getModel: vi.fn().mockReturnValue(DEFAULT_CODEFLY_MODEL_AUTO),
+      getPreviewFeatures: vi.fn().mockReturnValue(false),
       getSessionId: vi.fn().mockReturnValue('control-group-id'), // Default to Control Group (Hash 71 >= 50)
       getNumericalRoutingEnabled: vi.fn().mockResolvedValue(true),
       getClassifierThreshold: vi.fn().mockResolvedValue(undefined),
@@ -56,6 +58,7 @@ describe('NumericalClassifierStrategy', () => {
       getContentGeneratorConfig: vi.fn().mockReturnValue({
         authType: AuthType.LOGIN_WITH_GOOGLE,
       }),
+      getRoutingPolicy: vi.fn().mockReturnValue(undefined),
     } as unknown as Config;
     mockBaseLlmClient = {
       generateJson: vi.fn(),
@@ -82,7 +85,7 @@ describe('NumericalClassifierStrategy', () => {
   });
 
   it('should return null if the model is not a Codefly 3 model', async () => {
-    vi.mocked(mockConfig.getModel).mockReturnValue(DEFAULT_CODEFLY_MODEL_AUTO);
+    vi.mocked(mockConfig.getModel).mockReturnValue('gpt-4');
 
     const decision = await strategy.route(
       mockContext,
@@ -95,7 +98,7 @@ describe('NumericalClassifierStrategy', () => {
   });
 
   it('should return null if the model is explicitly a Codefly 2 model', async () => {
-    vi.mocked(mockConfig.getModel).mockReturnValue(DEFAULT_CODEFLY_MODEL);
+    vi.mocked(mockConfig.getModel).mockReturnValue('codefly-2.5-pro');
 
     const decision = await strategy.route(
       mockContext,

@@ -72,18 +72,26 @@ export const DEFAULT_THINKING_MODE = 8192;
 export function resolveModel(
   requestedModel: string,
   useCodefly3_1: boolean = false,
-  _useCustomToolModel: boolean = false,
+  useCustomToolModel: boolean = false,
 ): string {
   switch (requestedModel) {
-    case PREVIEW_CODEFLY_MODEL_AUTO: {
-      return PREVIEW_CODEFLY_MODEL; // Auto uses Pro by default for Codefly 3
-    }
+    case PREVIEW_CODEFLY_MODEL_AUTO:
     case DEFAULT_CODEFLY_MODEL_AUTO: {
+      if (useCodefly3_1) {
+        return useCustomToolModel
+          ? PREVIEW_CODEFLY_3_1_CUSTOM_TOOLS_MODEL
+          : PREVIEW_CODEFLY_3_1_MODEL;
+      }
       return PREVIEW_CODEFLY_MODEL; // Auto uses Pro by default for Codefly 3
     }
     case CODEFLY_MODEL_ALIAS_AUTO:
     case CODEFLY_MODEL_ALIAS_PRO: {
-      return useCodefly3_1 ? PREVIEW_CODEFLY_MODEL : DEFAULT_CODEFLY_MODEL;
+      if (useCodefly3_1) {
+        return useCustomToolModel
+          ? PREVIEW_CODEFLY_3_1_CUSTOM_TOOLS_MODEL
+          : PREVIEW_CODEFLY_3_1_MODEL;
+      }
+      return DEFAULT_CODEFLY_MODEL;
     }
     case CODEFLY_MODEL_ALIAS_FLASH: {
       return useCodefly3_1
@@ -139,11 +147,13 @@ export function getDisplayString(
     case DEFAULT_CODEFLY_MODEL_AUTO:
       return 'Auto (Codefly 2.5)';
     case CODEFLY_MODEL_ALIAS_PRO:
-      return useCodefly3_1 ? PREVIEW_CODEFLY_MODEL : DEFAULT_CODEFLY_MODEL;
+      return useCodefly3_1 ? PREVIEW_CODEFLY_3_1_MODEL : DEFAULT_CODEFLY_MODEL;
     case CODEFLY_MODEL_ALIAS_FLASH:
       return useCodefly3_1
         ? PREVIEW_CODEFLY_FLASH_MODEL
         : DEFAULT_CODEFLY_FLASH_MODEL;
+    case PREVIEW_CODEFLY_3_1_CUSTOM_TOOLS_MODEL:
+      return PREVIEW_CODEFLY_3_1_MODEL;
     default:
       return model;
   }
@@ -158,6 +168,8 @@ export function getDisplayString(
 export function isPreviewModel(model: string): boolean {
   return (
     model === PREVIEW_CODEFLY_MODEL ||
+    model === PREVIEW_CODEFLY_3_1_MODEL ||
+    model === PREVIEW_CODEFLY_3_1_CUSTOM_TOOLS_MODEL ||
     model === PREVIEW_CODEFLY_FLASH_MODEL ||
     model === PREVIEW_CODEFLY_MODEL_AUTO
   );
@@ -229,7 +241,8 @@ export function isAutoModel(model: string): boolean {
   return (
     model === CODEFLY_MODEL_ALIAS_AUTO ||
     model === PREVIEW_CODEFLY_MODEL_AUTO ||
-    model === DEFAULT_CODEFLY_MODEL_AUTO
+    model === DEFAULT_CODEFLY_MODEL_AUTO ||
+    model === 'auto-codefly-2.5'
   );
 }
 
